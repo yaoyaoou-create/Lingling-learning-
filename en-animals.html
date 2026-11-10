@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>K2 英文學習 - 動物與家庭拼寫特訓</title>
+  <style>
+    * { box-sizing: border-box; user-select: none; -webkit-user-select: none; font-family: 'Comic Sans MS', 'Chalkboard SE', system-ui, -apple-system, sans-serif; }
+    body { margin: 0; padding: 15px; background: #f0f9ff; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; }
+    .card { background: #fff; border-radius: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); padding: 20px; width: 100%; max-width: 650px; text-align: center; border: 4px solid #bae6fd; position: relative; }
+    
+    /* 頂部大門返回列 */
+    .portal-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 2px dashed #bae6fd; padding-bottom: 10px; }
+    .portal-btn { text-decoration: none; background: #f0fdf4; border: 2px solid #4ade80; color: #15803d; padding: 6px 12px; border-radius: 14px; font-weight: 800; font-size: 0.9rem; }
+    .back-hub-btn { background: #f1f5f9; border: 2px solid #cbd5e1; border-radius: 14px; padding: 6px 12px; font-weight: 800; color: #475569; cursor: pointer; font-size: 0.9rem; }
+
+    /* Hub 樣式 */
+    .hub-title { color: #0369a1; font-size: 1.7rem; margin-bottom: 5px; font-weight: 900; }
+    .hub-subtitle { color: #64748b; font-size: 0.95rem; margin-bottom: 16px; font-weight: bold; }
+    .unit-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 10px; max-height: 460px; overflow-y: auto; padding-right: 4px; }
+    .unit-card { background: #f8fafc; border: 3px solid #7dd3fc; border-radius: 18px; padding: 14px; text-align: left; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: transform 0.15s; }
+    .unit-card:active { transform: scale(0.98); }
+    .unit-card.secondary { border-color: #fcd34d; background: #fffbe3; }
+    .unit-card.tertiary { border-color: #f43f5e; background: #fff1f2; }
+    .unit-card.family { border-color: #a78bfa; background: #f5f3ff; }
+    .unit-info h3 { margin: 0 0 4px 0; color: #0284c7; font-size: 1.1rem; font-weight: 900; }
+    .unit-info p { margin: 0; color: #64748b; font-size: 0.85rem; font-weight: 600; }
+    .play-badge { background: #4ade80; color: white; padding: 6px 14px; border-radius: 20px; font-weight: bold; font-size: 0.9rem; flex-shrink: 0; }
+    .play-badge.yellow { background: #f59e0b; }
+    .play-badge.rose { background: #f43f5e; }
+    .play-badge.purple { background: #8b5cf6; }
+    
+    /* 遊戲樣式 */
+    .nav-map { display: flex; justify-content: center; gap: 4px; margin-bottom: 10px; flex-wrap: wrap; background: #e0f2fe; padding: 6px; border-radius: 14px; max-height: 90px; overflow-y: auto; }
+    .map-btn { width: 28px; height: 28px; border-radius: 50%; border: 2px solid #38bdf8; background: #fff; color: #0284c7; font-weight: bold; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .map-btn.active { background: #0284c7; color: #fff; transform: scale(1.1); }
+    .map-btn.correct-done { background: #bbf7d0; border-color: #22c55e; color: #15803d; }
+
+    .progress-bar { font-size: 1rem; font-weight: bold; color: #0284c7; margin-bottom: 4px; }
+    .instruction-en { font-size: 1.3rem; color: #0284c7; font-weight: bold; margin-bottom: 2px; }
+    .instruction-zh { font-size: 1rem; color: #64748b; margin-bottom: 10px; font-weight: bold; }
+    .options-grid-4 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+    
+    .option-card { background: #f8fafc; border: 4px solid #0284c7; border-radius: 16px; padding: 10px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 95px; position: relative; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+    .mark-badge { position: absolute; top: 6px; right: 10px; font-size: 1.3rem; font-weight: bold; }
+
+    .letter-btn { font-size: 2rem; font-weight: bold; color: #0284c7; background: #e0f2fe; border: 4px solid #0284c7; border-radius: 16px; padding: 10px; cursor: pointer; }
+    .spell-box { display: flex; justify-content: center; gap: 6px; margin: 10px 0; }
+    .slot { width: 34px; height: 42px; border-bottom: 4px solid #0284c7; font-size: 1.6rem; font-weight: bold; color: #0369a1; display: flex; align-items: center; justify-content: center; }
+    .letter-pool { display: flex; justify-content: center; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+    .pool-btn { background: #fef08a; border: 3px solid #fde047; font-size: 1.3rem; font-weight: bold; padding: 6px 12px; border-radius: 10px; cursor: pointer; color: #854d0e; }
+    
+    .feedback { font-size: 1.2rem; font-weight: bold; height: 26px; margin-top: 8px; }
+    .correct { color: #16a34a; }
+    .wrong { color: #dc2626; }
+    .audio-btn { background: #38bdf8; color: white; border: none; padding: 8px 18px; border-radius: 20px; font-size: 0.95rem; font-weight: bold; cursor: pointer; margin-bottom: 8px; box-shadow: 0 4px 10px rgba(56,189,248,0.3); }
+    .media-icon img { width: 65px; height: 65px; object-fit: contain; border-radius: 10px; }
+  </style>
+</head>
+<body>
+  
+<div class="card">
+  <div class="portal-bar">
+    <a href="index.html" class="portal-btn">🏠 返回學習大門</a>
+    <button class="back-hub-btn" id="top-hub-btn" style="display: none;" onclick="showHub()">📋 返回單元選單</button>
+  </div>
+
+  <!-- 大本營主頁 -->
+  <div id="hub-screen">
+    <div class="hub-title">🐾 動物與家庭拼寫大本營</div>
+    <div class="hub-subtitle">請選擇一個主題單元開始練習：</div>
+    
+    <div class="unit-grid">
+      <div class="unit-card" onclick="startModule('group1')">
+        <div class="unit-info">
+          <h3>🐾 單元一：動物朋友 (第一組基礎)</h3>
+          <p>Cat, Dog, Rabbit, Hamster 看圖與拼字 (12關)</p>
+        </div>
+        <div class="play-badge">▶ 開始</div>
+      </div>
+  
+      <div class="unit-card secondary" onclick="startModule('group2')">
+        <div class="unit-info">
+          <h3>🎧 單元二：動物朋友 (第二組聽力特訓)</h3>
+          <p>純聽力辨詞 + 已學單詞拼寫 + 長單字引導 (15關)</p>
+        </div>
+        <div class="play-badge yellow">▶ 挑戰</div>
+      </div>
+  
+      <div class="unit-card tertiary" onclick="startModule('group3')">
+        <div class="unit-info">
+          <h3>🔥 單元三：Rabbit & Hamster 拆解拼寫</h3>
+          <p>專攻 Rabbit & Hamster 雙寫與音節拆解 (15關)</p>
+        </div>
+        <div class="play-badge rose">▶ 特訓</div>
+      </div>
+      
+      <div class="unit-card family" onclick="startModule('group4')">
+        <div class="unit-info">
+          <h3>🏡 單元四：我的家庭與屋企 (Family & Home)</h3>
+          <p>Father, Mother, Brother, Sister, Home, Me (18關)</p>
+        </div>
+        <div class="play-badge purple">▶ 開始</div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 遊戲畫面 -->
+  <div id="game-screen" style="display: none;">
+    <div class="nav-map" id="nav-map"></div>
+    <div class="progress-bar" id="progress-text">Level 1 / 15</div>
+    <div class="instruction-en" id="instruction-en">Find the animal!</div>
+    <div class="instruction-zh" id="instruction-zh">請根據提示找出正確的答案！</div>
+    
+    <button class="audio-btn" id="audio-prompt-btn" onclick="speakCurrentPrompt()">🔊 聽英文發音 (Listen)</button>
+  
+    <div id="question-content"></div>
+    <div class="feedback" id="feedback"></div>
+  </div>
+</div>
+  
+<script>
+const SVGs = {
+  cat: `<svg viewBox="0 0 100 100" width="55" height="55"><circle cx="50" cy="55" r="30" fill="#f97316"/><polygon points="25,35 35,10 45,30" fill="#f97316"/><polygon points="75,35 65,10 55,30" fill="#f97316"/><circle cx="40" cy="50" r="3" fill="#000"/><circle cx="60" cy="50" r="3" fill="#000"/><polygon points="50,57 46,53 54,53" fill="#000"/><path d="M 40 63 Q 50 70 60 63" stroke="#000" stroke-width="2" fill="none"/></svg>`,
+  dog: `<svg viewBox="0 0 100 100" width="55" height="55"><circle cx="50" cy="50" r="30" fill="#a16207"/><ellipse cx="25" cy="40" rx="8" ry="20" fill="#713f12"/><ellipse cx="75" cy="40" rx="8" ry="20" fill="#713f12"/><circle cx="40" cy="45" r="3" fill="#000"/><circle cx="60" cy="45" r="3" fill="#000"/><ellipse cx="50" cy="55" rx="6" ry="4" fill="#000"/><path d="M 42 62 Q 50 68 58 62" stroke="#000" stroke-width="2" fill="none"/></svg>`,
+  rabbit: `<svg viewBox="0 0 100 100" width="55" height="55"><ellipse cx="38" cy="25" rx="6" ry="22" fill="#e2e8f0"/><ellipse cx="62" cy="25" rx="6" ry="22" fill="#e2e8f0"/><circle cx="50" cy="60" r="28" fill="#f1f5f9"/><circle cx="40" cy="55" r="3" fill="#000"/><circle cx="60" cy="55" r="3" fill="#000"/><polygon points="50,62 47,59 53,59" fill="#f43f5e"/><path d="M 44 67 Q 50 72 56 67" stroke="#000" stroke-width="2" fill="none"/></svg>`,
+  hamster: `<svg viewBox="0 0 100 100" width="55" height="55"><ellipse cx="50" cy="55" rx="30" ry="25" fill="#d97706"/><circle cx="28" cy="38" r="8" fill="#b45309"/><circle cx="72" cy="38" r="8" fill="#b45309"/><circle cx="40" cy="50" r="3" fill="#000"/><circle cx="60" cy="50" r="3" fill="#000"/><circle cx="50" cy="58" r="4" fill="#f43f5e"/></svg>`,
+  father: `<div class="media-icon"><img src="https://i.postimg.cc/RFNhbkHM/father.jpg" alt="father"></div>`,
+  mother: `<div class="media-icon"><img src="https://i.postimg.cc/SKZjdSjW/mother.jpg" alt="mother"></div>`,
+  brother: `<div class="media-icon"><img src="https://i.postimg.cc/XvNp9GNy/brother.jpg" alt="brother"></div>`,
+  sister: `<div class="media-icon"><img src="https://i.postimg.cc/7LBb9HbS/sister.jpg" alt="sister"></div>`,
+  home: `<div class="media-icon"><img src="https://i.postimg.cc/PqXSg4yp/home.jpg" alt="home"></div>`,
+  me: `<div class="media-icon"><img src="https://i.postimg.cc/85jcn26P/me.jpg" alt="me"></div>`
+};
+
+const allAnimals = ['cat', 'dog', 'rabbit', 'hamster'];
+const allFamily = ['father', 'mother', 'brother', 'sister', 'home', 'me'];
+
+function shuffleArray(array) {
+  let arr = [...array];
+  for (let i = arr.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+const group1Questions = [
+  { type: 'choice', word: 'cat', textEn: "Find the cat!", textZh: "請找出小貓！", speech: "Find the cat." },
+  { type: 'letter', word: 'cat', textEn: "Which letter starts 'cat'?", textZh: "Cat 是由哪個字母開始的呢？", targetLetter: 'C', options: ['C', 'D', 'R', 'H'], speech: "Which letter starts cat?" },
+  { type: 'spell', word: 'cat', textEn: "Spell the word 'cat'!", textZh: "請點擊字母拼出 cat！", letters: ['c', 'a', 't'], speech: "Spell the word cat." },
+  { type: 'choice', word: 'dog', textEn: "Find the dog!", textZh: "請找出小狗！", speech: "Find the dog." },
+  { type: 'letter', word: 'dog', textEn: "Which letter starts 'dog'?", textZh: "Dog 是由哪個字母開始的呢？", targetLetter: 'D', options: ['D', 'C', 'B', 'R'], speech: "Which letter starts dog?" },
+  { type: 'spell', word: 'dog', textEn: "Spell the word 'dog'!", textZh: "請點擊字母拼出 dog！", letters: ['d', 'o', 'g'], speech: "Spell the word dog." },
+  { type: 'choice', word: 'rabbit', textEn: "Find the rabbit!", textZh: "請找出兔子！", speech: "Find the rabbit." },
+  { type: 'letter', word: 'rabbit', textEn: "Which letter starts 'rabbit'?", textZh: "Rabbit 是由哪個字母開始的呢？", targetLetter: 'R', options: ['R', 'H', 'C', 'D'], speech: "Which letter starts rabbit?" },
+  { type: 'spell', word: 'rabbit', textEn: "Spell the word 'rabbit'!", textZh: "請點擊字母拼出 rabbit！", letters: ['r', 'a', 'b', 'b', 'i', 't'], speech: "Spell the word rabbit." },
+  { type: 'choice', word: 'hamster', textEn: "Find the hamster!", textZh: "請找出倉鼠！", speech: "Find the hamster." },
+  { type: 'letter', word: 'hamster', textEn: "Which letter starts 'hamster'?", textZh: "Hamster 是由哪個字母開始的呢？", targetLetter: 'H', options: ['H', 'R', 'D', 'C'], speech: "Which letter starts hamster." },
+  { type: 'spell', word: 'hamster', textEn: "Spell 'hamster'!", textZh: "請點擊字母拼出 hamster！", letters: ['h', 'a', 'm', 's', 't', 'e', 'r'], speech: "Spell hamster." }
+];
+
+const group2Questions = [
+  { type: 'listen', word: 'cat', textEn: "Listen and choose!", textZh: "請聽發音，選出正確的單字！", options: shuffleArray(allAnimals), speech: 'cat' },
+  { type: 'listen', word: 'dog', textEn: "Listen and choose!", textZh: "請聽發音，選出正確的單字！", options: shuffleArray(allAnimals), speech: 'dog' },
+  { type: 'listen', word: 'rabbit', textEn: "Listen and choose!", textZh: "請聽發音，選出正確的單字！", options: shuffleArray(allAnimals), speech: 'rabbit' },
+  { type: 'listen', word: 'hamster', textEn: "Listen and choose!", textZh: "請聽發音，選出正確的單字！", options: shuffleArray(allAnimals), speech: 'hamster' },
+  { type: 'spell', word: 'cat', textEn: "Spell cat!", textZh: "請按順序點擊字母完成拼寫！", letters: ['c', 'a', 't'], target: ['c', 'a', 't'], speech: 'cat' },
+  { type: 'spell', word: 'dog', textEn: "Spell dog!", textZh: "請按順序點擊字母完成拼寫！", letters: ['d', 'o', 'g'], target: ['d', 'o', 'g'], speech: 'dog' },
+  { type: 'listen', word: 'cat', textEn: "Listen and choose!", textZh: "哪一個是 cat？", options: shuffleArray(allAnimals), speech: 'Which word is cat?' },
+  { type: 'listen', word: 'hamster', textEn: "Listen and choose!", textZh: "哪一個是 hamster？", options: shuffleArray(allAnimals), speech: 'Which word is hamster?' },
+  { type: 'listen', word: 'rabbit', textEn: "Listen and choose!", textZh: "請聽發音選出 rabbit", options: shuffleArray(allAnimals), speech: 'rabbit' },
+  { type: 'spell-part', word: 'rabbit', textEn: "Rabbit 前半段拼寫: rab-", textZh: "請拼出前三個字母 rab-", letters: ['r', 'a', 'b', 't', 'm', 's'], target: ['r', 'a', 'b'], speech: 'rab' },
+  { type: 'spell', word: 'rabbit', textEn: "Rabbit 完整拼寫挑戰", textZh: "請完整拼出 rabbit", letters: ['r', 'a', 'b', 'b', 'i', 't'], target: ['r', 'a', 'b', 'b', 'i', 't'], speech: 'rabbit' },
+  { type: 'listen', word: 'hamster', textEn: "Listen and choose!", textZh: "請聽發音選出 hamster", options: shuffleArray(allAnimals), speech: 'hamster' },
+  { type: 'spell-part', word: 'hamster', textEn: "Hamster 前半段拼寫: ham-", textZh: "請拼出前三個字母 ham-", letters: ['h', 'a', 'm', 's', 'r', 't'], target: ['h', 'a', 'm'], speech: 'ham' },
+  { type: 'spell-part', word: 'hamster', textEn: "Hamster 後半段拼寫: -ster", textZh: "請拼出後半段 -ster", letters: ['s', 't', 'e', 'r', 'a', 'b'], target: ['s', 't', 'e', 'r'], speech: 'ster' },
+  { type: 'spell', word: 'hamster', textEn: "Hamster 完美總結拼寫！", textZh: "請完整拼出 hamster", letters: ['h', 'a', 'm', 's', 't', 'e', 'r'], target: ['h', 'a', 'm', 's', 't', 'e', 'r'], speech: 'hamster' }
+];
+
+const group3Questions = [
+  { type: 'listen', word: 'rabbit', textEn: "Listen and warm up!", textZh: "聽力熱身：找出 rabbit", options: shuffleArray(allAnimals), speech: 'rabbit' },
+  { type: 'listen', word: 'hamster', textEn: "Listen and warm up!", textZh: "聽力熱身：找出 hamster", options: shuffleArray(allAnimals), speech: 'hamster' },
+  { type: 'listen', word: 'rabbit', textEn: "Listen carefully!", textZh: "仔細聽：哪一個是 rabbit？", options: shuffleArray(allAnimals), speech: 'rabbit' },
+  { type: 'letter', word: 'rabbit', textEn: "Which letter starts 'rabbit'?", textZh: "Rabbit 是由哪個字母開始的呢？", targetLetter: 'R', options: ['R', 'H', 'C', 'D'], speech: "Which letter starts rabbit?" },
+  { type: 'spell-part', word: 'rabbit', textEn: "Rabbit Step 1: rab-", textZh: "兔子拼寫第一步：拼出 rab-", letters: ['r', 'a', 'b', 't', 'm', 's'], target: ['r', 'a', 'b'], speech: 'rab' },
+  { type: 'spell-part', word: 'rabbit', textEn: "Rabbit Step 2: Double 'bb'", textZh: "挑戰雙寫字母：拼出中間的 -bb-", letters: ['b', 'b', 'i', 't', 'a', 'r'], target: ['b', 'b'], speech: 'bb' },
+  { type: 'spell-part', word: 'rabbit', textEn: "Rabbit Step 3: -bit", textZh: "兔子結尾特訓：拼出 -bit", letters: ['b', 'i', 't', 'r', 'a', 's'], target: ['b', 'i', 't'], speech: 'bit' },
+  { type: 'listen', word: 'rabbit', textEn: "Listen and spell rabbit", textZh: "聽發音，準備拼寫 rabbit", options: shuffleArray(allAnimals), speech: 'rabbit' },
+  { type: 'spell', word: 'rabbit', textEn: "Rabbit Master Challenge!", textZh: "兔子獨立拼寫大挑戰！", letters: ['r', 'a', 'b', 'b', 'i', 't'], target: ['r', 'a', 'b', 'b', 'i', 't'], speech: 'rabbit' },
+  { type: 'letter', word: 'hamster', textEn: "Which letter starts 'hamster'?", textZh: "Hamster 是由哪個字母開始的呢？", targetLetter: 'H', options: ['H', 'R', 'D', 'C'], speech: "Which letter starts hamster." },
+  { type: 'spell-part', word: 'hamster', textEn: "Hamster Step 1: ham-", textZh: "倉鼠拼寫第一步：拼出 ham-", letters: ['h', 'a', 'm', 's', 'r', 't'], target: ['h', 'a', 'm'], speech: 'ham' },
+  { type: 'spell-part', word: 'hamster', textEn: "Hamster Step 2: -mst-", textZh: "倉鼠中間過渡：拼出 -mst-", letters: ['m', 's', 't', 'h', 'a', 'e'], target: ['m', 's', 't'], speech: 'mst' },
+  { type: 'spell-part', word: 'hamster', textEn: "Hamster Step 3: -ster", textZh: "倉鼠結尾特訓：拼出 -ster", letters: ['s', 't', 'e', 'r', 'a', 'b'], target: ['s', 't', 'e', 'r'], speech: 'ster' },
+  { type: 'listen', word: 'hamster', textEn: "Listen and spell hamster", textZh: "聽發音，準備拼寫 hamster", options: shuffleArray(allAnimals), speech: 'hamster' },
+  { type: 'spell', word: 'hamster', textEn: "Hamster Master Challenge!", textZh: "倉鼠獨立拼寫終極大挑戰！", letters: ['h', 'a', 'm', 's', 't', 'e', 'r'], target: ['h', 'a', 'm', 's', 't', 'e', 'r'], speech: 'hamster' }
+];
+
+const group4Questions = [
+  { type: 'choice-fam', word: 'father', opts: ['father', 'mother', 'brother', 'sister'], textEn: "Find 'father'!", textZh: "請找出爸爸 (father)！", speech: "father" },
+  { type: 'letter', word: 'father', textEn: "Which letter starts 'father'?", textZh: "Father 是由哪個字母開始的？", targetLetter: 'F', options: ['F', 'M', 'B', 'S'], speech: "Which letter starts father?" },
+  { type: 'spell', word: 'father', textEn: "Spell 'father'!", textZh: "請點擊字母拼出 father！", letters: ['f', 'a', 't', 'h', 'e', 'r'], speech: "father" },
+
+  { type: 'choice-fam', word: 'mother', opts: ['mother', 'father', 'sister', 'home'], textEn: "Find 'mother'!", textZh: "請找出媽媽 (mother)！", speech: "mother" },
+  { type: 'letter', word: 'mother', textEn: "Which letter starts 'mother'?", textZh: "Mother 是由哪個字母開始的？", targetLetter: 'M', options: ['M', 'F', 'H', 'S'], speech: "Which letter starts mother?" },
+  { type: 'spell', word: 'mother', textEn: "Spell 'mother'!", textZh: "請點擊字母拼出 mother！", letters: ['m', 'o', 't', 'h', 'e', 'r'], speech: "mother" },
+
+  { type: 'choice-fam', word: 'brother', opts: ['brother', 'sister', 'father', 'me'], textEn: "Find 'brother'!", textZh: "請找出哥哥/弟弟 (brother)！", speech: "brother" },
+  { type: 'letter', word: 'brother', textEn: "Which letter starts 'brother'?", textZh: "Brother 是由哪個字母開始的？", targetLetter: 'B', options: ['B', 'S', 'F', 'M'], speech: "Which letter starts brother?" },
+  { type: 'spell', word: 'brother', textEn: "Spell 'brother'!", textZh: "請點擊字母拼出 brother！", letters: ['b', 'r', 'o', 't', 'h', 'e', 'r'], speech: "brother" },
+
+  { type: 'choice-fam', word: 'sister', opts: ['sister', 'brother', 'mother', 'home'], textEn: "Find 'sister'!", textZh: "請找出姐姐/妹妹 (sister)！", speech: "sister" },
+  { type: 'letter', word: 'sister', textEn: "Which letter starts 'sister'?", textZh: "Sister 是由哪個字母開始的？", targetLetter: 'S', options: ['S', 'B', 'M', 'H'], speech: "Which letter starts sister?" },
+  { type: 'spell', word: 'sister', textEn: "Spell 'sister'!", textZh: "請點擊字母拼出 sister！", letters: ['s', 'i', 's', 't', 'e', 'r'], speech: "sister" },
+
+  { type: 'choice-fam', word: 'home', opts: ['home', 'me', 'father', 'mother'], textEn: "Find 'home'!", textZh: "請找出家 (home)！", speech: "home" },
+  { type: 'letter', word: 'home', textEn: "Which letter starts 'home'?", textZh: "Home 是由哪個字母開始的？", targetLetter: 'H', options: ['H', 'M', 'F', 'B'], speech: "Which letter starts home?" },
+  { type: 'spell', word: 'home', textEn: "Spell 'home'!", textZh: "請點擊字母拼出 home！", letters: ['h', 'o', 'm', 'e'], speech: "home" },
+
+  { type: 'choice-fam', word: 'me', opts: ['me', 'home', 'sister', 'brother'], textEn: "Find 'me'!", textZh: "請找出我 (me)！", speech: "me" },
+  { type: 'letter', word: 'me', textEn: "Which letter starts 'me'?", textZh: "Me 是由哪個字母開始的？", targetLetter: 'M', options: ['M', 'H', 'S', 'F'], speech: "Which letter starts me?" },
+  { type: 'spell', word: 'me', textEn: "Spell 'me'!", textZh: "請點擊字母拼出 me！", letters: ['m', 'e'], speech: "me" }
+];
+
+let activeQuestions = [];
+let currentGroup = '';
+let currentQ = 0;
+let spellProgress = [];
+
+function showHub() {
+  document.getElementById('hub-screen').style.display = 'block';
+  document.getElementById('game-screen').style.display = 'none';
+  document.getElementById('top-hub-btn').style.display = 'none';
+}
+
+function startModule(groupKey) {
+  currentGroup = groupKey;
+  if (groupKey === 'group1') activeQuestions = group1Questions;
+  else if (groupKey === 'group2') activeQuestions = group2Questions;
+  else if (groupKey === 'group3') activeQuestions = group3Questions;
+  else activeQuestions = group4Questions;
+
+  document.getElementById('hub-screen').style.display = 'none';
+  document.getElementById('game-screen').style.display = 'block';
+  document.getElementById('top-hub-btn').style.display = 'inline-block';
+  buildNavMap();
+  currentQ = 0;
+  loadQuestion();
+}
+
+function buildNavMap() {
+  const mapDiv = document.getElementById('nav-map');
+  let html = '';
+  for (let i = 0; i < activeQuestions.length; i++) {
+    html += `<button class="map-btn ${i === currentQ ? 'active' : ''}" id="map-btn-${i}" onclick="jumpToQuestion(${i})">${i+1}</button>`;
+  }
+  mapDiv.innerHTML = html;
+}
+
+function updateNavMap() {
+  const buttons = document.querySelectorAll('.map-btn');
+  buttons.forEach((btn, idx) => {
+    if (idx === currentQ) {
+      btn.className = `map-btn active`;
+    } else if (!btn.classList.contains('correct-done')) {
+      btn.className = `map-btn`;
+    }
+  });
+}
+
+function jumpToQuestion(index) {
+  currentQ = index;
+  loadQuestion();
+}
+
+function speakText(text) {
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-GB';
+    utterance.rate = 0.55;
+    utterance.pitch = 1.1;
+    window.speechSynthesis.speak(utterance);
+  }
+}
+
+function speakCurrentPrompt() {
+  const q = activeQuestions[currentQ];
+  speakText(q.speech || q.word);
+}
+
+function loadQuestion() {
+  document.getElementById('feedback').innerText = "";
+  if (currentQ >= activeQuestions.length) {
+    showVictory();
+    return;
+  }
+  updateNavMap();
+  const q = activeQuestions[currentQ];
+  document.getElementById('progress-text').innerText = `Level ${currentQ + 1} / ${activeQuestions.length}`;
+  document.getElementById('instruction-en').innerText = q.textEn;
+  document.getElementById('instruction-zh').innerText = q.textZh;
+  
+  document.getElementById('audio-prompt-btn').style.display = 'inline-block';
+  setTimeout(() => { speakText(q.speech); }, 300);
+  
+  const contentDiv = document.getElementById('question-content');
+  spellProgress = [];
+  let html = '';
+  
+  if (q.type === 'choice') {
+    html += `<div class="options-grid-4">`;
+    allAnimals.forEach(opt => {
+      html += `<div class="option-card" id="opt-${opt}" onclick="checkChoice('${opt}', '${q.word}')">${SVGs[opt]}<span style="margin-top:4px; font-weight:bold; color:#0284c7; text-transform:uppercase;">${opt}</span></div>`;
+    });
+    html += `</div>`;
+  } else if (q.type === 'choice-fam') {
+    html += `<div class="options-grid-4">`;
+    q.opts.forEach(opt => {
+      html += `<div class="option-card" id="opt-${opt}" onclick="checkChoice('${opt}', '${q.word}')">${SVGs[opt]}<span style="margin-top:4px; font-weight:bold; color:#0284c7; text-transform:uppercase;">${opt}</span></div>`;
+    });
+    html += `</div>`;
+  } else if (q.type === 'listen') {
+    html += `<div style="font-size: 3rem; margin: 8px 0;">👂🔊</div>`;
+    html += `<div class="options-grid-4">`;
+    q.options.forEach(opt => {
+      html += `<div class="option-card" id="opt-${opt}" onclick="checkChoice('${opt}', '${q.word}')" style="min-height: 70px; font-size: 1.4rem; font-weight: bold; color: #0369a1; text-transform: uppercase;">${opt}</div>`;
+    });
+    html += `</div>`;
+  } else if (q.type === 'letter') {
+    html += `<div style="margin-bottom:6px;">${SVGs[q.word]}</div><div class="options-grid-4">`;
+    q.options.forEach(opt => {
+      html += `<button class="letter-btn" id="let-${opt}" onclick="checkLetter('${opt}', '${q.targetLetter}')">${opt}</button>`;
+    });
+    html += `</div>`;
+  } else if (q.type === 'spell' || q.type === 'spell-part') {
+    if (currentGroup === 'group1' || currentGroup === 'group4') {
+      html += `<div style="margin-bottom:4px;">${SVGs[q.word]}</div>`;
+    } else {
+      html += `<div style="font-size: 2.5rem; margin: 4px 0;">✏️🔤</div>`;
+    }
+    html += `<div class="spell-box">`;
+    const targetArr = q.target || q.letters;
+    for (let i = 0; i < targetArr.length; i++) {
+      html += `<div class="slot" id="slot-${i}">_</div>`;
+    }
+    html += `</div><div class="letter-pool">`;
+    let shuffled = [...q.letters].sort(() => Math.random() - 0.5);
+    shuffled.forEach((l, idx) => {
+      html += `<button class="pool-btn" id="pool-${idx}" onclick="clickSpellLetter('${l}', 'pool-${idx}')">${l}</button>`;
+    });
+    html += `</div>`;
+  }
+  
+  contentDiv.innerHTML = html;
+}
+
+function checkChoice(selected, correctWord) {
+  const fb = document.getElementById('feedback');
+  const selectedCard = document.getElementById(`opt-${selected}`);
+  const correctCard = document.getElementById(`opt-${correctWord}`);
+  
+  document.querySelectorAll('.option-card').forEach(card => {
+    card.style.borderColor = '#0284c7';
+    const mark = card.querySelector('.mark-badge');
+    if (mark) mark.remove();
+  });
+  
+  if (selected === correctWord) {
+    selectedCard.style.borderColor = '#16a34a';
+    selectedCard.innerHTML += `<span class="mark-badge" style="color:#16a34a;">✔️</span>`;
+    fb.className = "feedback correct";
+    fb.innerText = "Wonderful! ★";
+    speakText("Wonderful!");
+    document.getElementById(`map-btn-${currentQ}`).classList.add('correct-done');
+    currentQ++;
+    setTimeout(loadQuestion, 900);
+  } else {
+    selectedCard.style.borderColor = '#dc2626';
+    selectedCard.innerHTML += `<span class="mark-badge" style="color:#dc2626;">❌</span>`;
+    if (correctCard) {
+      correctCard.style.borderColor = '#16a34a';
+      correctCard.innerHTML += `<span class="mark-badge" style="color:#16a34a;">✔️</span>`;
+    }
+    fb.className = "feedback wrong";
+    fb.innerText = "Try again!";
+    speakText("Try again.");
+  }
+}
+
+function checkLetter(selected, targetLetter) {
+  const fb = document.getElementById('feedback');
+  const selectedCard = document.getElementById(`let-${selected}`);
+  const correctCard = document.getElementById(`let-${targetLetter}`);
+  
+  if (selected === targetLetter) {
+    selectedCard.style.borderColor = '#16a34a';
+    fb.className = "feedback correct";
+    fb.innerText = "Brilliant! ★";
+    speakText("Brilliant!");
+    document.getElementById(`map-btn-${currentQ}`).classList.add('correct-done');
+    currentQ++;
+    setTimeout(loadQuestion, 900);
+  } else {
+    selectedCard.style.borderColor = '#dc2626';
+    if (correctCard) correctCard.style.borderColor = '#16a34a';
+    fb.className = "feedback wrong";
+    fb.innerText = "Try again!";
+    speakText("Try again.");
+  }
+}
+
+function clickSpellLetter(letter, btnId) {
+  const q = activeQuestions[currentQ];
+  const targetArr = q.target || q.letters;
+  const expectedLetter = targetArr[spellProgress.length];
+  const fb = document.getElementById('feedback');
+  
+  if (letter === expectedLetter) {
+    document.getElementById(`slot-${spellProgress.length}`).innerText = letter;
+    document.getElementById(btnId).style.visibility = 'hidden';
+    spellProgress.push(letter);
+    speakText(letter);
+  
+    if (spellProgress.length === targetArr.length) {
+      fb.className = "feedback correct";
+      fb.innerText = "Very good! ★";
+      speakText("Very good! " + q.word);
+      document.getElementById(`map-btn-${currentQ}`).classList.add('correct-done');
+      currentQ++;
+      setTimeout(loadQuestion, 1000);
+    }
+  } else {
+    fb.className = "feedback wrong";
+    fb.innerText = "Oops, try again!";
+    speakText("Try again.");
+  }
+}
+
+function showVictory() {
+  document.getElementById('nav-map').innerHTML = '';
+  document.getElementById('progress-text').innerText = "All Completed!";
+  document.getElementById('instruction-en').innerText = "🎉 Amazing Job!";
+  document.getElementById('instruction-zh').innerText = "太棒了！你完成了本組挑戰！";
+  document.getElementById('audio-prompt-btn').style.display = 'none';
+  document.getElementById('question-content').innerHTML = `
+    <p style="font-size: 1.2rem; color: #0284c7; font-weight: bold;">You are a spelling master! 🌟</p>
+    <div style="font-size: 3rem; margin: 10px 0;">🌟🐰🐹🏆✨</div>
+    <button class="play-badge" style="border:none; cursor:pointer; font-size:1.05rem; padding:10px 22px;" onclick="showHub()">返回單元選單 📋</button>
+  `;
+  speakText("Amazing job! You are a spelling master!");
+}
+</script>
+</body>
+</html>
