@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>K2 英文學習 - 情緒與句子朗讀</title>
+  <style>
+    * { box-sizing: border-box; user-select: none; -webkit-user-select: none; font-family: 'Comic Sans MS', 'Chalkboard SE', system-ui, -apple-system, sans-serif; }
+    body { margin: 0; padding: 15px; background: #e0f2fe; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; }
+    .card { background: #ffffff; border-radius: 32px; box-shadow: 0 16px 36px rgba(2, 132, 199, 0.18); padding: 22px 20px; width: 100%; max-width: 680px; text-align: center; border: 5px solid #38bdf8; position: relative; }
+    
+    /* 頂部返回大門列 */
+    .portal-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 2px dashed #bae6fd; padding-bottom: 10px; }
+    .portal-btn { text-decoration: none; background: #f5f3ff; border: 2px solid #a78bfa; color: #5b21b6; padding: 6px 14px; border-radius: 14px; font-weight: 800; font-size: 0.9rem; }
+    .back-home { background: #f1f5f9; border: 2px solid #cbd5e1; border-radius: 14px; padding: 6px 14px; font-weight: bold; color: #475569; cursor: pointer; font-size: 0.9rem; }
+
+    /* 大本營首頁 */
+    .hub-title { color: #0284c7; font-size: 2rem; margin-bottom: 4px; font-weight: 800; }
+    .hub-subtitle { color: #64748b; font-size: 1.05rem; margin-bottom: 18px; font-weight: 600; }
+    
+    .hub-intro { background: #f0f9ff; border: 2.5px solid #bae6fd; border-radius: 20px; padding: 15px; margin-bottom: 20px; color: #0369a1; font-size: 1.05rem; font-weight: 700; line-height: 1.5; text-align: left; }
+    
+    .start-btn { color: white; border: none; padding: 16px 28px; border-radius: 30px; font-weight: 800; font-size: 1.2rem; cursor: pointer; width: 90%; background: #22c55e; box-shadow: 0 8px 20px rgba(34, 197, 94, 0.35); display: flex; align-items: center; justify-content: center; gap: 8px; margin: 0 auto; }
+    .start-btn:active { transform: scale(0.96); }
+
+    /* 闖關頁面 */
+    .top-bar { display: flex; justify-content: center; align-items: center; margin-bottom: 10px; }
+    .progress-bar { font-size: 1.2rem; font-weight: 800; color: #0284c7; }
+
+    .nav-map { display: flex; justify-content: center; gap: 6px; margin-bottom: 15px; flex-wrap: wrap; background: #f0f9ff; padding: 8px; border-radius: 16px; border: 2px solid #bae6fd; }
+    .map-btn { width: 32px; height: 32px; border-radius: 50%; border: 2px solid #38bdf8; background: #fff; color: #0284c7; font-weight: 800; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .map-btn.active { background: #0284c7; color: #fff; transform: scale(1.15); border-color: #0369a1; }
+    .map-btn.correct-done { background: #bbf7d0; border-color: #22c55e; color: #15803d; }
+
+    .scene-container { display: flex; flex-direction: column; align-items: center; background: #f8fafc; border: 3.5px dashed #7dd3fc; border-radius: 24px; padding: 18px; margin-bottom: 16px; }
+    .giant-emoji-display { font-size: 5rem; margin-bottom: 6px; filter: drop-shadow(0 6px 10px rgba(0,0,0,0.12)); animation: bounceSlow 2s infinite ease-in-out; }
+    
+    @keyframes bounceSlow {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    .speech-bubble { background: #e0f2fe; border: 3px solid #38bdf8; border-radius: 18px; padding: 12px 20px; font-size: 1.35rem; color: #0369a1; font-weight: 800; margin-bottom: 12px; box-shadow: 0 6px 14px rgba(0,0,0,0.04); max-width: 95%; }
+    .instruction-zh { font-size: 1.05rem; color: #64748b; font-weight: 600; margin-top: 4px; }
+
+    /* 第一階段：整句選擇題容器 */
+    .options-grid-sentences { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 10px; width: 100%; }
+    .sentence-card { background: #f8fafc; border: 3.5px solid #0284c7; border-radius: 18px; padding: 12px 16px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; position: relative; box-shadow: 0 4px 10px rgba(2, 132, 199, 0.08); }
+    .sentence-card:active { background: #bae6fd; transform: scale(0.98); }
+    .sentence-text { font-size: 1.25rem; font-weight: 800; color: #0284c7; text-align: left; }
+    .sentence-emoji { font-size: 1.6rem; }
+    .mark-badge { font-size: 1.3rem; font-weight: bold; }
+
+    /* 第二階段：朗讀打卡按鈕 */
+    .read-aloud-container { display: flex; flex-direction: column; gap: 12px; width: 100%; margin-top: 10px; }
+    .success-read-btn { background: #22c55e; color: white; border: none; padding: 16px; border-radius: 22px; font-size: 1.25rem; font-weight: 800; cursor: pointer; box-shadow: 0 6px 16px rgba(34, 197, 94, 0.35); display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .success-read-btn:active { transform: scale(0.97); }
+
+    .audio-btn { background: #0284c7; color: white; border: none; padding: 14px 24px; border-radius: 30px; font-size: 1.15rem; font-weight: 800; cursor: pointer; margin-bottom: 8px; box-shadow: 0 6px 16px rgba(2, 132, 199, 0.35); display: inline-flex; align-items: center; gap: 6px; }
+    .audio-btn:active { transform: scale(0.96); }
+    
+    .feedback { font-size: 1.35rem; font-weight: 800; height: 30px; margin-top: 10px; }
+    .correct { color: #16a34a; }
+    .wrong { color: #dc2626; }
+  </style>
+</head>
+<body>
+  
+<div class="card">
+  <div class="portal-bar">
+    <a href="index.html" class="portal-btn">🏠 返回學習大門</a>
+    <button class="back-home" id="top-hub-btn" style="display: none;" onclick="showHub()">📋 返回挑戰首頁</button>
+  </div>
+
+  <!-- 大本營首頁 -->
+  <div id="hub-screen">
+    <div class="hub-title">😊 情緒與句子朗讀大本營</div>
+    <div class="hub-subtitle">Test 2: Making Faces Sentences & Read Aloud (10題)</div>
+    
+    <div class="hub-intro">
+      🌟 <b>本輪學習任務說明</b>：<br>
+      • <b>Part 1 (Q1-Q5)</b>：聽完整英文句子，選出正確的句型與表情配對！<br>
+      • <b>Part 2 (Q6-Q10)</b>：看圖聽音，由玲玲大聲朗讀給媽媽聽，點擊打卡！
+    </div>
+  
+    <button class="start-btn" onclick="openGame()">▶ 開始 Test 2 綜合挑戰 (10題)</button>
+  </div>
+  
+  <!-- 闖關頁面 -->
+  <div id="game-screen" style="display: none;">
+    <div class="top-bar">
+      <div class="progress-bar" id="progress-text">Level 1 / 10</div>
+    </div>
+  
+    <div class="nav-map" id="nav-map"></div>
+    
+    <div class="scene-container">
+      <div class="giant-emoji-display" id="scene-emoji">😭🍼</div>
+      <div class="speech-bubble" id="speech-bubble-text">Baby is hungry.</div>
+      <button class="audio-btn" onclick="speakCurrentSentence()">🔊 點擊聆聽完整句子</button>
+      <div class="instruction-zh" id="instruction-zh">請選出正確的句子！</div>
+    </div>
+  
+    <div id="question-content-container"></div>
+    <div class="feedback" id="feedback"></div>
+  </div>
+</div>
+  
+<script>
+const questions = [
+  // Part 1: 聽音辨義與句型搭配
+  { type: 'choice', word: 'hungry', sentence: "Baby is hungry.", emoji: '😭🍼', zh: "【Q1 聽力挑戰】聽到這句話，哪一個選項是正確的？", options: ["Baby is hungry.", "Mummy is happy.", "Daddy is sad.", "Mummy is angry."] },
+  { type: 'choice', word: 'happy', sentence: "Daddy is happy.", emoji: '😄⭐', zh: "【Q2 聽力挑戰】聽到這句話，哪一個選項是正確的？", options: ["Daddy is happy.", "Baby is hungry.", "Mummy is afraid.", "Daddy is sad."] },
+  { type: 'choice', word: 'sad', sentence: "Daddy is sad.", emoji: '😢💧', zh: "【Q3 聽力挑戰】聽到這句話，哪一個選項是正確的？", options: ["Daddy is sad.", "Mummy is angry.", "Baby is hungry.", "Daddy is happy."] },
+  { type: 'choice', word: 'afraid', sentence: "Mummy is afraid.", emoji: '😱⚡', zh: "【Q4 聽力挑戰】聽到這句話，哪一個選項是正確的？", options: ["Mummy is afraid.", "Mummy is angry.", "Daddy is happy.", "Baby is hungry."] },
+  { type: 'choice', word: 'angry', sentence: "Mummy is angry.", emoji: '😡💢', zh: "【Q5 聽力挑戰】聽到這句話，哪一個選項是正確的？", options: ["Mummy is angry.", "Mummy is afraid.", "Daddy is sad.", "Baby is hungry."] },
+  
+  // Part 2: 看圖朗讀與句子結構強化
+  { type: 'read', word: 'hungry', sentence: "Baby is hungry.", emoji: '😭🍼', zh: "【Q6 朗讀挑戰】請聽示範發音，並對著媽媽大聲唸出這句話！" },
+  { type: 'read', word: 'happy', sentence: "Daddy is happy.", emoji: '😄⭐', zh: "【Q7 朗讀挑戰】請聽示範發音，並對著媽媽大聲唸出這句話！" },
+  { type: 'read', word: 'sad', sentence: "Daddy is sad.", emoji: '😢💧', zh: "【Q8 朗讀挑戰】請聽示範發音，並對著媽媽大聲唸出這句話！" },
+  { type: 'read', word: 'afraid', sentence: "Mummy is afraid.", emoji: '😱⚡', zh: "【Q9 朗讀挑戰】請聽示範發音，並對著媽媽大聲唸出這句話！" },
+  { type: 'read', word: 'angry', sentence: "Mummy is angry.", emoji: '😡💢', zh: "【Q10 朗讀挑戰】請聽示範發音，並對著媽媽大聲唸出這句話！" }
+];
+
+let currentQ = 0;
+
+function speakCurrentSentence() {
+  const q = questions[currentQ];
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(q.sentence);
+    utterance.lang = 'en-GB';
+    utterance.rate = 0.8;
+    utterance.pitch = 1.2;
+    window.speechSynthesis.speak(utterance);
+  }
+}
+
+function openGame() {
+  document.getElementById('hub-screen').style.display = 'none';
+  document.getElementById('game-screen').style.display = 'block';
+  document.getElementById('top-hub-btn').style.display = 'inline-block';
+  buildNavMap();
+  currentQ = 0;
+  loadQuestion();
+}
+
+function showHub() {
+  document.getElementById('hub-screen').style.display = 'block';
+  document.getElementById('game-screen').style.display = 'none';
+  document.getElementById('top-hub-btn').style.display = 'none';
+}
+
+function buildNavMap() {
+  const mapDiv = document.getElementById('nav-map');
+  let html = '';
+  for (let i = 0; i < questions.length; i++) {
+    html += `<button class="map-btn ${i === currentQ ? 'active' : ''}" id="map-btn-${i}" onclick="jumpToQuestion(${i})">${i+1}</button>`;
+  }
+  mapDiv.innerHTML = html;
+}
+
+function updateNavMap() {
+  const buttons = document.querySelectorAll('.map-btn');
+  buttons.forEach((btn, idx) => {
+    if (idx === currentQ) {
+      btn.className = `map-btn active`;
+    } else if (!btn.classList.contains('correct-done')) {
+      btn.className = `map-btn`;
+    }
+  });
+}
+
+function jumpToQuestion(index) {
+  currentQ = index;
+  loadQuestion();
+}
+
+function loadQuestion() {
+  const fb = document.getElementById('feedback');
+  if (fb) fb.innerText = "";
+  
+  if (currentQ >= questions.length) {
+    showVictory();
+    return;
+  }
+  updateNavMap();
+  const q = questions[currentQ];
+  
+  document.getElementById('progress-text').innerText = `Level ${currentQ + 1} / ${questions.length}`;
+  document.getElementById('scene-emoji').innerText = q.emoji;
+  document.getElementById('speech-bubble-text').innerText = q.sentence;
+  document.getElementById('instruction-zh').innerText = q.zh;
+  
+  const contentContainer = document.getElementById('question-content-container');
+  
+  if (q.type === 'choice') {
+    let html = '<div class="options-grid-sentences">';
+    q.options.forEach((opt, idx) => {
+      html += `
+        <div class="sentence-card" id="opt-${idx}" onclick="checkSentenceChoice('${opt}', '${q.sentence}', ${idx})">
+          <span class="sentence-text">${opt}</span>
+          <span class="sentence-emoji">💬</span>
+        </div>
+      `;
+    });
+    html += '</div>';
+    contentContainer.innerHTML = html;
+    setTimeout(speakCurrentSentence, 300);
+  } else {
+    contentContainer.innerHTML = `
+      <div class="read-aloud-container">
+        <button class="success-read-btn" onclick="completeReadAloud()">
+          ⭐ 我已經大聲唸給媽媽聽了！
+        </button>
+      </div>
+    `;
+    setTimeout(speakCurrentSentence, 300);
+  }
+}
+
+function checkSentenceChoice(selected, correctSentence, idx) {
+  const fb = document.getElementById('feedback');
+  const selectedCard = document.getElementById(`opt-${idx}`);
+  
+  if (selected === correctSentence) {
+    selectedCard.style.borderColor = '#16a34a';
+    selectedCard.style.background = '#f0fdf4';
+    selectedCard.innerHTML += `<span class="mark-badge" style="color:#16a34a;">✔️</span>`;
+    
+    fb.className = "feedback correct";
+    fb.innerText = "Wonderful! ★";
+    
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance("Wonderful");
+      utterance.lang = 'en-GB';
+      window.speechSynthesis.speak(utterance);
+    }
+    
+    document.getElementById(`map-btn-${currentQ}`).classList.add('correct-done');
+    currentQ++;
+    setTimeout(loadQuestion, 1200);
+  } else {
+    selectedCard.style.borderColor = '#dc2626';
+    selectedCard.style.background = '#fef2f2';
+    if (!selectedCard.querySelector('.mark-badge')) {
+      selectedCard.innerHTML += `<span class="mark-badge" style="color:#dc2626;">❌</span>`;
+    }
+    fb.className = "feedback wrong";
+    fb.innerText = "Try again!";
+  }
+}
+
+function completeReadAloud() {
+  const fb = document.getElementById('feedback');
+  fb.className = "feedback correct";
+  fb.innerText = "Great Job, Super Star! ★★★";
+  
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance("Amazing job");
+    utterance.lang = 'en-GB';
+    window.speechSynthesis.speak(utterance);
+  }
+  
+  document.getElementById(`map-btn-${currentQ}`).classList.add('correct-done');
+  currentQ++;
+  setTimeout(loadQuestion, 1400);
+}
+
+function showVictory() {
+  document.getElementById('nav-map').innerHTML = '';
+  document.getElementById('progress-text').innerText = "Completed!";
+  document.getElementById('scene-emoji').innerText = "👑🌟🎉";
+  document.getElementById('speech-bubble-text').innerText = "You are a reading master!";
+  document.getElementById('instruction-zh').innerText = "太棒了！您和玲玲順利完成了 Test 2 全部 10 道句型與朗讀挑戰！";
+  document.getElementById('question-content-container').innerHTML = `
+    <button class="audio-btn" style="width: 100%; justify-content: center; margin-top: 10px;" onclick="showHub()">返回挑戰首頁 📋</button>
+  `;
+}
+</script>
+</body>
+</html>
