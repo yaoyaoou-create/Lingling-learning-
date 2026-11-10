@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Thomas Goes Fishing - 玲玲真人發音點讀書</title>
+  <style>
+    * { box-sizing: border-box; user-select: none; -webkit-user-select: none; font-family: 'Comic Sans MS', 'Chalkboard SE', "PingFang HK", sans-serif; }
+    body { margin: 0; padding: 12px; background: #e0f2fe; display: flex; flex-direction: column; align-items: center; min-height: 100vh; color: #1e293b; }
+    .app-card { background: #ffffff; border-radius: 24px; box-shadow: 0 12px 30px rgba(2, 132, 199, 0.18); padding: 16px; width: 100%; max-width: 760px; border: 4px solid #0284c7; }
+    
+    .top-nav { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; border-bottom: 3px dashed #bae6fd; padding-bottom: 10px; margin-bottom: 12px; }
+    .home-link { text-decoration: none; background: #f1f5f9; border: 2px solid #cbd5e1; color: #475569; padding: 6px 12px; border-radius: 14px; font-weight: 800; font-size: 0.9rem; }
+    .app-title { font-size: 1.3rem; font-weight: 900; color: #0369a1; margin: 0; }
+    .mode-tabs { display: flex; gap: 6px; }
+    .tab-btn { border: 2px solid #0284c7; background: #f0f9ff; color: #0369a1; padding: 6px 12px; border-radius: 16px; font-weight: 800; font-size: 0.9rem; cursor: pointer; }
+    .tab-btn.active { background: #0284c7; color: #ffffff; }
+
+    /* 語速與火車音效列 */
+    .control-bar { background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 14px; padding: 8px 12px; margin-bottom: 12px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+    .speed-group { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; font-weight: 800; color: #475569; }
+    .spd-btn { border: 2px solid #94a3b8; background: #fff; padding: 4px 10px; border-radius: 12px; font-weight: 800; font-size: 0.82rem; cursor: pointer; color: #334155; }
+    .spd-btn.active { background: #0ea5e9; color: #fff; border-color: #0284c7; }
+    .sfx-group { display: flex; gap: 6px; }
+    .sfx-btn { background: #f59e0b; color: #fff; border: none; padding: 5px 10px; border-radius: 12px; font-weight: 800; font-size: 0.82rem; cursor: pointer; }
+
+    /* 頁碼快速跳轉 */
+    .page-map { display: flex; gap: 5px; overflow-x: auto; padding: 6px; background: #f0f9ff; border-radius: 14px; border: 2px solid #bae6fd; margin-bottom: 12px; }
+    .page-chip { flex: 0 0 auto; padding: 5px 11px; border-radius: 12px; border: 2px solid #38bdf8; background: #fff; color: #0284c7; font-weight: 800; font-size: 0.85rem; cursor: pointer; }
+    .page-chip.active { background: #ef4444; border-color: #dc2626; color: #fff; transform: scale(1.06); }
+
+    /* 書本圖片舞台與懸浮喇叭 (方法 A) */
+    .book-stage { position: relative; width: 100%; background: #f1f5f9; border-radius: 18px; border: 3px solid #7dd3fc; overflow: hidden; margin-bottom: 12px; min-height: 240px; display: flex; align-items: center; justify-content: center; }
+    .book-stage img { width: 100%; height: auto; display: block; pointer-events: none; }
+    
+    .speaker-float {
+      position: absolute;
+      min-width: 56px;
+      height: 56px;
+      padding: 0 12px;
+      background: #ffffff;
+      border: 4px solid #ef4444;
+      border-radius: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 4px;
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: #dc2626;
+      cursor: pointer;
+      box-shadow: 0 6px 16px rgba(239, 68, 68, 0.45);
+      z-index: 10;
+      animation: pulse 1.8s infinite;
+      transition: transform 0.1s;
+    }
+    .speaker-float:active { transform: scale(0.88); background: #fef2f2; }
+    .speaker-label { font-size: 0.9rem; font-weight: 900; color: #b91c1c; }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.65); }
+      70% { box-shadow: 0 0 0 14px rgba(239, 68, 68, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    }
+
+    /* 上下頁導航 */
+    .nav-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; gap: 10px; }
+    .nav-btn { background: #0284c7; color: white; border: none; padding: 12px 20px; border-radius: 16px; font-size: 1.05rem; font-weight: 900; cursor: pointer; box-shadow: 0 4px 0 #0369a1; }
+    .nav-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #0369a1; }
+    .nav-btn:disabled { background: #cbd5e1; box-shadow: 0 4px 0 #94a3b8; cursor: not-allowed; }
+    .page-num { font-size: 1.15rem; font-weight: 900; color: #dc2626; background: #fef2f2; padding: 6px 16px; border-radius: 16px; border: 2px solid #fecaca; }
+
+    /* 句子與單字輔助點讀區 */
+    .sent-box { background: #eff6ff; border: 2.5px solid #93c5fd; border-radius: 16px; padding: 12px 14px; margin-bottom: 12px; cursor: pointer; }
+    .sent-en { font-size: 1.25rem; font-weight: 900; color: #1e3a8a; margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center; }
+    .sent-zh { font-size: 0.95rem; font-weight: 700; color: #0369a1; }
+    
+    .words-box { background: #f8fafc; border: 2px dashed #94a3b8; border-radius: 16px; padding: 10px 12px; margin-bottom: 12px; }
+    .words-title { font-size: 0.85rem; font-weight: 800; color: #475569; margin-bottom: 8px; }
+    .words-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+    .word-chip { background: #fff; border: 2px solid #0284c7; border-radius: 12px; padding: 6px 12px; cursor: pointer; font-weight: 800; color: #0369a1; font-size: 0.95rem; }
+    .word-chip:active { background: #e0f2fe; transform: scale(0.95); }
+
+    .mom-tip { background: #fdf2f8; border: 2px solid #f472b6; border-radius: 16px; padding: 10px 14px; font-size: 0.9rem; color: #831843; font-weight: 700; line-height: 1.45; }
+
+    /* 釣魚遊戲區 */
+    .quiz-box { text-align: center; padding: 14px 0; }
+    .quiz-btn { width: 96px; height: 96px; border-radius: 50%; background: #0284c7; color: #fff; font-size: 2.6rem; border: 4px solid #bae6fd; cursor: pointer; margin: 10px auto; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 18px rgba(2,132,199,0.3); }
+    .quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+    .quiz-card { background: #fff; border: 3px solid #0284c7; border-radius: 16px; padding: 14px; font-size: 1.25rem; font-weight: 900; color: #0369a1; cursor: pointer; }
+    .quiz-feedback { font-size: 1.2rem; font-weight: 900; min-height: 30px; margin-top: 12px; }
+  </style>
+</head>
+<body>
+
+<div class="app-card">
+  <div class="top-nav">
+    <a href="index.html" class="home-link">🏠 返回學習大門</a>
+    <h1 class="app-title">🚂 Thomas Goes Fishing</h1>
+    <div class="mode-tabs">
+      <button class="tab-btn active" id="tab-book" onclick="switchMode('book')">📖 繪本點讀</button>
+      <button class="tab-btn" id="tab-game" onclick="switchMode('game')">🎣 釣魚認字</button>
+    </div>
+  </div>
+
+  <!-- 繪本點讀模式 -->
+  <div id="book-screen">
+    <div class="control-bar">
+      <div class="speed-group">
+        <span>真人語速：</span>
+        <button class="spd-btn" id="spd-65" onclick="setSpeed(0.65)">🐢 超慢 0.65x</button>
+        <button class="spd-btn" id="spd-80" onclick="setSpeed(0.8)">🚶 慢速 0.8x</button>
+        <button class="spd-btn active" id="spd-100" onclick="setSpeed(1.0)">🐇 正常 1.0x</button>
+      </div>
+      <div class="sfx-group">
+        <button class="sfx-btn" onclick="playWhistle()">🚂 汽笛 Peep!</button>
+        <button class="sfx-btn" style="background:#0ea5e9;" onclick="playWaterSound()">🌊 裝水聲</button>
+      </div>
+    </div>
+
+    <div class="page-map" id="page-map"></div>
+
+    <!-- 圖片與懸浮喇叭舞台 -->
+    <div class="book-stage" id="book-stage">
+      <img id="page-img" src="1.jpeg" alt="Story Page">
+      <!-- 懸浮喇叭由 JS 動態放入 -->
+    </div>
+
+    <div class="nav-bar">
+      <button class="nav-btn" id="prev-btn" onclick="changePage(-1)">⬅️ 上一頁</button>
+      <div class="page-num" id="page-indicator">第 1 / 14 頁</div>
+      <button class="nav-btn" id="next-btn" onclick="changePage(1)">下一頁 ➡️</button>
+    </div>
+
+    <!-- 字幕卡與單字卡 -->
+    <div id="sent-container"></div>
+
+    <div class="words-box">
+      <div class="words-title">👆 重點單字卡（點擊單獨聽慢速發音）：</div>
+      <div class="words-grid" id="words-grid"></div>
+    </div>
+
+    <div class="mom-tip" id="mom-tip"></div>
+  </div>
+
+  <!-- 課後釣魚認字遊戲模式 -->
+  <div id="game-screen" style="display: none;">
+    <div class="quiz-box">
+      <div style="font-size: 1.15rem; font-weight: 900; color: #0369a1;" id="quiz-progress">🎣 幫 Thomas 釣魚：第 1 / 10 題</div>
+      <button class="quiz-btn" onclick="playQuizAudio()">🔊</button>
+      <div style="font-size: 0.95rem; color: #475569; font-weight: bold;" id="quiz-hint">請點擊上方大喇叭聽讀音，釣出正確嘅生字！</div>
+      <div class="quiz-options" id="quiz-options"></div>
+      <div class="quiz-feedback" id="quiz-feedback"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // 📚 14 頁完整設定：1.jpeg ~ 14.jpeg 與 Page1.mp3 ~ Page14.mp3 (含第3頁左右雙喇叭)
+  const pagesData = [
+    {
+      page: 1, img: "1.jpeg",
+      buttons: [{ left: 10, top: 14, audio: "Page1.mp3", label: "" }],
+      en: "Thomas chugged by the river. He saw children fishing.",
+      zh: "Thomas 噗哧噗哧咁行過河邊。佢見到小朋友喺度釣魚。",
+      words: [{en:"chugged",zh:"噗哧行"}, {en:"river",zh:"河"}, {en:"saw",zh:"見到"}, {en:"children",zh:"小朋友"}, {en:"fishing",zh:"釣魚"}],
+      tip: "👩‍👧 媽媽伴讀：同玲玲一齊雙手握拳前後搖扮火車：「Chug, chug!」再指住橋下面問：「小朋友喺河邊做緊咩呀？」"
+    },
+    {
+      page: 2, img: "2.jpeg",
+      buttons: [{ left: 10, top: 14, audio: "Page2.mp3", label: "" }],
+      en: "The children waved. \"Peep, peep,\" Thomas said.",
+      zh: "小朋友向佢揮手。「唓！唓！」Thomas 叫咗兩聲。",
+      words: [{en:"children",zh:"小朋友"}, {en:"waved",zh:"揮手"}, {en:"peep",zh:"汽笛聲"}, {en:"said",zh:"講"}],
+      tip: "👩‍👧 媽媽伴讀：叫玲玲撳下圖片上面個紅色喇叭，再一齊向書入面嘅小朋友揮手 (Wave) Say Hello！"
+    },
+    {
+      page: 3, img: "3.jpeg",
+      // 第 3 頁專屬：左邊 Thomas (Page3(1).mp3)，右邊 Driver (Page3(2).mp3)
+      buttons: [
+        { left: 8, top: 18, audio: "Page3(1).mp3", label: "Thomas" },
+        { left: 58, top: 18, audio: "Page3(2).mp3", label: "Driver" }
+      ],
+      en: "Thomas: \"I wish to fish,\" said Thomas. | Driver: \"An engine fishing,\" the Driver said. \"That is funny!\"",
+      zh: "左邊 Thomas：「我好想釣魚呀。」｜右邊司機叔叔：「火車頭去釣魚？真係太搞笑啦！」",
+      words: [{en:"wish",zh:"希望/想"}, {en:"fish",zh:"釣魚"}, {en:"engine",zh:"火車頭"}, {en:"Driver",zh:"司機叔叔"}, {en:"funny",zh:"搞笑"}],
+      tip: "👩‍👧 媽媽伴讀：呢一頁有兩個喇叭！叫玲玲先撳左邊聽 Thomas 講嘢，再撳右邊聽司機叔叔笑佢！"
+    },
+    {
+      page: 4, img: "4.jpeg",
+      buttons: [{ left: 10, top: 14, audio: "Page4.mp3", label: "" }],
+      en: "Each day Thomas saw the children. Each day Thomas wished to fish.",
+      zh: "每一日 Thomas 都見到班小朋友。每一日 Thomas 都好想釣魚。",
+      words: [{en:"each",zh:"每一個"}, {en:"day",zh:"日"}, {en:"saw",zh:"見到"}, {en:"wished",zh:"好想"}],
+      tip: "👩‍👧 媽媽伴讀：指住 Thomas 個樣同玲玲講：「你睇 Thomas 日日行過條橋都望住下面，真係好想釣魚喎！」"
+    },
+    {
+      page: 5, img: "5.jpeg",
+      buttons: [{ left: 10, top: 14, audio: "Page5.mp3", label: "" }],
+      en: "One day Thomas stopped. \"Oh, dear!\" he said. \"My boiler hurts!\"",
+      zh: "有一日 Thomas 停咗低。「哎呀！」佢話，「我個鍋爐（肚仔）好痛呀！」",
+      words: [{en:"stopped",zh:"停低"}, {en:"dear",zh:"哎呀"}, {en:"boiler",zh:"鍋爐(肚仔)"}, {en:"hurts",zh:"好痛"}],
+      tip: "👩‍👧 媽媽伴讀：同玲玲一齊雙手捧住個肚仔扮肚痛：「哎呀！Boiler 即係 Thomas 個肚仔呀，佢個肚仔好痛呀！」"
+    },
+    {
+      page: 6, img: "6.jpeg",
+      buttons: [{ left: 10, top: 14, audio: "Page6.mp3", label: "" }],
+      en: "The Driver looked in the boiler. It was empty.",
+      zh: "司機叔叔望入個鍋爐度。入面空晒（無晒水）。",
+      words: [{en:"looked",zh:"望"}, {en:"boiler",zh:"鍋爐"}, {en:"empty",zh:"空嘅"}],
+      tip: "👩‍👧 媽媽伴讀：扮司機叔叔裝入個窿度睇，再攤開雙手搖頭：「It was empty! 原來無晒水空晒呀！」"
+    },
+    {
+      page: 7, img: "7.jpeg",
+      buttons: [{ left: 10, top: 14, audio: "Page7.mp3", label: "" }],
+      en: "The Driver filled Thomas' boiler with water from the river.",
+      zh: "司機叔叔喺河度打水，裝滿 Thomas 個鍋爐。",
+      words: [{en:"filled",zh:"裝滿"}, {en:"water",zh:"水"}, {en:"from",zh:"由"}, {en:"river",zh:"河"}],
+      tip: "👩‍👧 媽媽伴讀：叫玲玲撳一下上面藍色嘅「🌊 裝水聲」掣，一齊扮拎住水桶倒水入 Thomas 個肚度！"
+    },
+    {
+      page: 8, img: "8.jpeg",
+      buttons: [{ left: 10, top: 14, audio: "Page8.mp3", label: "" }],
+      en: "Soon they were chugging along.",
+      zh: "好快，佢哋又噗哧噗哧咁繼續向前行喇。",
+      words: [{en:"soon",zh:"好快"}, {en:"chugging",zh:"噗哧行"}, {en:"along",zh:"向前"}],
+      tip: "👩‍👧 媽媽伴讀：Thomas 飲飽水又有力行啦！同玲玲一齊搖手扮火車開動！"
+    },
+    {
+      page: 9, img: "9.jpeg",
+      buttons: [{ left: 10, top: 14, audio: "Page9.mp3", label: "" }],
+      en: "Thomas stopped again. \"Hee hee!\" said Thomas. \"My boiler feels funny.\"",
+      zh: "Thomas 又停低咗。「嘻嘻！」Thomas 話，「我個肚仔覺得好痕、好奇怪呀。」",
+      words: [{en:"again",zh:"又一次"}, {en:"feels",zh:"覺得"}, {en:"funny",zh:"奇怪/好痕"}],
+      tip: "👩‍👧 媽媽伴讀：撳完喇叭聽完 Hee hee 之後，即刻伸手吱玲玲個肚仔：「點解 Thomas 個肚仔咁痕嘅？」"
+    },
+    {
+      page: 10, img: "10.jpeg",
+      buttons: [{ left: 10, top: 14, audio: "Page10.mp3", label: "" }],
+      en: "The Driver looked in the boiler. It was not empty.",
+      zh: "司機叔叔望入個鍋爐度。今次唔係空嘅喎！",
+      words: [{en:"looked",zh:"望"}, {en:"not",zh:"唔係"}, {en:"empty",zh:"空嘅"}],
+      tip: "👩‍👧 媽媽伴讀：指住圖入面游緊水嘅魚，同玲玲一齊大叫：「哇！你睇下 Thomas 個肚入面有咩？！」"
+    },
+    {
+      page: 11, img: "11.jpeg",
+      buttons: [{ left: 10, top: 14, audio: "Page11.mp3", label: "" }],
+      en: "There was water in the boiler. That was not all! There were fish, too!",
+      zh: "鍋爐入面有水。仲唔止咁少！入面仲有魚仔添呀！",
+      words: [{en:"water",zh:"水"}, {en:"all",zh:"全部"}, {en:"fish",zh:"魚"}, {en:"too",zh:"仲有"}],
+      tip: "👩‍👧 媽媽伴讀：原來頭先司機叔叔喺河度裝水嗰陣，唔小心連魚仔都裝埋入 Thomas 個肚度呀！"
+    },
+    {
+      page: 12, img: "12.jpeg",
+      buttons: [{ left: 10, top: 14, audio: "Page12.mp3", label: "" }],
+      en: "Thomas had an idea. He peeped loudly. The children came to see Thomas.",
+      zh: "Thomas 諗到條好橋。佢大聲響起汽笛。小朋友即刻跑過嚟睇 Thomas。",
+      words: [{en:"idea",zh:"好主意"}, {en:"loudly",zh:"大聲地"}, {en:"came",zh:"過嚟"}, {en:"see",zh:"睇"}],
+      tip: "👩‍👧 媽媽伴讀：叫玲玲撳下「🚂 汽笛 Peep!」掣，因為 Thomas 大聲叫小朋友過嚟幫手啦！"
+    },
+    {
+      page: 13, img: "13.jpeg",
+      buttons: [{ left: 10, top: 14, audio: "Page13.mp3", label: "" }],
+      en: "The Driver could fish in Thomas! The children could fish in the river!",
+      zh: "司機叔叔可以喺 Thomas 個肚釣魚！小朋友可以喺河入面釣魚！",
+      words: [{en:"could",zh:"可以"}, {en:"fish",zh:"釣魚"}, {en:"Driver",zh:"司機叔叔"}, {en:"river",zh:"河"}],
+      tip: "👩‍👧 媽媽伴讀：指住司機叔叔攞住魚竿個樣：「司機叔叔爬上 Thomas 頭頂，喺佢個肚入面釣魚出嚟救佢喇！」"
+    },
+    {
+      page: 14, img: "14.jpeg",
+      buttons: [{ left: 10, top: 14, audio: "Page14.mp3", label: "" }],
+      en: "And that is what they did. \"Peep! Peep!\"",
+      zh: "於是佢哋就真係咁樣一齊釣魚喇。「唓！唓！」",
+      words: [{en:"that",zh:"嗰個"}, {en:"what",zh:"咩嘢"}, {en:"they",zh:"佢哋"}, {en:"did",zh:"做咗"}],
+      tip: "👩‍👧 媽媽伴讀：讀完啦！同玲玲 High Five 擊掌，再撳右上角「🎣 釣魚認字」玩小遊戲！"
+    }
+  ];
+
+  const quizPool = [
+    { word: "fish", zh: "魚 / 釣魚" },
+    { word: "river", zh: "河" },
+    { word: "water", zh: "水" },
+    { word: "children", zh: "小朋友們" },
+    { word: "boiler", zh: "鍋爐 (火車肚仔)" },
+    { word: "empty", zh: "空嘅" },
+    { word: "funny", zh: "搞笑 / 好奇怪" },
+    { word: "stopped", zh: "停低" },
+    { word: "waved", zh: "揮手" },
+    { word: "Driver", zh: "司機叔叔" }
+  ];
+
+  let currentIndex = 0;
+  let currentAudio = null;
+  let playbackSpeed = 1.0;
+
+  function setSpeed(spd) {
+    playbackSpeed = spd;
+    document.querySelectorAll('.spd-btn').forEach(b => b.classList.remove('active'));
+    if (spd === 0.65) document.getElementById('spd-65').classList.add('active');
+    else if (spd === 0.8) document.getElementById('spd-80').classList.add('active');
+    else document.getElementById('spd-100').classList.add('active');
+    if (currentAudio) currentAudio.playbackRate = playbackSpeed;
+  }
+
+  // 播放 ElevenLabs MP3 音檔
+  function playMp3(fileName) {
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    if (currentAudio) {
+      currentAudio.pause();
+      currentAudio.currentTime = 0;
+    }
+    currentAudio = new Audio(fileName);
+    currentAudio.playbackRate = playbackSpeed;
+    currentAudio.play().catch(err => {
+      console.log("MP3 讀取提示：", err);
+    });
+  }
+
+  // 單字卡慢速英式發音
+  function speakWord(text) {
+    if (currentAudio) currentAudio.pause();
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'en-GB';
+      u.rate = 0.65;
+      window.speechSynthesis.speak(u);
+    }
+  }
+
+  function buildPageMap() {
+    const mapDiv = document.getElementById('page-map');
+    mapDiv.innerHTML = pagesData.map((p, idx) => `
+      <button class="page-chip ${idx === currentIndex ? 'active' : ''}" onclick="goToPage(${idx})">
+        P.${p.page}
+      </button>
+    `).join('');
+  }
+
+  function renderPage() {
+    if (currentAudio) currentAudio.pause();
+    buildPageMap();
+
+    const pageData = pagesData[currentIndex];
+    const imgEl = document.getElementById('page-img');
+    const stageEl = document.getElementById('book-stage');
+
+    imgEl.src = pageData.img;
+
+    // 清除舊喇叭，建立新懸浮喇叭
+    document.querySelectorAll('.speaker-float').forEach(el => el.remove());
+    pageData.buttons.forEach(btnCfg => {
+      const btn = document.createElement('div');
+      btn.className = 'speaker-float';
+      btn.innerHTML = btnCfg.label ? `🔊 <span class="speaker-label">${btnCfg.label}</span>` : '🔊';
+      btn.style.left = btnCfg.left + '%';
+      btn.style.top = btnCfg.top + '%';
+      btn.onclick = () => playMp3(btnCfg.audio);
+      stageEl.appendChild(btn);
+    });
+
+    document.getElementById('page-indicator').innerText = `第 ${currentIndex + 1} / 14 頁`;
+    document.getElementById('prev-btn').disabled = (currentIndex === 0);
+    document.getElementById('next-btn').disabled = (currentIndex === pagesData.length - 1);
+
+    // 句子區（點擊亦可播放該頁第一段 MP3）
+    const defaultMp3 = pageData.buttons[0].audio;
+    document.getElementById('sent-container').innerHTML = `
+      <div class="sent-box" onclick="playMp3('${defaultMp3}')">
+        <div class="sent-en"><span>${pageData.en}</span> <span>🔊</span></div>
+        <div class="sent-zh">${pageData.zh}</div>
+      </div>
+    `;
+
+    // 重點單字卡
+    document.getElementById('words-grid').innerHTML = pageData.words.map(w => `
+      <div class="word-chip" onclick="speakWord('${w.en}')">🔊 ${w.en} (${w.zh})</div>
+    `).join('');
+
+    // 媽媽貼士
+    document.getElementById('mom-tip').innerText = pageData.tip;
+  }
+
+  function changePage(dir) {
+    const next = currentIndex + dir;
+    if (next >= 0 && next < pagesData.length) {
+      currentIndex = next;
+      renderPage();
+    }
+  }
+
+  function goToPage(idx) {
+    currentIndex = idx;
+    renderPage();
+  }
+
+  // 火車汽笛與裝水音效
+  function playWhistle() {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const beep = (t, d) => {
+        const o1 = ctx.createOscillator(), o2 = ctx.createOscillator(), g = ctx.createGain();
+        o1.type = 'triangle'; o2.type = 'sine';
+        o1.frequency.setValueAtTime(587.33, t); o2.frequency.setValueAtTime(880, t);
+        g.gain.setValueAtTime(0.25, t); g.gain.exponentialRampToValueAtTime(0.01, t + d);
+        o1.connect(g); o2.connect(g); g.connect(ctx.destination);
+        o1.start(t); o2.start(t); o1.stop(t + d); o2.stop(t + d);
+      };
+      beep(ctx.currentTime, 0.28); beep(ctx.currentTime + 0.35, 0.45);
+    } catch (e) {}
+  }
+
+  function playWaterSound() {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      [0, 0.14, 0.28, 0.42].forEach((offset, i) => {
+        const osc = ctx.createOscillator(), gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(300 + i * 90, ctx.currentTime + offset);
+        osc.frequency.exponentialRampToValueAtTime(650 + i * 110, ctx.currentTime + offset + 0.11);
+        gain.gain.setValueAtTime(0.2, ctx.currentTime + offset);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + offset + 0.12);
+        osc.connect(gain); gain.connect(ctx.destination);
+        osc.start(ctx.currentTime + offset); osc.stop(ctx.currentTime + offset + 0.12);
+      });
+    } catch (e) {}
+  }
+
+  // 釣魚認字小遊戲
+  let quizIdx = 0;
+  function switchMode(mode) {
+    if (currentAudio) currentAudio.pause();
+    document.getElementById('tab-book').classList.toggle('active', mode === 'book');
+    document.getElementById('tab-game').classList.toggle('active', mode === 'game');
+    document.getElementById('book-screen').style.display = (mode === 'book') ? 'block' : 'none';
+    document.getElementById('game-screen').style.display = (mode === 'game') ? 'block' : 'none';
+    if (mode === 'game') { quizIdx = 0; loadQuiz(); }
+  }
+
+  function loadQuiz() {
+    const fb = document.getElementById('quiz-feedback');
+    fb.innerText = '';
+    if (quizIdx >= quizPool.length) {
+      document.getElementById('quiz-progress').innerText = "🎉 恭喜玲玲！10 條魚全部釣晒出嚟啦！";
+      document.getElementById('quiz-options').innerHTML = `<button class="nav-btn" style="grid-column: span 2;" onclick="switchMode('game')">🔄 再玩一次釣魚</button>`;
+      playWhistle();
+      return;
+    }
+    const target = quizPool[quizIdx];
+    document.getElementById('quiz-progress').innerText = `🎣 幫 Thomas 釣魚：第 ${quizIdx + 1} / ${quizPool.length} 題`;
+    document.getElementById('quiz-hint').innerText = `請聽讀音，搵出「${target.zh}」嘅英文單字！`;
+    const others = quizPool.filter(x => x.word !== target.word).sort(() => 0.5 - Math.random()).slice(0, 3);
+    const opts = [...others, target].sort(() => 0.5 - Math.random());
+    document.getElementById('quiz-options').innerHTML = opts.map(o => `
+      <div class="quiz-card" onclick="checkQuiz('${o.word}', '${target.word}', this)">🐟 ${o.word}</div>
+    `).join('');
+    speakWord(target.word);
+  }
+
+  function playQuizAudio() {
+    if (quizIdx < quizPool.length) speakWord(quizPool[quizIdx].word);
+  }
+
+  function checkQuiz(picked, correct, el) {
+    const fb = document.getElementById('quiz-feedback');
+    if (picked === correct) {
+      el.style.background = '#dcfce7'; el.style.borderColor = '#16a34a';
+      fb.style.color = '#16a34a'; fb.innerText = '🌟 釣到啦！玲玲好叻女呀！';
+      playWaterSound();
+      setTimeout(() => { quizIdx++; loadQuiz(); }, 1100);
+    } else {
+      el.style.background = '#fee2e2'; el.style.borderColor = '#dc2626';
+      fb.style.color = '#dc2626'; fb.innerText = '再聽一次試下啦！';
+      speakWord(correct);
+    }
+  }
+
+  renderPage();
+</script>
+
+</body>
+</html>
