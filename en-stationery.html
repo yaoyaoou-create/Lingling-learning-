@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>K2 English - School Stationery Learning Hub</title>
+  <style>
+    * { box-sizing: border-box; user-select: none; -webkit-user-select: none; font-family: 'Comic Sans MS', 'Chalkboard SE', 'PingFang TC', 'Microsoft JhengHei', sans-serif; }
+    body { margin: 0; padding: 10px; background: #fef3c7; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; }
+    .card { background: #ffffff; border-radius: 24px; box-shadow: 0 12px 30px rgba(217, 119, 6, 0.15); padding: 16px; width: 100%; max-width: 600px; text-align: center; border: 4px solid #f59e0b; position: relative; }
+    
+    .portal-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 2px dashed #fde68a; padding-bottom: 8px; }
+    .portal-btn { text-decoration: none; background: #fffbeb; border: 2px solid #f59e0b; color: #b45309; padding: 5px 12px; border-radius: 14px; font-weight: 800; font-size: 0.85rem; }
+    .back-home { background: #f1f5f9; border: 2px solid #cbd5e1; border-radius: 12px; padding: 4px 10px; font-weight: bold; color: #475569; font-size: 0.85rem; cursor: pointer; }
+
+    .hub-title { color: #d97706; font-size: 1.6rem; margin-bottom: 2px; font-weight: 800; }
+    .hub-subtitle { color: #78350f; font-size: 0.95rem; margin-bottom: 12px; font-weight: 600; }
+    .preview-section-title { font-size: 0.85rem; font-weight: bold; color: #b45309; margin-bottom: 8px; background: #fef3c7; padding: 4px 12px; border-radius: 16px; border: 2px dashed #fcd34d; display: inline-block; }
+    
+    .preview-grid { display: flex; justify-content: center; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
+    .preview-card { background: #fffbeb; border: 2px solid #fde68a; border-radius: 14px; padding: 6px 2px; cursor: pointer; display: flex; flex-direction: column; align-items: center; width: 30%; min-width: 85px; transition: all 0.2s ease; }
+    .preview-card:active { transform: scale(0.92); background: #fef3c7; border-color: #d97706; }
+    .preview-img { width: 55px; height: 55px; object-fit: contain; border: none; }
+    .preview-label { font-weight: 800; color: #92400e; font-size: 0.75rem; text-transform: uppercase; margin-top: 4px; }
+
+    .test-entry-container { display: flex; flex-direction: column; gap: 10px; margin-top: 6px; align-items: center; }
+    .start-btn-1 { color: white; border: none; padding: 12px 20px; border-radius: 24px; font-weight: 800; font-size: 1.05rem; cursor: pointer; width: 90%; background: #22c55e; box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3); }
+    .start-btn-2 { color: white; border: none; padding: 12px 20px; border-radius: 24px; font-weight: 800; font-size: 1.05rem; cursor: pointer; width: 90%; background: #d97706; box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3); }
+
+    .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .progress-bar { font-size: 1rem; font-weight: 800; color: #d97706; }
+    .nav-map { display: flex; justify-content: center; gap: 4px; margin-bottom: 10px; flex-wrap: wrap; background: #fffbeb; padding: 6px; border-radius: 14px; border: 2px solid #fde68a; }
+    .map-btn { width: 24px; height: 24px; border-radius: 50%; border: 2px solid #f59e0b; background: #fff; color: #d97706; font-weight: 800; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .map-btn.active { background: #d97706; color: #fff; transform: scale(1.15); }
+    .map-btn.correct-done { background: #bbf7d0; border-color: #22c55e; color: #15803d; }
+
+    .scene-container { display: flex; flex-direction: column; align-items: center; background: #fffbeb; border: 2px dashed #fcd34d; border-radius: 18px; padding: 10px; margin-bottom: 10px; }
+    .hero-img { width: 150px; height: 150px; object-fit: contain; border: none; filter: drop-shadow(0 6px 10px rgba(0,0,0,0.1)); }
+    .speech-bubble { background: #fef3c7; border: 2px solid #f59e0b; border-radius: 14px; padding: 6px 12px; font-size: 1.1rem; color: #78350f; font-weight: 800; margin-top: 6px; margin-bottom: 6px; }
+    .instruction-zh { font-size: 0.95rem; color: #b45309; font-weight: 700; }
+
+    .options-grid-4 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 6px; }
+    .pure-word-card { background: #fff; border: 3px solid #d97706; border-radius: 16px; padding: 12px; cursor: pointer; font-size: 1.3rem; font-weight: 800; color: #92400e; position: relative; }
+    .pure-word-card:active { background: #fef3c7; transform: scale(0.97); }
+    
+    .read-aloud-container { display: flex; flex-direction: column; gap: 10px; width: 100%; margin-top: 6px; }
+    .success-read-btn { background: #22c55e; color: white; border: none; padding: 14px; border-radius: 18px; font-size: 1.1rem; font-weight: 800; cursor: pointer; box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3); }
+
+    .match-header-box { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 10px; background: #fffbeb; padding: 6px 12px; border-radius: 16px; border: 2px solid #fde68a; }
+    .match-title { font-size: 1rem; font-weight: 800; color: #d97706; margin: 0; }
+    .instr-audio-btn { background: #d97706; color: white; border: none; width: 30px; height: 30px; border-radius: 50%; font-size: 0.95rem; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(217,119,6,0.3); }
+    
+    .match-board { position: relative; display: flex; flex-direction: column; gap: 8px; width: 100%; margin-top: 4px; }
+    .match-row { display: flex; justify-content: space-between; align-items: center; background: transparent; border: none; padding: 2px 6px; position: relative; height: 50px; }
+    .match-item-left { display: flex; align-items: center; gap: 10px; width: 42%; }
+    .match-img { width: 42px; height: 42px; object-fit: contain; }
+    .match-item-right { display: flex; align-items: center; width: 42%; justify-content: flex-start; }
+    .right-dot-col { width: 36px; display: flex; justify-content: center; }
+    .right-text-col { flex: 1; text-align: left; }
+    .match-word-text { font-size: 1.05rem; font-weight: 800; color: #d97706; text-transform: uppercase; }
+    
+    .connect-dot { width: 22px; height: 22px; border-radius: 50%; background: #fde047; border: 2.5px solid #fff; box-shadow: 0 0 0 2.5px #d97706; cursor: pointer; position: relative; z-index: 10; flex-shrink: 0; transition: all 0.15s ease; }
+    .connect-dot.selected { background: #38bdf8; box-shadow: 0 0 0 3px #0284c7; transform: scale(1.2); }
+    .connect-dot.connected { background: #22c55e; box-shadow: 0 0 0 2.5px #15803d; }
+    #svg-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; }
+
+    .mark-badge { position: absolute; top: 4px; right: 10px; font-size: 1.1rem; font-weight: bold; }
+    .audio-btn { background: #d97706; color: white; border: none; padding: 8px 16px; border-radius: 24px; font-size: 0.95rem; font-weight: 800; cursor: pointer; margin-top: 4px; display: inline-flex; align-items: center; gap: 6px; }
+    .feedback { font-size: 1.15rem; font-weight: 800; height: 24px; margin-top: 6px; }
+    .correct { color: #16a34a; }
+    .wrong { color: #dc2626; }
+  </style>
+</head>
+<body>
+  
+<div class="card">
+  <div class="portal-bar">
+    <a href="index.html" class="portal-btn">🏠 返回學習大門</a>
+    <button class="back-home" id="top-hub-btn" style="display: none;" onclick="showHub()">📋 返回大本營</button>
+  </div>
+
+  <div id="hub-screen">
+    <div class="hub-title">✏️ 校園文具學習大本營</div>
+    <div class="hub-subtitle">School Stationery & Supplies Hub</div>
+    
+    <div class="preview-section-title">💡 點擊文具圖案聽發音 (Preview)</div>
+    <div class="preview-grid" id="preview-grid"></div>
+  
+    <div class="test-entry-container">
+      <button class="start-btn-1" onclick="openGame('test1')">▶ Test 1: 文具看圖口語朗讀特訓 (6題)</button>
+      <button class="start-btn-2" onclick="openGame('test2')">▶ Test 2: 點擊配對與句型闖關 (13題)</button>
+    </div>
+  </div>
+  
+  <div id="game-screen" style="display: none;">
+    <div class="top-bar">
+      <div class="progress-bar" id="progress-text">Level 1 / 6</div>
+    </div>
+  
+    <div class="nav-map" id="nav-map"></div>
+    
+    <div class="scene-container" id="main-scene-container">
+      <div id="hero-media-container"></div>
+      <div class="speech-bubble" id="speech-bubble-text">Look at the picture, please speak it aloud.</div>
+      <button class="audio-btn" id="main-audio-btn" onclick="playCurrentAudio()">🔊 點擊聆聽發音</button>
+      <div class="instruction-zh" id="instruction-zh">請看圖片，對著媽媽大聲講出這個文具的英文！</div>
+    </div>
+  
+    <div id="question-content-container"></div>
+    <div class="feedback" id="feedback"></div>
+  </div>
+</div>
+  
+<script>
+const images = {
+  pencil: "https://i.postimg.cc/gk2ZD624/Unknown-6.jpg",
+  crayon: "https://i.postimg.cc/1zkd0Q0Y/Cryan.jpg",
+  ruler: "https://i.postimg.cc/Kv8MNg8p/Unknown-5.jpg",
+  pen: "https://i.postimg.cc/xjzfSfFY/pen.jpg",
+  book: "https://i.postimg.cc/SNxMrzxf/Unknown-8.jpg",
+  'school bag': "https://i.postimg.cc/65pv0Gp1/Unknown-7.jpg"
+};
+
+const test1Questions = [
+  { word: 'pencil', sentence: "Look at the picture, please speak it aloud.", img: images.pencil, zh: "請看圖片，對著媽媽大聲講出這個文具的英文！" },
+  { word: 'crayon', sentence: "Look at the picture, please speak it aloud.", img: images.crayon, zh: "請看圖片，對著媽媽大聲講出這個文具的英文！" },
+  { word: 'ruler', sentence: "Look at the picture, please speak it aloud.", img: images.ruler, zh: "請看圖片，對著媽媽大聲講出這個文具的英文！" },
+  { word: 'pen', sentence: "Look at the picture, please speak it aloud.", img: images.pen, zh: "請看圖片，對著媽媽大聲講出這個文具的英文！" },
+  { word: 'book', sentence: "Look at the picture, please speak it aloud.", img: images.book, zh: "請看圖片，對著媽媽大聲講出這個文具的英文！" },
+  { word: 'school bag', sentence: "Look at the picture, please speak it aloud.", img: images['school bag'], zh: "請看圖片，對著媽媽大聲講出這個文具的英文！" }
+];
+
+const test2Questions = [
+  { phase: 1, mode: 'match_connect', title: "Match the picture with the correct word", zh: "【階段一：點擊配對】輕按左邊圖片圓點，再輕按右邊正確單字圓點！" },
+  { phase: 2, mode: 'pure_word', word: 'pencil', sentence: "pencil", img: images.pencil, zh: "【階段二：無圖特訓】聽發音！找出文具單字：pencil", options: ['pencil', 'pen', 'ruler', 'book'] },
+  { phase: 2, mode: 'pure_word', word: 'crayon', sentence: "crayon", img: images.crayon, zh: "【階段二：無圖特訓】聽發音！找出文具單字：crayon", options: ['crayon', 'pencil', 'school bag', 'ruler'] },
+  { phase: 2, mode: 'pure_word', word: 'ruler', sentence: "ruler", img: images.ruler, zh: "【階段二：無圖特訓】聽發音！找出文具單字：ruler", options: ['ruler', 'pen', 'book', 'crayon'] },
+  { phase: 2, mode: 'pure_word', word: 'pen', sentence: "pen", img: images.pen, zh: "【階段二：無圖特訓】聽發音！找出短短的單字：pen", options: ['pen', 'pencil', 'book', 'ruler'] },
+  { phase: 2, mode: 'pure_word', word: 'book', sentence: "book", img: images.book, zh: "【階段二：無圖特訓】聽發音！找出文具單字：book", options: ['book', 'crayon', 'school bag', 'pen'] },
+  { phase: 2, mode: 'pure_word', word: 'school bag', sentence: "school bag", img: images['school bag'], zh: "【階段二：無圖特訓】聽發音！找出文具單字：school bag", options: ['school bag', 'book', 'pencil', 'ruler'] },
+  { phase: 3, mode: 'read', word: 'pencil', sentence: "This is a pencil.", img: images.pencil, zh: "【階段三：朗讀打卡】請看圖片與句子，對著媽媽大聲唸出這句話！" },
+  { phase: 3, mode: 'read', word: 'crayon', sentence: "This is a crayon.", img: images.crayon, zh: "【階段三：朗讀打卡】請看圖片與句子，對著媽媽大聲唸出這句話！" },
+  { phase: 3, mode: 'read', word: 'ruler', sentence: "This is a ruler.", img: images.ruler, zh: "【階段三：朗讀打卡】請看圖片與句子，對著媽媽大聲唸出這句話！" },
+  { phase: 3, mode: 'read', word: 'pen', sentence: "This is a pen.", img: images.pen, zh: "【階段三：朗讀打卡】請看圖片與句子，對著媽媽大聲唸出這句話！" },
+  { phase: 3, mode: 'read', word: 'book', sentence: "This is a book.", img: images.book, zh: "【階段三：朗讀打卡】請看圖片與句子，對著媽媽大聲唸出這句話！" },
+  { phase: 3, mode: 'read', word: 'school bag', sentence: "This is a school bag.", img: images['school bag'], zh: "【階段三：朗讀打卡】請看圖片與句子，對著媽媽大聲唸出這句話！" }
+];
+
+const previewData = [
+  { word: 'pencil', img: images.pencil },
+  { word: 'crayon', img: images.crayon },
+  { word: 'ruler', img: images.ruler },
+  { word: 'pen', img: images.pen },
+  { word: 'book', img: images.book },
+  { word: 'school bag', img: images['school bag'] }
+];
+
+let activeTestType = 'test1';
+let currentQ = 0;
+let currentQuestions = [];
+let selectedLeftWord = null;
+let matchedPairs = {};
+
+function playWordAudio(word) {
+  const audioUrl = `https://dict.youdao.com/dictvoice?type=1&audio=${encodeURIComponent(word)}`;
+  const audio = new Audio(audioUrl);
+  audio.playbackRate = 0.85;
+  audio.play().catch((err) => console.log("Audio error:", err));
+}
+
+function playSentenceAudio(sentence) {
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(sentence);
+    utterance.lang = 'en-GB';
+    utterance.rate = 0.5;
+    utterance.pitch = 1.1;
+    window.speechSynthesis.speak(utterance);
+  } else {
+    playWordAudio(sentence);
+  }
+}
+
+function playInstructionAudio(text) {
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-GB';
+    utterance.rate = 0.5;
+    utterance.pitch = 1.1;
+    window.speechSynthesis.speak(utterance);
+  }
+}
+
+function playCurrentAudio() {
+  const q = currentQuestions[currentQ];
+  if (activeTestType === 'test1') {
+    playInstructionAudio(q.sentence);
+  } else if (q.mode === 'pure_word') {
+    playWordAudio(q.word);
+  } else if (q.mode === 'read') {
+    playSentenceAudio(q.sentence);
+  }
+}
+
+function initPreviewGrid() {
+  const grid = document.getElementById('preview-grid');
+  if (!grid) return;
+  let html = '';
+  previewData.forEach(item => {
+    html += `
+      <div class="preview-card" onclick="playWordAudio('${item.word}')">
+        <img class="preview-img" src="${item.img}" alt="${item.word}">
+        <div class="preview-label">${item.word}</div>
+      </div>
+    `;
+  });
+  grid.innerHTML = html;
+}
+
+function showHub() {
+  document.getElementById('hub-screen').style.display = 'block';
+  document.getElementById('game-screen').style.display = 'none';
+  document.getElementById('top-hub-btn').style.display = 'none';
+}
+
+function openGame(testType) {
+  activeTestType = testType;
+  currentQuestions = (testType === 'test1') ? test1Questions : test2Questions;
+  currentQ = 0;
+  
+  document.getElementById('hub-screen').style.display = 'none';
+  document.getElementById('game-screen').style.display = 'block';
+  document.getElementById('top-hub-btn').style.display = 'inline-block';
+  buildNavMap();
+  loadQuestion();
+}
+
+function buildNavMap() {
+  const mapDiv = document.getElementById('nav-map');
+  let html = '';
+  for (let i = 0; i < currentQuestions.length; i++) {
+    html += `<button class="map-btn ${i === currentQ ? 'active' : ''}" id="map-btn-${i}" onclick="jumpToQuestion(${i})">${i+1}</button>`;
+  }
+  mapDiv.innerHTML = html;
+}
+
+function updateNavMap() {
+  const buttons = document.querySelectorAll('.map-btn');
+  buttons.forEach((btn, idx) => {
+    if (idx === currentQ) {
+      btn.className = `map-btn active`;
+    } else if (!btn.classList.contains('correct-done')) {
+      btn.className = `map-btn`;
+    }
+  });
+}
+
+function jumpToQuestion(index) {
+  currentQ = index;
+  loadQuestion();
+}
+
+function loadQuestion() {
+  const fb = document.getElementById('feedback');
+  if (fb) fb.innerText = "";
+  
+  if (currentQ >= currentQuestions.length) {
+    showVictory();
+    return;
+  }
+  updateNavMap();
+  const q = currentQuestions[currentQ];
+  
+  document.getElementById('progress-text').innerText = `Level ${currentQ + 1} / ${currentQuestions.length}`;
+  document.getElementById('instruction-zh').innerText = q.zh || "";
+  
+  const sceneContainer = document.getElementById('main-scene-container');
+  const contentContainer = document.getElementById('question-content-container');
+  
+  if (q.mode === 'match_connect') {
+    sceneContainer.style.display = 'none'; 
+    renderTapMatchBoard(contentContainer, q.title);
+    setTimeout(() => playInstructionAudio(q.title), 300);
+  } else {
+    sceneContainer.style.display = 'flex';
+    const mediaContainer = document.getElementById('hero-media-container');
+    const imgUrl = q.img || images[q.word];
+    if (imgUrl) {
+      mediaContainer.innerHTML = `<img class="hero-img" src="${imgUrl}" alt="Stationery">`;
+    } else {
+      mediaContainer.innerHTML = `<div style="font-size: 3.5rem; padding: 10px;">🔍</div>`;
+    }
+
+    document.getElementById('speech-bubble-text').innerText = (activeTestType === 'test1') ? q.sentence : ((q.mode === 'pure_word') ? "??? (Listen carefully)" : q.sentence);
+
+    if (activeTestType === 'test1') {
+      contentContainer.innerHTML = `
+        <div class="read-aloud-container">
+          <button class="success-read-btn" onclick="completeTest1Aloud()">
+            ⭐ 我已經大聲唸出這個單字了！
+          </button>
+        </div>
+      `;
+      setTimeout(() => playInstructionAudio(q.sentence), 300);
+    } else if (q.mode === 'pure_word') {
+      let html = '<div class="options-grid-4">';
+      q.options.forEach(opt => {
+        html += `
+          <div class="pure-word-card" id="opt-${opt}" onclick="checkChoice('${opt}', '${q.word}')">
+            <span>${opt}</span>
+          </div>
+        `;
+      });
+      html += '</div>';
+      contentContainer.innerHTML = html;
+      setTimeout(() => playWordAudio(q.word), 300);
+    } else if (q.mode === 'read') {
+      contentContainer.innerHTML = `
+        <div class="read-aloud-container">
+          <button class="success-read-btn" onclick="completeReadAloud()">
+            ⭐ 我已經大聲唸給媽媽聽了！
+          </button>
+        </div>
+      `;
+    }
+  }
+}
+
+function renderTapMatchBoard(container, titleText) {
+  matchedPairs = {};
+  selectedLeftWord = null;
+  
+  const leftItems = [
+    { word: 'pencil', img: images.pencil },
+    { word: 'crayon', img: images.crayon },
+    { word: 'ruler', img: images.ruler },
+    { word: 'pen', img: images.pen },
+    { word: 'book', img: images.book },
+    { word: 'school bag', img: images['school bag'] }
+  ];
+  const rightWords = ['book', 'pencil', 'school bag', 'ruler', 'pen', 'crayon'];
+  
+  let html = `
+    <div class="match-header-box">
+      <div class="match-title">${titleText}</div>
+      <button class="instr-audio-btn" onclick="playInstructionAudio('${titleText}')">🔊</button>
+    </div>
+    <div class="match-board" id="match-board">
+      <svg id="svg-canvas"></svg>
+  `;
+  
+  for (let i = 0; i < 6; i++) {
+    const leftItem = leftItems[i];
+    const rightWord = rightWords[i];
+    html += `
+      <div class="match-row">
+        <div class="match-item-left">
+          <img class="match-img" src="${leftItem.img}" alt="${leftItem.word}">
+          <div class="connect-dot dot-left" data-word="${leftItem.word}" id="dot-left-${leftItem.word}" onclick="handleLeftClick('${leftItem.word}')"></div>
+        </div>
+        <div class="match-item-right">
+          <div class="right-dot-col">
+            <div class="connect-dot dot-right" data-word="${rightWord}" id="dot-right-${rightWord}" onclick="handleRightClick('${rightWord}')"></div>
+          </div>
+          <div class="right-text-col">
+            <span class="match-word-text">${rightWord}</span>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+  html += `</div>`;
+  container.innerHTML = html;
+}
+
+function handleLeftClick(word) {
+  if (matchedPairs[word]) return;
+  document.querySelectorAll('.dot-left').forEach(d => d.classList.remove('selected'));
+  selectedLeftWord = word;
+  const dot = document.getElementById(`dot-left-${word}`);
+  if (dot) dot.classList.add('selected');
+  playWordAudio(word);
+}
+
+function handleRightClick(word) {
+  if (matchedPairs[word]) return;
+  const fb = document.getElementById('feedback');
+  
+  if (!selectedLeftWord) {
+    playWordAudio("try again");
+    if (fb) {
+      fb.className = "feedback wrong";
+      fb.innerText = "請先點擊左邊的圖片圓點！";
+    }
+    return;
+  }
+  
+  if (selectedLeftWord === word) {
+    matchedPairs[word] = true;
+    const leftDot = document.getElementById(`dot-left-${word}`);
+    const rightDot = document.getElementById(`dot-right-${word}`);
+    
+    if (leftDot) { leftDot.classList.remove('selected'); leftDot.classList.add('connected'); }
+    if (rightDot) { rightDot.classList.add('connected'); }
+  
+    playWordAudio("wonderful");
+    playWordAudio(word);
+    drawPermanentLine(leftDot, rightDot);
+    selectedLeftWord = null;
+  
+    if (fb) { fb.className = "feedback correct"; fb.innerText = "Wonderful! ★"; }
+  
+    if (Object.keys(matchedPairs).length === 6) {
+      if (fb) fb.innerText = "Match Completed! ★★★";
+      document.getElementById(`map-btn-${currentQ}`).classList.add('correct-done');
+      setTimeout(() => { currentQ++; loadQuestion(); }, 1400);
+    }
+  } else {
+    playWordAudio("try again");
+    if (fb) { fb.className = "feedback wrong"; fb.innerText = "Try again!"; }
+    document.querySelectorAll('.dot-left').forEach(d => d.classList.remove('selected'));
+    selectedLeftWord = null;
+  }
+}
+
+function drawPermanentLine(leftDot, rightDot) {
+  const board = document.getElementById('match-board');
+  const svg = document.getElementById('svg-canvas');
+  if (!board || !svg || !leftDot || !rightDot) return;
+  
+  const boardRect = board.getBoundingClientRect();
+  const lR = leftDot.getBoundingClientRect();
+  const rR = rightDot.getBoundingClientRect();
+  
+  const x1 = lR.left + lR.width/2 - boardRect.left;
+  const y1 = lR.top + lR.height/2 - boardRect.top;
+  const x2 = rR.left + rR.width/2 - boardRect.left;
+  const y2 = rR.top + rR.height/2 - boardRect.top;
+  
+  const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+  line.setAttribute('x1', x1); line.setAttribute('y1', y1);
+  line.setAttribute('x2', x2); line.setAttribute('y2', y2);
+  line.setAttribute('stroke', '#22c55e'); line.setAttribute('stroke-width', '5');
+  line.setAttribute('stroke-linecap', 'round');
+  svg.appendChild(line);
+}
+
+function checkChoice(selected, correctWord) {
+  const fb = document.getElementById('feedback');
+  const selectedCard = document.getElementById(`opt-${selected}`);
+  
+  if (selected === correctWord) {
+    selectedCard.style.borderColor = '#16a34a';
+    selectedCard.style.background = '#f0fdf4';
+    selectedCard.innerHTML += `<span class="mark-badge" style="color:#16a34a;">✔️</span>`;
+    
+    fb.className = "feedback correct";
+    fb.innerText = "Wonderful! ★";
+    playWordAudio("wonderful");
+    
+    document.getElementById(`map-btn-${currentQ}`).classList.add('correct-done');
+    currentQ++;
+    setTimeout(loadQuestion, 1100);
+  } else {
+    selectedCard.style.borderColor = '#dc2626';
+    selectedCard.style.background = '#fef2f2';
+    if (!selectedCard.querySelector('.mark-badge')) {
+      selectedCard.innerHTML += `<span class="mark-badge" style="color:#dc2626;">❌</span>`;
+    }
+    fb.className = "feedback wrong";
+    fb.innerText = "Try again!";
+    playWordAudio("try again");
+  }
+}
+
+function completeTest1Aloud() {
+  const fb = document.getElementById('feedback');
+  fb.className = "feedback correct";
+  fb.innerText = "Great Job, Super Star! ★★★";
+  playWordAudio("wonderful");
+  
+  document.getElementById(`map-btn-${currentQ}`).classList.add('correct-done');
+  currentQ++;
+  setTimeout(loadQuestion, 1200);
+}
+
+function completeReadAloud() {
+  const fb = document.getElementById('feedback');
+  fb.className = "feedback correct";
+  fb.innerText = "Great Job, Super Star! ★★★";
+  playSentenceAudio("Amazing job");
+  
+  document.getElementById(`map-btn-${currentQ}`).classList.add('correct-done');
+  currentQ++;
+  setTimeout(loadQuestion, 1400);
+}
+
+function showVictory() {
+  document.getElementById('main-scene-container').style.display = 'flex';
+  document.getElementById('nav-map').innerHTML = '';
+  document.getElementById('progress-text').innerText = "Completed!";
+  document.getElementById('hero-media-container').innerHTML = `<div style="font-size: 4.5rem;">👑🌟🎉</div>`;
+  document.getElementById('speech-bubble-text').innerText = "You are a stationery master!";
+  document.getElementById('instruction-zh').innerText = "太棒了！您和玲玲順利完成了文具單元的所有特訓與闖關！";
+  document.getElementById('question-content-container').innerHTML = `
+    <button class="audio-btn" style="width: 100%; justify-content: center; margin-top: 6px;" onclick="showHub()">返回大本營 📋</button>
+  `;
+}
+
+window.onload = initPreviewGrid;
+</script>
+</body>
+</html>
