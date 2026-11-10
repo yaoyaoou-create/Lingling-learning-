@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>K2 中文字寶寶通關大冒險</title>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #FF6B6B;
+      --secondary: #4ECDC4;
+      --accent: #FFE66D;
+      --purple: #9B51E0;
+      --blue: #2F80ED;
+      --green: #27AE60;
+      --bg: #F0F4F8;
+      --text: #2D3748;
+      --card-bg: #FFFFFF;
+      --radius: 24px;
+      --shadow: 0 12px 30px rgba(0,0,0,0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      font-family: 'M PLUS Rounded 1c', "PingFang HK", "Traditional Noto Sans HK", sans-serif;
+    }
+
+    body {
+      background: radial-gradient(circle at 50% 30%, #E0F7FA 0%, #FFF9C4 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 12px;
+      color: var(--text);
+    }
+
+    #app {
+      width: 100%;
+      max-width: 540px;
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      border: 5px solid #FFF;
+      min-height: 660px;
+    }
+
+    .top-bar {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      gap: 6px;
+    }
+
+    .top-left-group {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .btn-portal {
+      text-decoration: none;
+      background: #FFF5F7;
+      border: 2px solid #F687B3;
+      color: #B83280;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-weight: 800;
+      font-size: 0.9rem;
+    }
+
+    .btn-home {
+      background: #EDF2F7;
+      border: 2px solid #CBD5E0;
+      color: #4A5568;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-weight: 800;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    .speaker-btn {
+      background: #EBF8FF;
+      border: 2px solid #3182CE;
+      color: #3182CE;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      cursor: pointer;
+    }
+
+    .shortcut-bar {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      padding-bottom: 8px;
+      margin-bottom: 12px;
+      border-bottom: 2px dashed #E2E8F0;
+    }
+
+    .shortcut-chip {
+      background: #EDF2F7;
+      color: #4A5568;
+      padding: 8px 0;
+      border-radius: 14px;
+      font-size: 1.1rem;
+      font-weight: 900;
+      cursor: pointer;
+      border: 2px solid transparent;
+      flex: 1;
+      text-align: center;
+      transition: all 0.2s;
+    }
+
+    .shortcut-chip.active {
+      background: #EBF8FF;
+      color: #2B6CB0;
+      border-color: #3182CE;
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      width: 100%;
+      margin-top: 6px;
+      max-height: 560px;
+      overflow-y: auto;
+    }
+
+    .test-card {
+      background: linear-gradient(135deg, #FFFFFF, #F7FAFC);
+      border: 3px solid #E2E8F0;
+      border-radius: 16px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+      transition: all 0.2s;
+    }
+
+    .test-card:active { transform: scale(0.98); }
+    .test-info h3 { font-size: 1.1rem; color: #2B6CB0; }
+    .test-info p { font-size: 0.82rem; color: #718096; margin-top: 2px; }
+
+    .test-badge {
+      background: #4ECDC4;
+      color: white;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-weight: 800;
+      font-size: 0.85rem;
+    }
+
+    .title {
+      font-size: 1.35rem;
+      font-weight: 900;
+      color: #2D3748;
+      text-align: center;
+      margin: 6px 0 14px 0;
+      line-height: 1.3;
+    }
+
+    .option-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .feedback-badge {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      font-weight: 900;
+      color: white;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      z-index: 10;
+      animation: popIn 0.2s ease-out;
+    }
+
+    .feedback-badge.correct { background: #27AE60; }
+    .feedback-badge.wrong { background: #E53E3E; }
+
+    @keyframes popIn {
+      0% { transform: scale(0); }
+      80% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      width: 100%;
+      margin-bottom: 16px;
+    }
+
+    .word-card {
+      background: #FFF;
+      border: 4px solid #E2E8F0;
+      border-radius: 18px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.05);
+      transition: all 0.2s;
+      width: 100%;
+    }
+
+    .word-card .char { font-size: 3.2rem; font-weight: 900; color: #2B6CB0; }
+    .word-card .icon { font-size: 1.6rem; margin-top: 4px; }
+    .word-card.learned { border-color: #27AE60; background: #F0FFF4; }
+
+    .flashcard-box {
+      width: 100%;
+      background: #FAF5FF;
+      border: 4px solid #B794F4;
+      border-radius: 24px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      position: relative;
+    }
+
+    .flashcard-char { font-size: 6rem; font-weight: 900; color: #6B46C1; line-height: 1; }
+
+    .timer-badge {
+      position: absolute;
+      top: 10px;
+      right: 14px;
+      background: #FFE66D;
+      color: #744210;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-weight: 900;
+      font-size: 0.95rem;
+    }
+
+    .grid-pure {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      width: 100%;
+      margin-bottom: 16px;
+    }
+
+    .pure-card {
+      background: #FFF;
+      border: 4px solid #E2E8F0;
+      border-radius: 18px;
+      height: 90px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.2rem;
+      font-weight: 900;
+      color: #2B6CB0;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+
+    .train-container {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .train-head {
+      background: #FEFCBF;
+      border: 4px solid #ECC94B;
+      border-radius: 20px;
+      padding: 12px 32px;
+      font-size: 3.5rem;
+      font-weight: 900;
+      color: #744210;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+
+    .train-options {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      width: 100%;
+    }
+
+    .train-car {
+      background: #FFF;
+      border: 4px solid #CBD5E0;
+      border-radius: 18px;
+      padding: 12px 0;
+      font-size: 2.6rem;
+      font-weight: 900;
+      color: #2D3748;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+      transition: all 0.2s;
+      width: 100%;
+    }
+
+    .all-words-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      width: 100%;
+      margin-bottom: 16px;
+    }
+
+    .all-word-card {
+      background: #FFF;
+      border: 3px solid #CBD5E0;
+      border-radius: 16px;
+      padding: 10px 0;
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: #2B6CB0;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.04);
+      width: 100%;
+    }
+
+    .egg-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      gap: 14px;
+      margin: 10px 0;
+    }
+
+    .magic-egg { font-size: 5rem; cursor: pointer; }
+
+    .phrase-box {
+      font-size: 3.5rem;
+      font-weight: 900;
+      color: #805AD5;
+      background: #FAF5FF;
+      border: 3px dashed #B794F4;
+      padding: 10px 24px;
+      border-radius: 20px;
+      min-height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .btn-main {
+      background: linear-gradient(135deg, #48BB78, #2F855A);
+      color: white;
+      border: none;
+      font-size: 1.2rem;
+      font-weight: 900;
+      padding: 14px 28px;
+      border-radius: 50px;
+      cursor: pointer;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 6px 16px rgba(72, 187, 120, 0.3);
+      margin-top: auto;
+    }
+
+    .btn-main:disabled { background: #CBD5E0; box-shadow: none; }
+
+    .btn-sound, .audio-btn {
+      background: linear-gradient(135deg, #4299E1, #2B6CB0);
+      color: white;
+      border: none;
+      font-size: 1.1rem;
+      font-weight: 800;
+      padding: 12px 24px;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 6px 14px rgba(66, 153, 225, 0.3);
+    }
+
+    .feedback-btns { display: flex; gap: 10px; width: 100%; }
+
+    .btn-correct {
+      flex: 1; background: #48BB78; color: white; border: none;
+      padding: 12px; border-radius: 18px; font-size: 1rem; font-weight: 800; cursor: pointer;
+    }
+
+    .btn-wrong {
+      flex: 1; background: #E53E3E; color: white; border: none;
+      padding: 12px; border-radius: 18px; font-size: 1rem; font-weight: 800; cursor: pointer;
+    }
+
+    .shake { animation: shake 0.4s ease; }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-8px); }
+      40%, 80% { transform: translateX(8px); }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="app">
+    <div class="top-bar">
+      <div class="top-left-group">
+        <a href="index.html" class="btn-portal">🏠 學習大門</a>
+        <button class="btn-home" onclick="goHome()">📋 單元選單</button>
+      </div>
+      <button class="speaker-btn" onclick="repeatAudio()">🔊</button>
+    </div>
+
+    <div class="shortcut-bar" id="shortcutBar" style="display: none;"></div>
+    <div id="mainContainer" style="width: 100%; display: flex; flex-direction: column; align-items: center; flex: 1;"></div>
+  </div>
+
+  <script>
+    const ALL_LEARNED_WORDS = ["好", "朋", "友", "室", "課", "唱", "歌", "家", "庭", "菜", "果"];
+
+    const curriculumData = {
+      1: {
+        title: "Test 1: 好、朋、友、室",
+        words: [
+          { char: "好", icon: "👍" },
+          { char: "朋", icon: "👭" },
+          { char: "友", icon: "🤝" },
+          { char: "室", icon: "🏫" }
+        ]
+      },
+      2: {
+        title: "Test 2: 課、唱、歌",
+        words: [
+          { char: "課", icon: "📚" },
+          { char: "唱", icon: "🎤" },
+          { char: "歌", icon: "🎵" }
+        ]
+      },
+      3: {
+        title: "Test 3: 家、庭、菜、果",
+        words: [
+          { char: "家", icon: "🏠" },
+          { char: "庭", icon: "🏡" },
+          { char: "菜", icon: "🥦" },
+          { char: "果", icon: "🍎" }
+        ]
+      },
+      4: {
+        title: "Test 4: 綜合復習盲測大闖關 🚀",
+        isComprehensive: true,
+        t1Words: ["室", "唱", "菜", "果"],
+        t2Questions: [
+          { target: "友", options: ["朋", "友", "好"], prompt: "請找出：友" },
+          { target: "課", options: ["課", "唱", "室"], prompt: "請找出：課" },
+          { target: "家", options: ["家", "庭", "菜"], prompt: "請找出：家" },
+          { target: "果", options: ["菜", "果", "好"], prompt: "請找出：果" }
+        ],
+        t3Trains: [
+          { head: "唱", correct: "歌", options: ["歌", "室", "家", "果", "友"], audioPrompt: "請幫唱字找出歌的車廂！", phrase: "唱歌" },
+          { head: "好", correct: "友", options: ["友", "課", "果", "庭", "唱"], audioPrompt: "請幫好字找出友的車廂！", phrase: "好朋友" },
+          { head: "家", correct: "庭", options: ["庭", "菜", "朋", "室", "歌"], audioPrompt: "請幫家字找出庭的車廂！", phrase: "家庭" },
+          { head: "青", correct: "菜", options: ["菜", "課", "歌", "好", "果"], audioPrompt: "請幫青字找出菜的車廂！", phrase: "青菜" }
+        ],
+        t4Questions: [
+          { correct: "友", audioPrompt: "請在下面的字寶寶裏面，找出『好朋友』的『友』字！" },
+          { correct: "課", audioPrompt: "請在下面的字寶寶裏面，找出『上課』的『課』字！" },
+          { correct: "唱", audioPrompt: "請在下面的字寶寶裏面，找出『唱歌』的『唱』字！" },
+          { correct: "果", audioPrompt: "請在下面的字寶寶裏面，找出『水果』的『果』字！" }
+        ]
+      }
+    };
+
+    let currentTestDay = null;
+    let currentStepKey = "1";
+    let learnedSet = new Set();
+    let currentPrompt = "";
+    let isEggHatched = false;
+    let l1PromptSpoken = false;
+    let selectionFeedback = {};
+
+    let t1Index = 0;
+    let timerVal = 10;
+    let timerInterval = null;
+    let t2Index = 0;
+    let t3Index = 0;
+    let t4Index = 0;
+    let test5Data = null;
+
+    function generateTest5Data() {
+      const shuffled = [...ALL_LEARNED_WORDS].sort(() => 0.5 - Math.random());
+      const t1Words = shuffled.slice(0, 4);
+
+      const t2Questions = [];
+      for (let i = 0; i < 4; i++) {
+        const target = shuffled[i % shuffled.length];
+        const otherPool = ALL_LEARNED_WORDS.filter(w => w !== target).sort(() => 0.5 - Math.random());
+        const options = [target, otherPool[0], otherPool[1]].sort(() => 0.5 - Math.random());
+        t2Questions.push({ target, options, prompt: `請找出：${target}` });
+      }
+
+      const basePairs = [
+        { head: "好", correct: "友", phrase: "好朋友" },
+        { head: "唱", correct: "歌", phrase: "唱歌" },
+        { head: "家", correct: "庭", phrase: "家庭" },
+        { head: "水", correct: "果", phrase: "水果" },
+        { head: "上", correct: "課", phrase: "上課" },
+        { head: "教", correct: "室", phrase: "課室" }
+      ];
+      const selectedPairs = [...basePairs].sort(() => 0.5 - Math.random()).slice(0, 4);
+      const t3Trains = selectedPairs.map(p => {
+        const wrongOpts = ALL_LEARNED_WORDS.filter(w => w !== p.correct).sort(() => 0.5 - Math.random()).slice(0, 4);
+        const options = [p.correct, ...wrongOpts].sort(() => 0.5 - Math.random());
+        return {
+          head: p.head,
+          correct: p.correct,
+          options: options,
+          audioPrompt: `請幫${p.head}字找出${p.correct}的車廂！`,
+          phrase: p.phrase
+        };
+      });
+
+      const t4Questions = [];
+      for (let i = 0; i < 4; i++) {
+        const target = shuffled[(i + 2) % shuffled.length];
+        t4Questions.push({
+          correct: target,
+          audioPrompt: `請在下面的字寶寶裏面，找出『${target}』字！`
+        });
+      }
+
+      return {
+        title: "Test 5: 隨機挑戰盲測大闖關 🎲",
+        isComprehensive: true,
+        t1Words,
+        t2Questions,
+        t3Trains,
+        t4Questions
+      };
+    }
+
+    function speak(text, onEndCallback) {
+      currentPrompt = text;
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = 'zh-HK';
+        u.rate = 0.85;
+        if (onEndCallback) u.onend = onEndCallback;
+        window.speechSynthesis.speak(u);
+      }
+    }
+
+    function repeatAudio() {
+      if (currentPrompt) speak(currentPrompt);
+    }
+
+    function goHome() {
+      clearInterval(timerInterval);
+      currentTestDay = null;
+      l1PromptSpoken = false;
+      selectionFeedback = {};
+      document.getElementById('shortcutBar').style.display = 'none';
+      render(false);
+    }
+
+    function startTest(day) {
+      clearInterval(timerInterval);
+      currentTestDay = day;
+      learnedSet.clear();
+      l1PromptSpoken = false;
+      selectionFeedback = {};
+
+      if (day === 5) {
+        test5Data = generateTest5Data();
+      }
+
+      t1Index = 0;
+      t2Index = 0;
+      t3Index = 0;
+      t4Index = 0;
+
+      if (day >= 4) {
+        currentStepKey = "T4-1";
+      } else {
+        currentStepKey = "1";
+      }
+
+      renderShortcuts();
+      render(true);
+    }
+
+    function renderShortcuts() {
+      const bar = document.getElementById('shortcutBar');
+      if (!currentTestDay) {
+        bar.style.display = 'none';
+        return;
+      }
+
+      bar.style.display = 'flex';
+      const isCompreh = currentTestDay >= 4;
+      const activeKey = isCompreh ? currentStepKey.split('-')[1] : currentStepKey.split('-')[0];
+
+      let html = "";
+      for (let i = 1; i <= 4; i++) {
+        const isAct = activeKey === String(i);
+        const targetKey = isCompreh ? `T4-${i}` : `${i}`;
+        html += `<div class="shortcut-chip ${isAct ? 'active' : ''}" onclick="jumpShortcut('${targetKey}')">${i}</div>`;
+      }
+
+      bar.innerHTML = html;
+    }
+
+    function jumpShortcut(key) {
+      clearInterval(timerInterval);
+      currentStepKey = key;
+      isEggHatched = false;
+      selectionFeedback = {};
+      if (key !== '1') l1PromptSpoken = false;
+
+      if (key === 'T4-1') t1Index = 0;
+      if (key === 'T4-2') t2Index = 0;
+      if (key === 'T4-3') t3Index = 0;
+      if (key === 'T4-4') t4Index = 0;
+
+      renderShortcuts();
+      render(true);
+    }
+
+    function startTimer() {
+      clearInterval(timerInterval);
+      timerVal = 10;
+      const tEl = document.getElementById('timerVal');
+      if (tEl) tEl.innerText = timerVal;
+
+      timerInterval = setInterval(() => {
+        timerVal--;
+        const el = document.getElementById('timerVal');
+        if (el) el.innerText = timerVal;
+
+        if (timerVal <= 0) {
+          clearInterval(timerInterval);
+          verifyT1AndNext();
+        }
+      }, 1000);
+    }
+
+    function render(shouldSpeak = true) {
+      const container = document.getElementById('mainContainer');
+
+      if (currentTestDay === null) {
+        let menuHTML = `<h2 class="title">🀄 K2 中文字寶寶通關大冒險</h2><div class="menu-grid">`;
+        for (let i = 1; i <= 5; i++) {
+          let title = "";
+          let desc = "";
+          if (i <= 3) {
+            title = curriculumData[i].title;
+            desc = "基礎認字練習 ‧ 聽音找字 ‧ 孵魔法蛋";
+          } else if (i === 4) {
+            title = curriculumData[4].title;
+            desc = "綜合 4 大盲測挑戰題型";
+          } else {
+            title = "Test 5: 隨機挑戰盲測大闖關 🎲";
+            desc = "全字庫隨機生成盲測題型";
+          }
+          menuHTML += `
+            <div class="test-card" onclick="startTest(${i})">
+              <div class="test-info">
+                <h3>${title}</h3>
+                <p>${desc}</p>
+              </div>
+              <div class="test-badge">開始 🚀</div>
+            </div>
+          `;
+        }
+        menuHTML += `</div>`;
+        container.innerHTML = menuHTML;
+        if (shouldSpeak) speak("小朋友，請選擇今天的測試吧！");
+        return;
+      }
+
+      if (currentTestDay >= 4) {
+        const activeData = currentTestDay === 5 ? test5Data : curriculumData[4];
+
+        if (currentStepKey === 'T4-1') {
+          const targetChar = activeData.t1Words[t1Index];
+          container.innerHTML = `
+            <h2 class="title">題型一（${t1Index+1}/4）：大聲讀出這個字！</h2>
+            <div class="flashcard-box">
+              <span class="timer-badge">⏳ <span id="timerVal">10</span>s</span>
+              <span class="flashcard-char">${targetChar}</span>
+            </div>
+            <button class="btn-sound" onclick="verifyT1AndNext()">🔊 點擊聽答案</button>
+          `;
+          if (shouldSpeak) speak("請大聲讀出這個字！");
+          startTimer();
+        }
+        else if (currentStepKey === 'T4-2') {
+          const q = activeData.t2Questions[t2Index];
+          container.innerHTML = `
+            <h2 class="title">題型二（${t2Index+1}/4）：聽一聽，字在哪裏？</h2>
+            <div class="grid-pure">
+              ${q.options.map(opt => `
+                <div class="option-wrapper">
+                  ${selectionFeedback[opt] ? `<div class="feedback-badge ${selectionFeedback[opt]}">${selectionFeedback[opt]==='correct'?'✓':'✕'}</div>` : ''}
+                  <div class="pure-card" id="card-${opt}" onclick="handleGenericAnswer('${opt}', '${q.target}', 'T4-2')">${opt}</div>
+                </div>
+              `).join('')}
+            </div>
+          `;
+          if (shouldSpeak) speak(q.prompt);
+        }
+        else if (currentStepKey === 'T4-3') {
+          const train = activeData.t3Trains[t3Index];
+          container.innerHTML = `
+            <h2 class="title">題型三（${t3Index+1}/4）：組裝雙字車 🚂</h2>
+            <div class="train-container">
+              <div class="train-head">${train.head}</div>
+              <div class="train-options">
+                ${train.options.map(opt => `
+                  <div class="option-wrapper">
+                    ${selectionFeedback[opt] ? `<div class="feedback-badge ${selectionFeedback[opt]}">${selectionFeedback[opt]==='correct'?'✓':'✕'}</div>` : ''}
+                    <div class="train-car" id="card-${opt}" onclick="handleGenericAnswer('${opt}', '${train.correct}', 'T4-3', '${train.phrase}')">${opt}</div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          `;
+          if (shouldSpeak) speak(train.audioPrompt);
+        }
+        else if (currentStepKey === 'T4-4') {
+          const q = activeData.t4Questions[t4Index];
+          container.innerHTML = `
+            <h2 class="title">題型四（${t4Index+1}/4）：字寶寶大變身 ✨</h2>
+            <div class="all-words-grid">
+              ${ALL_LEARNED_WORDS.map(w => `
+                <div class="option-wrapper">
+                  ${selectionFeedback[w] ? `<div class="feedback-badge ${selectionFeedback[w]}">${selectionFeedback[w]==='correct'?'✓':'✕'}</div>` : ''}
+                  <div class="all-word-card" id="card-${w}" onclick="handleGenericAnswer('${w}', '${q.correct}', 'T4-4')">${w}</div>
+                </div>
+              `).join('')}
+            </div>
+          `;
+          if (shouldSpeak) speak(q.audioPrompt);
+        }
+        else if (currentStepKey === 'WIN') {
+          container.innerHTML = `
+            <div style="text-align:center; padding: 20px 0;">
+              <div style="font-size:6rem;">🏆</div>
+              <h2 class="title" style="color:#27AE60; font-size:1.8rem;">全勝通關！太棒了！</h2>
+              <p style="color:#718096; margin-bottom: 24px;">你順利完成了 ${activeData.title}！</p>
+              <button class="btn-main" onclick="goHome()">返回單元選單 📋</button>
+            </div>
+          `;
+          if (shouldSpeak) {
+            speak(`恭喜你！順利完成 ${activeData.title}！你太厲害了！`);
+            if (typeof confetti === 'function') confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+          }
+        }
+        return;
+      }
+
+      const activeData = curriculumData[currentTestDay];
+      const words = activeData.words;
+
+      if (currentStepKey === '1') {
+        container.innerHTML = `
+          <h2 class="title">點擊字寶寶，聽聽發音吧！</h2>
+          <div class="grid">
+            ${words.map(w => `
+              <div class="word-card ${learnedSet.has(w.char)?'learned':''}" onclick="clickL1Card('${w.char}')">
+                <span class="char">${w.char}</span>
+                <span class="icon">${w.icon}</span>
+              </div>
+            `).join('')}
+          </div>
+          <button class="btn-main" ${learnedSet.size < words.length ? 'disabled':''} onclick="jumpShortcut('2')">
+            前往『聽音找字』！🚀
+          </button>
+        `;
+        if (shouldSpeak && !l1PromptSpoken) {
+          speak("小朋友，點擊字寶寶，聽聽它們的名字吧！");
+          l1PromptSpoken = true;
+        }
+      }
+      else if (currentStepKey.startsWith('2')) {
+        const subIdx = currentStepKey.includes('-') ? parseInt(currentStepKey.split('-')[1]) : 0;
+        const targetObj = words[subIdx];
+        const shuffled = [...words].sort(() => 0.5 - Math.random());
+
+        container.innerHTML = `
+          <h2 class="title">聽一聽，字寶寶在哪裏？</h2>
+          <div class="grid">
+            ${shuffled.map(w => `
+              <div class="option-wrapper">
+                ${selectionFeedback[w.char] ? `<div class="feedback-badge ${selectionFeedback[w.char]}">${selectionFeedback[w.char]==='correct'?'✓':'✕'}</div>` : ''}
+                <div class="word-card" id="card-${w.char}" onclick="handleGenericAnswer('${w.char}', '${targetObj.char}', 'T123-2', null, ${subIdx})">
+                  <span class="char">${w.char}</span>
+                  <span class="icon">${w.icon}</span>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+        if (shouldSpeak) speak(`請找出：${targetObj.char}`);
+      }
+      else if (currentStepKey.startsWith('3')) {
+        const subIdx = currentStepKey.includes('-') ? parseInt(currentStepKey.split('-')[1]) : 0;
+        const currentItem = words[subIdx];
+
+        container.innerHTML = `
+          <h2 class="title">${isEggHatched ? '請小朋友大聲讀出來！' : '點擊魔法蛋，孵出字寶寶吧！'}</h2>
+          <div class="egg-container">
+            <div class="magic-egg" onclick="hatchEgg()">${isEggHatched ? '🐣' : '🥚'}</div>
+            <div class="phrase-box">${isEggHatched ? currentItem.char : '???'}</div>
+            
+            ${isEggHatched ? `
+              <button class="audio-btn" onclick="speak('${currentItem.char}')">🔊 點擊聽答案</button>
+              <div class="feedback-btns">
+                <button class="btn-wrong" onclick="eggRetry()">❌ 再試一次</button>
+                <button class="btn-correct" onclick="eggNext(${subIdx})">✅ 我答對了！</button>
+              </div>
+            ` : ''}
+          </div>
+        `;
+
+        if (shouldSpeak) {
+          if (!isEggHatched) speak("點擊神奇魔法蛋！");
+          else speak("孵出來啦！請小朋友先大聲讀出來！");
+        }
+      }
+      else if (currentStepKey === '4' || currentStepKey === 'WIN') {
+        container.innerHTML = `
+          <div style="text-align:center; padding: 20px 0;">
+            <div style="font-size:6rem;">🏆</div>
+            <h2 class="title" style="color:#27AE60; font-size:1.8rem;">太棒了！全勝通關！</h2>
+            <p style="color:#718096; margin-bottom: 24px;">你順利完成了 ${activeData.title}！</p>
+            <button class="btn-main" onclick="goHome()">返回單元選單 📋</button>
+          </div>
+        `;
+        if (shouldSpeak) {
+          speak("恭喜你！全勝通關！你今天太棒了！");
+          if (typeof confetti === 'function') confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+        }
+      }
+    }
+
+    function handleGenericAnswer(selected, correct, stageType, extraParam, subIdx) {
+      const cardEl = document.getElementById(`card-${selected}`);
+
+      if (selected === correct) {
+        selectionFeedback[selected] = 'correct';
+        if (cardEl) {
+          cardEl.style.borderColor = "#27AE60";
+          cardEl.style.background = "#C6F6D5";
+        }
+        render(false);
+
+        const msg = extraParam ? `答對啦！${extraParam}` : "答對啦！太棒了！";
+        speak(msg);
+
+        setTimeout(() => {
+          selectionFeedback = {};
+          if (stageType === 'T123-2') {
+            const words = curriculumData[currentTestDay].words;
+            if (subIdx + 1 < words.length) jumpShortcut(`2-${subIdx + 1}`);
+            else jumpShortcut('3-0');
+          } else if (stageType === 'T4-2') {
+            t2Index++;
+            const activeData = currentTestDay === 5 ? test5Data : curriculumData[4];
+            if (t2Index < activeData.t2Questions.length) render(true);
+            else jumpShortcut('T4-3');
+          } else if (stageType === 'T4-3') {
+            t3Index++;
+            const activeData = currentTestDay === 5 ? test5Data : curriculumData[4];
+            if (t3Index < activeData.t3Trains.length) render(true);
+            else jumpShortcut('T4-4');
+          } else if (stageType === 'T4-4') {
+            t4Index++;
+            const activeData = currentTestDay === 5 ? test5Data : curriculumData[4];
+            if (t4Index < activeData.t4Questions.length) render(true);
+            else jumpShortcut('WIN');
+          }
+        }, 1200);
+
+      } else {
+        selectionFeedback[selected] = 'wrong';
+        if (cardEl) {
+          cardEl.classList.add('shake');
+          setTimeout(() => cardEl.classList.remove('shake'), 400);
+        }
+        render(false);
+        speak("再試試看哦！");
+      }
+    }
+
+    function clickL1Card(char) {
+      learnedSet.add(char);
+      speak(char);
+      render(false);
+    }
+
+    function hatchEgg() {
+      if (!isEggHatched) {
+        isEggHatched = true;
+        render(true);
+      }
+    }
+
+    function eggRetry() {
+      isEggHatched = false;
+      speak("沒關係，再試一次！");
+      render(false);
+    }
+
+    function eggNext(subIdx) {
+      const words = curriculumData[currentTestDay].words;
+      isEggHatched = false;
+      if (subIdx + 1 < words.length) jumpShortcut(`3-${subIdx + 1}`);
+      else jumpShortcut('4');
+    }
+
+    function verifyT1AndNext() {
+      clearInterval(timerInterval);
+      const activeData = currentTestDay === 5 ? test5Data : curriculumData[4];
+      const targetChar = activeData.t1Words[t1Index];
+      speak(targetChar, () => {
+        setTimeout(() => {
+          t1Index++;
+          if (t1Index < activeData.t1Words.length) render(true);
+          else jumpShortcut('T4-2');
+        }, 1000);
+      });
+    }
+
+    window.onload = () => render(false);
+  </script>
+</body>
+</html>
