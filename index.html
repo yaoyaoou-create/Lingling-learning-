@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>玲玲的成長學習樂園</title>
+  <style>
+    * { box-sizing: border-box; user-select: none; -webkit-user-select: none; font-family: 'Comic Sans MS', 'Chalkboard SE', "PingFang HK", system-ui, sans-serif; }
+    body { margin: 0; padding: 16px; background: linear-gradient(135deg, #e0f2fe 0%, #fef9c3 100%); min-height: 100vh; display: flex; flex-direction: column; align-items: center; color: #1e293b; }
+    .container { width: 100%; max-width: 680px; background: #ffffff; border-radius: 28px; box-shadow: 0 14px 34px rgba(2, 132, 199, 0.15); padding: 22px 18px; border: 5px solid #38bdf8; }
+    .header { text-align: center; margin-bottom: 20px; border-bottom: 3px dashed #bae6fd; padding-bottom: 14px; }
+    .title { font-size: 2rem; font-weight: 900; color: #0369a1; margin: 0 0 6px 0; }
+    .subtitle { font-size: 1.05rem; color: #64748b; font-weight: 700; margin: 0; }
+    
+    .section-title { font-size: 1.2rem; font-weight: 900; color: #0f172a; margin: 18px 0 10px 4px; display: flex; align-items: center; gap: 8px; }
+    .grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+    
+    .card-link { text-decoration: none; display: flex; align-items: center; justify-content: space-between; padding: 16px 18px; border-radius: 22px; border: 4px solid transparent; transition: transform 0.15s; box-shadow: 0 6px 14px rgba(0,0,0,0.06); }
+    .card-link:active { transform: scale(0.97); }
+    
+    .card-left { display: flex; align-items: center; gap: 14px; }
+    .icon-box { font-size: 2.6rem; width: 60px; height: 60px; border-radius: 18px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.85); flex-shrink: 0; box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
+    .card-info h3 { margin: 0 0 4px 0; font-size: 1.25rem; font-weight: 900; }
+    .card-info p { margin: 0; font-size: 0.9rem; font-weight: 700; opacity: 0.85; }
+    .go-btn { padding: 8px 16px; border-radius: 20px; font-weight: 900; font-size: 0.95rem; color: #fff; flex-shrink: 0; }
+
+    /* 各區主題配色 */
+    .theme-thomas { background: #eff6ff; border-color: #3b82f6; color: #1e3a8a; }
+    .theme-thomas .go-btn { background: #ef4444; box-shadow: 0 4px 0 #b91c1c; }
+
+    .theme-cn { background: #fdf2f8; border-color: #f472b6; color: #831843; }
+    .theme-cn .go-btn { background: #ec4899; box-shadow: 0 4px 0 #be185d; }
+
+    .theme-en1 { background: #f0fdf4; border-color: #4ade80; color: #14532d; }
+    .theme-en1 .go-btn { background: #22c55e; box-shadow: 0 4px 0 #15803d; }
+
+    .theme-en2 { background: #fffbeb; border-color: #fbbf24; color: #78350f; }
+    .theme-en2 .go-btn { background: #f59e0b; box-shadow: 0 4px 0 #b45309; }
+
+    .theme-en3 { background: #f5f3ff; border-color: #a78bfa; color: #4c1d95; }
+    .theme-en3 .go-btn { background: #8b5cf6; box-shadow: 0 4px 0 #6d28d9; }
+
+    .theme-master { background: #fff1f2; border-color: #fb7185; color: #881337; }
+    .theme-master .go-btn { background: #f43f5e; box-shadow: 0 4px 0 #be123c; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1 class="title">🌟 玲玲的成長學習樂園 🌟</h1>
+    <p class="subtitle">K2 互動繪本點讀 ‧ 英文闖關 ‧ 中文字寶寶</p>
+  </div>
+
+  <div class="section-title">📖 有聲繪本點讀區</div>
+  <div class="grid">
+    <a href="thomas.html" class="card-link theme-thomas">
+      <div class="card-left">
+        <div class="icon-box">🚂</div>
+        <div class="card-info">
+          <h3>Thomas Goes Fishing</h3>
+          <p>14頁高清點讀繪本 + 真人發音 + 釣魚遊戲</p>
+        </div>
+      </div>
+      <div class="go-btn">點讀 ▶</div>
+    </a>
+  </div>
+
+  <div class="section-title">🀄 中文識字大冒險</div>
+  <div class="grid">
+    <a href="chinese.html" class="card-link theme-cn">
+      <div class="card-left">
+        <div class="icon-box">🐣</div>
+        <div class="card-info">
+          <h3>K2 中文字寶寶通關 (Test 1-5)</h3>
+          <p>好朋友室‧課唱歌‧家庭菜果‧火車配詞盲測</p>
+        </div>
+      </div>
+      <div class="go-btn">闖關 ▶</div>
+    </a>
+  </div>
+
+  <div class="section-title">🔤 英文主題闖關區</div>
+  <div class="grid">
+    <a href="en-animals.html" class="card-link theme-en1">
+      <div class="card-left">
+        <div class="icon-box">🐾</div>
+        <div class="card-info">
+          <h3>動物與家庭拼寫特訓</h3>
+          <p>Cat, Dog, Rabbit, Hamster & Family</p>
+        </div>
+      </div>
+      <div class="go-btn">開始 ▶</div>
+    </a>
+
+    <a href="en-emotions.html" class="card-link theme-en3">
+      <div class="card-left">
+        <div class="icon-box">😊</div>
+        <div class="card-info">
+          <h3>情緒與句子朗讀 (Making Faces)</h3>
+          <p>Happy, Sad, Hungry, Angry, Afraid 聽選與朗讀</p>
+        </div>
+      </div>
+      <div class="go-btn">開始 ▶</div>
+    </a>
+
+    <a href="en-stationery.html" class="card-link theme-en2">
+      <div class="card-left">
+        <div class="icon-box">✏️</div>
+        <div class="card-info">
+          <h3>校園文具大本營 (Stationery)</h3>
+          <p>6大文具發音預習 + 點擊自動連線配對 + 朗讀</p>
+        </div>
+      </div>
+      <div class="go-btn">開始 ▶</div>
+    </a>
+
+    <a href="en-master.html" class="card-link theme-master">
+      <div class="card-left">
+        <div class="icon-box">🏆</div>
+        <div class="card-info">
+          <h3>K2 英語全能總測試 & 錯題本</h3>
+          <p>家庭‧動物‧文具‧情緒 跨單元抽考與錯題統計</p>
+        </div>
+      </div>
+      <div class="go-btn">挑戰 ▶</div>
+    </a>
+  </div>
+</div>
+
+</body>
+</html>
