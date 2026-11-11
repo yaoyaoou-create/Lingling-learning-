@@ -1,786 +1,274 @@
 <!DOCTYPE html>
 <html lang="zh-HK">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>K2 中文 AI 導師每日課堂 - 我要謝謝你 (P.21-25)</title>
-  <style>
-    * { box-sizing: border-box; user-select: none; -webkit-user-select: none; font-family: "PingFang HK", "Microsoft JhengHei", "Chalkboard SE", sans-serif; }
-    body { margin: 0; padding: 8px; background: linear-gradient(135deg, #fdf2f8 0%, #fef9c3 100%); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-    .container { width: 100%; max-width: 720px; background: #fff; border-radius: 26px; border: 4px solid #f472b6; box-shadow: 0 10px 25px rgba(244, 114, 182, 0.15); padding: 12px 16px; position: relative; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>P.21-25 《我要謝謝你》每日課堂導航</title>
+    <style>
+        :root {
+            --bg-color: #FDFBF7;
+            --text-main: #2D3748;
+            --text-sub: #718096;
+            --accent-pink: #F472B6;
+        }
 
-    /* 頂部極簡導航列 */
-    .top-bar { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px dashed #fbcfe8; padding-bottom: 8px; margin-bottom: 8px; }
-    .nav-btn { text-decoration: none; background: #fdf2f8; border: 2px solid #f472b6; color: #be185d; padding: 5px 12px; border-radius: 14px; font-weight: 800; font-size: 0.85rem; cursor: pointer; }
-    .mom-btn { background: #eff6ff; border: 2px solid #60a5fa; color: #1d4ed8; padding: 5px 12px; border-radius: 14px; font-weight: 800; font-size: 0.85rem; cursor: pointer; }
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-    /* AI 導師語音橫幅 */
-    .tutor-banner { background: #fffbeb; border: 2px solid #fcd34d; border-radius: 18px; padding: 8px 12px; display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-    .tutor-avatar { font-size: 2.1rem; flex-shrink: 0; }
-    .tutor-speech { flex: 1; text-align: left; font-size: 0.96rem; font-weight: 800; color: #78350f; line-height: 1.4; }
-    .replay-btn { background: #f59e0b; color: white; border: none; border-radius: 50%; width: 40px; height: 40px; font-size: 1.2rem; cursor: pointer; flex-shrink: 0; box-shadow: 0 3px 6px rgba(245, 158, 11, 0.3); }
+        body {
+            margin: 0;
+            padding: 16px;
+            font-family: 'Comic Sans MS', 'Chalkboard SE', 'PingFang HK', 'Microsoft JhengHei', sans-serif;
+            background: linear-gradient(135deg, #fdf2f8 0%, #fef9c3 100%);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
 
-    /* 單一焦點主舞台（嚴格控制高度，iPad 橫向一屏完整呈現） */
-    .stage-box { background: #fff1f2; border: 3px dashed #f9a8d4; border-radius: 22px; padding: 14px; min-height: 290px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; text-align: center; position: relative; }
+        .container {
+            width: 100%;
+            max-width: 720px;
+            background: #FFFFFF;
+            border-radius: 26px;
+            border: 4px solid var(--accent-pink);
+            box-shadow: 0 10px 25px rgba(244, 114, 182, 0.15);
+            padding: 16px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-    /* 進度小圓點（頂部單向路線） */
-    .step-dots { display: flex; gap: 8px; justify-content: center; margin-bottom: 4px; }
-    .dot { width: 12px; height: 12px; border-radius: 50%; background: #fce7f3; border: 2px solid #f472b6; }
-    .dot.active { background: #ec4899; transform: scale(1.25); }
-    .dot.done { background: #22c55e; border-color: #16a34a; }
+        /* 頂部導航列 */
+        .top-bar {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px dashed #fbcfe8;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+        }
 
-    /* 單一詞語超大大卡（一頁只顯示一個詞） */
-    .single-focus-card { background: white; border: 4px solid #f472b6; border-radius: 24px; padding: 14px 28px; width: 92%; max-width: 480px; box-shadow: 0 8px 20px rgba(244, 114, 182, 0.12); display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 4px 0; cursor: pointer; }
-    .big-emoji { font-size: 3.8rem; line-height: 1.1; margin-bottom: 6px; }
-    .big-adj { font-size: 1.55rem; font-weight: 900; color: #db2777; margin-bottom: 2px; letter-spacing: 2px; }
-    .big-noun { font-size: 2.7rem; font-weight: 900; color: #831843; letter-spacing: 4px; line-height: 1.15; }
-    .char-structure-note { background: #fef3c7; color: #b45309; font-size: 0.9rem; font-weight: 800; padding: 5px 12px; border-radius: 12px; margin-top: 8px; border: 1px solid #fde68a; }
+        .nav-btn {
+            text-decoration: none;
+            background: #fdf2f8;
+            border: 2px solid #f472b6;
+            color: #be185d;
+            padding: 6px 14px;
+            border-radius: 14px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
 
-    /* 底部大按鈕（單向推進） */
-    .next-action-btn { background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: white; border: none; border-radius: 20px; padding: 10px 26px; font-size: 1.15rem; font-weight: 900; cursor: pointer; box-shadow: 0 5px 12px rgba(34, 197, 94, 0.3); transition: transform 0.1s; }
-    .next-action-btn:active { transform: scale(0.96); }
+        .title-badge {
+            font-size: 1rem;
+            font-weight: 900;
+            color: #9d174d;
+        }
 
-    /* 單頁互動問題選項 */
-    .quiz-choices { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; width: 100%; margin: 8px 0; }
-    .choice-btn { background: white; border: 4px solid #ec4899; border-radius: 20px; padding: 12px 22px; font-size: 1.5rem; font-weight: 900; color: #831843; cursor: pointer; min-width: 170px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: transform 0.1s; }
-    .choice-btn:active { transform: scale(0.95); }
-    .gentle-hint-box { background: #ecfdf5; border: 2px solid #10b981; color: #065f46; border-radius: 16px; padding: 8px 14px; font-size: 0.92rem; font-weight: 800; margin-top: 6px; max-width: 95%; line-height: 1.35; }
+        /* 提示橫幅 */
+        .banner {
+            width: 100%;
+            background: #fffbeb;
+            border: 2px solid #fcd34d;
+            border-radius: 18px;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
 
-    /* 兒歌單頁朗讀與圈熟字 */
-    .poem-stage-card { background: white; border: 3px solid #c084fc; border-radius: 20px; padding: 10px 18px; width: 95%; margin: 4px 0; }
-    .poem-single-line { font-size: 1.35rem; font-weight: 900; color: #334155; margin: 6px 0; letter-spacing: 2px; cursor: pointer; padding: 3px 8px; border-radius: 10px; }
-    .poem-single-line:hover { background: #fef08a; }
-    .circle-char { display: inline-block; padding: 2px 5px; margin: 1px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; }
-    .circle-char.circled { border-color: #16a34a; background: #dcfce7; color: #15803d; transform: scale(1.12); }
+        .banner-icon {
+            font-size: 2rem;
+        }
 
-    /* 每日地圖（Day 1 - Day 10 解鎖介面） */
-    .day-map-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; width: 100%; margin-top: 6px; }
-    .day-card { background: white; border: 3px solid #f472b6; border-radius: 16px; padding: 8px 4px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
-    .day-card.locked { background: #f1f5f9; border-color: #cbd5e1; color: #94a3b8; cursor: not-allowed; opacity: 0.75; }
-    .day-card.today { background: #fdf2f8; border-color: #db2777; box-shadow: 0 0 12px rgba(219, 39, 119, 0.35); transform: scale(1.03); }
-    .day-card.completed { background: #f0fdf4; border-color: #22c55e; }
-  </style>
+        .banner-text {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: #78350f;
+            line-height: 1.4;
+        }
+
+        /* 十天任務網格 */
+        .days-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .day-card {
+            background: #FFFFFF;
+            border: 3px solid #cbd5e1;
+            border-radius: 18px;
+            padding: 12px 6px;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            transition: all 0.15s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            min-height: 90px;
+            position: relative;
+        }
+
+        /* Day 1 解鎖可用狀態 */
+        .day-card.unlocked {
+            background: #d1fae5;
+            border-color: #10b981;
+            color: #065f46;
+        }
+
+        .day-card.unlocked:active {
+            transform: scale(0.95);
+        }
+
+        .day-card.unlocked .day-emoji {
+            font-size: 1.8rem;
+            margin-bottom: 2px;
+        }
+
+        .day-card.unlocked .day-title {
+            font-size: 0.9rem;
+            font-weight: 900;
+        }
+
+        .day-card.unlocked .day-sub {
+            font-size: 0.72rem;
+            color: #047857;
+            font-weight: 700;
+        }
+
+        /* Day 2 - Day 10 待解鎖狀態 */
+        .day-card.locked {
+            background: #f8fafc;
+            border: 2px dashed #cbd5e1;
+            color: #94a3b8;
+            pointer-events: none;
+        }
+
+        .day-card.locked .day-emoji {
+            font-size: 1.5rem;
+            opacity: 0.5;
+            filter: grayscale(40%);
+            margin-bottom: 2px;
+        }
+
+        .day-card.locked .day-title {
+            font-size: 0.85rem;
+            font-weight: 800;
+        }
+
+        .day-card.locked .day-sub {
+            font-size: 0.7rem;
+            color: #64748b;
+        }
+
+        footer {
+            margin-top: 10px;
+            font-size: 0.8rem;
+            color: #a0aec0;
+            text-align: center;
+        }
+
+        @media (max-width: 600px) {
+            .days-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
 </head>
 <body>
 
 <div class="container">
-  <div class="top-bar">
-    <a href="index.html" class="nav-btn">🏠 返回學習大門</a>
-    <button class="nav-btn" id="back-map-btn" style="display:none; background:#fffbeb; border-color:#f59e0b; color:#b45309;" onclick="renderDayMap()">📅 返回 10 日課表</button>
-    <span style="font-weight:900; color:#be185d; font-size:0.95rem;">👩‍🏫 P.21–25《我要謝謝你》每日課堂</span>
-    <button class="mom-btn" onclick="showMomReport()">👩 媽媽查看進度</button>
-  </div>
+    <!-- 頂部導航列 -->
+    <div class="top-bar">
+        <a href="index.html" class="nav-btn">🏠 返回學習大門</a>
+        <span class="title-badge">🏮 P.21-25 《我要謝謝你》每日課堂</span>
+        <a href="index.html" class="nav-btn" style="background:#eff6ff; border-color:#60a5fa; color:#1d4ed8;">✨ 樂園首頁</a>
+    </div>
 
-  <div class="tutor-banner">
-    <div class="tutor-avatar">👩‍🏫</div>
-    <div class="tutor-speech" id="tutor-text">哈囉小寶貝！今日爸爸媽媽忙緊，由老師一頁一頁帶妳去野餐學新字啦！</div>
-    <button class="replay-btn" onclick="speakText(currentSpeech, 0.72)" title="重聽老師說話">🔊</button>
-  </div>
+    <!-- 提示橫幅 -->
+    <div class="banner">
+        <div class="banner-icon">🐥</div>
+        <div class="banner-text">
+            哈囉小寶貝！今日係我哋嘅 <b>Day 1 課堂</b>，快啲撳下面翠綠色嘅 <b>Day 1 卡片</b>開始跟 Anna 老師上堂啦！
+        </div>
+    </div>
 
-  <div class="stage-box" id="stage-content"></div>
+    <!-- 十天學習進度網格 -->
+    <div class="days-grid">
+        <!-- Day 1：已連結 Anna 老師製作的專屬網頁 -->
+        <a href="chinese-p21-25-d1.html" class="day-card unlocked">
+            <span class="day-emoji">🌟</span>
+            <span class="day-title">Day 1</span>
+            <span class="day-sub">P.21 新字跟讀</span>
+        </a>
+
+        <!-- Day 2 - Day 10：全部設定為待解鎖 -->
+        <a href="#" class="day-card locked">
+            <span class="day-emoji">🔒</span>
+            <span class="day-title">Day 2</span>
+            <span class="day-sub">敬請期待</span>
+        </a>
+        <a href="#" class="day-card locked">
+            <span class="day-emoji">🔒</span>
+            <span class="day-title">Day 3</span>
+            <span class="day-sub">敬請期待</span>
+        </a>
+        <a href="#" class="day-card locked">
+            <span class="day-emoji">🔒</span>
+            <span class="day-title">Day 4</span>
+            <span class="day-sub">敬請期待</span>
+        </a>
+        <a href="#" class="day-card locked">
+            <span class="day-emoji">🔒</span>
+            <span class="day-title">Day 5</span>
+            <span class="day-sub">敬請期待</span>
+        </a>
+        <a href="#" class="day-card locked">
+            <span class="day-emoji">🔒</span>
+            <span class="day-title">Day 6</span>
+            <span class="day-sub">敬請期待</span>
+        </a>
+        <a href="#" class="day-card locked">
+            <span class="day-emoji">🔒</span>
+            <span class="day-title">Day 7</span>
+            <span class="day-sub">敬請期待</span>
+        </a>
+        <a href="#" class="day-card locked">
+            <span class="day-emoji">🔒</span>
+            <span class="day-title">Day 8</span>
+            <span class="day-sub">敬請期待</span>
+        </a>
+        <a href="#" class="day-card locked">
+            <span class="day-emoji">🔒</span>
+            <span class="day-title">Day 9</span>
+            <span class="day-sub">敬請期待</span>
+        </a>
+        <a href="#" class="day-card locked">
+            <span class="day-emoji">🔒</span>
+            <span class="day-title">Day 10</span>
+            <span class="day-sub">畢業典禮</span>
+        </a>
+    </div>
+
+    <footer>
+        Lingling's Chinese Classroom &copy; 2026 · Powered by Anna Teacher
+    </footer>
 </div>
 
-<script>
-// 兩週 10 日「單一焦點幻燈片」完整劇本庫（每一頁只顯示一個主角或一道問題）
-const dailyLessons = [
-  // ==================== DAY 1：P.21 詞語（上）＋ 截圖 3 道由淺入深問題 ====================
-  {
-    day: 1,
-    title: 'Day 1：美味野餐籃 (P.21 上)',
-    desc: '香香的蛋糕‧翠綠的蔬菜‧甜甜的蜜糖‧豆',
-    slides: [
-      {
-        type: 'teach_single',
-        emoji: '🎂',
-        adj: '香香的',
-        noun: '蛋糕',
-        readTarget: '香香的蛋糕',
-        note: '📖 課本 P.21 第 1 組詞語',
-        speech: '哈囉小寶貝！今日由老師陪妳去野餐啦！妳睇下第 21 頁第一樣嘢，係生日會食嘅「蛋糕」。蛋糕剛焗好嗰陣，鼻哥聞到好香，我哋叫佢做「香香的蛋糕」。來，撳一下張卡，跟老師細細聲讀一次：香、香、的、蛋、糕！'
-      },
-      {
-        type: 'teach_single',
-        emoji: '🥬',
-        adj: '翠綠的',
-        noun: '蔬菜',
-        readTarget: '翠綠的蔬菜',
-        note: '📖 課本 P.21 第 2 組詞語',
-        speech: '第二樣係好健康、顏色好似樹葉咁靚嘅「蔬菜」！課本叫佢做「翠綠的蔬菜」。來，跟老師慢速讀一次：翠、綠、的、蔬、菜！'
-      },
-      {
-        type: 'teach_single',
-        emoji: '🍯',
-        adj: '甜甜的',
-        noun: '蜜糖',
-        readTarget: '甜甜的蜜糖',
-        note: '📖 課本 P.21 第 3 組詞語',
-        speech: '第三樣係小蜜蜂整嘅「蜜糖」。放一滴落嘴仔度，嘩，好甜呀！我哋叫佢做「甜甜的蜜糖」。跟老師讀一次：甜、甜、的、蜜、糖！'
-      },
-      {
-        type: 'teach_single',
-        emoji: '🫘',
-        adj: '',
-        noun: '豆',
-        readTarget: '豆',
-        note: '💡 字形小秘密：上面一橫，中間有個「口」字，好似豆仔擺喺碟上面！',
-        speech: '最後睇下第 21 頁最下面左邊呢個單字，係一粒圓碌碌嘅「豆」字！「豆」字上面有一橫，中間有個細細嘅「口」字，好似一粒豆仔擺喺隻碟上面咁樣！跟老師讀一次：豆！'
-      },
-      {
-        type: 'quiz_step',
-        levelTag: '【第 1 題：認一認單字（淺）】',
-        visual: '🫘',
-        speech: '第 1 題：小寶貝，請妳用手指搵下——邊個字係第 21 頁最下面左邊、圓碌碌好似小珠珠咁樣嘅「豆」字呀？',
-        options: ['豆', '肉'],
-        answer: '豆',
-        hint: '唔緊要，我哋再睇真啲！「豆」字上面有一橫，中間有個細細嘅「口」字，好似一粒豆仔擺喺隻碟上面咁樣！再試一次啦！',
-        praise: '好叻女呀！一眼就認出圓碌碌嘅「豆」字啦！'
-      },
-      {
-        type: 'quiz_step',
-        levelTag: '【第 2 題：形容詞配對（中）】',
-        visual: '🐝 🍯 蜜糖',
-        speech: '第 2 題：小蜜蜂採花蜜整出嚟嘅「蜜糖」，食落口係咩味道㗎？係「翠綠的」定係「甜甜的」呀？',
-        options: ['翠綠的', '甜甜的'],
-        answer: '甜甜的',
-        hint: '諗下喔，「翠綠」係樹葉同埋蔬菜嘅綠色嚟㗎；蜜糖食落嘴仔會笑眯眯、好甜好甜，應該係邊個呢？',
-        praise: '答啱啦！甜甜的蜜糖！妳讀得好棒呀！'
-      },
-      {
-        type: 'quiz_step',
-        levelTag: '【第 3 題：看圖說句式（深 — P.22 預熱）】',
-        visual: '🍎 大蘋果 (P.22)',
-        speech: '第 3 題：請妳睇下第 22 頁上面第一幅圖係一個大蘋果！如果我哋用今日學過嘅詞語，將佢變成一句話「（形容詞）（食物名稱）。」，妳會揀邊句呀？',
-        options: ['甜甜的蘋果。', '翠綠的肉。'],
-        answer: '甜甜的蘋果。',
-        hint: '蘋果聞落去好香，食落去又好甜！妳可以試下揀「甜甜的蘋果。」喔！',
-        praise: '太棒啦！「甜甜的蘋果。」今日 Day 1 嘅三個任務全部完成啦！'
-      }
-    ]
-  },
-
-  // ==================== DAY 2：P.21 詞語（下） ====================
-  {
-    day: 2,
-    title: 'Day 2：新鮮食物與力氣 (P.21 下)',
-    desc: '新鮮的食物‧肉‧P.21 詞語配對',
-    slides: [
-      {
-        type: 'teach_single',
-        emoji: '🍱',
-        adj: '新鮮的',
-        noun: '食物',
-        readTarget: '新鮮的食物',
-        note: '📖 課本 P.21 第 4 組詞語',
-        speech: '歡迎返嚟 Day 2 課堂！今日我哋睇第 21 頁第四組詞語：剛剛煮好、乾乾淨淨好健康嘅，叫做「新鮮的食物」。來，跟老師慢速讀一次：新、鮮、的、食、物！'
-      },
-      {
-        type: 'teach_single',
-        emoji: '🥩',
-        adj: '',
-        noun: '肉',
-        readTarget: '肉',
-        note: '📖 課本 P.21 右下角單字（之前喺字寶寶學過喔！）',
-        speech: '再睇下第 21 頁最右下角呢個字，係長大高高、充滿力氣要食嘅「肉」字！入面有兩個小人字「人人」喺度。跟老師讀一次：肉！'
-      },
-      {
-        type: 'quiz_step',
-        levelTag: '【第 1 題：認一認單字（淺）】',
-        visual: '🥩 長高高有力氣',
-        speech: '小寶貝，邊個字係第 21 頁右下角、食咗會長高高有力氣嘅「肉」字呀？',
-        options: ['肉', '豆'],
-        answer: '肉',
-        hint: '溫柔提示：「肉」字外框打開，入面有兩個小「人」字疊埋一齊㗎！再試下啦！',
-        praise: '完全正確！呢個就係「肉」字！'
-      },
-      {
-        type: 'quiz_step',
-        levelTag: '【第 2 題：形容詞配對（中）】',
-        visual: '🎂 生日蛋糕',
-        speech: '生日會上面剛剛焗好嘅「蛋糕」，鼻哥聞落去好香，課本第 21 頁叫佢做咩蛋糕呀？',
-        options: ['香香的蛋糕', '翠綠的蛋糕'],
-        answer: '香香的蛋糕',
-        hint: '溫柔提示：用鼻哥聞到好香好香，所以係「香香的蛋糕」喔！',
-        praise: '好叻呀！香香的蛋糕！'
-      },
-      {
-        type: 'quiz_step',
-        levelTag: '【第 3 題：形容詞配對（深）】',
-        visual: '🥬 綠色健康青菜',
-        speech: '顏色好似樹葉咁靚嘅「蔬菜」，課本叫佢做咩蔬菜呀？',
-        options: ['翠綠的蔬菜', '甜甜的蔬菜'],
-        answer: '翠綠的蔬菜',
-        hint: '溫柔提示：蔬菜係綠色㗎，課本寫住「翠綠的蔬菜」，揀第一個試下啦！',
-        praise: '太叻啦！第 21 頁所有詞語妳都識晒啦！'
-      }
-    ]
-  },
-
-  // ==================== DAY 3：P.22 句式（一） ====================
-  {
-    day: 3,
-    title: 'Day 3：看圖說句式 (P.22 上)',
-    desc: '句式 1：(形容詞)(食物名稱)。',
-    slides: [
-      {
-        type: 'teach_single',
-        emoji: '🍎',
-        adj: '香香的 / 甜甜的',
-        noun: '蘋果。',
-        readTarget: '香香的蘋果。',
-        note: '📖 課本 P.22 句式 1：第 1 幅圖（蘋果）',
-        speech: '今日我哋學第 22 頁第一個句式：「（形容詞）（食物名稱）。」睇下第一幅圖係大蘋果，我哋可以講：「香香的蘋果。」跟老師讀一次啦！'
-      },
-      {
-        type: 'teach_single',
-        emoji: '🥕',
-        adj: '新鮮的',
-        noun: '紅蘿蔔。',
-        readTarget: '新鮮的紅蘿蔔。',
-        note: '📖 課本 P.22 句式 1：第 2 幅圖（紅蘿蔔）',
-        speech: '第 22 頁中間第二幅圖，係小白兔最鍾意食嘅紅蘿蔔！我哋可以用 P.21 學過嘅詞語，講成：「新鮮的紅蘿蔔。」跟老師讀一次啦！'
-      },
-      {
-        type: 'teach_single',
-        emoji: '🍌',
-        adj: '甜甜的',
-        noun: '香蕉。',
-        readTarget: '甜甜的香蕉。',
-        note: '📖 課本 P.22 句式 1：第 3 幅圖（香蕉）',
-        speech: '第 22 頁右邊第三幅圖，係彎彎黃色嘅香蕉！香蕉食落口好甜，我哋一齊講：「甜甜的香蕉。」'
-      },
-      {
-        type: 'quiz_step',
-        levelTag: '【P.22 句式小挑戰】',
-        visual: '🍌 彎彎的香蕉',
-        speech: '如果我哋要用第 22 頁句式讚下呢隻香蕉好甜，應該點樣講呀？',
-        options: ['甜甜的香蕉。', '翠綠的蜜糖。'],
-        answer: '甜甜的香蕉。',
-        hint: '溫柔提示：前面擺味道「甜甜的」，後面擺食物名稱「香蕉」，合埋就係「甜甜的香蕉。」啦！',
-        praise: '造句大成功！陣間記得喺課本 P.22 幫蘋果、紅蘿蔔同香蕉塗上靚靚顏色喔！'
-      }
-    ]
-  },
-
-  // ==================== DAY 4：P.22 句式（二）食物分類 ====================
-  {
-    day: 4,
-    title: 'Day 4：食物分類小專家 (P.22 下)',
-    desc: '句式 2：(食物名稱)是(食物類別)的食物。',
-    slides: [
-      {
-        type: 'teach_single',
-        emoji: '🥬🥕🧅🥔',
-        adj: '蔬菜是',
-        noun: '蔬菜類的食物。',
-        readTarget: '蔬菜是蔬菜類的食物。',
-        note: '📖 課本 P.22 句式 2 左圖：椰菜、紅蘿蔔、洋蔥、馬鈴薯',
-        speech: '今日我哋睇第 22 頁下面嘅句式 2！左邊有一籃菜，入面有椰菜、紅蘿蔔同洋蔥，佢哋全部都屬於「蔬菜類」家族！跟老師讀一次：蔬菜是蔬菜類的食物。'
-      },
-      {
-        type: 'teach_single',
-        emoji: '🍞🍚🍜',
-        adj: '米飯是',
-        noun: '五穀類的食物。',
-        readTarget: '米飯是五穀類的食物。',
-        note: '📖 課本 P.22 句式 2 右圖：麵包、白飯、麵條【課外補充：五穀類】',
-        speech: '再睇下第 22 頁右下角，有麵包、一碗白飯同埋麵條，食咗會飽肚有力氣，佢哋屬於「五穀類」家族！跟老師讀一次：米飯是五穀類的食物。'
-      },
-      {
-        type: 'quiz_step',
-        levelTag: '【P.22 分類句式挑戰 1】',
-        visual: '🥕 紅蘿蔔與椰菜 🥬',
-        speech: '請問第 22 頁左邊嘅紅蘿蔔同椰菜，係屬於邊一類嘅食物呀？',
-        options: ['蔬菜類的食物。', '零食類的食物。'],
-        answer: '蔬菜類的食物。',
-        hint: '溫柔提示：紅蘿蔔同椰菜都係綠色同健康嘅菜寶寶，屬於「蔬菜類的食物。」喔！',
-        praise: '好棒呀！妳已經係食物分類小專家啦！'
-      },
-      {
-        type: 'quiz_step',
-        levelTag: '【P.22 分類句式挑戰 2】',
-        visual: '🍚 白飯、麵包與麵條 🍞',
-        speech: '咁第 22 頁右邊嘅白飯同麵包，又係屬於邊一類嘅食物呢？',
-        options: ['五穀類的食物。', '玩具類的食物。'],
-        answer: '五穀類的食物。',
-        hint: '溫柔提示：白飯同麵包唔係玩具嚟㗎，佢哋係俾我哋力氣嘅「五穀類的食物。」！',
-        praise: '完全正確！第 22 頁兩個句式都難唔到妳啦！'
-      }
-    ]
-  },
-
-  // ==================== DAY 5：P.23 兒歌《均衡飲食》先讀後圈 ====================
-  {
-    day: 5,
-    title: 'Day 5：兒歌《均衡飲食》 (P.23)',
-    desc: '逐句跟讀 ➔ 手指尋寶圈出熟字',
-    slides: [
-      {
-        type: 'teach_single',
-        emoji: '🍚🥛🥩🥚',
-        adj: 'P.23 兒歌第 1–2 句',
-        noun: '米飯牛奶肉和蛋，\n一日三餐要均衡，',
-        readTarget: '米飯牛奶肉和蛋，一日三餐要均衡，',
-        note: '📖 課本 P.23《均衡飲食》前半首',
-        speech: '今日我哋讀第 23 頁嘅兒歌《均衡飲食》！先聽老師讀頭兩句：米飯牛奶肉和蛋，一日三餐要均衡。來，跟老師大聲讀一次啦！'
-      },
-      {
-        type: 'teach_single',
-        emoji: '🥬🍎🚫🍬',
-        adj: 'P.23 兒歌第 3–4 句',
-        noun: '少吃零食多吃菜，\n還有水果不可減。',
-        readTarget: '少吃零食多吃菜，還有水果不可減。',
-        note: '📖 課本 P.23《均衡飲食》後半首',
-        speech: '接住讀埋下面兩句喔：少吃零食多吃菜，還有水果不可減。意思係糖果零食要少食啲，蔬菜同水果要多食啲！跟老師讀一次啦！'
-      },
-      {
-        type: 'poem_circle',
-        title: '🔍 尋寶時間：喺《均衡飲食》圈出 5 個熟字！',
-        lines: ['米飯牛奶肉和蛋，', '一日三餐要均衡，', '少吃零食多吃菜，', '還有水果不可減。'],
-        knownChars: ['米','飯','牛','奶','肉','蛋','一','日','三','少','吃','多','菜','水','果','不'],
-        targetCount: 5,
-        speech: '兒歌讀得好順呀！而家進入「尋寶圈熟字」：請用手指喺兒歌入面，搵出 5 個妳之前學過嘅熟字（例如：米、肉、蛋、一、三、菜、果），篤一下圈起佢啦！'
-      },
-      {
-        type: 'quiz_step',
-        levelTag: '【P.23 兒歌理解問題】',
-        visual: '🥗 均衡飲食小寶寶',
-        speech: '《均衡飲食》兒歌教我哋：少吃零食，要多吃咩嘢呀？',
-        options: ['多吃菜', '多吃糖'],
-        answer: '多吃菜',
-        hint: '溫柔提示：兒歌第三句係「少吃零食多吃菜」，食翠綠嘅菜先至健康喔！',
-        praise: '太叻啦！陣間記得讀一次 P.23 俾媽媽聽，請媽媽喺課本簽名鼓勵妳！'
-      }
-    ]
-  },
-
-  // ==================== DAY 6：第一週 AI 動態溫習日 ====================
-  {
-    day: 6,
-    title: 'Day 6：第一週尋寶溫習日',
-    desc: '鞏固 P.21–23 重點詞語與兒歌',
-    slides: [
-      {
-        type: 'quiz_step',
-        levelTag: '【溫習第 1 關：聽音辨字】',
-        visual: '🎂 香噴噴',
-        speech: '歡迎來到溫習日！請問邊個詞語係「香香的蛋糕」呀？',
-        options: ['香香的蛋糕', '新鮮的食物'],
-        answer: '香香的蛋糕',
-        hint: '溫柔提示：搵下後面有「蛋糕」兩個字嗰個選項啦！',
-        praise: '記性真係好！一秒就搵到香香的蛋糕！'
-      },
-      {
-        type: 'quiz_step',
-        levelTag: '【溫習第 2 關：聽音辨字】',
-        visual: '🍱 乾乾淨淨剛煮好',
-        speech: '請問邊個詞語係「新鮮的食物」呀？',
-        options: ['新鮮的食物', '甜甜的蜜糖'],
-        answer: '新鮮的食物',
-        hint: '溫柔提示：小蜜蜂整嘅係甜甜的蜜糖；另一個就係「新鮮的食物」啦！',
-        praise: '好棒呀！「新鮮的食物」都完全記住咗！'
-      },
-      {
-        type: 'quiz_step',
-        levelTag: '【溫習第 3 關：兒歌填空】',
-        visual: '🍎 還有（ ？ ）不可減',
-        speech: '《均衡飲食》最後一句：「還有（咩嘢）不可減」呀？',
-        options: ['水果', '零食'],
-        answer: '水果',
-        hint: '溫柔提示：蘋果同香蕉都係健康嘅「水果」，每日都要食，不可減喔！',
-        praise: '第一週所有內容都完美過關啦！'
-      }
-    ]
-  },
-
-  // ==================== DAY 7：P.24 兒歌《米飯哪裏來？》 ====================
-  {
-    day: 7,
-    title: 'Day 7：兒歌《米飯哪裏來？》 (P.24)',
-    desc: '電飯鍋香氣 ➔ 朗讀與圈熟字',
-    slides: [
-      {
-        type: 'teach_single',
-        emoji: '🍲💨',
-        adj: 'P.24 兒歌第 1–2 句',
-        noun: '電飯鍋，一打開，\n米飯香氣飄過來。',
-        readTarget: '電飯鍋，一打開，米飯香氣飄過來。',
-        note: '📖 課本 P.24《米飯哪裏來？》前半首',
-        speech: '今日我哋翻開第 24 頁，睇下下面有個冒緊熱氣嘅電飯鍋！跟老師讀頭兩句：電飯鍋，一打開，米飯香氣飄過來！'
-      },
-      {
-        type: 'teach_single',
-        emoji: '🌾👨‍🌾🍚',
-        adj: 'P.24 兒歌第 3–4 句',
-        noun: '究竟米飯哪裏來？\n飯鍋先生變出來？',
-        readTarget: '究竟米飯哪裏來？飯鍋先生變出來？',
-        note: '📖 課本 P.24《米飯哪裏來？》後半首（農夫伯伯種出嚟㗎！）',
-        speech: '跟住讀下面兩句問號句：究竟米飯哪裏來？飯鍋先生變出來？哈哈，米飯唔係飯鍋先生變魔術變出嚟，係農夫伯伯辛苦種出嚟㗎，所以我哋要謝謝農夫伯伯！'
-      },
-      {
-        type: 'poem_circle',
-        title: '🔍 尋寶時間：喺《米飯哪裏來？》圈出 4 個熟字！',
-        lines: ['電飯鍋，一打開，', '米飯香氣飄過來。', '究竟米飯哪裏來？', '飯鍋先生變出來？'],
-        knownChars: ['飯','一','開','米','香','生','出','來'],
-        targetCount: 4,
-        speech: '而家請用手指喺《米飯哪裏來？》入面，搵出 4 個妳識得嘅熟字（例如：一、開、米、飯、香、出、來），圈起佢啦！'
-      },
-      {
-        type: 'quiz_step',
-        levelTag: '【P.24 兒歌小問答】',
-        visual: '🍲 電飯鍋，一打開',
-        speech: '電飯鍋一打開，咩嘢嘅香氣飄過來呀？',
-        options: ['米飯', '蝸牛'],
-        answer: '米飯',
-        hint: '溫柔提示：電飯鍋入面煮緊白雪雪一粒粒、好香嘅「米飯」喔！',
-        praise: '答啱啦！今晚食飯打開電飯鍋嗰陣，記得唸呢首兒歌俾媽媽聽喔！'
-      }
-    ]
-  },
-
-  // ==================== DAY 8：P.25 品格兒歌《蝸牛（順服）》 ====================
-  {
-    day: 8,
-    title: 'Day 8：品格兒歌《蝸牛》 (P.25)',
-    desc: '背着房子也不愁 ➔ 朗讀與圈熟字',
-    slides: [
-      {
-        type: 'teach_single',
-        emoji: '🐌😊',
-        adj: 'P.25 兒歌第 1–2 句',
-        noun: '蝸牛、蝸牛\n喜歡神造的樣貌，',
-        readTarget: '蝸牛、蝸牛，喜歡神造的樣貌，',
-        note: '📖 課本 P.25《蝸牛》（品格：順服 Obey）',
-        speech: '今日我哋去第 25 頁探下可愛嘅小蝸牛！小蝸牛好聽話、好順服，好鍾意自己個樣。跟老師讀頭兩句：蝸牛、蝸牛，喜歡神造的樣貌。'
-      },
-      {
-        type: 'teach_single',
-        emoji: '🐌🏠🌿',
-        adj: 'P.25 兒歌第 3–4 句',
-        noun: '背着房子也不愁，\n喜歡慢慢四處遊。',
-        readTarget: '背着房子也不愁，喜歡慢慢四處遊。',
-        note: '📖 課本 P.25《蝸牛》後半首',
-        speech: '小蝸牛背脊上面個殼，就好似佢間小房子咁，雖然重重哋但佢都唔擔心、笑眯眯！跟老師讀下面兩句：背着房子也不愁，喜歡慢慢四處遊。'
-      },
-      {
-        type: 'poem_circle',
-        title: '🔍 尋寶時間：喺《蝸牛》兒歌圈出 3 個熟字！',
-        lines: ['蝸牛、蝸牛', '喜歡神造的樣貌，', '背着房子也不愁，', '喜歡慢慢四處遊。'],
-        knownChars: ['牛','的','子','也','不','四'],
-        targetCount: 3,
-        speech: '請用手指喺《蝸牛》兒歌入面，搵出 3 個熟字朋友（例如：牛、的、不、四），篤一下圈起佢啦！'
-      },
-      {
-        type: 'quiz_step',
-        levelTag: '【P.25 兒歌小問答】',
-        visual: '🐌 背着重重的小殼',
-        speech: '小蝸牛背脊上面背着咩嘢也不愁，開開心心慢慢四處遊呀？',
-        options: ['背着房子', '背着電飯鍋'],
-        answer: '背着房子',
-        hint: '溫柔提示：小蝸牛個殼係佢間屋企，兒歌講「背着房子也不愁」喔！',
-        praise: '好乖好叻呀！記得幫第 25 頁隻小蝸牛塗上靚靚顏色喔！'
-      }
-    ]
-  },
-
-  // ==================== DAY 9：P.21–25 綜合尋寶與弱項特訓 ====================
-  {
-    day: 9,
-    title: 'Day 9：P.21–25 綜合大尋寶',
-    desc: '無圖辨字與句式兒歌總複習',
-    slides: [
-      {
-        type: 'quiz_step',
-        levelTag: '【綜合挑戰第 1 關：無圖認字】',
-        visual: '👂 專心聽老師讀字',
-        speech: '而家唔睇公仔考下妳：邊個詞語係綠色好健康嘅「翠綠的蔬菜」呀？',
-        options: ['翠綠的蔬菜', '甜甜的蜜糖'],
-        answer: '翠綠的蔬菜',
-        hint: '溫柔提示：蔬菜有草花頭「艹」，開頭係「翠綠的」，揀第一個啦！',
-        praise: '太厲害啦！唔睇公仔都認得「翠綠的蔬菜」！'
-      },
-      {
-        type: 'quiz_step',
-        levelTag: '【綜合挑戰第 2 關：無圖認字】',
-        visual: '👂 專心聽老師讀字',
-        speech: '邊個單字係上面一橫、中間一個口、圓碌碌嘅「豆」字呀？',
-        options: ['豆', '肉'],
-        answer: '豆',
-        hint: '溫柔提示：好似一粒豆仔擺喺隻碟上面、中間有個細細「口」字嗰個呢！',
-        praise: '完全正確！一眼就搵到「豆」字！'
-      },
-      {
-        type: 'quiz_step',
-        levelTag: '【綜合挑戰第 3 關：兒歌記憶】',
-        visual: '🍲 飯鍋先生變出來？',
-        speech: '「電飯鍋，一打開，米飯香氣飄過來。」係邊首兒歌入面嘅句子呀？',
-        options: ['米飯哪裏來？', '蝸牛'],
-        answer: '米飯哪裏來？',
-        hint: '溫柔提示：講電飯鍋同米飯香氣嘅，係第 24 頁《米飯哪裏來？》喔！',
-        praise: '三關全過！聽日就係我哋嘅小小朗誦家畢業禮啦！'
-      }
-    ]
-  },
-
-  // ==================== DAY 10：小小朗誦家畢業成果展 ====================
-  {
-    day: 10,
-    title: 'Day 10：小小朗誦家畢業禮 👑',
-    desc: '大聲朗讀表演 ➔ 領取感恩小天使皇冠',
-    slides: [
-      {
-        type: 'teach_single',
-        emoji: '👑🎤',
-        adj: '畢業表演第 1 關',
-        noun: '香香的蛋糕、翠綠的蔬菜、\n甜甜的蜜糖、新鮮的食物！',
-        readTarget: '香香的蛋糕，翠綠的蔬菜，甜甜的蜜糖，新鮮的食物。',
-        note: '🌟 大聲跟讀一次 P.21 四大美味詞語！',
-        speech: '恭喜小寶貝來到最後一日畢業禮！跟老師精神奕奕讀一次第 21 頁嘅詞語，預備開始：香香的蛋糕、翠綠的蔬菜、甜甜的蜜糖、新鮮的食物！'
-      },
-      {
-        type: 'teach_single',
-        emoji: '🥗🍚🐌',
-        adj: '畢業表演第 2 關',
-        noun: '我要謝謝你！\n一日三餐要均衡！',
-        readTarget: '我要謝謝你！米飯牛奶肉和蛋，一日三餐要均衡！',
-        note: '🌟 大聲對爸爸媽媽同農夫伯伯講聲謝謝！',
-        speech: '最後，我哋一齊大聲講出呢個單元嘅主題：「我要謝謝你！」多謝爸爸媽媽同農夫伯伯俾我哋美味嘅食物！撳下面個掣領取妳嘅畢業皇冠啦！'
-      }
-    ]
-  }
-];
-
-let unlockedDay = parseInt(localStorage.getItem('lingling_cn_p21_unlocked_day') || '1', 10);
-let completedDays = JSON.parse(localStorage.getItem('lingling_cn_p21_done_days') || '[]');
-let wrongCounts = JSON.parse(localStorage.getItem('lingling_cn_p21_errors') || '{}');
-
-let currentDayIdx = 0;
-let currentSlideIdx = 0;
-let currentSpeech = '';
-let circledCountInSlide = 0;
-
-function speakText(text, rate = 0.72) {
-  currentSpeech = text;
-  document.getElementById('tutor-text').innerText = text;
-  if ('speechSynthesis' in window) {
-    window.speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = 'zh-HK';
-    u.rate = rate;
-    window.speechSynthesis.speak(u);
-  }
-}
-
-function saveState() {
-  localStorage.setItem('lingling_cn_p21_unlocked_day', String(unlockedDay));
-  localStorage.setItem('lingling_cn_p21_done_days', JSON.stringify(completedDays));
-  localStorage.setItem('lingling_cn_p21_errors', JSON.stringify(wrongCounts));
-}
-
-// 顯示 10 日進度大門（預設直接凸顯今日應上課堂）
-function renderDayMap() {
-  document.getElementById('back-map-btn').style.display = 'none';
-  const todayTarget = Math.min(unlockedDay, 10);
-  const todayLesson = dailyLessons[todayTarget - 1];
-
-  speakText(`哈囉小寶貝！今日係我哋嘅第 ${todayTarget} 日課堂：「${todayLesson.title}」，快啲撳中間大大個粉紅色掣開始上堂啦！`, 0.75);
-
-  let gridHtml = dailyLessons.map(d => {
-    const isDone = completedDays.includes(d.day);
-    const isUnlocked = d.day <= unlockedDay;
-    const isToday = d.day === todayTarget;
-    let statusIcon = isDone ? '✅' : (isUnlocked ? '🌟' : '🔒');
-    let cls = isDone ? 'completed' : (isToday ? 'today' : (!isUnlocked ? 'locked' : ''));
-    return `
-      <div class="day-card ${cls}" onclick="${isUnlocked ? `startDay(${d.day - 1})` : `speakText('呢一課係 Day ${d.day}，要完成咗今日嘅課堂先至會自動解鎖喔！', 0.75)`}">
-        <div style="font-size:1.3rem;">${statusIcon}</div>
-        <div style="font-weight:900; font-size:0.9rem; color:#831843;">Day ${d.day}</div>
-        <div style="font-size:0.7rem; color:#64748b; font-weight:700;">P.21-25</div>
-      </div>
-    `;
-  }).join('');
-
-  document.getElementById('stage-content').innerHTML = `
-    <div style="background:white; border:4px solid #ec4899; border-radius:22px; padding:14px 20px; width:95%; box-shadow:0 6px 16px rgba(236,72,153,0.15);">
-      <div style="font-size:0.9rem; font-weight:900; color:#db2777;">📅 今日專屬自動解鎖課堂（約 8 分鐘‧做完即止）</div>
-      <div style="font-size:1.45rem; font-weight:900; color:#831843; margin:6px 0;">${todayLesson.title}</div>
-      <div style="font-size:0.9rem; color:#475569; font-weight:800; margin-bottom:10px;">${todayLesson.desc}（共 ${todayLesson.slides.length} 小步）</div>
-      <button class="next-action-btn" style="font-size:1.25rem; padding:12px 32px; background:linear-gradient(135deg, #ec4899 0%, #be185d 100%);" onclick="startDay(${todayTarget - 1})">
-        ▶ 開始今日課堂 (Day ${todayTarget})
-      </button>
-    </div>
-    <div class="day-map-grid">${gridHtml}</div>
-  `;
-}
-
-function startDay(dayIdx) {
-  currentDayIdx = dayIdx;
-  currentSlideIdx = 0;
-  document.getElementById('back-map-btn').style.display = 'inline-block';
-  renderCurrentSlide();
-}
-
-function renderCurrentSlide() {
-  const lesson = dailyLessons[currentDayIdx];
-  const slides = lesson.slides;
-
-  // 若已完成當日所有步驟 -> 顯示今日畢業獎盃頁（做完即止）
-  if (currentSlideIdx >= slides.length) {
-    if (!completedDays.includes(lesson.day)) {
-      completedDays.push(lesson.day);
-    }
-    if (unlockedDay <= lesson.day && unlockedDay < 10) {
-      unlockedDay = lesson.day + 1;
-    }
-    saveState();
-
-    speakText(`太棒啦！今日 Day ${lesson.day} 嘅課堂已經全部完成啦！妳攞到今日嘅超級大獎盃！而家可以收起 iPad，去搵媽媽睇報告同抱抱妳，聽日再玩 Day ${Math.min(lesson.day + 1, 10)} 啦！`, 0.75);
-
-    document.getElementById('stage-content').innerHTML = `
-      <div style="background:white; border:4px solid #f59e0b; border-radius:24px; padding:18px; width:92%; max-width:480px;">
-        <div style="font-size:4rem;">🏆🎉</div>
-        <div style="font-size:1.5rem; font-weight:900; color:#b45309; margin:6px 0;">Day ${lesson.day} 今日下課啦！</div>
-        <div style="font-size:0.95rem; font-weight:800; color:#475569; margin-bottom:14px;">
-          小寶貝今日好專心跟老師學晒所有內容！<br>聽日嘅 <b>Day ${Math.min(lesson.day + 1, 10)}</b> 已經為妳自動解鎖啦！
-        </div>
-        <button class="next-action-btn" onclick="showMomReport()">👩 叫媽媽睇今日 1 分鐘報告</button>
-      </div>
-    `;
-    return;
-  }
-
-  const slide = slides[currentSlideIdx];
-  const dotsHtml = slides.map((_, idx) => {
-    let cls = idx < currentSlideIdx ? 'done' : (idx === currentSlideIdx ? 'active' : '');
-    return `<div class="dot ${cls}"></div>`;
-  }).join('');
-
-  // 類型 1：單一詞語/句式焦點教學頁（一頁只顯示一個詞）
-  if (slide.type === 'teach_single') {
-    speakText(slide.speech, 0.72);
-    document.getElementById('stage-content').innerHTML = `
-      <div class="step-dots">${dotsHtml}</div>
-      <div class="single-focus-card" onclick="speakText('${slide.readTarget}', 0.65)">
-        <div class="big-emoji">${slide.emoji}</div>
-        ${slide.adj ? `<div class="big-adj">${slide.adj}</div>` : ''}
-        <div class="big-noun">${slide.noun.replace(/\n/g, '<br>')}</div>
-        <div class="char-structure-note">${slide.note}（撳卡片可慢速重聽 🔊）</div>
-      </div>
-      <button class="next-action-btn" onclick="goNextSlide()">🌟 我讀好啦！下一個 ➔</button>
-    `;
-  }
-  // 類型 2：單一問題由淺入深頁（答對自動進入下一頁，答錯出溫和提示）
-  else if (slide.type === 'quiz_step') {
-    speakText(slide.speech, 0.72);
-    let choicesHtml = slide.options.map(opt => `
-      <button class="choice-btn" onclick="checkSlideQuiz('${opt}')">${opt}</button>
-    `).join('');
-
-    document.getElementById('stage-content').innerHTML = `
-      <div class="step-dots">${dotsHtml}</div>
-      <div style="font-size:0.95rem; font-weight:900; color:#be185d;">${slide.levelTag}</div>
-      <div style="font-size:2.4rem; font-weight:900; color:#831843; background:white; padding:8px 24px; border-radius:20px; border:3px solid #fbcfe8;">
-        ${slide.visual}
-      </div>
-      <div class="quiz-choices">${choicesHtml}</div>
-      <div class="gentle-hint-box" id="slide-hint" style="display:none;"></div>
-    `;
-  }
-  // 類型 3：兒歌尋寶圈熟字單頁
-  else if (slide.type === 'poem_circle') {
-    circledCountInSlide = 0;
-    speakText(slide.speech, 0.72);
-    let linesHtml = slide.lines.map(line => {
-      let chHtml = line.split('').map(ch => {
-        if ('，。？、'.includes(ch)) return ch;
-        return `<span class="circle-char" onclick="tapPoemChar(this, '${ch}', ${slide.targetCount})">${ch}</span>`;
-      }).join('');
-      return `<div class="poem-single-line">${chHtml}</div>`;
-    }).join('');
-
-    document.getElementById('stage-content').innerHTML = `
-      <div class="step-dots">${dotsHtml}</div>
-      <div style="font-size:0.95rem; font-weight:900; color:#6b21a8;" id="circle-progress">${slide.title}（已圈出 0 / ${slide.targetCount} 個）</div>
-      <div class="poem-stage-card">${linesHtml}</div>
-      <button class="next-action-btn" onclick="goNextSlide()">🌟 圈好熟字啦！下一步 ➔</button>
-    `;
-  }
-}
-
-function goNextSlide() {
-  currentSlideIdx++;
-  renderCurrentSlide();
-}
-
-function checkSlideQuiz(selected) {
-  const slide = dailyLessons[currentDayIdx].slides[currentSlideIdx];
-  const hintBox = document.getElementById('slide-hint');
-  if (selected === slide.answer) {
-    speakText(slide.praise, 0.78);
-    setTimeout(() => {
-      currentSlideIdx++;
-      renderCurrentSlide();
-    }, 1800);
-  } else {
-    wrongCounts[slide.answer] = (wrongCounts[slide.answer] || 0) + 1;
-    saveState();
-    hintBox.style.display = 'block';
-    hintBox.innerText = '💡 溫柔提示：' + slide.hint;
-    speakText(slide.hint, 0.72);
-  }
-}
-
-function tapPoemChar(el, ch, targetCount) {
-  const slide = dailyLessons[currentDayIdx].slides[currentSlideIdx];
-  if (!el.classList.contains('circled')) {
-    el.classList.add('circled');
-    circledCountInSlide++;
-    const prog = document.getElementById('circle-progress');
-    if (prog) prog.innerText = `${slide.title}（已圈出 ${circledCountInSlide} / ${targetCount} 個）`;
-  }
-  if (slide.knownChars.includes(ch)) {
-    speakText(`好叻呀！搵到熟字「${ch}」！`, 0.75);
-  } else {
-    speakText(`呢個係兒歌新字「${ch}」，跟老師讀一次：${ch}！`, 0.7);
-  }
-}
-
-// 媽媽 1 分鐘進度報告與全解鎖測試開關
-function showMomReport() {
-  document.getElementById('back-map-btn').style.display = 'inline-block';
-  const errKeys = Object.keys(wrongCounts);
-  let errHtml = errKeys.length === 0
-    ? '<span style="color:#16a34a; font-weight:800;">目前所有問題均一次答對，無卡關字詞！</span>'
-    : errKeys.map(k => `• <b>${k}</b>（觸發溫和提示 ${wrongCounts[k]} 次）`).join('<br>');
-
-  document.getElementById('stage-content').innerHTML = `
-    <div style="text-align:left; width:100%; background:white; padding:12px 16px; border-radius:18px; border:3px solid #60a5fa;">
-      <h3 style="margin:0 0 6px 0; color:#1d4ed8; font-size:1.05rem;">📊 媽媽 1 分鐘激勵報告（P.21–25 每日自動解鎖紀錄）</h3>
-      <p style="margin:4px 0; font-size:0.9rem;">📅 <b>目前已解鎖進度：</b> Day ${unlockedDay} / 10 日（已完成：${completedDays.length > 0 ? completedDays.map(d=>'Day '+d).join(', ') : '準備開始 Day 1'}）</p>
-      <p style="margin:4px 0; font-size:0.9rem;"><b>📌 AI 導師弱項提示紀錄：</b><br>${errHtml}</p>
-      <hr style="border:none; border-top:1px dashed #cbd5e1; margin:8px 0;">
-      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:6px;">
-        <button class="nav-btn" style="background:#dcfce7; border-color:#22c55e; color:#15803d;" onclick="unlockAllForMom()">🔓 媽媽測試：一鍵解鎖全部 10 日</button>
-        <button class="nav-btn" style="background:#fee2e2; border-color:#ef4444; color:#b91c1c;" onclick="resetToDay1()">🔄 重設回 Day 1 鎖定狀態</button>
-      </div>
-    </div>
-  `;
-  speakText('呢個係媽媽專屬進度報告，媽媽亦可以撳綠色掣一鍵解鎖全部十日課堂嚟預覽檢查喔！', 0.82);
-}
-
-function unlockAllForMom() {
-  unlockedDay = 10;
-  saveState();
-  renderDayMap();
-}
-
-function resetToDay1() {
-  unlockedDay = 1;
-  completedDays = [];
-  saveState();
-  renderDayMap();
-}
-
-window.onload = () => renderDayMap();
-</script>
 </body>
 </html>
