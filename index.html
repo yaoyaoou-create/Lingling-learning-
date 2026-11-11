@@ -1,131 +1,664 @@
 <!DOCTYPE html>
 <html lang="zh-HK">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>玲玲的成長學習樂園</title>
-  <style>
-    * { box-sizing: border-box; user-select: none; -webkit-user-select: none; font-family: 'Comic Sans MS', 'Chalkboard SE', "PingFang HK", system-ui, sans-serif; }
-    body { margin: 0; padding: 12px; background: linear-gradient(135deg, #e0f2fe 0%, #fef9c3 100%); min-height: 100vh; display: flex; flex-direction: column; align-items: center; color: #1e293b; }
-    .container { width: 100%; max-width: 820px; background: #ffffff; border-radius: 24px; box-shadow: 0 10px 25px rgba(2, 132, 199, 0.1); padding: 14px; border: 4px solid #38bdf8; }
-    .header { text-align: center; margin-bottom: 12px; border-bottom: 3px dashed #bae6fd; padding-bottom: 8px; }
-    .title { font-size: 1.7rem; font-weight: 900; color: #0369a1; margin: 0 0 4px 0; }
-    .subtitle { font-size: 0.9rem; color: #64748b; font-weight: 700; margin: 0; }
-    
-    .section { margin-bottom: 14px; }
-    .section-title { font-size: 1.1rem; font-weight: 900; color: #0f172a; margin: 0 0 8px 4px; display: flex; align-items: center; gap: 6px; }
-    
-    /* 橫向網格排版：自動並排顯示，不隨內容增加而拉長 */
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
-    
-    .card-link { text-decoration: none; display: flex; flex-direction: column; align-items: center; text-align: center; padding: 10px 8px; border-radius: 18px; border: 3px solid transparent; transition: transform 0.15s; box-shadow: 0 4px 10px rgba(0,0,0,0.05); position: relative; }
-    .card-link:active { transform: scale(0.96); }
-    .ai-badge { position: absolute; top: -8px; right: 8px; background: #e11d48; color: white; font-size: 0.68rem; font-weight: 900; padding: 2px 7px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.15); }
-    
-    .icon-box { font-size: 2rem; width: 46px; height: 46px; border-radius: 14px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.9); margin-bottom: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.04); }
-    .card-info h3 { margin: 0 0 3px 0; font-size: 0.92rem; font-weight: 900; line-height: 1.2; }
-    .card-info p { margin: 0; font-size: 0.74rem; font-weight: 700; opacity: 0.85; line-height: 1.2; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>玲玲K2嘅學習成長樂園</title>
+    <style>
+        :root {
+            --bg-main: #FDFBF7;
+            --text-dark: #2D3748;
+            --text-muted: #718096;
 
-    /* 各區主題配色 */
-    .theme-thomas { background: #eff6ff; border-color: #3b82f6; color: #1e3a8a; }
-    .theme-cn-ai { background: #fff1f2; border-color: #f43f5e; color: #881337; }
-    .theme-cn { background: #fdf2f8; border-color: #f472b6; color: #831843; }
-    .theme-en-ai { background: #ecfeff; border-color: #06b6d4; color: #164e63; }
-    .theme-en1 { background: #f0fdf4; border-color: #4ade80; color: #14532d; }
-    .theme-en2 { background: #fffbeb; border-color: #fbbf24; color: #78350f; }
-    .theme-en3 { background: #f5f3ff; border-color: #a78bfa; color: #4c1d95; }
-    .theme-master { background: #fef2f2; border-color: #fb7185; color: #9f1239; }
-  </style>
+            /* 六大分類專屬識別色 */
+            --cn-class-main: #F59E0B;
+            --cn-class-bg: #FEF3C7;
+            --cn-class-border: #FCD34D;
+
+            --en-class-main: #0EA5E9;
+            --en-class-bg: #E0F2FE;
+            --en-class-border: #7DD3FC;
+
+            --cn-quiz-main: #10B981;
+            --cn-quiz-bg: #D1FAE5;
+            --cn-quiz-border: #6EE7B7;
+
+            --en-quiz-main: #8B5CF6;
+            --en-quiz-bg: #EDE9FE;
+            --en-quiz-border: #C4B5FD;
+
+            --book-main: #F43F5E;
+            --book-bg: #FFE4E6;
+            --book-border: #FDA4AF;
+
+            --video-main: #EF4444;
+            --video-bg: #FEE2E2;
+            --video-border: #FCA5A5;
+        }
+
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            margin: 0;
+            padding: 16px 20px 24px 20px;
+            font-family: 'Comic Sans MS', 'Chalkboard SE', 'PingFang HK', 'Microsoft JhengHei', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1080px;
+        }
+
+        /* 頂部標題 */
+        header {
+            text-align: center;
+            margin-bottom: 14px;
+        }
+
+        .header-title {
+            font-size: 26px;
+            font-weight: 800;
+            color: #1E293B;
+            margin: 0 0 4px 0;
+            letter-spacing: 1px;
+        }
+
+        .header-subtitle {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        /* 六大分類導航列 */
+        .category-nav {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .nav-tab {
+            background: #FFFFFF;
+            border: 3px solid #E2E8F0;
+            border-radius: 16px;
+            padding: 8px 4px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            transition: all 0.18s ease;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.03);
+            font-family: inherit;
+        }
+
+        .nav-tab:active {
+            transform: scale(0.95);
+        }
+
+        .nav-tab .tab-icon {
+            font-size: 24px;
+            line-height: 1;
+        }
+
+        .nav-tab .tab-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-dark);
+            text-align: center;
+        }
+
+        /* 選中狀態樣式 */
+        .nav-tab.active-cn-class { background: var(--cn-class-bg); border-color: var(--cn-class-main); }
+        .nav-tab.active-en-class { background: var(--en-class-bg); border-color: var(--en-class-main); }
+        .nav-tab.active-cn-quiz  { background: var(--cn-quiz-bg);  border-color: var(--cn-quiz-main); }
+        .nav-tab.active-en-quiz  { background: var(--en-quiz-bg);  border-color: var(--en-quiz-main); }
+        .nav-tab.active-book     { background: var(--book-bg);     border-color: var(--book-main); }
+        .nav-tab.active-video    { background: var(--video-bg);    border-color: var(--video-main); }
+
+        /* 分類內容區塊 */
+        .category-section {
+            display: none;
+            background: #FFFFFF;
+            border-radius: 22px;
+            padding: 18px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.04);
+            border: 3px solid #EDF2F7;
+            margin-bottom: 16px;
+        }
+
+        .category-section.active {
+            display: block;
+            animation: fadeIn 0.2s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 14px;
+            padding-bottom: 10px;
+            border-bottom: 2px dashed #E2E8F0;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 800;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* 上下學期切換按鈕 */
+        .term-switcher {
+            display: flex;
+            gap: 6px;
+            background: #F1F5F9;
+            padding: 3px;
+            border-radius: 12px;
+        }
+
+        .term-btn {
+            border: none;
+            background: transparent;
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .term-btn.active {
+            background: #FFFFFF;
+            color: var(--text-dark);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+        }
+
+        .term-group {
+            display: none;
+        }
+
+        .term-group.active {
+            display: block;
+        }
+
+        /* 單元卡片網格 */
+        .unit-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+        }
+
+        /* 單元卡片 */
+        .unit-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 14px 10px;
+            border-radius: 18px;
+            text-decoration: none;
+            color: var(--text-dark);
+            border: 3px solid transparent;
+            transition: transform 0.15s ease;
+            min-height: 125px;
+        }
+
+        .unit-card:active {
+            transform: scale(0.95);
+        }
+
+        .unit-emoji {
+            font-size: 32px;
+            margin-bottom: 6px;
+            line-height: 1;
+        }
+
+        .unit-tag {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 8px;
+            margin-bottom: 4px;
+            background: rgba(255,255,255,0.85);
+        }
+
+        .unit-name {
+            font-size: 14px;
+            font-weight: 800;
+            margin: 0 0 2px 0;
+            line-height: 1.25;
+        }
+
+        .unit-desc {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        /* 卡片邊框與底色 */
+        .card-cn-class { background: var(--cn-class-bg); border-color: var(--cn-class-border); }
+        .card-cn-class .unit-tag { color: #B45309; }
+
+        .card-en-class { background: var(--en-class-bg); border-color: var(--en-class-border); }
+        .card-en-class .unit-tag { color: #0369A1; }
+
+        .card-cn-quiz  { background: var(--cn-quiz-bg);  border-color: var(--cn-quiz-border); }
+        .card-cn-quiz .unit-tag  { color: #047857; }
+
+        .card-en-quiz  { background: var(--en-quiz-bg);  border-color: var(--en-quiz-border); }
+        .card-en-quiz .unit-tag  { color: #6D28D9; }
+
+        .card-book     { background: var(--book-bg);     border-color: var(--book-border); }
+        .card-book .unit-tag     { color: #BE123C; }
+
+        .card-video    { background: var(--video-bg);    border-color: var(--video-border); }
+        .card-video .unit-tag    { color: #B91C1C; }
+
+        /* 預留鎖定卡片 */
+        .unit-card.locked {
+            background: #F8FAFC;
+            border: 2px dashed #CBD5E1;
+            color: #94A3B8;
+            pointer-events: none;
+        }
+
+        .unit-card.locked .unit-emoji {
+            opacity: 0.55;
+            filter: grayscale(40%);
+        }
+
+        .unit-card.locked .unit-tag {
+            background: #E2E8F0;
+            color: #64748B;
+        }
+
+        /* 底部操作 */
+        .footer-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: #94A3B8;
+            margin-top: 6px;
+        }
+
+        .show-all-btn {
+            background: #F1F5F9;
+            border: 1px solid #CBD5E1;
+            color: #475569;
+            padding: 5px 12px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        @media (max-width: 720px) {
+            .category-nav {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
 </head>
 <body>
 
 <div class="container">
-  <div class="header">
-    <h1 class="title">🌟 玲玲的成長學習樂園 🌟</h1>
-    <p class="subtitle">AI 導師自主課堂 ‧ 有聲繪本 ‧ 中英文闖關</p>
-  </div>
+    <header>
+        <h1 class="header-title">🌟 玲玲K2嘅學習成長樂園 🌟</h1>
+        <p class="header-subtitle">中文、英文、闖關測驗與有聲故事書總入口</p>
+    </header>
 
-  <div class="section">
-    <div class="section-title">📖 有聲繪本</div>
-    <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
-      <a href="thomas.html" class="card-link theme-thomas">
-        <div class="icon-box">🚂</div>
-        <div class="card-info">
-          <h3>Thomas Goes Fishing</h3>
-          <p>真人發音 + 釣魚遊戲</p>
+    <!-- 六大分類按鈕列 -->
+    <nav class="category-nav">
+        <button class="nav-tab active-cn-class" onclick="switchCategory('cn-class', this)">
+            <span class="tab-icon">🏮</span>
+            <span class="tab-label">1. 中文AI課堂</span>
+        </button>
+        <button class="nav-tab" onclick="switchCategory('en-class', this)">
+            <span class="tab-icon">🔤</span>
+            <span class="tab-label">2. 英文AI課堂</span>
+        </button>
+        <button class="nav-tab" onclick="switchCategory('cn-quiz', this)">
+            <span class="tab-icon">🎯</span>
+            <span class="tab-label">3. 中文闖關</span>
+        </button>
+        <button class="nav-tab" onclick="switchCategory('en-quiz', this)">
+            <span class="tab-icon">🏆</span>
+            <span class="tab-label">4. 英文闖關</span>
+        </button>
+        <button class="nav-tab" onclick="switchCategory('book', this)">
+            <span class="tab-icon">📚</span>
+            <span class="tab-label">5. 點讀書</span>
+        </button>
+        <button class="nav-tab" onclick="switchCategory('video', this)">
+            <span class="tab-icon">🎬</span>
+            <span class="tab-label">6. 小視頻</span>
+        </button>
+    </nav>
+
+    <!-- 1. 中文AI導師課堂 -->
+    <section id="sec-cn-class" class="category-section active" style="border-color: var(--cn-class-border);">
+        <div class="section-header">
+            <h2 class="section-title" style="color: #B45309;">🏮 中文AI導師課堂</h2>
+            <div class="term-switcher">
+                <button class="term-btn active" onclick="switchTerm('cn-term-1', 'cn-term-2', this)">☀️ 上學期</button>
+                <button class="term-btn" onclick="switchTerm('cn-term-2', 'cn-term-1', this)">🌱 下學期預留</button>
+            </div>
         </div>
-      </a>
+
+        <div id="cn-term-1" class="term-group active">
+            <div class="unit-grid">
+                <!-- 現有真實檔案 1：我要謝謝你 -->
+                <a href="cn-thankyou.html" class="unit-card card-cn-class">
+                    <span class="unit-emoji">💝</span>
+                    <span class="unit-tag">上週 AI 導師</span>
+                    <h3 class="unit-name">P.21-25 我要謝謝你</h3>
+                    <p class="unit-desc">故事教學 · 兒歌圈熟字</p>
+                </a>
+
+                <!-- 現有真實檔案 2：中文字寶寶 -->
+                <a href="chinese.html" class="unit-card card-cn-class">
+                    <span class="unit-emoji">🐥</span>
+                    <span class="unit-tag">識字基石</span>
+                    <h3 class="unit-name">K2 中文字寶寶</h3>
+                    <p class="unit-desc">好朋友室 · 課唱歌 (Test 1-5)</p>
+                </a>
+
+                <!-- 預留擴充位 -->
+                <a href="#" class="unit-card card-cn-class locked">
+                    <span class="unit-emoji">📖</span>
+                    <span class="unit-tag">上學期 · 單元三</span>
+                    <h3 class="unit-name">待上傳新單元</h3>
+                    <p class="unit-desc">預留課堂位置</p>
+                </a>
+
+                <a href="#" class="unit-card card-cn-class locked">
+                    <span class="unit-emoji">📖</span>
+                    <span class="unit-tag">上學期 · 單元四</span>
+                    <h3 class="unit-name">待上傳新單元</h3>
+                    <p class="unit-desc">預留課堂位置</p>
+                </a>
+
+                <a href="#" class="unit-card card-cn-class locked">
+                    <span class="unit-emoji">📖</span>
+                    <span class="unit-tag">上學期 · 單元五</span>
+                    <h3 class="unit-name">待上傳新單元</h3>
+                    <p class="unit-desc">預留課堂位置</p>
+                </a>
+
+                <a href="#" class="unit-card card-cn-class locked">
+                    <span class="unit-emoji">📖</span>
+                    <span class="unit-tag">上學期 · 單元六</span>
+                    <h3 class="unit-name">待上傳新單元</h3>
+                    <p class="unit-desc">預留課堂位置</p>
+                </a>
+            </div>
+        </div>
+
+        <div id="cn-term-2" class="term-group">
+            <div class="unit-grid">
+                <a href="#" class="unit-card card-cn-class locked"><span class="unit-emoji">🌱</span><span class="unit-tag">下學期</span><h3 class="unit-name">下學期單元一</h3><p class="unit-desc">預留位置</p></a>
+                <a href="#" class="unit-card card-cn-class locked"><span class="unit-emoji">🌱</span><span class="unit-tag">下學期</span><h3 class="unit-name">下學期單元二</h3><p class="unit-desc">預留位置</p></a>
+                <a href="#" class="unit-card card-cn-class locked"><span class="unit-emoji">🌱</span><span class="unit-tag">下學期</span><h3 class="unit-name">下學期單元三</h3><p class="unit-desc">預留位置</p></a>
+                <a href="#" class="unit-card card-cn-class locked"><span class="unit-emoji">🌱</span><span class="unit-tag">下學期</span><h3 class="unit-name">下學期單元四</h3><p class="unit-desc">預留位置</p></a>
+                <a href="#" class="unit-card card-cn-class locked"><span class="unit-emoji">🌱</span><span class="unit-tag">下學期</span><h3 class="unit-name">下學期單元五</h3><p class="unit-desc">預留位置</p></a>
+                <a href="#" class="unit-card card-cn-class locked"><span class="unit-emoji">🌱</span><span class="unit-tag">下學期</span><h3 class="unit-name">下學期單元六</h3><p class="unit-desc">預留位置</p></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. 英文AI導師課堂 -->
+    <section id="sec-en-class" class="category-section" style="border-color: var(--en-class-border);">
+        <div class="section-header">
+            <h2 class="section-title" style="color: #0369A1;">🔤 英文AI導師課堂</h2>
+            <div class="term-switcher">
+                <button class="term-btn active" onclick="switchTerm('en-term-1', 'en-term-2', this)">☀️ 上學期</button>
+                <button class="term-btn" onclick="switchTerm('en-term-2', 'en-term-1', this)">🌱 下學期預留</button>
+            </div>
+        </div>
+
+        <div id="en-term-1" class="term-group active">
+            <div class="unit-grid">
+                <!-- 現有真實檔案：Unit 4 -->
+                <a href="en-unit4.html" class="unit-card card-en-class">
+                    <span class="unit-emoji">🤸</span>
+                    <span class="unit-tag">本週 AI 導師</span>
+                    <h3 class="unit-name">Unit 4: I can do it</h3>
+                    <p class="unit-desc">P.17-20 動作·年齡·字母 m</p>
+                </a>
+
+                <!-- 預留位 -->
+                <a href="#" class="unit-card card-en-class locked"><span class="unit-emoji">📘</span><span class="unit-tag">上學期</span><h3 class="unit-name">Unit 1</h3><p class="unit-desc">預留單元位置</p></a>
+                <a href="#" class="unit-card card-en-class locked"><span class="unit-emoji">📘</span><span class="unit-tag">上學期</span><h3 class="unit-name">Unit 2</h3><p class="unit-desc">預留單元位置</p></a>
+                <a href="#" class="unit-card card-en-class locked"><span class="unit-emoji">📘</span><span class="unit-tag">上學期</span><h3 class="unit-name">Unit 3</h3><p class="unit-desc">預留單元位置</p></a>
+                <a href="#" class="unit-card card-en-class locked"><span class="unit-emoji">📘</span><span class="unit-tag">上學期</span><h3 class="unit-name">Unit 5</h3><p class="unit-desc">預留單元位置</p></a>
+                <a href="#" class="unit-card card-en-class locked"><span class="unit-emoji">📘</span><span class="unit-tag">上學期</span><h3 class="unit-name">Unit 6</h3><p class="unit-desc">預留單元位置</p></a>
+            </div>
+        </div>
+
+        <div id="en-term-2" class="term-group">
+            <div class="unit-grid">
+                <a href="#" class="unit-card card-en-class locked"><span class="unit-emoji">🌱</span><span class="unit-tag">下學期</span><h3 class="unit-name">Unit 1</h3><p class="unit-desc">預留位置</p></a>
+                <a href="#" class="unit-card card-en-class locked"><span class="unit-emoji">🌱</span><span class="unit-tag">下學期</span><h3 class="unit-name">Unit 2</h3><p class="unit-desc">預留位置</p></a>
+                <a href="#" class="unit-card card-en-class locked"><span class="unit-emoji">🌱</span><span class="unit-tag">下學期</span><h3 class="unit-name">Unit 3</h3><p class="unit-desc">預留位置</p></a>
+                <a href="#" class="unit-card card-en-class locked"><span class="unit-emoji">🌱</span><span class="unit-tag">下學期</span><h3 class="unit-name">Unit 4</h3><p class="unit-desc">預留位置</p></a>
+                <a href="#" class="unit-card card-en-class locked"><span class="unit-emoji">🌱</span><span class="unit-tag">下學期</span><h3 class="unit-name">Unit 5</h3><p class="unit-desc">預留位置</p></a>
+                <a href="#" class="unit-card card-en-class locked"><span class="unit-emoji">🌱</span><span class="unit-tag">下學期</span><h3 class="unit-name">Unit 6</h3><p class="unit-desc">預留位置</p></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. 中文闖關 -->
+    <section id="sec-cn-quiz" class="category-section" style="border-color: var(--cn-quiz-border);">
+        <div class="section-header">
+            <h2 class="section-title" style="color: #047857;">🎯 中文闖關測驗</h2>
+        </div>
+        <div class="unit-grid">
+            <a href="chinese.html" class="unit-card card-cn-quiz">
+                <span class="unit-emoji">🎯</span>
+                <span class="unit-tag">字詞闖關</span>
+                <h3 class="unit-name">字寶寶基礎闖關</h3>
+                <p class="unit-desc">Test 1-5 綜合挑戰</p>
+            </a>
+
+            <a href="#" class="unit-card card-cn-quiz locked">
+                <span class="unit-emoji">🔒</span>
+                <span class="unit-tag">預留闖關</span>
+                <h3 class="unit-name">P.21-25 錯字特訓</h3>
+                <p class="unit-desc">動態複習題庫</p>
+            </a>
+
+            <a href="#" class="unit-card card-cn-quiz locked">
+                <span class="unit-emoji">🔒</span>
+                <span class="unit-tag">預留闖關</span>
+                <h3 class="unit-name">生活詞語 4 選 1</h3>
+                <p class="unit-desc">待解鎖新挑戰</p>
+            </a>
+        </div>
+    </section>
+
+    <!-- 4. 英文闖關 -->
+    <section id="sec-en-quiz" class="category-section" style="border-color: var(--en-quiz-border);">
+        <div class="section-header">
+            <h2 class="section-title" style="color: #6D28D9;">🏆 英文闖關測驗</h2>
+        </div>
+        <div class="unit-grid">
+            <!-- 現有真實檔案：動物家庭 -->
+            <a href="en-animals.html" class="unit-card card-en-quiz">
+                <span class="unit-emoji">🐾</span>
+                <span class="unit-tag">主題挑戰 · 1</span>
+                <h3 class="unit-name">動物家庭</h3>
+                <p class="unit-desc">Cat, Dog, Family</p>
+            </a>
+
+            <!-- 現有真實檔案：情緒句子 -->
+            <a href="en-emotions.html" class="unit-card card-en-quiz">
+                <span class="unit-emoji">😄</span>
+                <span class="unit-tag">主題挑戰 · 2</span>
+                <h3 class="unit-name">情緒句子</h3>
+                <p class="unit-desc">Happy, Sad, Angry</p>
+            </a>
+
+            <!-- 現有真實檔案：校園文具 -->
+            <a href="en-stationery.html" class="unit-card card-en-quiz">
+                <span class="unit-emoji">✏️</span>
+                <span class="unit-tag">主題挑戰 · 3</span>
+                <h3 class="unit-name">校園文具</h3>
+                <p class="unit-desc">發音預習與連線</p>
+            </a>
+
+            <!-- 現有真實檔案：全能總測 -->
+            <a href="en-master.html" class="unit-card card-en-quiz">
+                <span class="unit-emoji">🏆</span>
+                <span class="unit-tag">期末必備</span>
+                <h3 class="unit-name">全能總測</h3>
+                <p class="unit-desc">K2 總考與錯題本</p>
+            </a>
+
+            <!-- 預留位 -->
+            <a href="#" class="unit-card card-en-quiz locked">
+                <span class="unit-emoji">🔒</span>
+                <span class="unit-tag">預留關卡</span>
+                <h3 class="unit-name">Unit 4 單字拼字考</h3>
+                <p class="unit-desc">0.5x 慢速英音聽測</p>
+            </a>
+        </div>
+    </section>
+
+    <!-- 5. 點讀書 -->
+    <section id="sec-book" class="category-section" style="border-color: var(--book-border);">
+        <div class="section-header">
+            <h2 class="section-title" style="color: #BE123C;">📚 點讀書（每週三英文繪本閱讀）</h2>
+        </div>
+        <div class="unit-grid">
+            <!-- 現有真實檔案：Thomas -->
+            <a href="thomas.html" class="unit-card card-book">
+                <span class="unit-emoji">🚂</span>
+                <span class="unit-tag">繪本點讀 · 本週</span>
+                <h3 class="unit-name">Thomas Goes Fishing</h3>
+                <p class="unit-desc">真人發音 + 釣魚遊戲</p>
+            </a>
+
+            <!-- 週三繪本預留位 -->
+            <a href="#" class="unit-card card-book locked"><span class="unit-emoji">📕</span><span class="unit-tag">週三小書</span><h3 class="unit-name">待上傳繪本 2</h3><p class="unit-desc">預留點讀位置</p></a>
+            <a href="#" class="unit-card card-book locked"><span class="unit-emoji">📗</span><span class="unit-tag">週三小書</span><h3 class="unit-name">待上傳繪本 3</h3><p class="unit-desc">預留點讀位置</p></a>
+            <a href="#" class="unit-card card-book locked"><span class="unit-emoji">📘</span><span class="unit-tag">週三小書</span><h3 class="unit-name">待上傳繪本 4</h3><p class="unit-desc">預留點讀位置</p></a>
+        </div>
+    </section>
+
+    <!-- 6. 小視頻 -->
+    <section id="sec-video" class="category-section" style="border-color: var(--video-border);">
+        <div class="section-header">
+            <h2 class="section-title" style="color: #B91C1C;">🎬 小視頻（教學動畫與兒歌律動）</h2>
+        </div>
+        <div class="unit-grid">
+            <a href="#" class="unit-card card-video locked">
+                <span class="unit-emoji">🎥</span>
+                <span class="unit-tag">故事動畫</span>
+                <h3 class="unit-name">Thomas 釣魚動畫</h3>
+                <p class="unit-desc">生成中 · 敬請期待</p>
+            </a>
+            <a href="#" class="unit-card card-video locked">
+                <span class="unit-emoji">🎵</span>
+                <span class="unit-tag">兒歌短片</span>
+                <h3 class="unit-name">待上傳律動影片</h3>
+                <p class="unit-desc">預留播放位置</p>
+            </a>
+            <a href="#" class="unit-card card-video locked">
+                <span class="unit-emoji">🎵</span>
+                <span class="unit-tag">兒歌短片</span>
+                <h3 class="unit-name">待上傳律動影片</h3>
+                <p class="unit-desc">預留播放位置</p>
+            </a>
+        </div>
+    </section>
+
+    <div class="footer-bar">
+        <span>Lingling's K2 Learning Park &copy; 2026</span>
+        <button class="show-all-btn" onclick="toggleAllSections(this)">🌈 展開全部分類一覽</button>
     </div>
-  </div>
-
-  <div class="section">
-    <div class="section-title">🀄 中文</div>
-    <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
-      <a href="cn-thankyou.html" class="card-link theme-cn-ai">
-        <span class="ai-badge">👩‍🏫 本週 AI 導師</span>
-        <div class="icon-box">🍱</div>
-        <div class="card-info">
-          <h3>P.21-25 我要謝謝你</h3>
-          <p>故事教字 ‧ 兒歌圈熟字</p>
-        </div>
-      </a>
-
-      <a href="chinese.html" class="card-link theme-cn">
-        <div class="icon-box">🐣</div>
-        <div class="card-info">
-          <h3>K2 中文字寶寶</h3>
-          <p>好朋友室‧課唱歌 (Test 1-5)</p>
-        </div>
-      </a>
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="section-title">🔤 英文</div>
-    <div class="grid">
-      <a href="en-unit4.html" class="card-link theme-en-ai">
-        <span class="ai-badge">👩‍🏫 本週 AI 導師</span>
-        <div class="icon-box">🤸</div>
-        <div class="card-info">
-          <h3>Unit 4: I can do it</h3>
-          <p>P.17-20 動作‧年齡‧字母 m</p>
-        </div>
-      </a>
-
-      <a href="en-animals.html" class="card-link theme-en1">
-        <div class="icon-box">🐾</div>
-        <div class="card-info">
-          <h3>動物家庭</h3>
-          <p>Cat, Dog, Family</p>
-        </div>
-      </a>
-
-      <a href="en-emotions.html" class="card-link theme-en3">
-        <div class="icon-box">😊</div>
-        <div class="card-info">
-          <h3>情緒句子</h3>
-          <p>Happy, Sad, Angry</p>
-        </div>
-      </a>
-
-      <a href="en-stationery.html" class="card-link theme-en2">
-        <div class="icon-box">✏️</div>
-        <div class="card-info">
-          <h3>校園文具</h3>
-          <p>發音預習與連線</p>
-        </div>
-      </a>
-
-      <a href="en-master.html" class="card-link theme-master">
-        <div class="icon-box">🏆</div>
-        <div class="card-info">
-          <h3>全能總測</h3>
-          <p>K2 總考與錯題本</p>
-        </div>
-      </a>
-    </div>
-  </div>
 </div>
+
+<script>
+    const categoryColorMap = {
+        'cn-class': 'active-cn-class',
+        'en-class': 'active-en-class',
+        'cn-quiz':  'active-cn-quiz',
+        'en-quiz':  'active-en-quiz',
+        'book':     'active-book',
+        'video':    'active-video'
+    };
+
+    let isShowingAll = false;
+
+    function switchCategory(catKey, tabElement) {
+        isShowingAll = false;
+        document.querySelector('.show-all-btn').innerText = '🌈 展開全部分類一覽';
+
+        document.querySelectorAll('.nav-tab').forEach(btn => {
+            Object.values(categoryColorMap).forEach(cls => btn.classList.remove(cls));
+        });
+        tabElement.classList.add(categoryColorMap[catKey]);
+
+        document.querySelectorAll('.category-section').forEach(sec => {
+            sec.classList.remove('active');
+        });
+        document.getElementById('sec-' + catKey).classList.add('active');
+    }
+
+    function switchTerm(showId, hideId, btnElement) {
+        document.getElementById(showId).classList.add('active');
+        document.getElementById(hideId).classList.remove('active');
+
+        const parentSwitcher = btnElement.parentElement;
+        parentSwitcher.querySelectorAll('.term-btn').forEach(b => b.classList.remove('active'));
+        btnElement.classList.add('active');
+    }
+
+    function toggleAllSections(btn) {
+        isShowingAll = !isShowingAll;
+        const sections = document.querySelectorAll('.category-section');
+        if (isShowingAll) {
+            sections.forEach(sec => sec.classList.add('active'));
+            btn.innerText = '📁 恢復單頁切換模式';
+        } else {
+            sections.forEach((sec, idx) => {
+                if (idx === 0) sec.classList.add('active');
+                else sec.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-tab').forEach((tab, idx) => {
+                Object.values(categoryColorMap).forEach(cls => tab.classList.remove(cls));
+                if (idx === 0) tab.classList.add('active-cn-class');
+            });
+            btn.innerText = '🌈 展開全部分類一覽';
+        }
+    }
+</script>
 
 </body>
 </html>
