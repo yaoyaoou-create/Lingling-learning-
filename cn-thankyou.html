@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>K2 中文 AI 導師課堂 - 我要謝謝你 (P.21-25)</title>
+  <style>
+    * { box-sizing: border-box; user-select: none; -webkit-user-select: none; font-family: "PingFang HK", "Microsoft JhengHei", "Chalkboard SE", sans-serif; }
+    body { margin: 0; padding: 8px; background: linear-gradient(135deg, #fdf2f8 0%, #fef9c3 100%); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .container { width: 100%; max-width: 720px; background: #fff; border-radius: 24px; border: 4px solid #f472b6; box-shadow: 0 10px 25px rgba(244, 114, 182, 0.15); padding: 12px 16px; position: relative; }
+    
+    /* 頂部導航（一屏緊湊設計） */
+    .top-bar { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px dashed #fbcfe8; padding-bottom: 8px; margin-bottom: 10px; gap: 6px; flex-wrap: wrap; }
+    .nav-btn { text-decoration: none; background: #fdf2f8; border: 2px solid #f472b6; color: #be185d; padding: 5px 10px; border-radius: 14px; font-weight: 800; font-size: 0.85rem; cursor: pointer; }
+    .mom-btn { background: #eff6ff; border: 2px solid #60a5fa; color: #1d4ed8; padding: 5px 10px; border-radius: 14px; font-weight: 800; font-size: 0.85rem; cursor: pointer; }
+
+    /* 四大自主學習階段切換列 */
+    .stage-tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 10px; }
+    .tab-btn { background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 14px; padding: 6px 4px; font-weight: 800; font-size: 0.82rem; color: #475569; cursor: pointer; text-align: center; }
+    .tab-btn.active { background: #ec4899; color: white; border-color: #db2777; box-shadow: 0 3px 8px rgba(236, 72, 153, 0.3); }
+
+    /* AI 導師對話橫幅 */
+    .tutor-banner { background: #fffbeb; border: 2px solid #fcd34d; border-radius: 16px; padding: 8px 12px; display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .tutor-avatar { font-size: 2rem; flex-shrink: 0; }
+    .tutor-speech { flex: 1; text-align: left; font-size: 0.95rem; font-weight: 800; color: #78350f; line-height: 1.35; }
+    .replay-btn { background: #f59e0b; color: white; border: none; border-radius: 50%; width: 36px; height: 36px; font-size: 1.1rem; cursor: pointer; flex-shrink: 0; }
+
+    /* 主舞台（嚴格控制高度，免上下拉） */
+    .stage-box { background: #fdf2f8; border: 2px dashed #f9a8d4; border-radius: 18px; padding: 12px; min-height: 250px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+
+    /* 階段 1：詞語閃卡 */
+    .vocab-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; }
+    .vocab-card { background: white; border: 3px solid #f472b6; border-radius: 16px; padding: 8px 4px; cursor: pointer; transition: transform 0.15s; }
+    .vocab-card:active { transform: scale(0.95); background: #fce7f3; }
+    .vocab-emoji { font-size: 2rem; }
+    .vocab-adj { font-size: 0.85rem; color: #db2777; font-weight: 800; }
+    .vocab-noun { font-size: 1.25rem; color: #831843; font-weight: 900; }
+
+    /* 階段 2：句式積木 */
+    .builder-row { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin: 6px 0; }
+    .block-btn { background: white; border: 3px solid #38bdf8; color: #0369a1; padding: 8px 12px; border-radius: 14px; font-size: 1.05rem; font-weight: 900; cursor: pointer; }
+    .block-btn.selected { background: #0284c7; color: white; }
+    .sentence-result { background: white; border: 3px solid #f59e0b; border-radius: 16px; padding: 10px 16px; font-size: 1.3rem; font-weight: 900; color: #b45309; margin-top: 8px; min-width: 80%; }
+
+    /* 階段 3：兒歌帶讀與尋寶圈熟字 */
+    .poem-selector { display: flex; gap: 6px; margin-bottom: 8px; }
+    .poem-pill { background: white; border: 2px solid #c084fc; color: #6b21a8; padding: 4px 10px; border-radius: 20px; font-size: 0.85rem; font-weight: 800; cursor: pointer; }
+    .poem-pill.active { background: #9333ea; color: white; }
+    .poem-lines { background: white; border-radius: 16px; padding: 10px 14px; width: 100%; border: 2px solid #f3e8ff; margin-bottom: 8px; }
+    .poem-line { font-size: 1.35rem; font-weight: 900; color: #334155; margin: 6px 0; letter-spacing: 2px; cursor: pointer; padding: 4px; border-radius: 10px; }
+    .poem-line.reading { background: #fef08a; color: #b45309; }
+    .char-box { display: inline-block; padding: 2px 5px; margin: 1px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; transition: all 0.2s; }
+    .char-box.circled { border-color: #16a34a; background: #dcfce7; color: #15803d; transform: scale(1.1); }
+
+    /* 階段 4：自適應闖關與溫和提示 */
+    .quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; margin-top: 8px; }
+    .quiz-card { background: white; border: 3px solid #ec4899; border-radius: 16px; padding: 12px; font-size: 1.3rem; font-weight: 900; color: #831843; cursor: pointer; }
+    .hint-box { background: #ecfdf5; border: 2px solid #34d399; color: #065f46; border-radius: 14px; padding: 8px 12px; font-size: 0.92rem; font-weight: 800; margin-top: 8px; display: none; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="top-bar">
+    <a href="index.html" class="nav-btn">🏠 返回學習大門</a>
+    <span style="font-weight:900; color:#be185d; font-size:1rem;">👩‍🏫 P.21–25《我要謝謝你》AI 導師課堂</span>
+    <button class="mom-btn" onclick="showMomReport()">👩 媽媽查看進度</button>
+  </div>
+
+  <div class="stage-tabs">
+    <button class="tab-btn active" id="tab-1" onclick="switchStage(1)">1. 老師教詞語<br><small>(P.21)</small></button>
+    <button class="tab-btn" id="tab-2" onclick="switchStage(2)">2. 句式積木<br><small>(P.22)</small></button>
+    <button class="tab-btn" id="tab-3" onclick="switchStage(3)">3. 兒歌圈熟字<br><small>(P.23-25)</small></button>
+    <button class="tab-btn" id="tab-4" onclick="switchStage(4)">4. 動態小挑戰<br><small>(自適應)</small></button>
+  </div>
+
+  <div class="tutor-banner">
+    <div class="tutor-avatar">👩‍🏫</div>
+    <div class="tutor-speech" id="tutor-text">哈囉小寶貝！撳一下下面嘅食物卡，聽老師講故事同教妳讀新詞語啦！</div>
+    <button class="replay-btn" onclick="speakCurrentTutorText()" title="重聽老師說話">🔊</button>
+  </div>
+
+  <div class="stage-box" id="stage-content"></div>
+</div>
+
+<script>
+// P.21 課本詞語庫
+const vocabList = [
+  { id: 'cake', adj: '香香的', noun: '蛋糕', full: '香香的蛋糕', emoji: '🎂', story: '生日會上面有香香的蛋糕，鼻哥聞到好香呀！請跟老師讀：香香的蛋糕。' },
+  { id: 'veg', adj: '翠綠的', noun: '蔬菜', full: '翠綠的蔬菜', emoji: '🥬', story: '好似樹葉咁靚嘅綠色，就係翠綠的蔬菜！食咗身體好健康。請跟老師讀：翠綠的蔬菜。' },
+  { id: 'honey', adj: '甜甜的', noun: '蜜糖', full: '甜甜的蜜糖', emoji: '🍯', story: '小蜜蜂整嘅蜜糖，放落嘴仔好甜好甜！請跟老師讀：甜甜的蜜糖。' },
+  { id: 'food', adj: '新鮮的', noun: '食物', full: '新鮮的食物', emoji: '🍱', story: '剛剛煮好、乾乾淨淨嘅就係新鮮的食物！請跟老師讀：新鮮的食物。' },
+  { id: 'bean', adj: '圓碌碌', noun: '豆', full: '豆', emoji: '🫘', story: '呢個單字係「豆」，好似一粒小珠珠擺喺隻碟上面咁樣！請跟老師讀：豆。' },
+  { id: 'meat', adj: '有力氣', noun: '肉', full: '肉', emoji: '🥩', story: '呢個字我哋之前見過啦，係「肉」！食肉可以幫妳長高高。請跟老師讀：肉。' }
+];
+
+// P.23-25 課本三首兒歌與熟字庫
+const poems = [
+  {
+    title: 'P.23 均衡飲食',
+    lines: ['米飯牛奶肉和蛋，', '一日三餐要均衡，', '少吃零食多吃菜，', '還有水果不可減。'],
+    knownChars: ['米','飯','牛','奶','肉','蛋','一','日','三','吃','多','菜','水','果','不'],
+    intro: '我哋先撳每一句跟老師讀一次，然後開啟「尋寶圈熟字」，用手指圈出妳之前學過嘅字啦！'
+  },
+  {
+    title: 'P.24 米飯哪裏來？',
+    lines: ['電飯鍋，一打開，', '米飯香氣飄過來。', '究竟米飯哪裏來？', '飯鍋先生變出來？'],
+    knownChars: ['飯','一','開','米','香','生','出','來'],
+    intro: '電飯鍋一打開，好香呀！先跟老師逐句讀，再搵下入面邊個字係熟字朋友！'
+  },
+  {
+    title: 'P.25 蝸牛 (順服)',
+    lines: ['蝸牛、蝸牛', '喜歡神造的樣貌，', '背着房子也不愁，', '喜歡慢慢四處遊。'],
+    knownChars: ['牛','的','子','也','不','四'],
+    intro: '小蝸牛背住重重嘅屋企都笑眯眯！跟老師讀完之後，幫小蝸牛圈出熟字啦！'
+  }
+];
+
+// 自適應題庫（結合 P.21-25）
+const adaptiveQuestions = [
+  { q: '邊個詞語係小蜜蜂整、食落嘴仔「好甜好甜」㗎？', answer: '甜甜的蜜糖', options: ['甜甜的蜜糖', '翠綠的蔬菜', '香香的蛋糕', '新鮮的食物'], hint: '溫柔提示：蜜糖食落口係甜絲絲㗎，搵下開頭兩個一樣樣嘅「甜甜」字啦！' },
+  { q: '好似樹葉咁樣靚靚綠色嘅菜，課本叫佢做咩呀？', answer: '翠綠的蔬菜', options: ['翠綠的蔬菜', '甜甜的蜜糖', '香香的蛋糕', '豆'], hint: '溫柔提示：蔬菜係綠色㗎，課本第21頁寫住「翠綠的蔬菜」，再試下！' },
+  { q: '《均衡飲食》兒歌入面講：少吃零食多吃咩呀？', answer: '菜', options: ['菜', '糖', '豆', '鍋'], hint: '溫柔提示：綠色健康嘅蔬菜寶寶，上面有個草花頭「艹」嗰個字呢！' },
+  { q: '電飯鍋一打開，咩嘢香氣飄過來呀？', answer: '米飯', options: ['米飯', '蛋糕', '蝸牛', '水果'], hint: '溫柔提示：電飯鍋煮出嚟白雪雪一粒粒嘅係「米飯」喔！' },
+  { q: '邊隻小動物背着房子也不愁，喜歡慢慢四處遊？', answer: '蝸牛', options: ['蝸牛', '小狗', '白兔', '倉鼠'], hint: '溫柔提示：名字入面有個「牛」字、背脊有間小房子嘅係「蝸牛」呀！' },
+  { q: '課本第22頁句式：紅蘿蔔同椰菜係屬於邊一類食物？', answer: '蔬菜類', options: ['蔬菜類', '五穀類', '零食類', '玩具類'], hint: '溫柔提示：紅蘿蔔同椰菜都係翠綠健康的「蔬菜類」食物喔！' }
+];
+
+let currentTutorText = '';
+let selectedAdj = '香香的';
+let selectedFood = '蘋果';
+let currentPoemIdx = 0;
+let circleMode = false;
+let currentQIdx = 0;
+let wrongCounts = JSON.parse(localStorage.getItem('lingling_p21_errors') || '{}');
+let learnedLog = JSON.parse(localStorage.getItem('lingling_p21_learned') || '{"vocab":0, "circled":0, "quizPass":0}');
+
+function speakText(text, rate = 0.75) {
+  currentTutorText = text;
+  document.getElementById('tutor-text').innerText = text;
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'zh-HK';
+    u.rate = rate;
+    window.speechSynthesis.speak(u);
+  }
+}
+
+function speakCurrentTutorText() {
+  speakText(currentTutorText, 0.75);
+}
+
+function saveProgress() {
+  localStorage.setItem('lingling_p21_errors', JSON.stringify(wrongCounts));
+  localStorage.setItem('lingling_p21_learned', JSON.stringify(learnedLog));
+}
+
+function switchStage(stageNum) {
+  document.querySelectorAll('.tab-btn').forEach((b, i) => {
+    b.classList.toggle('active', i + 1 === stageNum);
+  });
+  if (stageNum === 1) renderStage1();
+  if (stageNum === 2) renderStage2();
+  if (stageNum === 3) renderStage3();
+  if (stageNum === 4) renderStage4();
+}
+
+// 階段 1：P.21 老師教詞語
+function renderStage1() {
+  speakText('請用手指撳下面嘅食物卡，老師會講故事同埋慢速帶妳讀第21頁嘅新詞語喔！');
+  let html = '<div class="vocab-grid">';
+  vocabList.forEach(item => {
+    html += `
+      <div class="vocab-card" onclick="learnVocab('${item.id}')">
+        <div class="vocab-emoji">${item.emoji}</div>
+        <div class="vocab-adj">${item.adj}</div>
+        <div class="vocab-noun">${item.noun}</div>
+      </div>
+    `;
+  });
+  html += '</div>';
+  document.getElementById('stage-content').innerHTML = html;
+}
+
+function learnVocab(id) {
+  const item = vocabList.find(v => v.id === id);
+  learnedLog.vocab = (learnedLog.vocab || 0) + 1;
+  saveProgress();
+  speakText(item.story, 0.7);
+}
+
+// 階段 2：P.22 句式積木
+function renderStage2() {
+  speakText('而家我哋玩第22頁嘅句式火車！先揀左邊嘅形容詞，再揀右邊嘅食物，拼成一句完整嘅話啦！');
+  const adjs = ['香香的', '翠綠的', '甜甜的', '新鮮的'];
+  const foods = [
+    { name: '蘋果', cat: '水果類', emoji: '🍎' },
+    { name: '紅蘿蔔', cat: '蔬菜類', emoji: '🥕' },
+    { name: '香蕉', cat: '水果類', emoji: '🍌' },
+    { name: '白飯', cat: '五穀類', emoji: '🍚' },
+    { name: '蛋糕', cat: '甜品類', emoji: '🎂' }
+  ];
+  const curFoodObj = foods.find(f => f.name === selectedFood) || foods[0];
+  let html = `
+    <div style="font-weight:800; color:#0369a1; font-size:0.9rem;">第一步：點選形容詞</div>
+    <div class="builder-row">
+      ${adjs.map(a => `<button class="block-btn ${selectedAdj===a?'selected':''}" onclick="pickAdj('${a}')">${a}</button>`).join('')}
+    </div>
+    <div style="font-weight:800; color:#0369a1; font-size:0.9rem; margin-top:4px;">第二步：點選第 22 頁食物</div>
+    <div class="builder-row">
+      ${foods.map(f => `<button class="block-btn ${selectedFood===f.name?'selected':''}" onclick="pickFood('${f.name}')">${f.emoji} ${f.name}</button>`).join('')}
+    </div>
+    <div class="sentence-result" onclick="speakSentenceBuilder('${curFoodObj.cat}')">
+      句式 1：${selectedAdj}${selectedFood}。<br>
+      <span style="font-size:1.05rem; color:#15803d;">句式 2：${selectedFood}是${curFoodObj.cat}的食物。 🔊</span>
+    </div>
+  `;
+  document.getElementById('stage-content').innerHTML = html;
+}
+
+function pickAdj(a) {
+  selectedAdj = a;
+  renderStage2();
+  speakText(`${selectedAdj}${selectedFood}。`, 0.7);
+}
+
+function pickFood(f) {
+  selectedFood = f;
+  renderStage2();
+  const catMap = { '蘋果':'水果類', '紅蘿蔔':'蔬菜類', '香蕉':'水果類', '白飯':'五穀類', '蛋糕':'甜品類' };
+  speakText(`${selectedAdj}${selectedFood}。${selectedFood}是${catMap[f]}的食物。`, 0.7);
+}
+
+function speakSentenceBuilder(cat) {
+  speakText(`${selectedAdj}${selectedFood}。${selectedFood}是${cat}的食物。`, 0.7);
+}
+
+// 階段 3：P.23-25 兒歌帶讀與尋寶圈熟字
+function renderStage3() {
+  const poem = poems[currentPoemIdx];
+  speakText(poem.intro, 0.75);
+  let pillsHtml = poems.map((p, idx) => `
+    <button class="poem-pill ${idx===currentPoemIdx?'active':''}" onclick="selectPoem(${idx})">${p.title}</button>
+  `).join('');
+
+  let linesHtml = '';
+  if (!circleMode) {
+    linesHtml = poem.lines.map((line, lIdx) => `
+      <div class="poem-line" id="pline-${lIdx}" onclick="readPoemLine(${lIdx}, '${line}')">🔊 ${line}</div>
+    `).join('');
+  } else {
+    linesHtml = poem.lines.map(line => {
+      let chars = line.split('').map(ch => {
+        if ('，。？、'.includes(ch)) return ch;
+        return `<span class="char-box" onclick="tapCircleChar(this, '${ch}')">${ch}</span>`;
+      }).join('');
+      return `<div class="poem-line">${chars}</div>`;
+    }).join('');
+  }
+
+  document.getElementById('stage-content').innerHTML = `
+    <div class="poem-selector">${pillsHtml}</div>
+    <div class="poem-lines">${linesHtml}</div>
+    <div style="display:flex; gap:10px;">
+      <button class="nav-btn" style="background:#fef3c7; border-color:#f59e0b; color:#b45309;" onclick="toggleCircleMode(false)">📖 老師逐句帶讀模式</button>
+      <button class="nav-btn" style="background:#dcfce7; border-color:#22c55e; color:#15803d;" onclick="toggleCircleMode(true)">🔍 尋寶圈出熟字模式</button>
+    </div>
+  `;
+}
+
+function selectPoem(idx) {
+  currentPoemIdx = idx;
+  circleMode = false;
+  renderStage3();
+}
+
+function readPoemLine(lIdx, lineText) {
+  document.querySelectorAll('.poem-line').forEach(el => el.classList.remove('reading'));
+  const target = document.getElementById(`pline-${lIdx}`);
+  if (target) target.classList.add('reading');
+  speakText(lineText, 0.65);
+}
+
+function toggleCircleMode(enable) {
+  circleMode = enable;
+  renderStage3();
+  if (enable) {
+    speakText('尋寶開始！請用手指撳兒歌入面妳之前學過或者識讀嘅熟字，老師會幫妳圈起佢並讀出嚟喔！', 0.75);
+  }
+}
+
+function tapCircleChar(el, ch) {
+  const poem = poems[currentPoemIdx];
+  el.classList.add('circled');
+  learnedLog.circled = (learnedLog.circled || 0) + 1;
+  saveProgress();
+  if (poem.knownChars.includes(ch)) {
+    speakText(`好叻呀！搵到熟字「${ch}」！`, 0.75);
+  } else {
+    speakText(`呢個係新字朋友「${ch}」，跟老師讀一次：${ch}！`, 0.7);
+  }
+}
+
+// 階段 4：自適應小挑戰（優先出曾經錯過的題目）
+function renderStage4() {
+  const qObj = adaptiveQuestions[currentQIdx % adaptiveQuestions.length];
+  speakText(qObj.q, 0.75);
+  let optsHtml = qObj.options.map(opt => `
+    <button class="quiz-card" onclick="checkAdaptiveAnswer('${opt}')">${opt}</button>
+  `).join('');
+
+  document.getElementById('stage-content').innerHTML = `
+    <div style="font-size:1.1rem; font-weight:900; color:#9d174d; margin-bottom:4px;">第 ${(currentQIdx % adaptiveQuestions.length) + 1} 關（AI 動態調適）</div>
+    <div class="quiz-options">${optsHtml}</div>
+    <div class="hint-box" id="gentle-hint"></div>
+  `;
+}
+
+function checkAdaptiveAnswer(selected) {
+  const qObj = adaptiveQuestions[currentQIdx % adaptiveQuestions.length];
+  const hintBox = document.getElementById('gentle-hint');
+  if (selected === qObj.answer) {
+    learnedLog.quizPass = (learnedLog.quizPass || 0) + 1;
+    saveProgress();
+    speakText(`答啱啦！「${selected}」！妳真係超級叻女！我哋去下一關啦！`, 0.8);
+    setTimeout(() => {
+      currentQIdx++;
+      renderStage4();
+    }, 1600);
+  } else {
+    wrongCounts[qObj.answer] = (wrongCounts[qObj.answer] || 0) + 1;
+    saveProgress();
+    hintBox.style.display = 'block';
+    hintBox.innerText = '💡 ' + qObj.hint;
+    speakText(qObj.hint, 0.72);
+  }
+}
+
+// 媽媽 1 分鐘進度與簽名提醒面板
+function showMomReport() {
+  const errKeys = Object.keys(wrongCounts);
+  let errHtml = errKeys.length === 0 
+    ? '<span style="color:#16a34a; font-weight:800;">目前全部一次答對，沒有卡關字詞！</span>'
+    : errKeys.map(k => `• <b>${k}</b>（需要溫和提示 ${wrongCounts[k]} 次，AI 已排入優先複習）`).join('<br>');
+
+  document.getElementById('stage-content').innerHTML = `
+    <div style="text-align:left; width:100%; background:white; padding:12px 16px; border-radius:16px; border:2px solid #60a5fa;">
+      <h3 style="margin:0 0 8px 0; color:#1d4ed8;">📊 媽媽 1 分鐘激勵報告（P.21–25 自主學習紀錄）</h3>
+      <p style="margin:4px 0; font-size:0.95rem;">🌟 <b>自主點讀新詞次數：</b> ${learnedLog.vocab || 0} 次</p>
+      <p style="margin:4px 0; font-size:0.95rem;">🔍 <b>兒歌尋寶圈出熟字：</b> ${learnedLog.circled || 0} 個</p>
+      <p style="margin:4px 0; font-size:0.95rem;">🏆 <b>動態挑戰成功通關：</b> ${learnedLog.quizPass || 0} 題</p>
+      <hr style="border:none; border-top:1px dashed #cbd5e1; margin:8px 0;">
+      <p style="margin:4px 0; font-size:0.92rem;"><b>📌 AI 導師動態弱項追蹤：</b><br>${errHtml}</p>
+      <p style="margin:8px 0 0 0; font-size:0.9rem; color:#be185d; font-weight:800;">💖 今日媽媽行動建議：抱抱她、誇獎她自己完成兒歌圈熟字，並在課本 P.23–25 陪她塗色與簽名！</p>
+    </div>
+  `;
+  speakText('呢個係給媽媽睇嘅一分鐘進度報告，紀錄咗小寶貝今日自己學習嘅成果喔！', 0.85);
+}
+
+window.onload = () => switchStage(1);
+</script>
+</body>
+</html>
