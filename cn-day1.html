@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Anna 老師中文課堂 - Day 1: 我要謝謝你 (P.21)</title>
+<style>
+* { box-sizing: border-box; user-select: none; -webkit-user-select: none; font-family: "PingFang HK", "Microsoft JhengHei", "Chalkboard SE", sans-serif; }
+body { margin: 0; padding: 8px; background: linear-gradient(135deg, #fdf2f8 0%, #fef9c3 100%); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.container { width: 100%; max-width: 720px; background: #fff; border-radius: 26px; border: 4px solid #f472b6; box-shadow: 0 10px 25px rgba(244, 114, 182, 0.15); padding: 12px 16px; position: relative; }
+/* 頂部導航列 */
+.top-bar { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px dashed #fbcfe8; padding-bottom: 8px; margin-bottom: 8px; }
+.nav-btn { text-decoration: none; background: #fdf2f8; border: 2px solid #f472b6; color: #be185d; padding: 5px 12px; border-radius: 14px; font-weight: 800; font-size: 0.85rem; cursor: pointer; }
+.mom-btn { background: #eff6ff; border: 2px solid #60a5fa; color: #1d4ed8; padding: 5px 12px; border-radius: 14px; font-weight: 800; font-size: 0.85rem; cursor: pointer; }
+/* Anna 老師語音橫幅 */
+.tutor-banner { background: #fffbeb; border: 2px solid #fcd34d; border-radius: 18px; padding: 8px 12px; display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.tutor-avatar { font-size: 2.1rem; flex-shrink: 0; }
+.tutor-speech { flex: 1; text-align: left; font-size: 0.96rem; font-weight: 800; color: #78350f; line-height: 1.4; }
+.replay-btn { background: #f59e0b; color: white; border: none; border-radius: 50%; width: 40px; height: 40px; font-size: 1.2rem; cursor: pointer; flex-shrink: 0; box-shadow: 0 3px 6px rgba(245, 158, 11, 0.3); }
+/* 主舞台（iPad 一屏橫向完整呈現） */
+.stage-box { background: #fff1f2; border: 3px dashed #f9a8d4; border-radius: 22px; padding: 14px; min-height: 290px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; text-align: center; position: relative; }
+/* 進度小圓點 */
+.step-dots { display: flex; gap: 8px; justify-content: center; margin-bottom: 4px; }
+.dot { width: 12px; height: 12px; border-radius: 50%; background: #fce7f3; border: 2px solid #f472b6; }
+.dot.active { background: #ec4899; transform: scale(1.25); }
+.dot.done { background: #22c55e; border-color: #16a34a; }
+/* 單一焦點卡片 */
+.single-focus-card { background: white; border: 4px solid #f472b6; border-radius: 24px; padding: 14px 28px; width: 92%; max-width: 480px; box-shadow: 0 8px 20px rgba(244, 114, 182, 0.12); display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 4px 0; cursor: pointer; }
+.big-emoji { font-size: 3.8rem; line-height: 1.1; margin-bottom: 6px; }
+.big-adj { font-size: 1.55rem; font-weight: 900; color: #db2777; margin-bottom: 2px; letter-spacing: 2px; }
+.big-noun { font-size: 2.7rem; font-weight: 900; color: #831843; letter-spacing: 4px; line-height: 1.15; }
+.char-structure-note { background: #fef3c7; color: #b45309; font-size: 0.9rem; font-weight: 800; padding: 5px 12px; border-radius: 12px; margin-top: 8px; border: 1px solid #fde68a; }
+/* 底部大按鈕 */
+.next-action-btn { background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: white; border: none; border-radius: 20px; padding: 10px 26px; font-size: 1.15rem; font-weight: 900; cursor: pointer; box-shadow: 0 5px 12px rgba(34, 197, 94, 0.3); transition: transform 0.1s; }
+.next-action-btn:active { transform: scale(0.96); }
+/* 單頁互動問題選項 */
+.quiz-choices { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; width: 100%; margin: 8px 0; }
+.choice-btn { background: white; border: 4px solid #ec4899; border-radius: 20px; padding: 12px 22px; font-size: 1.5rem; font-weight: 900; color: #831843; cursor: pointer; min-width: 170px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: transform 0.1s; }
+.choice-btn:active { transform: scale(0.95); }
+.gentle-hint-box { background: #ecfdf5; border: 2px solid #10b981; color: #065f46; border-radius: 16px; padding: 8px 14px; font-size: 0.92rem; font-weight: 800; margin-top: 6px; max-width: 95%; line-height: 1.35; }
+</style>
+</head>
+<body>
+<div class="container">
+<div class="top-bar">
+<a href="index.html" class="nav-btn">🏠 返回學習大門</a>
+<span style="font-weight:900; color:#be185d; font-size:0.95rem;">👩‍🏫 Anna 老師中文課 - P.21 我要謝謝你 (Day 1)</span>
+<button class="mom-btn" onclick="showMomReport()">👩 媽媽查看進度</button>
+</div>
+<div class="tutor-banner">
+<div class="tutor-avatar">👩‍🏫</div>
+<div class="tutor-speech" id="tutor-text">Hello 小寶貝！我係 Anna 老師，今日由 Anna 老師一頁一頁帶妳去野餐學新字啦！</div>
+<button class="replay-btn" onclick="speakText(currentSpeech, 0.72)" title="重聽 Anna 老師說話">🔊</button>
+</div>
+<div class="stage-box" id="stage-content"></div>
+</div>
+<script>
+// P.21 Day 1 專屬幻燈片劇本（包含 Anna 老師帶讀與 3 道由淺入深問題）
+const day1Slides = [
+{
+type: 'teach_single',
+emoji: '🎂',
+adj: '香香的',
+noun: '蛋糕',
+readTarget: '香香的蛋糕',
+note: '📖 課本 P.21 第 1 組詞語',
+speech: 'Hello 小寶貝！我係 Anna 老師！今日由 Anna 老師陪妳去野餐啦！妳睇下第 21 頁第一樣嘢，係生日會食嘅「蛋糕」。蛋糕剛焗好嗰陣，鼻哥聞到好香，我哋叫佢做「香香的蛋糕」。來，撳一下張卡，跟 Anna 老師細細聲讀一次：香、香、的、蛋、糕！'
+},
+{
+type: 'teach_single',
+emoji: '🥬',
+adj: '翠綠的',
+noun: '蔬菜',
+readTarget: '翠綠的蔬菜',
+note: '📖 課本 P.21 第 2 組詞語',
+speech: '第二樣係好健康、顏色好似樹葉咁靚嘅「蔬菜」！課本叫佢做「翠綠的蔬菜」。來，跟 Anna 老師慢速讀一次：翠、綠、的、蔬、菜！'
+},
+{
+type: 'teach_single',
+emoji: '🍯',
+adj: '甜甜的',
+noun: '蜜糖',
+readTarget: '甜甜的蜜糖',
+note: '📖 課本 P.21 第 3 組詞語',
+speech: '第三樣係小蜜蜂整嘅「蜜糖」。放一滴落嘴仔度，嘩，好甜呀！我哋叫佢做「甜甜的蜜糖」。跟 Anna 老師讀一次：甜、甜、的、蜜、糖！'
+},
+{
+type: 'teach_single',
+emoji: '🫘',
+adj: '',
+noun: '豆',
+readTarget: '豆',
+note: '💡 字形小秘密：上面一橫，中間有個「口」字，好似豆仔擺喺碟上面！',
+speech: '最後睇下第 21 頁最下面左邊呢個單字，係一粒圓碌碌嘅「豆」字！「豆」字上面有一橫，中間有個細細嘅「口」字，好似一粒豆仔擺喺隻碟上面咁樣！跟 Anna 老師讀一次：豆！'
+},
+{
+type: 'quiz_step',
+levelTag: '【第 1 題：認一認單字（淺）】',
+visual: '🫘',
+speech: '第 1 題：小寶貝，請妳用手指搵下——邊個字係第 21 頁最下面左邊、圓碌碌好似小珠珠咁樣嘅「豆」字呀？',
+options: ['豆', '肉'],
+answer: '豆',
+hint: '唔緊要， Anna 老師帶妳再睇真啲！「豆」字上面有一橫，中間有個細細嘅「口」字，好似一粒豆仔擺喺隻碟上面咁樣！再試一次啦！',
+praise: '好叻女呀！一眼就認出圓碌碌嘅「豆」字啦！'
+},
+{
+type: 'quiz_step',
+levelTag: '【第 2 題：形容詞配對（中）】',
+visual: '🐝 🍯 蜜糖',
+speech: '第 2 題：小蜜蜂採花蜜整出嚟嘅「蜜糖」，食落口係咩味道㗎？係「翠綠的」定係「甜甜的」呀？',
+options: ['翠綠的', '甜甜的'],
+answer: '甜甜的',
+hint: '諗下喔，「翠綠」係樹葉同埋蔬菜嘅綠色嚟㗎；蜜糖食落嘴仔會笑眯眯、好甜好甜，應該係邊個呢？',
+praise: '答啱啦！甜甜的蜜糖！妳讀得好棒呀！'
+},
+{
+type: 'quiz_step',
+levelTag: '【第 3 題：看圖說句式（深 — P.22 預熱）】',
+visual: '🍎 大蘋果 (P.22)',
+speech: '第 3 題：請妳睇下第 22 頁上面第一幅圖係一個大蘋果！如果我哋用今日學過嘅詞語，將佢變成一句話「（形容詞）（食物名稱）。」，妳會揀邊句呀？',
+options: ['甜甜的蘋果。', '翠綠的肉。'],
+answer: '甜甜的蘋果。',
+hint: '蘋果聞落去好香，食落去又好甜！妳可以試下同 Anna 老師揀「甜甜的蘋果。」喔！',
+praise: '太棒啦！「甜甜的蘋果。」Day 1 嘅全部任務順利通關啦！'
+}
+];
+let currentSlideIdx = 0;
+let currentSpeech = '';
+let wrongCounts = JSON.parse(localStorage.getItem('lingling_cn_day1_errors') || '{}');
+function speakText(text, rate = 0.72) {
+currentSpeech = text;
+document.getElementById('tutor-text').innerText = text;
+if ('speechSynthesis' in window) {
+window.speechSynthesis.cancel();
+const u = new SpeechSynthesisUtterance(text);
+u.lang = 'zh-HK';
+u.rate = rate;
+window.speechSynthesis.speak(u);
+}
+}
+function saveState() {
+localStorage.setItem('lingling_cn_day1_errors', JSON.stringify(wrongCounts));
+}
+function renderSlide() {
+if (currentSlideIdx >= day1Slides.length) {
+saveState();
+speakText('太棒啦！今日 Day 1 嘅中文課堂已經完成啦！請話俾 Anna 老師知玲玲好乖，而家可以去搵媽媽睇進度報告啦！', 0.75);
+document.getElementById('stage-content').innerHTML = ⁠<div style="background:white; border:4px solid #f59e0b; border-radius:24px; padding:18px; width:92%; max-width:480px;"> <div style="font-size:4rem;">🏆🎉</div> <div style="font-size:1.5rem; font-weight:900; color:#b45309; margin:6px 0;">Day 1 順利畢業啦！</div> <div style="font-size:0.95rem; font-weight:800; color:#475569; margin-bottom:14px;"> 玲玲今日跟 Anna 老師學得超級好！<br>請話俾 Anna 老師知妳錯咗邊幾個字，明晚 Anna 老師幫妳度身訂造 Day 2 溫習！ </div> <button class="next-action-btn" onclick="showMomReport()">👩 叫媽媽睇進度報告</button> </div>⁠;
+return;
+}
+const slide = day1Slides[currentSlideIdx];
+const dotsHtml = day1Slides.map((_, idx) => {
+let cls = idx < currentSlideIdx ? 'done' : (idx === currentSlideIdx ? 'active' : '');
+return ⁠<div class="dot ${cls}"></div>⁠;
+}).join('');
+if (slide.type === 'teach_single') {
+speakText(slide.speech, 0.72);
+document.getElementById('stage-content').innerHTML = ⁠<div class="step-dots">${dotsHtml}</div> <div class="single-focus-card" onclick="speakText('${slide.readTarget}', 0.65)"> <div class="big-emoji">${slide.emoji}</div> ${slide.adj ?⁠<div class="big-adj">${slide.adj}</div>⁠: ''} <div class="big-noun">${slide.noun}</div> <div class="char-structure-note">${slide.note}（撳卡片可重聽 Anna 老師發音 🔊）</div> </div> <button class="next-action-btn" onclick="goNextSlide()">🌟 我讀好啦！下一個 ➔</button>⁠;
+} else if (slide.type === 'quiz_step') {
+speakText(slide.speech, 0.72);
+let choicesHtml = slide.options.map(opt => ⁠<button class="choice-btn" onclick="checkQuiz('${opt}')">${opt}</button>⁠).join('');
+document.getElementById('stage-content').innerHTML = ⁠<div class="step-dots">${dotsHtml}</div> <div style="font-size:0.95rem; font-weight:900; color:#be185d;">${slide.levelTag}</div> <div style="font-size:2.4rem; font-weight:900; color:#831843; background:white; padding:8px 24px; border-radius:20px; border:3px solid #fbcfe8;"> ${slide.visual} </div> <div class="quiz-choices">${choicesHtml}</div> <div class="gentle-hint-box" id="slide-hint" style="display:none;"></div>⁠;
+}
+}
+function goNextSlide() {
+currentSlideIdx++;
+renderSlide();
+}
+function checkQuiz(selected) {
+const slide = day1Slides[currentSlideIdx];
+const hintBox = document.getElementById('slide-hint');
+if (selected === slide.answer) {
+speakText(slide.praise, 0.78);
+setTimeout(() => {
+currentSlideIdx++;
+renderSlide();
+}, 1800);
+} else {
+wrongCounts[slide.answer] = (wrongCounts[slide.answer] || 0) + 1;
+saveState();
+hintBox.style.display = 'block';
+hintBox.innerText = '💡 Anna 老師溫柔提示：' + slide.hint;
+speakText(slide.hint, 0.72);
+}
+}
+function showMomReport() {
+const errKeys = Object.keys(wrongCounts);
+let errHtml = errKeys.length === 0
+? '<span style="color:#16a34a; font-weight:800;">Day 1 完美通關，全部一次答對！</span>'
+: errKeys.map(k => ⁠• <b>${k}</b>（觸發溫和提示 ${wrongCounts[k]} 次）⁠).join('
+');
+document.getElementById('stage-content').innerHTML = ⁠<div style="text-align:left; width:100%; background:white; padding:12px 16px; border-radius:18px; border:3px solid #60a5fa;"> <h3 style="margin:0 0 6px 0; color:#1d4ed8; font-size:1.05rem;">📊 媽媽 1 分鐘進度報告（Day 1 實戰紀錄）</h3> <p style="margin:4px 0; font-size:0.9rem;"><b>📌 Anna 老師錯題統計：</b><br>${errHtml}</p> <hr style="border:none; border-top:1px dashed #cbd5e1; margin:8px 0;"> <p style="margin:4px 0; font-size:0.88rem; color:#be185d; font-weight:800;">💖 媽媽實戰下一步：<br>玲玲玩完 Day 1 後，隨時話俾 Anna 老師知：「佢今日錯咗邊個字／邊個字讀得唔順」，Anna 老師即刻幫妳動態生成 Day 2 專屬教程同網頁代碼！</p> <button class="nav-btn" style="margin-top:8px; background:#fdf2f8; border-color:#f472b6;" onclick="currentSlideIdx=0; renderSlide();">🔄 重新玩一次 Day 1</button> </div>⁠;
+speakText('呢個係媽媽專屬進度報告，媽媽隨時可以將玲玲 Day 1 錯咗嘅字話俾 Anna 老師知喔！', 0.82);
+}
+window.onload = () => renderSlide();
+</script>
+</body>
+</html>
