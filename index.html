@@ -60,7 +60,6 @@
             max-width: 1080px;
         }
 
-        /* 頂部標題 */
         header {
             text-align: center;
             margin-bottom: 14px;
@@ -80,7 +79,6 @@
             margin: 0;
         }
 
-        /* 六大分類導航列 */
         .category-nav {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
@@ -120,7 +118,6 @@
             text-align: center;
         }
 
-        /* 選中狀態樣式 */
         .nav-tab.active-cn-class { background: var(--cn-class-bg); border-color: var(--cn-class-main); }
         .nav-tab.active-en-class { background: var(--en-class-bg); border-color: var(--en-class-main); }
         .nav-tab.active-cn-quiz  { background: var(--cn-quiz-bg);  border-color: var(--cn-quiz-main); }
@@ -128,7 +125,6 @@
         .nav-tab.active-book     { background: var(--book-bg);     border-color: var(--book-main); }
         .nav-tab.active-video    { background: var(--video-bg);    border-color: var(--video-main); }
 
-        /* 分類內容區塊 */
         .category-section {
             display: none;
             background: #FFFFFF;
@@ -169,7 +165,6 @@
             gap: 6px;
         }
 
-        /* 上下學期切換按鈕 */
         .term-switcher {
             display: flex;
             gap: 6px;
@@ -204,14 +199,12 @@
             display: block;
         }
 
-        /* 單元卡片網格 */
         .unit-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 12px;
         }
 
-        /* 單元卡片 */
         .unit-card {
             display: flex;
             flex-direction: column;
@@ -259,7 +252,6 @@
             margin: 0;
         }
 
-        /* 卡片邊框與底色 */
         .card-cn-class { background: var(--cn-class-bg); border-color: var(--cn-class-border); }
         .card-cn-class .unit-tag { color: #B45309; }
 
@@ -278,7 +270,6 @@
         .card-video    { background: var(--video-bg);    border-color: var(--video-border); }
         .card-video .unit-tag    { color: #B91C1C; }
 
-        /* 預留鎖定卡片 */
         .unit-card.locked {
             background: #F8FAFC;
             border: 2px dashed #CBD5E1;
@@ -296,7 +287,6 @@
             color: #64748B;
         }
 
-        /* 底部操作 */
         .footer-bar {
             display: flex;
             justify-content: space-between;
@@ -333,7 +323,6 @@
         <p class="header-subtitle">中文、英文、闖關測驗與有聲故事書總入口</p>
     </header>
 
-    <!-- 六大分類按鈕列 -->
     <nav class="category-nav">
         <button class="nav-tab active-cn-class" onclick="switchCategory('cn-class', this)">
             <span class="tab-icon">🏮</span>
@@ -361,7 +350,7 @@
         </button>
     </nav>
 
-    <!-- 1. 中文AI導師課堂 -->
+    <!-- 1. 中文AI導師課堂（已將中文字寶寶移走，改回預留位） -->
     <section id="sec-cn-class" class="category-section active" style="border-color: var(--cn-class-border);">
         <div class="section-header">
             <h2 class="section-title" style="color: #B45309;">🏮 中文AI導師課堂</h2>
@@ -373,7 +362,7 @@
 
         <div id="cn-term-1" class="term-group active">
             <div class="unit-grid">
-                <!-- 現有真實檔案 1：我要謝謝你 -->
+                <!-- 真實檔案：我要謝謝你 -->
                 <a href="cn-thankyou.html" class="unit-card card-cn-class">
                     <span class="unit-emoji">💝</span>
                     <span class="unit-tag">上週 AI 導師</span>
@@ -381,15 +370,14 @@
                     <p class="unit-desc">故事教學 · 兒歌圈熟字</p>
                 </a>
 
-                <!-- 現有真實檔案 2：中文字寶寶 -->
-                <a href="chinese.html" class="unit-card card-cn-class">
-                    <span class="unit-emoji">🐥</span>
-                    <span class="unit-tag">識字基石</span>
-                    <h3 class="unit-name">K2 中文字寶寶</h3>
-                    <p class="unit-desc">好朋友室 · 課唱歌 (Test 1-5)</p>
+                <!-- 預留位（中文字寶寶已移至中文闖關） -->
+                <a href="#" class="unit-card card-cn-class locked">
+                    <span class="unit-emoji">📖</span>
+                    <span class="unit-tag">上學期 · 單元二</span>
+                    <h3 class="unit-name">待上傳新單元</h3>
+                    <p class="unit-desc">預留課堂位置</p>
                 </a>
 
-                <!-- 預留擴充位 -->
                 <a href="#" class="unit-card card-cn-class locked">
                     <span class="unit-emoji">📖</span>
                     <span class="unit-tag">上學期 · 單元三</span>
@@ -444,15 +432,12 @@
 
         <div id="en-term-1" class="term-group active">
             <div class="unit-grid">
-                <!-- 現有真實檔案：Unit 4 -->
                 <a href="en-unit4.html" class="unit-card card-en-class">
                     <span class="unit-emoji">🤸</span>
                     <span class="unit-tag">本週 AI 導師</span>
                     <h3 class="unit-name">Unit 4: I can do it</h3>
                     <p class="unit-desc">P.17-20 動作·年齡·字母 m</p>
                 </a>
-
-                <!-- 預留位 -->
                 <a href="#" class="unit-card card-en-class locked"><span class="unit-emoji">📘</span><span class="unit-tag">上學期</span><h3 class="unit-name">Unit 1</h3><p class="unit-desc">預留單元位置</p></a>
                 <a href="#" class="unit-card card-en-class locked"><span class="unit-emoji">📘</span><span class="unit-tag">上學期</span><h3 class="unit-name">Unit 2</h3><p class="unit-desc">預留單元位置</p></a>
                 <a href="#" class="unit-card card-en-class locked"><span class="unit-emoji">📘</span><span class="unit-tag">上學期</span><h3 class="unit-name">Unit 3</h3><p class="unit-desc">預留單元位置</p></a>
@@ -473,17 +458,18 @@
         </div>
     </section>
 
-    <!-- 3. 中文闖關 -->
+    <!-- 3. 中文闖關（已納入中文字寶寶 好朋友課室唱歌 Test 1-5） -->
     <section id="sec-cn-quiz" class="category-section" style="border-color: var(--cn-quiz-border);">
         <div class="section-header">
             <h2 class="section-title" style="color: #047857;">🎯 中文闖關測驗</h2>
         </div>
         <div class="unit-grid">
+            <!-- 已將 chinese.html 歸位到中文闖關，並更新名稱 -->
             <a href="chinese.html" class="unit-card card-cn-quiz">
-                <span class="unit-emoji">🎯</span>
-                <span class="unit-tag">字詞闖關</span>
-                <h3 class="unit-name">字寶寶基礎闖關</h3>
-                <p class="unit-desc">Test 1-5 綜合挑戰</p>
+                <span class="unit-emoji">🐥</span>
+                <span class="unit-tag">識字闖關</span>
+                <h3 class="unit-name">中文字寶寶 好朋友課室唱歌</h3>
+                <p class="unit-desc">Test 1-5 綜合闖關</p>
             </a>
 
             <a href="#" class="unit-card card-cn-quiz locked">
@@ -508,7 +494,6 @@
             <h2 class="section-title" style="color: #6D28D9;">🏆 英文闖關測驗</h2>
         </div>
         <div class="unit-grid">
-            <!-- 現有真實檔案：動物家庭 -->
             <a href="en-animals.html" class="unit-card card-en-quiz">
                 <span class="unit-emoji">🐾</span>
                 <span class="unit-tag">主題挑戰 · 1</span>
@@ -516,7 +501,6 @@
                 <p class="unit-desc">Cat, Dog, Family</p>
             </a>
 
-            <!-- 現有真實檔案：情緒句子 -->
             <a href="en-emotions.html" class="unit-card card-en-quiz">
                 <span class="unit-emoji">😄</span>
                 <span class="unit-tag">主題挑戰 · 2</span>
@@ -524,7 +508,6 @@
                 <p class="unit-desc">Happy, Sad, Angry</p>
             </a>
 
-            <!-- 現有真實檔案：校園文具 -->
             <a href="en-stationery.html" class="unit-card card-en-quiz">
                 <span class="unit-emoji">✏️</span>
                 <span class="unit-tag">主題挑戰 · 3</span>
@@ -532,7 +515,6 @@
                 <p class="unit-desc">發音預習與連線</p>
             </a>
 
-            <!-- 現有真實檔案：全能總測 -->
             <a href="en-master.html" class="unit-card card-en-quiz">
                 <span class="unit-emoji">🏆</span>
                 <span class="unit-tag">期末必備</span>
@@ -540,7 +522,6 @@
                 <p class="unit-desc">K2 總考與錯題本</p>
             </a>
 
-            <!-- 預留位 -->
             <a href="#" class="unit-card card-en-quiz locked">
                 <span class="unit-emoji">🔒</span>
                 <span class="unit-tag">預留關卡</span>
@@ -556,15 +537,12 @@
             <h2 class="section-title" style="color: #BE123C;">📚 點讀書（每週三英文繪本閱讀）</h2>
         </div>
         <div class="unit-grid">
-            <!-- 現有真實檔案：Thomas -->
             <a href="thomas.html" class="unit-card card-book">
                 <span class="unit-emoji">🚂</span>
                 <span class="unit-tag">繪本點讀 · 本週</span>
                 <h3 class="unit-name">Thomas Goes Fishing</h3>
                 <p class="unit-desc">真人發音 + 釣魚遊戲</p>
             </a>
-
-            <!-- 週三繪本預留位 -->
             <a href="#" class="unit-card card-book locked"><span class="unit-emoji">📕</span><span class="unit-tag">週三小書</span><h3 class="unit-name">待上傳繪本 2</h3><p class="unit-desc">預留點讀位置</p></a>
             <a href="#" class="unit-card card-book locked"><span class="unit-emoji">📗</span><span class="unit-tag">週三小書</span><h3 class="unit-name">待上傳繪本 3</h3><p class="unit-desc">預留點讀位置</p></a>
             <a href="#" class="unit-card card-book locked"><span class="unit-emoji">📘</span><span class="unit-tag">週三小書</span><h3 class="unit-name">待上傳繪本 4</h3><p class="unit-desc">預留點讀位置</p></a>
