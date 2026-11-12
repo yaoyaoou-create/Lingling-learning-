@@ -1,0 +1,2330 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Unit 8: Love at Home — 玲玲的 3D 魔法闖關大冒險</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Fredoka (Chunky 3D Cartoon English) & Noto Sans TC (Rounded Traditional Chinese) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Noto+Sans+TC:wght@500;700;900&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       3D CARTOON TOY-BLOCK DESIGN SYSTEM & IPAD TOUCH OPTIMIZATIONS
+       ========================================================================== */
+    :root {
+      --bg-sky: #38bdf8;
+      --bg-indigo: #6366f1;
+      --stage-cream: #fffbeb;
+      --stage-border: #fde68a;
+    }
+
+    * {
+      -webkit-tap-highlight-color: transparent;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Fredoka', 'Noto Sans TC', sans-serif;
+      background: linear-gradient(135deg, #38bdf8 0%, #60a5fa 45%, #6366f1 100%);
+      min-height: 100vh;
+      margin: 0;
+      overflow-x: hidden;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    /* Mandatory Tactile 3D Toy-Block Buttons */
+    .btn-3d {
+      border-bottom-width: 8px;
+      border-radius: 18px;
+      transition: transform 0.09s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  border-bottom-width 0.09s ease,
+                  background-color 0.2s ease,
+                  box-shadow 0.2s ease;
+      touch-action: manipulation;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .btn-3d:active:not(:disabled) {
+      transform: translateY(4px);
+      border-bottom-width: 4px;
+    }
+
+    .btn-3d:disabled {
+      opacity: 0.72;
+      cursor: not-allowed;
+    }
+
+    /* 3D Button Color Variants */
+    .btn-coral {
+      background: linear-gradient(180deg, #fb7185 0%, #f43f5e 100%);
+      border-color: #be123c;
+      color: #ffffff;
+      box-shadow: 0 6px 14px rgba(244, 63, 94, 0.3);
+    }
+
+    .btn-emerald {
+      background: linear-gradient(180deg, #34d399 0%, #10b981 100%);
+      border-color: #047857;
+      color: #ffffff;
+      box-shadow: 0 6px 14px rgba(16, 185, 129, 0.3);
+    }
+
+    .btn-amber {
+      background: linear-gradient(180deg, #fde047 0%, #facc15 100%);
+      border-color: #ca8a04;
+      color: #713f12;
+      box-shadow: 0 6px 14px rgba(250, 204, 21, 0.35);
+    }
+
+    .btn-sky {
+      background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%);
+      border-color: #0369a1;
+      color: #ffffff;
+      box-shadow: 0 6px 14px rgba(2, 132, 199, 0.3);
+    }
+
+    .btn-purple {
+      background: linear-gradient(180deg, #a78bfa 0%, #7c3aed 100%);
+      border-color: #5b21b6;
+      color: #ffffff;
+      box-shadow: 0 6px 14px rgba(124, 58, 237, 0.3);
+    }
+
+    .btn-cream {
+      background: linear-gradient(180deg, #ffffff 0%, #fef3c7 100%);
+      border-color: #f59e0b;
+      color: #1e293b;
+      box-shadow: 0 6px 14px rgba(245, 158, 11, 0.18);
+    }
+
+    .btn-cream-blue {
+      background: linear-gradient(180deg, #ffffff 0%, #e0f2fe 100%);
+      border-color: #38bdf8;
+      color: #0f172a;
+      box-shadow: 0 6px 14px rgba(56, 189, 248, 0.22);
+    }
+
+    /* Correct Answer Glowing Emerald State */
+    .btn-correct-glow {
+      background: linear-gradient(180deg, #34d399 0%, #10b981 100%) !important;
+      border-color: #047857 !important;
+      color: #ffffff !important;
+      box-shadow: 0 0 24px rgba(16, 185, 129, 0.75), 0 8px 16px rgba(4, 120, 87, 0.35) !important;
+      animation: bounceCelebrate 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* Selected Active State (e.g., Line Matching) */
+    .btn-selected-ring {
+      background: linear-gradient(180deg, #fef08a 0%, #fde047 100%) !important;
+      border-color: #eab308 !important;
+      box-shadow: 0 0 0 4px rgba(250, 204, 21, 0.55), 0 8px 16px rgba(202, 138, 4, 0.3) !important;
+      transform: translateY(-2px);
+    }
+
+    /* Gentle Horizontal Shake for Wrong Answer */
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      18% { transform: translateX(-10px); }
+      36% { transform: translateX(10px); }
+      54% { transform: translateX(-8px); }
+      72% { transform: translateX(8px); }
+      90% { transform: translateX(-4px); }
+    }
+
+    .animate-shake {
+      animation: shake 0.48s ease-in-out;
+      border-color: #ef4444 !important;
+      background: linear-gradient(180deg, #fee2e2 0%, #fecaca 100%) !important;
+    }
+
+    @keyframes bounceCelebrate {
+      0% { transform: scale(1); }
+      40% { transform: scale(1.08); }
+      70% { transform: scale(0.97); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-8px) rotate(2deg); }
+    }
+
+    .animate-float {
+      animation: floatSlow 3.4s ease-in-out infinite;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 12px rgba(250, 204, 21, 0.5); }
+      50% { box-shadow: 0 0 24px rgba(250, 204, 21, 0.95); }
+    }
+
+    .glow-gold {
+      animation: pulseGlow 2s infinite;
+    }
+
+    /* Game Stage Card */
+    .stage-card {
+      background: radial-gradient(circle at top center, #fffef7 0%, #fffbeb 65%, #fef3c7 100%);
+      border: 5px solid #fde68a;
+      border-bottom-width: 12px;
+      border-radius: 32px;
+      box-shadow: 0 20px 45px rgba(30, 27, 75, 0.28);
+    }
+
+    /* Decorative Picture Frame */
+    .cartoon-frame {
+      background: linear-gradient(145deg, #d97706, #92400e);
+      padding: 10px;
+      border-radius: 26px;
+      box-shadow: 0 12px 24px rgba(120, 53, 15, 0.3), inset 0 2px 4px rgba(255, 255, 255, 0.4);
+    }
+
+    .cartoon-frame-inner {
+      background: linear-gradient(180deg, #e0f2fe 0%, #bae6fd 100%);
+      border-radius: 18px;
+      overflow: hidden;
+    }
+
+    /* Confetti / Star Burst Particle */
+    .star-particle {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      font-size: 26px;
+      animation: starFly 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes starFly {
+      0% {
+        opacity: 1;
+        transform: translate(0, 0) scale(0.5) rotate(0deg);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(var(--tx), var(--ty)) scale(1.35) rotate(240deg);
+      }
+    }
+  </style>
+</head>
+<body class="text-slate-800 antialiased selection:bg-amber-200">
+
+  <!-- ========================================================================
+       FLOATING DECORATIVE MACARON BACKGROUND ELEMENTS (STARS, HEARTS, 'S' SUNS)
+       ======================================================================== -->
+  <div class="fixed inset-0 pointer-events-none overflow-hidden z-0" aria-hidden="true">
+    <!-- Top Left Sun 's' Badge -->
+    <div class="absolute top-20 left-3 md:left-8 opacity-90 animate-float" style="animation-delay: 0.2s;">
+      <svg width="64" height="64" viewBox="0 0 80 80">
+        <circle cx="40" cy="40" r="24" fill="#facc15" stroke="#eab308" stroke-width="4"/>
+        <circle cx="40" cy="40" r="18" fill="#fef08a"/>
+        <text x="40" y="48" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="28" fill="#d97706">s</text>
+      </svg>
+    </div>
+    <!-- Bottom Left Heart -->
+    <div class="absolute bottom-12 left-4 md:left-10 opacity-85 animate-float" style="animation-delay: 1.1s;">
+      <svg width="48" height="48" viewBox="0 0 64 64">
+        <path d="M32 56C32 56 8 40 8 22C8 14 14 8 22 8C27 8 30 11 32 14C34 11 37 8 42 8C50 8 56 14 56 22C56 40 32 56 32 56Z" fill="#fb7185" stroke="#e11d48" stroke-width="3"/>
+      </svg>
+    </div>
+    <!-- Right Side Sun 's' Badge -->
+    <div class="absolute top-1/2 right-2 md:right-7 opacity-90 animate-float" style="animation-delay: 0.7s;">
+      <svg width="60" height="60" viewBox="0 0 80 80">
+        <circle cx="40" cy="40" r="24" fill="#fb923c" stroke="#ea580c" stroke-width="4"/>
+        <circle cx="40" cy="40" r="18" fill="#fed7aa"/>
+        <text x="40" y="48" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="28" fill="#c2410c">s</text>
+      </svg>
+    </div>
+    <!-- Top Right Star -->
+    <div class="absolute top-24 right-8 md:right-16 opacity-90 animate-float" style="animation-delay: 1.6s;">
+      <svg width="44" height="44" viewBox="0 0 64 64">
+        <polygon points="32,4 40,22 60,24 45,38 49,58 32,48 15,58 19,38 4,24 24,22" fill="#fde047" stroke="#ca8a04" stroke-width="3" stroke-linejoin="round"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       MAIN APPLICATION CONTAINER
+       ======================================================================== -->
+  <div class="relative z-10 max-w-5xl mx-auto px-3 sm:px-6 py-3 sm:py-5 flex flex-col min-h-screen">
+
+    <!-- ======================================================================
+         TOP NAVIGATION BAR (Home Audio-Kill Lock + Progress Map + AI Tools)
+         ====================================================================== -->
+    <header class="w-full bg-indigo-900/65 backdrop-blur-md border-2 border-indigo-300/40 rounded-3xl px-3 py-2.5 sm:px-5 sm:py-3 mb-4 shadow-lg flex flex-wrap items-center justify-between gap-2">
+
+      <!-- Left: 3D Coral Home Button with iPad Safari Dual Audio-Kill Lock -->
+      <button id="btn-home" onclick="handleHomeButtonClick()"
+        class="btn-3d btn-coral px-3.5 py-2 sm:px-4 sm:py-2.5 font-bold text-sm sm:text-base flex items-center gap-1.5 shrink-0">
+        <span class="text-lg">🏠</span>
+        <span>返回大門</span>
+      </button>
+
+      <!-- Center: 關卡進度地圖 (Top Progress Star/Dot Map: Levels 1-5 + Trophy) -->
+      <div class="flex flex-col items-center order-3 lg:order-2 w-full lg:w-auto mt-1 lg:mt-0">
+        <div class="text-[11px] sm:text-xs font-bold text-amber-200 tracking-wide mb-1 flex items-center gap-1.5">
+          <span>✨ 關卡進度地圖</span>
+          <span id="header-level-label" class="bg-indigo-950/70 text-white px-2 py-0.5 rounded-full">預習大廳</span>
+        </div>
+        <div id="progress-map" class="flex items-center gap-1.5 sm:gap-2.5 bg-indigo-950/55 px-3 py-1.5 rounded-full border border-indigo-400/40">
+          <!-- Populated dynamically by renderProgressMap() -->
+        </div>
+      </div>
+
+      <!-- Right: British English Badge + Gemini AI Avatar Generator Button -->
+      <div class="flex items-center gap-2 order-2 lg:order-3 shrink-0">
+        <span class="hidden sm:inline-flex items-center gap-1 bg-sky-950/75 text-sky-200 border border-sky-400/40 px-2.5 py-1.5 rounded-2xl text-xs font-bold">
+          <span>🇬🇧</span>
+          <span>British English</span>
+        </span>
+        <button id="btn-ai-avatars" onclick="generateGeminiAvatars()"
+          class="btn-3d btn-purple px-3 py-2 sm:px-3.5 sm:py-2.5 font-bold text-xs sm:text-sm flex items-center gap-1.5">
+          <span>✨ AI 變變變新頭像</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- ======================================================================
+         STATUS BANNER / NON-INTRUSIVE TOAST (Replaces alert/confirm)
+         ====================================================================== -->
+    <div id="toast-banner" class="hidden mb-3 mx-auto max-w-xl w-full bg-white/95 border-4 border-amber-400 rounded-2xl px-4 py-2.5 shadow-xl flex items-center justify-between gap-3 transition-all">
+      <div class="flex items-center gap-2.5">
+        <span id="toast-icon" class="text-2xl">✨</span>
+        <span id="toast-text" class="font-bold text-slate-800 text-sm sm:text-base"></span>
+      </div>
+      <button onclick="hideToast()" class="text-slate-400 hover:text-slate-700 font-bold text-lg px-2">✕</button>
+    </div>
+
+    <!-- ======================================================================
+         MAIN GAME STAGE CARD
+         ====================================================================== -->
+    <main id="game-stage" class="stage-card flex-1 p-4 sm:p-6 md:p-8 flex flex-col justify-between relative overflow-hidden">
+      <!-- Dynamic Level Content Rendered Here -->
+    </main>
+
+    <!-- Subtle Footer Tip -->
+    <footer class="text-center text-white/90 text-xs sm:text-sm font-medium mt-3 pb-1 drop-shadow">
+      Unit 8: Love at Home (Pages 33–36) • 玲玲專屬 3D 伴讀小精靈 Anna 🧚‍♀️
+    </footer>
+  </div>
+
+  <!-- ========================================================================
+       JAVASCRIPT: CURRICULUM DATA, 3D SVG ARTWORK, GEMINI TTS/IMAGE & 5 LEVELS
+       ======================================================================== -->
+  <script>
+    /* ========================================================================
+       1. CURRICULUM DATA & STATE MANAGEMENT
+       ======================================================================== */
+    const FAMILY_MEMBERS = [
+      {
+        id: 'father',
+        word: 'father',
+        zh: '爸爸',
+        sentence: 'I love my father.',
+        phonicsStartS: false,
+        color: '#38bdf8'
+      },
+      {
+        id: 'mother',
+        word: 'mother',
+        zh: '媽媽',
+        sentence: 'I love my mother.',
+        phonicsStartS: false,
+        color: '#f472b6'
+      },
+      {
+        id: 'sister',
+        word: 'sister',
+        zh: '家姐 / 妹妹',
+        sentence: 'I love my sister.',
+        phonicsStartS: true,
+        color: '#fb7185'
+      },
+      {
+        id: 'brother',
+        word: 'brother',
+        zh: '哥哥 / 弟弟',
+        sentence: 'I love my brother.',
+        phonicsStartS: false,
+        color: '#34d399'
+      }
+    ];
+
+    const PHONICS_ITEMS = [
+      { id: 'sister', word: 'sister', zh: '家姐/妹妹', startsWithS: true },
+      { id: 'sun', word: 'sun', zh: '太陽', startsWithS: true },
+      { id: 'sea', word: 'sea', zh: '大海', startsWithS: true },
+      { id: 'fish', word: 'fish', zh: '小魚', startsWithS: false },
+      { id: 'dog', word: 'dog', zh: '小狗', startsWithS: false },
+      { id: 'rabbit', word: 'rabbit', zh: '白兔', startsWithS: false },
+      { id: 'cat', word: 'cat', zh: '小貓', startsWithS: false },
+      { id: 'hamster', word: 'hamster', zh: '倉鼠', startsWithS: false }
+    ];
+
+    const LEVEL_META = [
+      { num: 1, title: '第一關：無圖聽音選字', short: '聽音選字', icon: '🎧' },
+      { num: 2, title: '第二關：卡通拉線配對', short: '拉線配對', icon: '🖍️' },
+      { num: 3, title: '第三關：Tickles 陷阱問答', short: 'Yes / No', icon: '🐱' },
+      { num: 4, title: '第四關：Phonics /s/ 捉迷藏', short: 'Phonics s', icon: '☀️' },
+      { num: 5, title: '第五關：拼寫積木＋親子口語', short: '拼寫口語', icon: '🧱' }
+    ];
+
+    // Global Application State
+    const appState = {
+      currentStep: 0, // 0 = Preview Hub, 1..5 = Levels 1..5, 6 = Final Celebration & Parent Report
+      completedLevels: new Set(),
+      customAvatars: {}, // Stores Gemini-generated data URLs for 'father', 'mother', 'sister', 'brother'
+      isGeneratingAvatars: false,
+
+      // Diagnostic Tracking for Parent Mistake Report
+      stats: {
+        1: { attempts: 0, mistakes: [], completed: false },
+        2: { attempts: 0, mistakes: [], completed: false },
+        3: { attempts: 0, mistakes: [], completed: false },
+        4: { attempts: 0, mistakes: [], completed: false },
+        5: { attempts: 0, mistakes: [], completed: false }
+      },
+
+      // Level-specific runtime state
+      l1: { questions: [], index: 0, locked: false },
+      l2: { leftItems: [], rightItems: [], selectedLeft: null, matched: new Set(), lines: [] },
+      l3: { questions: [], index: 0, locked: false },
+      l4: { questions: [], index: 0, bonusCompleted: { sister: false, sun: false, sea: false }, locked: false },
+      l5: {
+        spellingWords: [],
+        spellIndex: 0,
+        scrambledTiles: [],
+        chosenTiles: [],
+        spellingDone: false,
+        selectedLoveMember: 'mother',
+        speakingChecked: false
+      }
+    };
+
+    /* ========================================================================
+       2. HIGH-CRAFT 3D-SHADED SVG MASCOTS & CARTOON PORTRAITS
+       ======================================================================== */
+    function getAnnaFairySVG(size = 115) {
+      return `
+        <svg width="${size}" height="${size}" viewBox="0 0 180 180" class="drop-shadow-lg shrink-0">
+          <defs>
+            <radialGradient id="annaSkin" cx="40%" cy="35%" r="60%">
+              <stop offset="0%" stop-color="#ffe4d6"/>
+              <stop offset="100%" stop-color="#f5b89a"/>
+            </radialGradient>
+            <linearGradient id="annaHair" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#854d0e"/>
+              <stop offset="100%" stop-color="#451a03"/>
+            </linearGradient>
+            <linearGradient id="annaWingL" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#67e8f9" stop-opacity="0.9"/>
+              <stop offset="50%" stop-color="#f472b6" stop-opacity="0.85"/>
+              <stop offset="100%" stop-color="#fde047" stop-opacity="0.9"/>
+            </linearGradient>
+            <linearGradient id="annaDress" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#8b5cf6"/>
+              <stop offset="100%" stop-color="#5b21b6"/>
+            </linearGradient>
+          </defs>
+          <!-- Rainbow Fairy Wings -->
+          <path d="M62 88 C20 55, 8 92, 48 112 C22 125, 32 152, 66 130 Z" fill="url(#annaWingL)" stroke="#ffffff" stroke-width="2.5"/>
+          <path d="M118 88 C160 55, 172 92, 132 112 C158 125, 148 152, 114 130 Z" fill="url(#annaWingL)" stroke="#ffffff" stroke-width="2.5"/>
+          <!-- Hair Bun -->
+          <circle cx="90" cy="30" r="22" fill="url(#annaHair)"/>
+          <ellipse cx="90" cy="48" rx="20" ry="6" fill="#ec4899"/>
+          <!-- Purple Dress Body -->
+          <path d="M66 112 L114 112 L124 162 L56 162 Z" fill="url(#annaDress)" stroke="#4c1d95" stroke-width="3" stroke-linejoin="round"/>
+          <path d="M64 150 L116 150 L122 162 L58 162 Z" fill="#14b8a6"/>
+          <!-- Arms -->
+          <path d="M66 118 Q46 128 42 114" fill="none" stroke="url(#annaSkin)" stroke-width="10" stroke-linecap="round"/>
+          <path d="M114 118 Q134 122 142 104" fill="none" stroke="url(#annaSkin)" stroke-width="10" stroke-linecap="round"/>
+          <!-- Golden Star Wand -->
+          <line x1="142" y1="106" x2="156" y2="74" stroke="#78350f" stroke-width="4" stroke-linecap="round"/>
+          <polygon points="156,56 160,68 172,69 162,77 165,89 156,82 147,89 150,77 140,69 152,68" fill="#fde047" stroke="#eab308" stroke-width="2"/>
+          <!-- Head & Hair -->
+          <circle cx="90" cy="76" r="36" fill="url(#annaSkin)"/>
+          <path d="M54 74 C54 44, 126 44, 126 74 C116 58, 96 64, 90 56 C82 66, 64 58, 54 74 Z" fill="url(#annaHair)"/>
+          <!-- Round Purple Glasses -->
+          <circle cx="76" cy="78" r="13" fill="#ffffff" stroke="#7e22ce" stroke-width="4"/>
+          <circle cx="104" cy="78" r="13" fill="#ffffff" stroke="#7e22ce" stroke-width="4"/>
+          <line x1="89" y1="78" x2="91" y2="78" stroke="#7e22ce" stroke-width="4"/>
+          <!-- Big Sparkling Eyes -->
+          <circle cx="76" cy="78" r="6" fill="#0284c7"/>
+          <circle cx="76" cy="78" r="3" fill="#0f172a"/>
+          <circle cx="74" cy="75" r="2" fill="#ffffff"/>
+          <circle cx="104" cy="78" r="6" fill="#0284c7"/>
+          <circle cx="104" cy="78" r="3" fill="#0f172a"/>
+          <circle cx="102" cy="75" r="2" fill="#ffffff"/>
+          <!-- Rosy Cheeks & Happy Smile -->
+          <ellipse cx="64" cy="91" rx="6" ry="3.5" fill="#fb7185" opacity="0.6"/>
+          <ellipse cx="116" cy="91" rx="6" ry="3.5" fill="#fb7185" opacity="0.6"/>
+          <path d="M80 94 Q90 105 100 94 Z" fill="#e11d48"/>
+          <!-- Speech Badge "Anna" -->
+          <rect x="6" y="14" width="54" height="24" rx="12" fill="#ffffff" stroke="#8b5cf6" stroke-width="3"/>
+          <text x="33" y="30" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="14" fill="#6d28d9">Anna</text>
+        </svg>
+      `;
+    }
+
+    function getTicklesCatSVG(size = 115) {
+      return `
+        <svg width="${size}" height="${size}" viewBox="0 0 180 180" class="drop-shadow-lg shrink-0">
+          <defs>
+            <radialGradient id="catFur" cx="45%" cy="35%" r="60%">
+              <stop offset="0%" stop-color="#fdba74"/>
+              <stop offset="65%" stop-color="#f97316"/>
+              <stop offset="100%" stop-color="#c2410c"/>
+            </radialGradient>
+          </defs>
+          <!-- Tail -->
+          <path d="M132 142 Q165 130 156 104" fill="none" stroke="#ea580c" stroke-width="14" stroke-linecap="round"/>
+          <!-- Body -->
+          <ellipse cx="95" cy="136" rx="36" ry="34" fill="url(#catFur)"/>
+          <ellipse cx="92" cy="140" rx="20" ry="22" fill="#ffedd5"/>
+          <!-- Pointing Left Paw -->
+          <path d="M64 124 Q34 112 24 104" fill="none" stroke="#fb923c" stroke-width="15" stroke-linecap="round"/>
+          <circle cx="22" cy="103" r="8" fill="#ffedd5"/>
+          <!-- Ears -->
+          <polygon points="52,58 46,20 80,42" fill="#ea580c" stroke="#9a3412" stroke-width="3" stroke-linejoin="round"/>
+          <polygon points="56,52 52,29 73,43" fill="#fda4af"/>
+          <polygon points="128,58 134,20 100,42" fill="#ea580c" stroke="#9a3412" stroke-width="3" stroke-linejoin="round"/>
+          <polygon points="124,52 128,29 107,43" fill="#fda4af"/>
+          <!-- Head -->
+          <ellipse cx="90" cy="76" rx="46" ry="38" fill="url(#catFur)"/>
+          <!-- Tabby Stripes -->
+          <path d="M84 40 L84 52 M90 38 L90 54 M96 40 L96 52" stroke="#9a3412" stroke-width="4" stroke-linecap="round"/>
+          <!-- Big Expressive Eyes -->
+          <circle cx="72" cy="74" r="13" fill="#fef9c3" stroke="#9a3412" stroke-width="2.5"/>
+          <circle cx="70" cy="74" r="6" fill="#1e293b"/>
+          <circle cx="68" cy="71" r="2.5" fill="#ffffff"/>
+          <circle cx="108" cy="74" r="13" fill="#fef9c3" stroke="#9a3412" stroke-width="2.5"/>
+          <circle cx="106" cy="74" r="6" fill="#1e293b"/>
+          <circle cx="104" cy="71" r="2.5" fill="#ffffff"/>
+          <!-- Pink Nose & Happy Mouth -->
+          <polygon points="85,86 95,86 90,92" fill="#fb7185"/>
+          <path d="M80 94 Q90 106 100 94 Z" fill="#e11d48"/>
+          <!-- Whiskers -->
+          <line x1="34" y1="82" x2="56" y2="85" stroke="#7c2d12" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="34" y1="92" x2="56" y2="91" stroke="#7c2d12" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="124" y1="85" x2="146" y2="82" stroke="#7c2d12" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="124" y1="91" x2="146" y2="92" stroke="#7c2d12" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+      `;
+    }
+
+    /**
+     * Renders either a Gemini-generated custom cartoon portrait (if generated)
+     * or our high-craft 3D-shaded SVG character / phonics artwork.
+     */
+    function getPortraitHTML(id, sizeClass = 'w-28 h-28 sm:w-32 sm:h-32') {
+      if (appState.customAvatars[id]) {
+        return `
+          <img src="${appState.customAvatars[id]}" alt="${id}"
+            class="${sizeClass} object-cover rounded-2xl shadow-md border-4 border-white mx-auto" />
+        `;
+      }
+
+      const svgMap = {
+        father: `
+          <svg viewBox="0 0 140 140" class="${sizeClass} mx-auto drop-shadow">
+            <defs>
+              <radialGradient id="dadSkin" cx="40%" cy="35%" r="60%">
+                <stop offset="0%" stop-color="#fde6d8"/><stop offset="100%" stop-color="#eab396"/>
+              </radialGradient>
+            </defs>
+            <rect width="140" height="140" rx="24" fill="#dbeafe"/>
+            <!-- Blue Polo Shirt -->
+            <path d="M26 140 C26 106, 114 106, 114 140 Z" fill="#2563eb"/>
+            <polygon points="56,108 70,122 84,108" fill="#93c5fd"/>
+            <!-- Neck & Head -->
+            <rect x="61" y="92" width="18" height="20" rx="8" fill="#eab396"/>
+            <circle cx="70" cy="64" r="34" fill="url(#dadSkin)"/>
+            <!-- Short Brown Hair -->
+            <path d="M36 60 C34 26, 106 26, 104 60 C96 42, 44 42, 36 60 Z" fill="#451a03"/>
+            <!-- Glasses -->
+            <rect x="45" y="56" width="21" height="16" rx="5" fill="#ffffff" fill-opacity="0.4" stroke="#1e293b" stroke-width="3.5"/>
+            <rect x="74" y="56" width="21" height="16" rx="5" fill="#ffffff" fill-opacity="0.4" stroke="#1e293b" stroke-width="3.5"/>
+            <line x1="66" y1="63" x2="74" y2="63" stroke="#1e293b" stroke-width="3.5"/>
+            <circle cx="55" cy="64" r="3.5" fill="#0f172a"/>
+            <circle cx="84" cy="64" r="3.5" fill="#0f172a"/>
+            <!-- Warm Smile -->
+            <path d="M58 80 Q70 90 82 80" fill="none" stroke="#9a3412" stroke-width="3.5" stroke-linecap="round"/>
+          </svg>
+        `,
+        mother: `
+          <svg viewBox="0 0 140 140" class="${sizeClass} mx-auto drop-shadow">
+            <defs>
+              <radialGradient id="momSkin" cx="40%" cy="35%" r="60%">
+                <stop offset="0%" stop-color="#ffe8dc"/><stop offset="100%" stop-color="#f3bea2"/>
+              </radialGradient>
+            </defs>
+            <rect width="140" height="140" rx="24" fill="#fce7f3"/>
+            <!-- Back Long Hair -->
+            <path d="M32 62 C28 105, 36 122, 48 124 L92 124 C104 122, 112 105, 108 62 Z" fill="#3b1706"/>
+            <!-- Purple Top -->
+            <path d="M28 140 C28 106, 112 106, 112 140 Z" fill="#a855f7"/>
+            <!-- Head -->
+            <circle cx="70" cy="64" r="32" fill="url(#momSkin)"/>
+            <!-- Front Hair Swept -->
+            <path d="M38 62 C40 30, 100 30, 102 62 C88 44, 56 44, 38 62 Z" fill="#451a03"/>
+            <!-- Eyes & Eyelashes -->
+            <circle cx="57" cy="64" r="4" fill="#1e293b"/>
+            <circle cx="55.5" cy="62.5" r="1.5" fill="#ffffff"/>
+            <circle cx="83" cy="64" r="4" fill="#1e293b"/>
+            <circle cx="81.5" cy="62.5" r="1.5" fill="#ffffff"/>
+            <!-- Rosy Cheeks & Smile -->
+            <circle cx="48" cy="73" r="4.5" fill="#fb7185" opacity="0.5"/>
+            <circle cx="92" cy="73" r="4.5" fill="#fb7185" opacity="0.5"/>
+            <path d="M58 79 Q70 90 82 79" fill="none" stroke="#be123c" stroke-width="3.5" stroke-linecap="round"/>
+          </svg>
+        `,
+        sister: `
+          <svg viewBox="0 0 140 140" class="${sizeClass} mx-auto drop-shadow">
+            <defs>
+              <radialGradient id="sisSkin" cx="40%" cy="35%" r="60%">
+                <stop offset="0%" stop-color="#ffece2"/><stop offset="100%" stop-color="#f5c2a8"/>
+              </radialGradient>
+            </defs>
+            <rect width="140" height="140" rx="24" fill="#ffe4e6"/>
+            <!-- Cute Pigtails -->
+            <circle cx="30" cy="54" r="15" fill="#78350f"/>
+            <circle cx="110" cy="54" r="15" fill="#78350f"/>
+            <circle cx="39" cy="52" r="5" fill="#f43f5e"/>
+            <circle cx="101" cy="52" r="5" fill="#f43f5e"/>
+            <!-- Pink Dress with 's' Badge -->
+            <path d="M34 140 C34 108, 106 108, 106 140 Z" fill="#fb7185"/>
+            <circle cx="70" cy="126" r="10" fill="#fef08a"/>
+            <text x="70" y="131" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="14" fill="#e11d48">s</text>
+            <!-- Head -->
+            <circle cx="70" cy="68" r="30" fill="url(#sisSkin)"/>
+            <path d="M40 66 C42 36, 98 36, 100 66 C86 50, 54 50, 40 66 Z" fill="#78350f"/>
+            <!-- Eyes & Smile -->
+            <circle cx="58" cy="68" r="4" fill="#1e293b"/>
+            <circle cx="56.5" cy="66.5" r="1.5" fill="#ffffff"/>
+            <circle cx="82" cy="68" r="4" fill="#1e293b"/>
+            <circle cx="80.5" cy="66.5" r="1.5" fill="#ffffff"/>
+            <path d="M60 82 Q70 92 80 82 Z" fill="#e11d48"/>
+          </svg>
+        `,
+        brother: `
+          <svg viewBox="0 0 140 140" class="${sizeClass} mx-auto drop-shadow">
+            <defs>
+              <radialGradient id="broSkin" cx="40%" cy="35%" r="60%">
+                <stop offset="0%" stop-color="#ffece2"/><stop offset="100%" stop-color="#f2bca0"/>
+              </radialGradient>
+            </defs>
+            <rect width="140" height="140" rx="24" fill="#d1fae5"/>
+            <!-- Green T-Shirt -->
+            <path d="M32 140 C32 108, 108 108, 108 140 Z" fill="#10b981"/>
+            <path d="M56 110 Q70 120 84 110" fill="none" stroke="#a7f3d0" stroke-width="4"/>
+            <!-- Head -->
+            <circle cx="70" cy="68" r="30" fill="url(#broSkin)"/>
+            <!-- Fluffy Curly Brown Hair -->
+            <circle cx="48" cy="46" r="12" fill="#7c2d12"/>
+            <circle cx="64" cy="40" r="13" fill="#7c2d12"/>
+            <circle cx="80" cy="41" r="13" fill="#7c2d12"/>
+            <circle cx="94" cy="48" r="11" fill="#7c2d12"/>
+            <!-- Eyes & Big Grin -->
+            <circle cx="58" cy="68" r="4" fill="#1e293b"/>
+            <circle cx="56.5" cy="66.5" r="1.5" fill="#ffffff"/>
+            <circle cx="82" cy="68" r="4" fill="#1e293b"/>
+            <circle cx="80.5" cy="66.5" r="1.5" fill="#ffffff"/>
+            <path d="M58 81 Q70 93 82 81 Z" fill="#ffffff" stroke="#9a3412" stroke-width="2"/>
+          </svg>
+        `,
+        sun: `
+          <svg viewBox="0 0 140 140" class="${sizeClass} mx-auto drop-shadow">
+            <rect width="140" height="140" rx="24" fill="#fef9c3"/>
+            <g stroke="#f59e0b" stroke-width="7" stroke-linecap="round">
+              <line x1="70" y1="14" x2="70" y2="28"/>
+              <line x1="70" y1="112" x2="70" y2="126"/>
+              <line x1="14" y1="70" x2="28" y2="70"/>
+              <line x1="112" y1="70" x2="126" y2="70"/>
+              <line x1="30" y1="30" x2="40" y2="40"/>
+              <line x1="100" y1="100" x2="110" y2="110"/>
+              <line x1="110" y1="30" x2="100" y2="40"/>
+              <line x1="40" y1="100" x2="30" y2="110"/>
+            </g>
+            <circle cx="70" cy="70" r="34" fill="#facc15" stroke="#ea580c" stroke-width="4"/>
+            <circle cx="60" cy="64" r="3.5" fill="#7c2d12"/>
+            <circle cx="80" cy="64" r="3.5" fill="#7c2d12"/>
+            <path d="M60 76 Q70 86 80 76" fill="none" stroke="#7c2d12" stroke-width="3.5" stroke-linecap="round"/>
+          </svg>
+        `,
+        sea: `
+          <svg viewBox="0 0 140 140" class="${sizeClass} mx-auto drop-shadow">
+            <rect width="140" height="140" rx="24" fill="#e0f2fe"/>
+            <!-- Fluffy Clouds -->
+            <circle cx="42" cy="36" r="14" fill="#ffffff"/>
+            <circle cx="58" cy="34" r="16" fill="#ffffff"/>
+            <circle cx="74" cy="38" r="12" fill="#ffffff"/>
+            <!-- Sparkling Blue Ocean Waves -->
+            <path d="M12 68 Q35 54 58 68 T104 68 T128 68 L128 128 L12 128 Z" fill="#0284c7"/>
+            <path d="M12 86 Q38 72 64 86 T116 86 L128 86 L128 128 L12 128 Z" fill="#38bdf8"/>
+            <path d="M26 104 Q48 94 70 104 T114 104" fill="none" stroke="#e0f2fe" stroke-width="4" stroke-linecap="round"/>
+          </svg>
+        `,
+        fish: `
+          <svg viewBox="0 0 140 140" class="${sizeClass} mx-auto drop-shadow">
+            <rect width="140" height="140" rx="24" fill="#fdf2f8"/>
+            <!-- Fancy Pink Fins (Modelled on Page 36!) -->
+            <path d="M35 70 C12 36, 12 104, 35 70 Z" fill="#f472b6"/>
+            <path d="M55 44 C50 20, 86 20, 82 46 Z" fill="#fb7185"/>
+            <path d="M55 96 C50 118, 86 118, 82 94 Z" fill="#fb7185"/>
+            <!-- Fish Body -->
+            <ellipse cx="76" cy="70" rx="38" ry="26" fill="#ec4899"/>
+            <circle cx="96" cy="64" r="6" fill="#ffffff"/>
+            <circle cx="98" cy="64" r="3" fill="#0f172a"/>
+            <path d="M104 76 Q98 82 92 78" fill="none" stroke="#831843" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+        `,
+        dog: `
+          <svg viewBox="0 0 140 140" class="${sizeClass} mx-auto drop-shadow">
+            <rect width="140" height="140" rx="24" fill="#fef3c7"/>
+            <!-- Floppy Golden Ears -->
+            <ellipse cx="36" cy="72" rx="14" ry="28" fill="#b45309"/>
+            <ellipse cx="104" cy="72" rx="14" ry="28" fill="#b45309"/>
+            <!-- Dog Face -->
+            <circle cx="70" cy="68" r="32" fill="#f59e0b"/>
+            <!-- Glasses (Page 34 Dog!) -->
+            <circle cx="57" cy="62" r="10" fill="#ffffff" fill-opacity="0.4" stroke="#78350f" stroke-width="3"/>
+            <circle cx="83" cy="62" r="10" fill="#ffffff" fill-opacity="0.4" stroke="#78350f" stroke-width="3"/>
+            <line x1="67" y1="62" x2="73" y2="62" stroke="#78350f" stroke-width="3"/>
+            <circle cx="57" cy="62" r="3" fill="#1e293b"/>
+            <circle cx="83" cy="62" r="3" fill="#1e293b"/>
+            <!-- Nose & Happy Tongue -->
+            <ellipse cx="70" cy="76" rx="7" ry="5" fill="#1e293b"/>
+            <path d="M64 84 Q70 98 76 84 Z" fill="#fb7185"/>
+          </svg>
+        `,
+        rabbit: `
+          <svg viewBox="0 0 140 140" class="${sizeClass} mx-auto drop-shadow">
+            <rect width="140" height="140" rx="24" fill="#f3e8ff"/>
+            <!-- Long Rabbit Ears -->
+            <ellipse cx="54" cy="34" rx="10" ry="26" fill="#ffffff" stroke="#cbd5e1" stroke-width="3"/>
+            <ellipse cx="54" cy="34" rx="5" ry="18" fill="#fbcfe8"/>
+            <ellipse cx="86" cy="34" rx="10" ry="26" fill="#ffffff" stroke="#cbd5e1" stroke-width="3"/>
+            <ellipse cx="86" cy="34" rx="5" ry="18" fill="#fbcfe8"/>
+            <!-- Head -->
+            <circle cx="70" cy="80" r="32" fill="#ffffff" stroke="#cbd5e1" stroke-width="3"/>
+            <circle cx="58" cy="74" r="4" fill="#1e293b"/>
+            <circle cx="82" cy="74" r="4" fill="#1e293b"/>
+            <polygon points="66,82 74,82 70,87" fill="#f472b6"/>
+            <path d="M62 90 Q70 96 78 90" fill="none" stroke="#64748b" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+        `,
+        cat: `
+          <svg viewBox="0 0 140 140" class="${sizeClass} mx-auto drop-shadow">
+            <rect width="140" height="140" rx="24" fill="#ffedd5"/>
+            <polygon points="40,56 36,24 64,44" fill="#94a3b8"/>
+            <polygon points="100,56 104,24 76,44" fill="#94a3b8"/>
+            <circle cx="70" cy="74" r="32" fill="#cbd5e1"/>
+            <circle cx="58" cy="70" r="4" fill="#0f172a"/>
+            <circle cx="82" cy="70" r="4" fill="#0f172a"/>
+            <polygon points="66,78 74,78 70,83" fill="#fb7185"/>
+            <path d="M62 86 Q70 94 78 86" fill="none" stroke="#475569" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+        `,
+        hamster: `
+          <svg viewBox="0 0 140 140" class="${sizeClass} mx-auto drop-shadow">
+            <rect width="140" height="140" rx="24" fill="#ecfccb"/>
+            <circle cx="44" cy="48" r="11" fill="#d97706"/>
+            <circle cx="96" cy="48" r="11" fill="#d97706"/>
+            <ellipse cx="70" cy="76" rx="36" ry="30" fill="#fbbf24"/>
+            <ellipse cx="70" cy="84" rx="24" ry="18" fill="#fef3c7"/>
+            <circle cx="56" cy="68" r="4" fill="#1e293b"/>
+            <circle cx="84" cy="68" r="4" fill="#1e293b"/>
+            <circle cx="70" cy="76" r="4" fill="#fb7185"/>
+          </svg>
+        `
+      };
+
+      return svgMap[id] || svgMap['sister'];
+    }
+
+    /* ========================================================================
+       3. GEMINI BRITISH ENGLISH VOICE ENGINE + INSTANT SPEECHSYNTHESIS FALLBACK
+       ======================================================================== */
+    const ttsCache = new Map();
+    const ttsInFlight = new Map();
+    let activeAudioElement = null;
+    let webAudioCtx = null;
+
+    /**
+     * Converts Base64 string to ArrayBuffer for PCM16 -> WAV wrapping
+     */
+    function base64ToArrayBuffer(base64) {
+      const binaryString = window.atob(base64);
+      const len = binaryString.length;
+      const bytes = new Uint8Array(len);
+      for (let i = 0; i < len; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+      return bytes.buffer;
+    }
+
+    /**
+     * Wraps raw signed PCM16 audio data into a playable WAV Blob
+     */
+    function pcmToWav(pcm16Array, sampleRate) {
+      const numChannels = 1;
+      const byteRate = sampleRate * numChannels * 2;
+      const blockAlign = numChannels * 2;
+      const dataSize = pcm16Array.length * 2;
+      const buffer = new ArrayBuffer(44 + dataSize);
+      const view = new DataView(buffer);
+
+      function writeString(offset, str) {
+        for (let i = 0; i < str.length; i++) {
+          view.setUint8(offset + i, str.charCodeAt(i));
+        }
+      }
+
+      writeString(0, 'RIFF');
+      view.setUint32(4, 36 + dataSize, true);
+      writeString(8, 'WAVE');
+      writeString(12, 'fmt ');
+      view.setUint32(16, 16, true);
+      view.setUint16(20, 1, true);
+      view.setUint16(22, numChannels, true);
+      view.setUint32(24, sampleRate, true);
+      view.setUint32(28, byteRate, true);
+      view.setUint16(32, blockAlign, true);
+      view.setUint16(34, 16, true);
+      writeString(36, 'data');
+      view.setUint32(40, dataSize, true);
+
+      let offset = 44;
+      for (let i = 0; i < pcm16Array.length; i++, offset += 2) {
+        view.setInt16(offset, pcm16Array[i], true);
+      }
+
+      return new Blob([buffer], { type: 'audio/wav' });
+    }
+
+    /**
+     * Fetches & caches British English RP audio from Gemini TTS API (gemini-2.5-flash-preview-tts)
+     */
+    async function fetchAndCacheGeminiTTS(text) {
+      if (ttsCache.has(text)) return ttsCache.get(text);
+      if (ttsInFlight.has(text)) return ttsInFlight.get(text);
+
+      const promise = (async () => {
+        const apiKey = "";
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`;
+        const payload = {
+          contents: [{
+            parts: [{
+              text: `Speak clearly, warmly, and naturally in a standard British English (RP) accent for a young child learning English: "${text}"`
+            }]
+          }],
+          generationConfig: {
+            responseModalities: ["AUDIO"],
+            speechConfig: {
+              voiceConfig: {
+                prebuiltVoiceConfig: { voiceName: "Aoede" }
+              }
+            }
+          },
+          model: "gemini-2.5-flash-preview-tts"
+        };
+
+        let delay = 1000;
+        for (let attempt = 0; attempt < 3; attempt++) {
+          try {
+            const response = await fetch(apiUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload)
+            });
+            if (!response.ok) throw new Error('TTS HTTP ' + response.status);
+            const result = await response.json();
+            const part = result?.candidates?.[0]?.content?.parts?.[0];
+            const audioData = part?.inlineData?.data;
+            const mimeType = part?.inlineData?.mimeType;
+
+            if (audioData && mimeType && mimeType.startsWith("audio/")) {
+              const rateMatch = mimeType.match(/rate=(\d+)/);
+              const sampleRate = rateMatch ? parseInt(rateMatch[1], 10) : 24000;
+              const pcmBuffer = base64ToArrayBuffer(audioData);
+              const pcm16 = new Int16Array(pcmBuffer);
+              const wavBlob = pcmToWav(pcm16, sampleRate);
+              const audioUrl = URL.createObjectURL(wavBlob);
+              ttsCache.set(text, audioUrl);
+              return audioUrl;
+            }
+            break;
+          } catch (err) {
+            if (attempt < 2) {
+              await new Promise(r => setTimeout(r, delay));
+              delay *= 2;
+            }
+          }
+        }
+        return null;
+      })();
+
+      ttsInFlight.set(text, promise);
+      const res = await promise;
+      ttsInFlight.delete(text);
+      return res;
+    }
+
+    /**
+     * Plays British English via Web Speech API (en-GB) as instant fallback
+     */
+    function speakWithWebSpeechUK(text, rate = 1.0) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-GB';
+      utterance.rate = rate;
+      utterance.pitch = 1.08;
+
+      const voices = window.speechSynthesis.getVoices();
+      const ukVoice = voices.find(v =>
+        v.lang === 'en-GB' && (v.name.includes('Serena') || v.name.includes('Kate') || v.name.includes('Daniel') || v.name.includes('Google UK'))
+      ) || voices.find(v => v.lang && v.lang.toLowerCase().includes('gb'));
+
+      if (ukVoice) {
+        utterance.voice = ukVoice;
+      }
+      window.speechSynthesis.speak(utterance);
+    }
+
+    /**
+     * Master British English Speaker Engine:
+     * 1. Stops any currently playing audio cleanly.
+     * 2. Plays cached Gemini British English WAV if ready; otherwise triggers Gemini TTS caching
+     *    in background while speaking immediately via en-GB SpeechSynthesis so there is zero lag.
+     */
+    function speakBritish(text, rate = 1.0) {
+      stopAllAudio();
+
+      if (ttsCache.has(text)) {
+        const url = ttsCache.get(text);
+        const audio = new Audio(url);
+        audio.playbackRate = rate;
+        activeAudioElement = audio;
+        audio.play().catch(() => speakWithWebSpeechUK(text, rate));
+      } else {
+        // Immediate response for iPad touch responsiveness + warm Gemini TTS cache for replays
+        speakWithWebSpeechUK(text, rate);
+        fetchAndCacheGeminiTTS(text);
+      }
+    }
+
+    /**
+     * Pre-warms Gemini British TTS cache for core vocabulary silently on first interaction
+     */
+    let prewarmed = false;
+    function prewarmCoreBritishTTS() {
+      if (prewarmed) return;
+      prewarmed = true;
+      const corePhrases = ['father', 'mother', 'sister', 'brother', 'sun', 'sea', 'fish'];
+      corePhrases.forEach((phrase, idx) => {
+        setTimeout(() => fetchAndCacheGeminiTTS(phrase), idx * 450);
+      });
+    }
+
+    /**
+     * Stops all HTML5 Audio and SpeechSynthesis immediately
+     */
+    function stopAllAudio() {
+      if (activeAudioElement) {
+        try {
+          activeAudioElement.pause();
+          activeAudioElement.currentTime = 0;
+        } catch (e) {}
+        activeAudioElement = null;
+      }
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+    }
+
+    /**
+     * iPad Safari Dual Audio-Kill Lock for Home Button
+     */
+    function handleHomeButtonClick() {
+      stopAllAudio();
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+      setTimeout(() => {
+        if ('speechSynthesis' in window) {
+          window.speechSynthesis.cancel();
+        }
+        goHome();
+      }, 80);
+    }
+
+    /**
+     * Cheerful Web Audio Chime & Gentle Boop Sound Effects (No external MP3 URLs)
+     */
+    function playSoundEffect(type = 'correct') {
+      try {
+        if (!webAudioCtx) {
+          webAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (webAudioCtx.state === 'suspended') {
+          webAudioCtx.resume();
+        }
+        const now = webAudioCtx.currentTime;
+        const osc = webAudioCtx.createOscillator();
+        const gain = webAudioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(webAudioCtx.destination);
+
+        if (type === 'correct') {
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(523.25, now); // C5
+          osc.frequency.setValueAtTime(659.25, now + 0.09); // E5
+          osc.frequency.setValueAtTime(783.99, now + 0.18); // G5
+          osc.frequency.setValueAtTime(1046.5, now + 0.28); // C6
+          gain.gain.setValueAtTime(0.22, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.55);
+          osc.start(now);
+          osc.stop(now + 0.56);
+        } else {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(280, now);
+          osc.frequency.linearRampToValueAtTime(210, now + 0.25);
+          gain.gain.setValueAtTime(0.18, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+          osc.start(now);
+          osc.stop(now + 0.32);
+        }
+      } catch (e) {}
+    }
+
+    /* ========================================================================
+       4. GEMINI 3D CARTOON AVATAR GENERATOR (AI 變變變新頭像)
+       ======================================================================== */
+    async function generateSingleGeminiAvatar(rolePrompt) {
+      const apiKey = "";
+      const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite-image:generateContent?key=${apiKey}`;
+      const payload = {
+        contents: [{
+          parts: [{
+            text: `Cute 3D Pixar-style cartoon character portrait icon for a children's English learning app: ${rolePrompt}. Bright pastel solid background, centered headshot, friendly happy smile, vibrant colors, no text.`
+          }]
+        }],
+        generationConfig: {
+          responseModalities: ['TEXT', 'IMAGE']
+        }
+      };
+
+      let delay = 1000;
+      for (let attempt = 0; attempt < 3; attempt++) {
+        try {
+          const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          if (!response.ok) throw new Error('Image HTTP ' + response.status);
+          const result = await response.json();
+          const base64Data = result?.candidates?.[0]?.content?.parts?.find(p => p.inlineData)?.inlineData?.data;
+          if (base64Data) {
+            return `data:image/png;base64,${base64Data}`;
+          }
+        } catch (err) {
+          if (attempt < 2) {
+            await new Promise(r => setTimeout(r, delay));
+            delay *= 2;
+          }
+        }
+      }
+      return null;
+    }
+
+    async function generateGeminiAvatars() {
+      if (appState.isGeneratingAvatars) return;
+      appState.isGeneratingAvatars = true;
+      const btn = document.getElementById('btn-ai-avatars');
+      const originalHTML = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = `<span class="animate-spin inline-block">✨</span> <span>魔法變身中...</span>`;
+      showToast('🎨 Gemini 魔法師正在為玲玲繪製全新 3D 卡通家庭頭像，請稍等幾秒...', '🪄');
+
+      const prompts = {
+        father: 'a kind young father wearing stylish glasses and a blue polo shirt',
+        mother: 'a gentle smiling mother with shoulder-length hair wearing a lavender sweater',
+        sister: 'a cheerful 6-year-old girl with cute twin pigtails wearing a pink dress',
+        brother: 'a playful 4-year-old little boy with curly hair wearing a bright green t-shirt'
+      };
+
+      try {
+        const entries = Object.entries(prompts);
+        const results = await Promise.all(
+          entries.map(async ([key, prompt]) => {
+            const url = await generateSingleGeminiAvatar(prompt);
+            return [key, url];
+          })
+        );
+
+        let successCount = 0;
+        results.forEach(([key, url]) => {
+          if (url) {
+            appState.customAvatars[key] = url;
+            successCount++;
+          }
+        });
+
+        if (successCount > 0) {
+          playSoundEffect('correct');
+          showToast('🎉 全新 3D 卡通頭像變身成功！快看看新造型吧！', '✨');
+          renderCurrentView();
+        } else {
+          showToast('💡 暫時未能連線至 AI 畫室，已為你保留精美 3D 卡通頭像！', '🎨');
+        }
+      } finally {
+        appState.isGeneratingAvatars = false;
+        btn.disabled = false;
+        btn.innerHTML = originalHTML;
+      }
+    }
+
+    /* ========================================================================
+       5. UI HELPERS: TOASTS, STAR PARTICLE BURST & PROGRESS MAP
+       ======================================================================== */
+    let toastTimer = null;
+    function showToast(message, icon = '✨') {
+      const banner = document.getElementById('toast-banner');
+      document.getElementById('toast-text').textContent = message;
+      document.getElementById('toast-icon').textContent = icon;
+      banner.classList.remove('hidden');
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        banner.classList.add('hidden');
+      }, 4200);
+    }
+
+    function hideToast() {
+      document.getElementById('toast-banner').classList.add('hidden');
+    }
+
+    function spawnStarBurst(targetEl) {
+      if (!targetEl) return;
+      const rect = targetEl.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const emojis = ['⭐', '✨', '🌟', '💖'];
+
+      for (let i = 0; i < 8; i++) {
+        const p = document.createElement('div');
+        p.className = 'star-particle';
+        p.textContent = emojis[i % emojis.length];
+        const angle = (Math.PI * 2 * i) / 8;
+        const dist = 55 + Math.random() * 45;
+        p.style.left = `${cx - 12}px`;
+        p.style.top = `${cy - 12}px`;
+        p.style.setProperty('--tx', `${Math.cos(angle) * dist}px`);
+        p.style.setProperty('--ty', `${Math.sin(angle) * dist - 20}px`);
+        document.body.appendChild(p);
+        setTimeout(() => p.remove(), 920);
+      }
+    }
+
+    function renderProgressMap() {
+      const mapEl = document.getElementById('progress-map');
+      const labelEl = document.getElementById('header-level-label');
+
+      if (appState.currentStep === 0) {
+        labelEl.textContent = '預習大廳';
+      } else if (appState.currentStep >= 1 && appState.currentStep <= 5) {
+        labelEl.textContent = LEVEL_META[appState.currentStep - 1].title;
+      } else {
+        labelEl.textContent = '🏆 全部通關！';
+      }
+
+      let html = '';
+      for (let i = 1; i <= 5; i++) {
+        const isDone = appState.completedLevels.has(i);
+        const isCurrent = appState.currentStep === i;
+        let nodeClass = 'w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-xs sm:text-sm font-black transition-all ';
+        if (isDone) {
+          nodeClass += 'bg-amber-400 text-amber-950 border-2 border-yellow-200 shadow-md scale-105';
+        } else if (isCurrent) {
+          nodeClass += 'bg-sky-400 text-white border-2 border-white ring-2 ring-amber-300 scale-110';
+        } else {
+          nodeClass += 'bg-indigo-900/80 text-indigo-300 border border-indigo-500/50';
+        }
+
+        html += `
+          <button onclick="jumpToLevel(${i})" title="跳至第 ${i} 關" class="${nodeClass}">
+            ${isDone ? '⭐' : i}
+          </button>
+        `;
+        if (i < 5) {
+          html += `<div class="w-2.5 sm:w-4 h-1 rounded-full ${isDone ? 'bg-amber-400' : 'bg-indigo-700'}"></div>`;
+        }
+      }
+
+      // Final Trophy Node
+      const allDone = appState.completedLevels.size === 5 || appState.currentStep === 6;
+      html += `
+        <div class="w-2.5 sm:w-4 h-1 rounded-full ${allDone ? 'bg-amber-400' : 'bg-indigo-700'}"></div>
+        <button onclick="goToReport()" title="查看成績單"
+          class="w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center text-base sm:text-lg ${allDone ? 'bg-amber-400 border-2 border-white glow-gold' : 'bg-indigo-900/80 border border-indigo-500/50 opacity-75'}">
+          🏆
+        </button>
+      `;
+
+      mapEl.innerHTML = html;
+    }
+
+    function shuffleArray(arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    /* ========================================================================
+       6. NAVIGATION & LEVEL INITIALIZERS
+       ======================================================================== */
+    function goHome() {
+      appState.currentStep = 0;
+      renderCurrentView();
+    }
+
+    function jumpToLevel(levelNum) {
+      stopAllAudio();
+      prewarmCoreBritishTTS();
+      if (levelNum === 1) initLevel1();
+      else if (levelNum === 2) initLevel2();
+      else if (levelNum === 3) initLevel3();
+      else if (levelNum === 4) initLevel4();
+      else if (levelNum === 5) initLevel5();
+    }
+
+    function goToReport() {
+      stopAllAudio();
+      appState.currentStep = 6;
+      renderCurrentView();
+    }
+
+    function startFullAdventure() {
+      prewarmCoreBritishTTS();
+      initLevel1();
+    }
+
+    function renderCurrentView() {
+      renderProgressMap();
+      const stage = document.getElementById('game-stage');
+      if (appState.currentStep === 0) renderPreviewHub(stage);
+      else if (appState.currentStep === 1) renderLevel1(stage);
+      else if (appState.currentStep === 2) renderLevel2(stage);
+      else if (appState.currentStep === 3) renderLevel3(stage);
+      else if (appState.currentStep === 4) renderLevel4(stage);
+      else if (appState.currentStep === 5) renderLevel5(stage);
+      else renderCelebrationAndReport(stage);
+    }
+
+    /* ========================================================================
+       7. STEP 0: 預習大廳 (PREVIEW HUB)
+       ======================================================================== */
+    function renderPreviewHub(stage) {
+      stage.innerHTML = `
+        <div class="flex flex-col gap-5">
+          <!-- Welcome Header with Anna & Tickles -->
+          <div class="flex flex-col md:flex-row items-center justify-between gap-4 bg-gradient-to-r from-sky-100 via-amber-50 to-pink-100 border-4 border-amber-300 rounded-3xl p-4 sm:p-5">
+            <div class="flex items-center gap-3 sm:gap-4">
+              ${getAnnaFairySVG(96)}
+              <div>
+                <span class="inline-block bg-purple-600 text-white text-xs font-bold px-3 py-1 rounded-full mb-1">Unit 8: Love at Home (p.33–36)</span>
+                <h1 class="text-2xl sm:text-3xl font-black text-slate-800 tracking-tight">玲玲的 3D 魔法闖關大冒險</h1>
+                <p class="text-sm sm:text-base text-slate-600 font-medium mt-1">
+                  先點擊下方圖卡聽一聽英式發音複習，準備好就按「開始 5 關魔法大挑戰」！
+                </p>
+              </div>
+            </div>
+            <div class="hidden sm:block">
+              ${getTicklesCatSVG(92)}
+            </div>
+          </div>
+
+          <!-- Core 4 Family Members Grid -->
+          <div>
+            <div class="flex items-center justify-between mb-2.5 px-1">
+              <h2 class="text-lg sm:text-xl font-black text-amber-900 flex items-center gap-2">
+                <span>👨‍👩‍👧‍👦 核心家庭成員單字 (Page 34)</span>
+              </h2>
+              <span class="text-xs sm:text-sm font-bold text-amber-700 bg-amber-200/70 px-3 py-1 rounded-full">點擊圖卡聽發音 🔊</span>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+              ${FAMILY_MEMBERS.map(m => `
+                <button onclick="previewTapCard(this, '${m.word}', '${m.sentence}')"
+                  class="btn-3d btn-cream p-3 sm:p-4 flex flex-col items-center text-center group">
+                  <div class="mb-2 transform group-hover:scale-105 transition-transform">
+                    ${getPortraitHTML(m.id, 'w-24 h-24 sm:w-28 sm:h-28')}
+                  </div>
+                  <div class="text-2xl sm:text-3xl font-black text-slate-800 tracking-wide">${m.word}</div>
+                  <div class="text-xs sm:text-sm font-bold text-slate-500 mt-0.5">${m.zh}</div>
+                  <div class="mt-2 inline-flex items-center gap-1 bg-sky-100 text-sky-700 px-2.5 py-1 rounded-full text-xs font-bold">
+                    <span>🔊</span><span>聽英式讀音</span>
+                  </div>
+                </button>
+              `).join('')}
+            </div>
+          </div>
+
+          <!-- Phonics /s/ Spotlight (Page 36) -->
+          <div class="bg-amber-100/80 border-4 border-amber-300 rounded-3xl p-3.5 sm:p-4">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-2.5">
+              <div class="flex items-center gap-2">
+                <span class="w-9 h-9 rounded-2xl bg-orange-500 text-white font-black text-xl flex items-center justify-center shadow">s</span>
+                <div>
+                  <h3 class="text-base sm:text-lg font-black text-amber-950">Phonics 自然拼讀 /s/ 聲音寶庫 (Page 36)</h3>
+                  <p class="text-xs text-amber-800 font-medium">留意字首 <span class="text-rose-600 font-black">s</span> 的發音！</p>
+                </div>
+              </div>
+              <button onclick="speakBritish('s... sister... sun... sea', 0.9)"
+                class="btn-3d btn-amber px-3 py-1.5 text-xs sm:text-sm font-black flex items-center gap-1">
+                <span>🔊</span><span>連讀 s 音示範</span>
+              </button>
+            </div>
+            <div class="grid grid-cols-3 gap-2.5 sm:gap-4">
+              ${['sister', 'sun', 'sea'].map(w => `
+                <button onclick="previewTapCard(this, '${w}')"
+                  class="btn-3d btn-cream-blue p-2.5 sm:p-3 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3">
+                  ${getPortraitHTML(w, 'w-14 h-14 sm:w-16 sm:h-16')}
+                  <div class="text-center sm:text-left">
+                    <div class="text-xl sm:text-2xl font-black text-slate-800">
+                      <span class="text-rose-600">s</span>${w.slice(1)}
+                    </div>
+                    <div class="text-xs font-bold text-sky-700">🔊 點擊跟讀</div>
+                  </div>
+                </button>
+              `).join('')}
+            </div>
+          </div>
+
+          <!-- Start Adventure & Direct Level Jump Pills -->
+          <div class="flex flex-col items-center gap-3 pt-1">
+            <button onclick="startFullAdventure()"
+              class="btn-3d btn-emerald w-full max-w-md py-4 px-6 text-xl sm:text-2xl font-black flex items-center justify-center gap-3 shadow-xl">
+              <span>🚀</span>
+              <span>開始 5 關魔法大挑戰</span>
+            </button>
+
+            <div class="flex flex-wrap items-center justify-center gap-2 mt-1">
+              <span class="text-xs font-bold text-slate-500 mr-1">快速跳關：</span>
+              ${LEVEL_META.map(lvl => `
+                <button onclick="jumpToLevel(${lvl.num})"
+                  class="btn-3d btn-cream px-3 py-1.5 text-xs sm:text-sm font-bold flex items-center gap-1">
+                  <span>${lvl.icon}</span>
+                  <span>第${lvl.num}關</span>
+                </button>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function previewTapCard(btnEl, word, sentence = null) {
+      prewarmCoreBritishTTS();
+      spawnStarBurst(btnEl);
+      speakBritish(sentence ? `${word}. ${sentence}` : word, 1.0);
+    }
+
+    /* ========================================================================
+       8. LEVEL 1 (第一關): 無圖「聽音選字」4 選 1 (AUDIO-ONLY RECOGNITION)
+       ======================================================================== */
+    function initLevel1() {
+      appState.currentStep = 1;
+      appState.l1 = {
+        questions: shuffleArray(FAMILY_MEMBERS),
+        index: 0,
+        locked: false
+      };
+      renderCurrentView();
+      setTimeout(() => {
+        const q = appState.l1.questions[0];
+        if (q) speakBritish(q.word, 1.0);
+      }, 280);
+    }
+
+    function renderLevel1(stage) {
+      const { questions, index } = appState.l1;
+      const currentQ = questions[index];
+      const options = ['father', 'mother', 'sister', 'brother'];
+
+      stage.innerHTML = `
+        <div class="flex flex-col justify-between h-full gap-5">
+          <!-- Level Header -->
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b-2 border-amber-200 pb-3">
+            <div>
+              <span class="bg-sky-500 text-white text-xs font-black px-3 py-1 rounded-full">LEVEL 1 / 5 • 純聽力辨字</span>
+              <h2 class="text-xl sm:text-2xl font-black text-slate-800 mt-1">🎧 無圖「聽音選字」大考驗</h2>
+              <p class="text-xs sm:text-sm text-slate-600 font-medium">仔細聽 Anna 讀出邊個單字，留意字尾 <code class="bg-amber-200 px-1.5 rounded font-bold">-ther</code> 嘅分別喔！</p>
+            </div>
+            <div class="bg-amber-200 text-amber-950 font-black px-4 py-2 rounded-2xl text-base sm:text-lg">
+              第 ${index + 1} / ${questions.length} 題
+            </div>
+          </div>
+
+          <!-- Audio Stage (Strictly NO character images shown!) -->
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 bg-gradient-to-br from-sky-100 to-indigo-100 border-4 border-sky-300 rounded-3xl p-5 sm:p-6">
+            ${getAnnaFairySVG(110)}
+            <div class="flex flex-col items-center sm:items-start gap-3">
+              <div class="bg-white px-4 py-2 rounded-2xl border-2 border-sky-300 text-sky-900 font-bold text-sm sm:text-base shadow-sm">
+                👂 唔睇圖畫，只聽聲音！你聽到邊個英文字？
+              </div>
+              <div class="flex flex-wrap items-center justify-center gap-3">
+                <button onclick="speakBritish('${currentQ.word}', 1.0)"
+                  class="btn-3d btn-sky px-5 py-3.5 text-base sm:text-lg font-black flex items-center gap-2">
+                  <span class="text-2xl">🔊</span>
+                  <span>正常語速播放</span>
+                </button>
+                <button onclick="speakBritish('${currentQ.word}', 0.65)"
+                  class="btn-3d btn-amber px-4 py-3.5 text-base sm:text-lg font-black flex items-center gap-2">
+                  <span class="text-2xl">🐢</span>
+                  <span>慢速清晰跟讀</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4 Chunky 3D Word-Block Options -->
+          <div class="grid grid-cols-2 gap-3.5 sm:gap-5 max-w-2xl mx-auto w-full">
+            ${options.map(opt => `
+              <button onclick="handleLevel1Answer(this, '${opt}')"
+                class="btn-3d btn-cream py-5 sm:py-6 px-4 text-2xl sm:text-4xl font-black text-slate-800 tracking-wide">
+                ${opt}
+              </button>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function handleLevel1Answer(btnEl, chosenWord) {
+      if (appState.l1.locked) return;
+      const currentQ = appState.l1.questions[appState.l1.index];
+      appState.stats[1].attempts++;
+
+      if (chosenWord === currentQ.word) {
+        appState.l1.locked = true;
+        btnEl.classList.add('btn-correct-glow');
+        playSoundEffect('correct');
+        spawnStarBurst(btnEl);
+        speakBritish('Spot on, Lingling!', 1.0);
+
+        setTimeout(() => {
+          appState.l1.index++;
+          appState.l1.locked = false;
+          if (appState.l1.index < appState.l1.questions.length) {
+            renderCurrentView();
+            const nextQ = appState.l1.questions[appState.l1.index];
+            setTimeout(() => speakBritish(nextQ.word, 1.0), 250);
+          } else {
+            appState.completedLevels.add(1);
+            appState.stats[1].completed = true;
+            showToast('🌟 太棒了！第一關無圖聽音選字全部過關！', '🎉');
+            initLevel2();
+          }
+        }, 1150);
+      } else {
+        // Gentle shake, record mistake, do NOT reveal answer
+        appState.stats[1].mistakes.push({
+          prompt: `聽音辨字 "${currentQ.word}"`,
+          chosen: chosenWord
+        });
+        playSoundEffect('wrong');
+        btnEl.classList.remove('animate-shake');
+        void btnEl.offsetWidth;
+        btnEl.classList.add('animate-shake');
+        speakBritish('Oops! Have another listen.', 1.0);
+        setTimeout(() => btnEl.classList.remove('animate-shake'), 550);
+      }
+    }
+
+    /* ========================================================================
+       9. LEVEL 2 (第二關): 卡通頭像「SVG 點擊拉線配對」(CARTOON LINE-MATCHING)
+       ======================================================================== */
+    function initLevel2() {
+      appState.currentStep = 2;
+      appState.l2 = {
+        leftItems: shuffleArray(FAMILY_MEMBERS),
+        rightItems: shuffleArray(FAMILY_MEMBERS),
+        selectedLeft: null,
+        matched: new Set(),
+        lines: []
+      };
+      renderCurrentView();
+      setTimeout(() => drawLevel2Lines(), 60);
+    }
+
+    function renderLevel2(stage) {
+      const { leftItems, rightItems, selectedLeft, matched } = appState.l2;
+
+      stage.innerHTML = `
+        <div class="flex flex-col justify-between h-full gap-4">
+          <!-- Level Header -->
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b-2 border-amber-200 pb-3">
+            <div>
+              <span class="bg-purple-600 text-white text-xs font-black px-3 py-1 rounded-full">LEVEL 2 / 5 • 角色概念遷移</span>
+              <h2 class="text-xl sm:text-2xl font-black text-slate-800 mt-1">🖍️ 卡通頭像「拉線配對」</h2>
+              <p class="text-xs sm:text-sm text-slate-600 font-medium">先點左邊的英文單字，再點右邊對應的卡通家人頭像連線！</p>
+            </div>
+            <div class="bg-purple-100 text-purple-900 font-black px-4 py-2 rounded-2xl text-sm sm:text-base">
+              已配對：${matched.size} / 4
+            </div>
+          </div>
+
+          <!-- Interactive Line-Matching Board -->
+          <div id="l2-board" class="relative grid grid-cols-2 gap-10 sm:gap-24 md:gap-36 items-center my-auto py-2">
+            <!-- SVG Overlay for Smooth Curved Lines -->
+            <svg id="l2-svg-lines" class="absolute inset-0 w-full h-full pointer-events-none z-20"></svg>
+
+            <!-- Left Column: 3D Word + Mini Speaker Blocks -->
+            <div class="flex flex-col gap-3 sm:gap-4 z-10">
+              ${leftItems.map(item => {
+                const isMatched = matched.has(item.id);
+                const isSelected = selectedLeft === item.id;
+                let extraClass = 'btn-cream';
+                if (isMatched) extraClass = 'btn-correct-glow';
+                else if (isSelected) extraClass = 'btn-selected-ring';
+
+                return `
+                  <button id="l2-left-${item.id}" onclick="handleL2LeftTap('${item.id}')"
+                    class="btn-3d ${extraClass} py-3.5 sm:py-4 px-3 sm:px-5 flex items-center justify-between gap-2">
+                    <span class="text-xl sm:text-2xl font-black">${item.word}</span>
+                    <span class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-sky-500 text-white flex items-center justify-center text-sm sm:text-base shadow shrink-0">🔊</span>
+                  </button>
+                `;
+              }).join('')}
+            </div>
+
+            <!-- Right Column: Shuffled 3D Cartoon Portraits -->
+            <div class="flex flex-col gap-3 sm:gap-4 z-10">
+              ${rightItems.map(item => {
+                const isMatched = matched.has(item.id);
+                return `
+                  <button id="l2-right-${item.id}" onclick="handleL2RightTap(this, '${item.id}')"
+                    class="btn-3d ${isMatched ? 'btn-correct-glow' : 'btn-cream-blue'} p-2 sm:p-2.5 flex items-center justify-center">
+                    ${getPortraitHTML(item.id, 'w-16 h-16 sm:w-20 sm:h-20')}
+                  </button>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+
+      requestAnimationFrame(() => drawLevel2Lines());
+    }
+
+    function handleL2LeftTap(id) {
+      if (appState.l2.matched.has(id)) {
+        speakBritish(id, 1.0);
+        return;
+      }
+      appState.l2.selectedLeft = id;
+      speakBritish(id, 1.0);
+      renderCurrentView();
+    }
+
+    function handleL2RightTap(btnEl, rightId) {
+      if (appState.l2.matched.has(rightId)) return;
+
+      const leftId = appState.l2.selectedLeft;
+      if (!leftId) {
+        showToast('👈 請先點擊左邊的一個英文單字積木喔！', '💡');
+        return;
+      }
+
+      appState.stats[2].attempts++;
+
+      if (leftId === rightId) {
+        // Match Success!
+        appState.l2.matched.add(leftId);
+        appState.l2.selectedLeft = null;
+        playSoundEffect('correct');
+        spawnStarBurst(btnEl);
+        speakBritish(`Yes! ${leftId}.`, 1.0);
+        renderCurrentView();
+
+        if (appState.l2.matched.size === 4) {
+          setTimeout(() => {
+            appState.completedLevels.add(2);
+            appState.stats[2].completed = true;
+            showToast('🎨 太厲害了！四位家人都成功連線配對啦！', '🌟');
+            initLevel3();
+          }, 1100);
+        }
+      } else {
+        // Mismatch: shake right card, log mistake, keep left selected or reset gently
+        appState.stats[2].mistakes.push({
+          prompt: `連線配對 "${leftId}"`,
+          chosen: `誤連到 "${rightId}" 的頭像`
+        });
+        playSoundEffect('wrong');
+        btnEl.classList.remove('animate-shake');
+        void btnEl.offsetWidth;
+        btnEl.classList.add('animate-shake');
+        speakBritish('Try again, Lingling!', 1.0);
+        setTimeout(() => {
+          btnEl.classList.remove('animate-shake');
+          appState.l2.selectedLeft = null;
+          renderCurrentView();
+        }, 550);
+      }
+    }
+
+    function drawLevel2Lines() {
+      const board = document.getElementById('l2-board');
+      const svg = document.getElementById('l2-svg-lines');
+      if (!board || !svg) return;
+
+      const boardRect = board.getBoundingClientRect();
+      let pathsHTML = '';
+
+      appState.l2.matched.forEach(id => {
+        const leftEl = document.getElementById(`l2-left-${id}`);
+        const rightEl = document.getElementById(`l2-right-${id}`);
+        if (!leftEl || !rightEl) return;
+
+        const lRect = leftEl.getBoundingClientRect();
+        const rRect = rightEl.getBoundingClientRect();
+
+        const x1 = lRect.right - boardRect.left - 4;
+        const y1 = lRect.top + lRect.height / 2 - boardRect.top;
+        const x2 = rRect.left - boardRect.left + 4;
+        const y2 = rRect.top + rRect.height / 2 - boardRect.top;
+        const cx = (x1 + x2) / 2;
+
+        pathsHTML += `
+          <path d="M ${x1} ${y1} C ${cx} ${y1}, ${cx} ${y2}, ${x2} ${y2}"
+            fill="none" stroke="#047857" stroke-width="10" stroke-linecap="round" opacity="0.35" />
+          <path d="M ${x1} ${y1} C ${cx} ${y1}, ${cx} ${y2}, ${x2} ${y2}"
+            fill="none" stroke="#10b981" stroke-width="6" stroke-linecap="round" />
+          <circle cx="${x1}" cy="${y1}" r="7" fill="#fde047" stroke="#047857" stroke-width="3" />
+          <circle cx="${x2}" cy="${y2}" r="7" fill="#fde047" stroke="#047857" stroke-width="3" />
+        `;
+      });
+
+      svg.innerHTML = pathsHTML;
+    }
+
+    window.addEventListener('resize', () => {
+      if (appState.currentStep === 2) {
+        drawLevel2Lines();
+      }
+    });
+
+    /* ========================================================================
+       10. LEVEL 3 (第三關): TICKLES 陷阱問答 (PAGE 35 YES / NO COMPREHENSION)
+       ======================================================================== */
+    function initLevel3() {
+      appState.currentStep = 3;
+      // Construct 4 questions with deliberate mismatch traps (2 Yes + 2 No traps)
+      const traps = [
+        { shownId: 'father', askedWord: 'mother', isMatch: false }, // Classic Page 35 style trap!
+        { shownId: 'sister', askedWord: 'sister', isMatch: true },
+        { shownId: 'brother', askedWord: 'sister', isMatch: false }, // Gender/sibling trap
+        { shownId: 'mother', askedWord: 'mother', isMatch: true }
+      ];
+      appState.l3 = {
+        questions: shuffleArray(traps),
+        index: 0,
+        locked: false
+      };
+      renderCurrentView();
+      setTimeout(() => {
+        const q = appState.l3.questions[0];
+        if (q) speakBritish(`Is this your ${q.askedWord}?`, 1.0);
+      }, 280);
+    }
+
+    function renderLevel3(stage) {
+      const { questions, index } = appState.l3;
+      const q = questions[index];
+      const questionText = `Is this your ${q.askedWord}?`;
+
+      stage.innerHTML = `
+        <div class="flex flex-col justify-between h-full gap-4">
+          <!-- Level Header -->
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b-2 border-amber-200 pb-3">
+            <div>
+              <span class="bg-amber-500 text-white text-xs font-black px-3 py-1 rounded-full">LEVEL 3 / 5 • Talk with Tickles! (Page 35)</span>
+              <h2 class="text-xl sm:text-2xl font-black text-slate-800 mt-1">🐱 Tickles 陷阱問答大挑戰</h2>
+              <p class="text-xs sm:text-sm text-slate-600 font-medium">小心 Tickles 調皮問錯人喔！睇清楚相框入面係邊個先好答！</p>
+            </div>
+            <div class="bg-amber-200 text-amber-950 font-black px-4 py-2 rounded-2xl text-base sm:text-lg">
+              第 ${index + 1} / ${questions.length} 題
+            </div>
+          </div>
+
+          <!-- Center Stage: Anna + Framed Portrait + Tickles Cat -->
+          <div class="flex flex-col items-center justify-center gap-3 my-auto">
+            <!-- Speech Bubble Question -->
+            <div class="bg-white border-4 border-purple-400 rounded-3xl px-5 py-3 shadow-md flex flex-wrap items-center justify-center gap-3">
+              <span class="text-2xl sm:text-3xl font-black text-slate-800">
+                Is this your <span class="text-rose-600 underline decoration-wavy">${q.askedWord}</span>?
+              </span>
+              <div class="flex items-center gap-2">
+                <button onclick="speakBritish('${questionText}', 1.0)"
+                  class="btn-3d btn-sky px-3.5 py-2 text-sm font-black flex items-center gap-1">
+                  <span>🔊</span><span>重聽</span>
+                </button>
+                <button onclick="speakBritish('${questionText}', 0.65)"
+                  class="btn-3d btn-amber px-3 py-2 text-sm font-black flex items-center gap-1">
+                  <span>🐢</span><span>慢速</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Stage Characters & Framed Picture -->
+            <div class="flex items-center justify-center gap-3 sm:gap-8 mt-1">
+              <div class="hidden sm:block">${getAnnaFairySVG(105)}</div>
+
+              <div class="cartoon-frame transform -rotate-1">
+                <div class="cartoon-frame-inner p-3 sm:p-4">
+                  ${getPortraitHTML(q.shownId, 'w-32 h-32 sm:w-40 sm:h-40')}
+                </div>
+              </div>
+
+              <div>${getTicklesCatSVG(115)}</div>
+            </div>
+          </div>
+
+          <!-- Giant 3D Yes / No Buttons with Nodding & Shaking Cat Badges -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto w-full">
+            <button onclick="handleLevel3Answer(this, true)"
+              class="btn-3d btn-emerald py-4 sm:py-5 px-5 flex items-center justify-center gap-3 text-2xl sm:text-3xl font-black">
+              <span class="bg-white/25 px-2.5 py-1 rounded-xl text-xl">🐱✔ 點頭</span>
+              <span>Yes, it is.</span>
+            </button>
+
+            <button onclick="handleLevel3Answer(this, false)"
+              class="btn-3d btn-coral py-4 sm:py-5 px-5 flex items-center justify-center gap-3 text-2xl sm:text-3xl font-black">
+              <span class="bg-white/25 px-2.5 py-1 rounded-xl text-xl">🐱✖ 搖頭</span>
+              <span>No, it is not.</span>
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function handleLevel3Answer(btnEl, userSaidYes) {
+      if (appState.l3.locked) return;
+      const q = appState.l3.questions[appState.l3.index];
+      appState.stats[3].attempts++;
+
+      if (userSaidYes === q.isMatch) {
+        appState.l3.locked = true;
+        btnEl.classList.add('btn-correct-glow');
+        playSoundEffect('correct');
+        spawnStarBurst(btnEl);
+        speakBritish(q.isMatch ? 'Yes, it is! Brilliant!' : 'No, it is not! Clever girl!', 1.0);
+
+        setTimeout(() => {
+          appState.l3.index++;
+          appState.l3.locked = false;
+          if (appState.l3.index < appState.l3.questions.length) {
+            renderCurrentView();
+            const nextQ = appState.l3.questions[appState.l3.index];
+            setTimeout(() => speakBritish(`Is this your ${nextQ.askedWord}?`, 1.0), 250);
+          } else {
+            appState.completedLevels.add(3);
+            appState.stats[3].completed = true;
+            showToast('🐱 Tickles 拍手讚好！玲玲完全無中陷阱！', '🏆');
+            initLevel4();
+          }
+        }, 1250);
+      } else {
+        appState.stats[3].mistakes.push({
+          prompt: `相片為 ${q.shownId}，問 "Is this your ${q.askedWord}?"`,
+          chosen: userSaidYes ? 'Yes, it is.' : 'No, it is not.'
+        });
+        playSoundEffect('wrong');
+        btnEl.classList.remove('animate-shake');
+        void btnEl.offsetWidth;
+        btnEl.classList.add('animate-shake');
+        speakBritish('Look closely and try again!', 1.0);
+        setTimeout(() => btnEl.classList.remove('animate-shake'), 550);
+      }
+    }
+
+    /* ========================================================================
+       11. LEVEL 4 (第四關): PHONICS /s/ 聲音捉迷藏 (PAGE 36 + CROSS-PAGE BONUS)
+       ======================================================================== */
+    function initLevel4() {
+      appState.currentStep = 4;
+      const distractors = shuffleArray(['dog', 'rabbit', 'cat', 'hamster']);
+      const rounds = [
+        { type: 'choice', pair: shuffleArray(['sea', 'fish']) }, // Page 36 exact pair (shuffled left/right)
+        { type: 'choice', pair: shuffleArray(['sun', distractors[0]]) },
+        { type: 'choice', pair: shuffleArray(['sister', distractors[1]]) },
+        { type: 'bonus_s' } // Cross-page bonus: fill 's' into _ister, _un, _ea
+      ];
+      appState.l4 = {
+        questions: rounds,
+        index: 0,
+        bonusCompleted: { sister: false, sun: false, sea: false },
+        locked: false
+      };
+      renderCurrentView();
+      setTimeout(() => {
+        speakBritish('Which word starts with the s sound?', 1.0);
+      }, 280);
+    }
+
+    function renderLevel4(stage) {
+      const { questions, index, bonusCompleted } = appState.l4;
+      const current = questions[index];
+
+      if (current.type === 'choice') {
+        const [leftId, rightId] = current.pair;
+        stage.innerHTML = `
+          <div class="flex flex-col justify-between h-full gap-4">
+            <!-- Header -->
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b-2 border-amber-200 pb-3">
+              <div>
+                <span class="bg-orange-500 text-white text-xs font-black px-3 py-1 rounded-full">LEVEL 4 / 5 • Phonics (Page 36)</span>
+                <h2 class="text-xl sm:text-2xl font-black text-slate-800 mt-1">☀️ Phonics <span class="text-rose-600">/s/</span> 聲音捉迷藏</h2>
+                <p class="text-xs sm:text-sm text-slate-600 font-medium">邊一個單字係用 <span class="font-black text-rose-600">s</span> 音開頭？點擊圖卡聽讀音，再把「黃色大剔號 ✔」送給它！</p>
+              </div>
+              <div class="bg-orange-100 text-orange-950 font-black px-4 py-2 rounded-2xl text-base sm:text-lg">
+                第 ${index + 1} / ${questions.length} 題
+              </div>
+            </div>
+
+            <!-- Question Prompt -->
+            <div class="flex items-center justify-center gap-3 bg-amber-100 border-2 border-amber-300 rounded-2xl py-2.5 px-4 max-w-xl mx-auto">
+              <span class="text-base sm:text-xl font-black text-amber-950">Which word starts with the <span class="text-rose-600 text-2xl">s</span> sound?</span>
+              <button onclick="speakBritish('Which word starts with the s sound?', 1.0)"
+                class="btn-3d btn-sky px-3 py-1.5 text-sm font-black">🔊</button>
+            </div>
+
+            <!-- Side-by-Side Picture Cards + Yellow Checkmark Sticker Buttons -->
+            <div class="grid grid-cols-2 gap-4 sm:gap-8 max-w-2xl mx-auto w-full my-auto">
+              ${[leftId, rightId].map(id => `
+                <div class="flex flex-col items-center gap-3 bg-white/90 border-4 border-sky-200 rounded-3xl p-4 shadow-md">
+                  <button onclick="speakBritish('${id}', 0.9)"
+                    class="w-full flex flex-col items-center group cursor-pointer">
+                    ${getPortraitHTML(id, 'w-28 h-28 sm:w-36 sm:h-36')}
+                    <span class="mt-2 inline-flex items-center gap-1 bg-sky-100 text-sky-800 px-3 py-1 rounded-full text-sm font-bold">
+                      <span>🔊</span><span>點我聽讀音</span>
+                    </span>
+                  </button>
+
+                  <!-- Yellow Checkmark Sticker Button (Page 36) -->
+                  <button onclick="handleLevel4Choice(this, '${id}')"
+                    class="btn-3d btn-amber w-full py-3.5 px-4 flex items-center justify-center gap-2 text-lg sm:text-xl font-black">
+                    <span class="w-8 h-8 rounded-full bg-rose-500 text-white flex items-center justify-center font-black shadow">✔</span>
+                    <span>貼上剔號</span>
+                  </button>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      } else {
+        // Round 4: Cross-page Bonus — Tap 's' letter tile to complete _ister, _un, _ea
+        const bonusWords = [
+          { key: 'sister', tail: 'ister', zh: '家姐/妹妹' },
+          { key: 'sun', tail: 'un', zh: '太陽' },
+          { key: 'sea', tail: 'ea', zh: '大海' }
+        ];
+
+        stage.innerHTML = `
+          <div class="flex flex-col justify-between h-full gap-4">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b-2 border-amber-200 pb-3">
+              <div>
+                <span class="bg-rose-500 text-white text-xs font-black px-3 py-1 rounded-full">LEVEL 4 • 跨頁魔法彩蛋 (p.34 + p.36)</span>
+                <h2 class="text-xl sm:text-2xl font-black text-slate-800 mt-1">✨ 點擊字母積木 <span class="text-rose-600">s</span> 幫單字變身！</h2>
+                <p class="text-xs sm:text-sm text-slate-600 font-medium">點擊下面三個缺少字首的單字卡，將 <span class="font-black text-rose-600">s</span> 填進去並聽聽拼讀！</p>
+              </div>
+              <div class="bg-orange-100 text-orange-950 font-black px-4 py-2 rounded-2xl text-base sm:text-lg">
+                第 4 / 4 題
+              </div>
+            </div>
+
+            <!-- Giant 's' Letter Tile Badge -->
+            <div class="flex items-center justify-center gap-3">
+              <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-3xl bg-gradient-to-b from-amber-300 to-amber-500 border-b-8 border-amber-700 flex items-center justify-center text-4xl sm:text-5xl font-black text-rose-600 shadow-lg animate-bounce">
+                s
+              </div>
+              <div class="text-sm sm:text-base font-bold text-slate-700">
+                ← 點擊下方三個單字卡片，把魔法字母 <span class="text-rose-600 font-black text-xl">s</span> 放進去！
+              </div>
+            </div>
+
+            <!-- 3 Word Cards: _ister, _un, _ea -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto w-full my-auto">
+              ${bonusWords.map(bw => {
+                const done = bonusCompleted[bw.key];
+                return `
+                  <button onclick="handleLevel4BonusTap(this, '${bw.key}')"
+                    class="btn-3d ${done ? 'btn-correct-glow' : 'btn-cream'} p-4 flex flex-col items-center gap-2">
+                    ${getPortraitHTML(bw.key, 'w-24 h-24 sm:w-28 sm:h-28')}
+                    <div class="text-3xl sm:text-4xl font-black tracking-wide mt-1">
+                      ${done
+                        ? `<span class="text-yellow-200 underline">s</span><span>${bw.tail}</span>`
+                        : `<span class="inline-block w-8 border-b-4 border-dashed border-rose-500 text-rose-400">?</span><span>${bw.tail}</span>`
+                      }
+                    </div>
+                    <span class="text-xs font-bold ${done ? 'text-white' : 'text-slate-500'}">
+                      ${done ? '🔊 已完成！點擊重聽' : '👆 點擊填入 s'}
+                    </span>
+                  </button>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    function handleLevel4Choice(btnEl, chosenId) {
+      if (appState.l4.locked) return;
+      const itemObj = PHONICS_ITEMS.find(p => p.id === chosenId);
+      appState.stats[4].attempts++;
+
+      if (itemObj && itemObj.startsWithS) {
+        appState.l4.locked = true;
+        btnEl.classList.add('btn-correct-glow');
+        playSoundEffect('correct');
+        spawnStarBurst(btnEl);
+        speakBritish(`Yes! ${chosenId} starts with s!`, 1.0);
+
+        setTimeout(() => {
+          appState.l4.index++;
+          appState.l4.locked = false;
+          renderCurrentView();
+        }, 1200);
+      } else {
+        appState.stats[4].mistakes.push({
+          prompt: 'Phonics /s/ 辨音',
+          chosen: chosenId
+        });
+        playSoundEffect('wrong');
+        btnEl.classList.remove('animate-shake');
+        void btnEl.offsetWidth;
+        btnEl.classList.add('animate-shake');
+        speakBritish(`Listen again! Does ${chosenId} start with s?`, 1.0);
+        setTimeout(() => btnEl.classList.remove('animate-shake'), 550);
+      }
+    }
+
+    function handleLevel4BonusTap(btnEl, key) {
+      speakBritish(`s... ${key}!`, 0.95);
+      if (!appState.l4.bonusCompleted[key]) {
+        appState.l4.bonusCompleted[key] = true;
+        playSoundEffect('correct');
+        spawnStarBurst(btnEl);
+        renderCurrentView();
+
+        const allThreeDone = Object.values(appState.l4.bonusCompleted).every(Boolean);
+        if (allThreeDone) {
+          setTimeout(() => {
+            appState.completedLevels.add(4);
+            appState.stats[4].completed = true;
+            showToast('☀️ 太棒了！Phonics /s/ 聲音捉迷藏全部過關！', '🎉');
+            initLevel5();
+          }, 1250);
+        }
+      }
+    }
+
+    /* ========================================================================
+       12. LEVEL 5 (第五關): 字母拼寫積木 ＋ 親子口語打卡 (PAGES 33–34)
+       ======================================================================== */
+    function initLevel5() {
+      appState.currentStep = 5;
+      // Pick 2 spelling challenges: always include 'sister' (links Phonics s + Family) + 1 random from father/mother/brother
+      const others = shuffleArray(['father', 'mother', 'brother']);
+      const words = ['sister', others[0]];
+      appState.l5 = {
+        spellingWords: words,
+        spellIndex: 0,
+        scrambledTiles: createScrambledTiles(words[0]),
+        chosenTiles: [],
+        spellingDone: false,
+        selectedLoveMember: 'mother',
+        speakingChecked: false
+      };
+      renderCurrentView();
+      setTimeout(() => speakBritish(words[0], 0.9), 280);
+    }
+
+    function createScrambledTiles(word) {
+      const letters = word.split('').map((ch, idx) => ({ id: `${idx}-${ch}`, ch, used: false }));
+      let shuffled = shuffleArray(letters);
+      // Ensure it is not already in exact spelling order
+      if (shuffled.map(t => t.ch).join('') === word) {
+        shuffled = shuffled.reverse();
+      }
+      return shuffled;
+    }
+
+    function renderLevel5(stage) {
+      const { spellingWords, spellIndex, scrambledTiles, chosenTiles, spellingDone, selectedLoveMember } = appState.l5;
+
+      if (!spellingDone) {
+        const targetWord = spellingWords[spellIndex];
+        stage.innerHTML = `
+          <div class="flex flex-col justify-between h-full gap-4">
+            <!-- Header -->
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b-2 border-amber-200 pb-3">
+              <div>
+                <span class="bg-emerald-600 text-white text-xs font-black px-3 py-1 rounded-full">LEVEL 5A • 字母拼寫積木</span>
+                <h2 class="text-xl sm:text-2xl font-black text-slate-800 mt-1">🧱 魔法字母積木拼一拼</h2>
+                <p class="text-xs sm:text-sm text-slate-600 font-medium">聽一聽英式發音，按順序點擊字母積木拼出單字！</p>
+              </div>
+              <div class="bg-emerald-100 text-emerald-950 font-black px-4 py-2 rounded-2xl text-base sm:text-lg">
+                拼寫第 ${spellIndex + 1} / ${spellingWords.length} 題
+              </div>
+            </div>
+
+            <!-- Portrait & Audio Prompt -->
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 bg-white/80 border-4 border-emerald-200 rounded-3xl p-4 max-w-xl mx-auto w-full">
+              ${getPortraitHTML(targetWord, 'w-24 h-24 sm:w-28 sm:h-28')}
+              <div class="flex flex-col items-center sm:items-start gap-2">
+                <div class="text-sm font-bold text-slate-500">請拼出這個家庭成員的英文單字：</div>
+                <div class="flex items-center gap-2">
+                  <button onclick="speakBritish('${targetWord}', 1.0)"
+                    class="btn-3d btn-sky px-4 py-2.5 text-base font-black flex items-center gap-1.5">
+                    <span>🔊</span><span>正常發音</span>
+                  </button>
+                  <button onclick="speakBritish('${targetWord}', 0.65)"
+                    class="btn-3d btn-amber px-3.5 py-2.5 text-base font-black flex items-center gap-1.5">
+                    <span>🐢</span><span>慢速拼讀</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Target Letter Slots -->
+            <div id="l5-slots-row" class="flex flex-wrap items-center justify-center gap-2 sm:gap-3 my-1">
+              ${targetWord.split('').map((_, idx) => {
+                const tile = chosenTiles[idx];
+                return `
+                  <button onclick="handleL5SlotUndo(${idx})"
+                    class="w-12 h-14 sm:w-16 sm:h-16 rounded-2xl border-4 ${tile ? 'bg-amber-300 border-amber-500 text-slate-900 shadow-md' : 'bg-white/70 border-dashed border-slate-400 text-slate-300'} flex items-center justify-center text-3xl sm:text-4xl font-black transition-all">
+                    ${tile ? tile.ch : ''}
+                  </button>
+                `;
+              }).join('')}
+            </div>
+
+            <!-- Scrambled 3D Letter Tiles + Clear Button -->
+            <div class="flex flex-col items-center gap-3">
+              <div class="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3.5">
+                ${scrambledTiles.map(tile => `
+                  <button onclick="handleL5TileTap('${tile.id}')" ${tile.used ? 'disabled' : ''}
+                    class="btn-3d btn-cream w-13 h-14 sm:w-16 sm:h-16 px-4 text-3xl sm:text-4xl font-black text-indigo-900">
+                    ${tile.ch}
+                  </button>
+                `).join('')}
+              </div>
+
+              <button onclick="resetL5CurrentWord()"
+                class="btn-3d btn-coral px-4 py-2 text-xs sm:text-sm font-black flex items-center gap-1.5">
+                <span>🔄</span><span>清空重拼</span>
+              </button>
+            </div>
+          </div>
+        `;
+      } else {
+        // Part B: 親子口語打卡 — Love at Home (p.34) & Help at Home (p.33)
+        const currentSentence = `I love my ${selectedLoveMember}.`;
+        stage.innerHTML = `
+          <div class="flex flex-col justify-between h-full gap-4">
+            <!-- Header -->
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b-2 border-amber-200 pb-3">
+              <div>
+                <span class="bg-rose-500 text-white text-xs font-black px-3 py-1 rounded-full">LEVEL 5B • 親子口語打卡 (Pages 33–34)</span>
+                <h2 class="text-xl sm:text-2xl font-black text-slate-800 mt-1">💖 愛在屋企：大聲講出愛與幫忙！</h2>
+                <p class="text-xs sm:text-sm text-slate-600 font-medium">請媽媽引導玲玲選擇一位家人，大聲讀出英文句子，並分享一件在家幫忙做的小事！</p>
+              </div>
+              <span class="bg-rose-100 text-rose-800 font-black px-3 py-1.5 rounded-2xl text-xs sm:text-sm">最後一步！</span>
+            </div>
+
+            <!-- Interactive Sentence Builder: "I love my ______." (Page 34) -->
+            <div class="bg-gradient-to-r from-pink-100 via-amber-50 to-sky-100 border-4 border-pink-300 rounded-3xl p-4 sm:p-5 flex flex-col items-center gap-3">
+              <div class="flex flex-wrap items-center justify-center gap-3">
+                <span class="text-2xl sm:text-4xl font-black text-slate-800">
+                  “I love my <span class="text-rose-600 underline decoration-wavy">${selectedLoveMember}</span>.”
+                </span>
+                <button onclick="speakBritish('${currentSentence}', 0.95)"
+                  class="btn-3d btn-sky px-4 py-2 text-sm sm:text-base font-black flex items-center gap-1.5">
+                  <span>🔊</span><span>聽句子示範</span>
+                </button>
+              </div>
+
+              <!-- Family Member Selector Pills -->
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 w-full max-w-xl mt-1">
+                ${FAMILY_MEMBERS.map(m => `
+                  <button onclick="selectLoveMember('${m.id}')"
+                    class="btn-3d ${selectedLoveMember === m.id ? 'btn-selected-ring' : 'btn-cream'} py-2 px-3 flex items-center justify-center gap-2 font-black text-base">
+                    ${getPortraitHTML(m.id, 'w-9 h-9')}
+                    <span>${m.word}</span>
+                  </button>
+                `).join('')}
+              </div>
+            </div>
+
+            <!-- Help at Home Prompt (Page 33) -->
+            <div class="bg-amber-100/90 border-4 border-amber-300 rounded-3xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div class="flex items-center gap-3">
+                <span class="text-4xl">🧹</span>
+                <div>
+                  <h3 class="text-base sm:text-lg font-black text-amber-950">Help at home: Can you do it? (Page 33)</h3>
+                  <p class="text-xs sm:text-sm text-amber-900 font-medium">
+                    家長小任務：問問玲玲「你喺屋企會幫手做啲咩？（例如抹枱、執玩具）」並鼓勵佢講出 <span class="font-bold">"I love my ..."</span>！
+                  </p>
+                </div>
+              </div>
+              <button onclick="speakBritish('How do you help at home? Can you do it?', 0.95)"
+                class="btn-3d btn-amber px-3.5 py-2 text-xs sm:text-sm font-black shrink-0 flex items-center gap-1">
+                <span>🔊</span><span>讀出問題</span>
+              </button>
+            </div>
+
+            <!-- Parent Sign-off Button -->
+            <button onclick="completeLevel5Speaking(this)"
+              class="btn-3d btn-emerald w-full max-w-lg mx-auto py-4 px-6 text-xl sm:text-2xl font-black flex items-center justify-center gap-2.5 shadow-xl">
+              <span>🌟</span>
+              <span>媽媽認證：口語過關！</span>
+            </button>
+          </div>
+        `;
+      }
+    }
+
+    function handleL5TileTap(tileId) {
+      const { spellingWords, spellIndex, scrambledTiles, chosenTiles } = appState.l5;
+      const targetWord = spellingWords[spellIndex];
+      const tile = scrambledTiles.find(t => t.id === tileId);
+      if (!tile || tile.used) return;
+
+      tile.used = true;
+      chosenTiles.push(tile);
+
+      if (chosenTiles.length === targetWord.length) {
+        appState.stats[5].attempts++;
+        const attemptWord = chosenTiles.map(t => t.ch).join('');
+        if (attemptWord === targetWord) {
+          playSoundEffect('correct');
+          const slotsRow = document.getElementById('l5-slots-row');
+          spawnStarBurst(slotsRow);
+          speakBritish(`Well done! ${targetWord}!`, 1.0);
+          renderCurrentView();
+
+          setTimeout(() => {
+            if (appState.l5.spellIndex + 1 < appState.l5.spellingWords.length) {
+              appState.l5.spellIndex++;
+              const nextWord = appState.l5.spellingWords[appState.l5.spellIndex];
+              appState.l5.scrambledTiles = createScrambledTiles(nextWord);
+              appState.l5.chosenTiles = [];
+              renderCurrentView();
+              setTimeout(() => speakBritish(nextWord, 0.9), 250);
+            } else {
+              appState.l5.spellingDone = true;
+              renderCurrentView();
+              setTimeout(() => speakBritish('I love my mother!', 0.95), 280);
+            }
+          }, 1200);
+          return;
+        } else {
+          // Wrong spelling order -> gentle shake & reset
+          appState.stats[5].mistakes.push({
+            prompt: `拼寫單字 "${targetWord}"`,
+            chosen: `拼成 "${attemptWord}"`
+          });
+          playSoundEffect('wrong');
+          speakBritish('Almost! Let us try spelling again.', 1.0);
+          renderCurrentView();
+          const slotsRow = document.getElementById('l5-slots-row');
+          if (slotsRow) {
+            slotsRow.classList.add('animate-shake');
+          }
+          setTimeout(() => {
+            resetL5CurrentWord();
+          }, 650);
+          return;
+        }
+      }
+
+      renderCurrentView();
+    }
+
+    function handleL5SlotUndo(slotIdx) {
+      const { chosenTiles } = appState.l5;
+      if (slotIdx >= chosenTiles.length) return;
+      const removed = chosenTiles.splice(slotIdx, 1)[0];
+      if (removed) removed.used = false;
+      renderCurrentView();
+    }
+
+    function resetL5CurrentWord() {
+      appState.l5.scrambledTiles.forEach(t => (t.used = false));
+      appState.l5.chosenTiles = [];
+      renderCurrentView();
+    }
+
+    function selectLoveMember(memberId) {
+      appState.l5.selectedLoveMember = memberId;
+      speakBritish(`I love my ${memberId}!`, 0.95);
+      renderCurrentView();
+    }
+
+    function completeLevel5Speaking(btnEl) {
+      appState.l5.speakingChecked = true;
+      appState.completedLevels.add(5);
+      appState.stats[5].completed = true;
+      playSoundEffect('correct');
+      spawnStarBurst(btnEl);
+      speakBritish('Congratulations Lingling! You are a superstar!', 1.0);
+
+      setTimeout(() => {
+        appState.currentStep = 6;
+        renderCurrentView();
+      }, 1150);
+    }
+
+    /* ========================================================================
+       13. FINAL CELEBRATION & PARENT MISTAKE DIAGNOSTIC REPORT
+       ======================================================================== */
+    function renderCelebrationAndReport(stage) {
+      const completedCount = appState.completedLevels.size;
+      let totalMistakes = 0;
+      const allMistakeItems = [];
+
+      for (let lvl = 1; lvl <= 5; lvl++) {
+        const st = appState.stats[lvl];
+        totalMistakes += st.mistakes.length;
+        st.mistakes.forEach(m => {
+          allMistakeItems.push({ level: LEVEL_META[lvl - 1].short, ...m });
+        });
+      }
+
+      // Generate smart parent recommendation based on mistake patterns
+      let parentAdvice = '玲玲對 Unit 8 的四個家庭成員單字及 Phonics /s/ 掌握非常紮實！建議日常在家繼續用 "Is this your ...?" 和 "I love my ..." 進行親子對話遊戲。';
+      if (totalMistakes > 0) {
+        const hasTherConfusion = allMistakeItems.some(m =>
+          m.prompt.includes('father') || m.prompt.includes('mother') || m.prompt.includes('brother')
+        );
+        const hasPhonicsConfusion = allMistakeItems.some(m => m.prompt.includes('Phonics'));
+        if (hasTherConfusion && hasPhonicsConfusion) {
+          parentAdvice = '玲玲在字尾同為 "-ther" 的單字（father / mother / brother）以及 Phonics /s/ 字首辨音上出現過小猶豫，建議多用「慢速跟讀 🐢」強調字首音（f- / m- / br- / s-）。';
+        } else if (hasTherConfusion) {
+          parentAdvice = 'father、mother、brother 字尾同樣是 "-ther"，小朋友初學時容易混淆字首。建議指著字首字母 f、m、br 引導她先看開頭再發音。';
+        } else if (hasPhonicsConfusion) {
+          parentAdvice = '建議多帶玲玲在日常生活中尋找 /s/ 音開頭的物品（如 sun、sea、sister、spoon），強化字母 s 的聲音敏感度。';
+        }
+      }
+
+      stage.innerHTML = `
+        <div class="flex flex-col gap-5">
+          <!-- Trophy Celebration Banner -->
+          <div class="bg-gradient-to-r from-amber-200 via-yellow-100 to-amber-200 border-4 border-amber-400 rounded-3xl p-5 text-center relative overflow-hidden shadow-md">
+            <div class="text-5xl sm:text-6xl mb-2 animate-bounce">🏆</div>
+            <h1 class="text-2xl sm:text-4xl font-black text-amber-950">恭喜玲玲！勇奪 Unit 8 魔法小博士獎盃！</h1>
+            <p class="text-sm sm:text-base font-bold text-amber-800 mt-1">
+              已完成關卡：<span class="text-emerald-700 text-lg font-black">${completedCount} / 5 關</span> •
+              獲得星星：<span class="text-amber-600 text-lg font-black">${completedCount * 3} ⭐</span>
+            </p>
+          </div>
+
+          <!-- Parent Diagnostic Report Card -->
+          <div class="bg-white border-4 border-sky-200 rounded-3xl p-4 sm:p-6 shadow-sm">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b-2 border-slate-100 pb-3 mb-4">
+              <h2 class="text-lg sm:text-xl font-black text-slate-800 flex items-center gap-2">
+                <span>📋 家長錯題與理解力分析報告</span>
+              </h2>
+              <span class="px-3 py-1 rounded-full text-xs sm:text-sm font-black ${totalMistakes === 0 ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
+                ${totalMistakes === 0 ? '💯 零失誤一次通關！' : `共記錄 ${totalMistakes} 次重試練習`}
+              </span>
+            </div>
+
+            <!-- Per-Level Summary Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-5 gap-2.5 mb-4">
+              ${LEVEL_META.map(lvl => {
+                const st = appState.stats[lvl.num];
+                const errCount = st.mistakes.length;
+                return `
+                  <div class="rounded-2xl p-3 border-2 ${st.completed ? 'bg-emerald-50 border-emerald-200' : 'bg-slate-50 border-slate-200'} flex flex-col justify-between">
+                    <div class="text-xs font-black text-slate-500">第 ${lvl.num} 關</div>
+                    <div class="text-sm font-black text-slate-800 my-0.5">${lvl.short}</div>
+                    <div class="text-xs font-bold ${st.completed ? (errCount === 0 ? 'text-emerald-600' : 'text-amber-600') : 'text-slate-400'}">
+                      ${st.completed ? (errCount === 0 ? '⭐ 一次全對' : `🔄 重試 ${errCount} 次`) : '尚未完成'}
+                    </div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+
+            <!-- Detailed Mistake Log (If any) -->
+            ${allMistakeItems.length > 0 ? `
+              <div class="mb-4">
+                <h3 class="text-sm font-black text-rose-700 mb-2">🔍 需要多加留意的題目紀錄：</h3>
+                <div class="space-y-1.5 max-h-40 overflow-y-auto pr-1">
+                  ${allMistakeItems.map((item, idx) => `
+                    <div class="text-xs sm:text-sm bg-rose-50 border border-rose-200 rounded-xl px-3 py-2 flex flex-wrap items-center justify-between gap-2">
+                      <span class="font-bold text-slate-700">${idx + 1}. [${item.level}] ${item.prompt}</span>
+                      <span class="text-rose-600 font-bold">當時誤選：${item.chosen}</span>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            ` : ''}
+
+            <!-- Practical Home Practice Suggestion -->
+            <div class="bg-sky-50 border-2 border-sky-200 rounded-2xl p-3.5 text-xs sm:text-sm text-sky-950 leading-relaxed">
+              <span class="font-black text-sky-700">💡 Anna 伴讀建議：</span>${parentAdvice}
+            </div>
+          </div>
+
+          <!-- Action Buttons: Replay or Return to Preview Hub -->
+          <div class="flex flex-wrap items-center justify-center gap-4">
+            <button onclick="resetAllAndReplay()"
+              class="btn-3d btn-emerald px-6 py-3.5 text-lg font-black flex items-center gap-2">
+              <span>🔄</span><span>重新挑戰全部 5 關</span>
+            </button>
+            <button onclick="handleHomeButtonClick()"
+              class="btn-3d btn-sky px-6 py-3.5 text-lg font-black flex items-center gap-2">
+              <span>🏠</span><span>返回預習大廳</span>
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function resetAllAndReplay() {
+      appState.completedLevels.clear();
+      for (let i = 1; i <= 5; i++) {
+        appState.stats[i] = { attempts: 0, mistakes: [], completed: false };
+      }
+      initLevel1();
+    }
+
+    /* ========================================================================
+       14. BOOTSTRAP ON WINDOW LOAD
+       ======================================================================== */
+    window.addEventListener('load', () => {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.getVoices();
+        window.speechSynthesis.onvoiceschanged = () => {
+          window.speechSynthesis.getVoices();
+        };
+      }
+      renderCurrentView();
+    });
+  </script>
+</body>
+</html>
