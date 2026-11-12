@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Anna 老師 - 數學與邏輯進階 (Day 2)</title>
+  <style>
+    * { box-sizing: border-box; user-select: none; -webkit-user-select: none; font-family: "PingFang HK", 'Comic Sans MS', sans-serif; }
+    body { margin: 0; padding: 8px; background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .container { width: 100%; max-width: 720px; background: #fff; border-radius: 26px; border: 4px solid #6366f1; box-shadow: 0 10px 25px rgba(99, 102, 241, 0.15); padding: 12px 16px; position: relative; }
+
+    /* 頂部極簡導航 */
+    .top-bar { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px dashed #c7d2fe; padding-bottom: 8px; margin-bottom: 8px; }
+    .nav-btn { text-decoration: none; background: #eef2ff; border: 2px solid #818cf8; color: #4338ca; padding: 5px 12px; border-radius: 14px; font-weight: 900; font-size: 0.85rem; cursor: pointer; }
+    
+    /* Anna 老師語音橫幅 */
+    .tutor-banner { background: #fffbeb; border: 2px solid #fcd34d; border-radius: 18px; padding: 8px 12px; display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .tutor-avatar { font-size: 2.1rem; flex-shrink: 0; }
+    .tutor-speech { flex: 1; text-align: left; font-size: 0.96rem; font-weight: 900; color: #78350f; line-height: 1.4; }
+    .replay-btn { background: #f59e0b; color: white; border: none; border-radius: 50%; width: 40px; height: 40px; font-size: 1.2rem; cursor: pointer; flex-shrink: 0; box-shadow: 0 3px 6px rgba(245, 158, 11, 0.3); }
+
+    /* 主舞台 */
+    .stage-box { background: #f8fafc; border: 3px dashed #94a3b8; border-radius: 22px; padding: 14px; min-height: 290px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; text-align: center; position: relative; }
+
+    /* 題目顯示區 */
+    .question-visual { font-size: 2.8rem; line-height: 1.3; background: white; padding: 16px 20px; border-radius: 20px; border: 3px solid #cbd5e1; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); letter-spacing: 2px;}
+    .math-eq { font-weight: 900; color: #3730a3; margin: 0 10px; }
+    
+    /* 選項區 */
+    .quiz-choices { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; width: 100%; margin: 8px 0; }
+    .choice-btn { background: white; border: 4px solid #6366f1; border-radius: 20px; padding: 12px 22px; font-size: 2.2rem; font-weight: 900; color: #3730a3; cursor: pointer; min-width: 130px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: transform 0.1s; display: flex; align-items: center; justify-content: center;}
+    .choice-btn:active { transform: scale(0.95); }
+    .gentle-hint-box { background: #ecfdf5; border: 2px solid #10b981; color: #065f46; border-radius: 16px; padding: 8px 14px; font-size: 0.95rem; font-weight: 900; margin-top: 6px; max-width: 95%; display: none; }
+
+    /* 報告表格 */
+    .report-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+    .report-table th, .report-table td { border: 2px solid #cbd5e1; padding: 6px 8px; font-size: 0.9rem; text-align: center; }
+    .report-table th { background: #f1f5f9; color: #334155; font-weight: 900; }
+    .status-fast { color: #16a34a; font-weight: 900; }
+    .status-error { color: #dc2626; font-weight: 900; }
+  </style>
+</head>
+<body>
+
+<div class="container" id="main-container" style="display:none;">
+  <div class="top-bar">
+    <a href="index.html" class="nav-btn">🏠 返回學習大門</a>
+    <span style="font-weight:900; color:#4338ca; font-size:0.95rem;">🕵️‍♀️ Anna 老師：進階邏輯特訓</span>
+  </div>
+
+  <div class="tutor-banner">
+    <div class="tutor-avatar">👩‍🏫</div>
+    <div class="tutor-speech" id="tutor-text"></div>
+    <button class="replay-btn" onclick="speakText(currentSpeech, 0.72)" title="重聽 Anna 老師說話">🔊</button>
+  </div>
+
+  <div class="stage-box" id="stage-content"></div>
+</div>
+
+<div id="start-screen" style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; width:100%;">
+  <button onclick="startLesson()" style="font-size:1.8rem; font-weight:900; padding:20px 40px; border-radius:30px; background:#4f46e5; color:white; border:none; box-shadow:0 8px 20px rgba(79, 70, 229, 0.4); cursor:pointer;">
+    🚀 啟動進階小偵探挑戰 🚀
+  </button>
+</div>
+
+<script>
+// 進階難度劇本 (邏輯規律、加法概念、減法與抽象觀察)
+const slides = [
+  {
+    type: 'quiz',
+    levelTag: '【第 1 關：邏輯規律 (Pattern)】',
+    visual: '🍎🍌🍎🍌🍎<span class="math-eq">❓</span>',
+    speech: '小偵探，第一關考下妳嘅邏輯！蘋果、香蕉、蘋果、香蕉、蘋果... 下一個應該係咩嘢生果呀？',
+    options: [
+      { val: 'apple', label: '🍎' },
+      { val: 'banana', label: '🍌' }
+    ],
+    answer: 'banana',
+    hint: '妳試下跟住讀出嚟：蘋果、香蕉、蘋果、香蕉... 蘋果之後，係咪應該輪返到香蕉呢？',
+    praise: '轉數好快！完全掌握到規律！'
+  },
+  {
+    type: 'quiz',
+    levelTag: '【第 2 關：加法概念 (Addition)】',
+    visual: '🚗🚗 <span class="math-eq">+</span> 🚗🚗🚗 <span class="math-eq">= ❓</span>',
+    speech: '第二關：左邊有 2 架車，右邊有 3 架車，如果全部泊埋同一個停車場，總共有幾多架車？',
+    options: [
+      { val: '4', label: '4' },
+      { val: '5', label: '5' },
+      { val: '6', label: '6' }
+    ],
+    answer: '5',
+    hint: '試下將左邊同右邊嘅車仔連埋一齊數：一、二、三、四、五！2 加 3 等於幾多呀？',
+    praise: '太勁啦！妳識得將兩邊加埋一齊！'
+  },
+  {
+    type: 'quiz',
+    levelTag: '【第 3 關：減法與隱藏記憶 (Subtraction)】',
+    visual: '🍩🍩🍩🍩🍩<br><span style="font-size:1.5rem; color:#dc2626;">(食咗 2 個)</span>',
+    speech: '最後一關！碟上面原本有 5 個冬甩，但係 Anna 老師太肚餓，食咗 2 個。妳估下碟上面仲剩低幾多個冬甩？',
+    options: [
+      { val: '2', label: '2' },
+      { val: '3', label: '3' }
+    ],
+    answer: '3',
+    hint: '妳舉起 5 隻手指，然後收埋 2 隻手指（代表食咗），睇下仲剩低幾多隻手指企喺度？',
+    praise: '非常之聰明呀！5 減 2 就係 3！任務完美過關！'
+  }
+];
+
+let currentSlideIdx = 0;
+let currentSpeech = '';
+let questionStartTime = 0;
+let resultsLog = []; 
+let currentFails = 0;
+
+function speakText(text, rate = 0.72) {
+  currentSpeech = text;
+  document.getElementById('tutor-text').innerText = text;
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'zh-HK';
+    u.rate = rate;
+    window.speechSynthesis.speak(u);
+  }
+}
+
+function startLesson() {
+  document.getElementById('start-screen').style.display = 'none';
+  document.getElementById('main-container').style.display = 'block';
+  renderSlide();
+}
+
+function renderSlide() {
+  if (currentSlideIdx >= slides.length) {
+    speakText('太厲害啦！進階版嘅邏輯同加減法都難唔到妳！妳真係一個數學小天才！', 0.75);
+    document.getElementById('stage-content').innerHTML = `
+      <div style="background:white; border:4px solid #f59e0b; border-radius:24px; padding:18px; width:92%; max-width:480px;">
+        <div style="font-size:4rem;">🕵️‍♀️🏆</div>
+        <div style="font-size:1.5rem; font-weight:900; color:#b45309; margin:6px 0;">進階特訓成功！</div>
+        <button onclick="showMomReport()" style="margin-top:10px; background:#4f46e5; color:white; border:none; padding:10px 20px; border-radius:16px; font-weight:bold; font-size:1.1rem; cursor:pointer;">
+          👩 叫媽媽睇進階診斷報告
+        </button>
+      </div>
+    `;
+    return;
+  }
+
+  const slide = slides[currentSlideIdx];
+  currentFails = 0; 
+  questionStartTime = Date.now(); 
+  
+  speakText(slide.speech, 0.72);
+  let choicesHtml = slide.options.map(opt => `
+    <button class="choice-btn" onclick="checkAnswer('${opt.val}')">${opt.label}</button>
+  `).join('');
+
+  document.getElementById('stage-content').innerHTML = `
+    <div style="font-size:0.95rem; font-weight:900; color:#4338ca; margin-bottom:8px;">${slide.levelTag}</div>
+    <div class="question-visual">${slide.visual}</div>
+    <div class="quiz-choices">${choicesHtml}</div>
+    <div class="gentle-hint-box" id="slide-hint"></div>
+  `;
+}
+
+function checkAnswer(selected) {
+  const slide = slides[currentSlideIdx];
+  const hintBox = document.getElementById('slide-hint');
+  let timeSpent = Math.round((Date.now() - questionStartTime) / 1000);
+
+  if (selected === slide.answer) {
+    if (currentFails === 0) resultsLog.push({ q: slide.levelTag, status: 'correct', time: timeSpent });
+    else resultsLog.push({ q: slide.levelTag, status: 'hinted', time: timeSpent });
+    
+    speakText(slide.praise, 0.78);
+    setTimeout(() => { currentSlideIdx++; renderSlide(); }, 2000);
+  } else {
+    currentFails++;
+    hintBox.style.display = 'block';
+    hintBox.innerText = '💡 Anna 老師提示：' + slide.hint;
+    speakText(slide.hint, 0.72);
+  }
+}
+
+function showMomReport() {
+  let trs = resultsLog.map(r => {
+    let statusTxt = r.status === 'correct' ? '✅ 1次答對' : '❌ 需提示';
+    let timeClass = (r.time <= 5 && r.status === 'correct') ? 'status-fast' : (r.status === 'hinted' ? 'status-error' : '');
+    let analysis = r.status === 'hinted' ? '概念需強化' : (r.time <= 5 ? '邏輯極佳 (秒答)' : '需時思考運算');
+    return `<tr><td style="font-weight:900;">${r.q}</td><td>${statusTxt}</td><td class="${timeClass}">${r.time} 秒</td><td class="${timeClass}">${analysis}</td></tr>`;
+  }).join('');
+
+  document.getElementById('stage-content').innerHTML = `
+    <div style="text-align:left; width:100%; background:white; padding:12px 14px; border-radius:18px; border:3px solid #6366f1;">
+      <h3 style="margin:0 0 8px 0; color:#3730a3; font-size:1.1rem;">📊 媽媽進階診斷報告 (資優挑戰)</h3>
+      <table class="report-table">
+        <tr><th>關卡目標</th><th>結果</th><th>耗時</th><th>Anna 診斷</th></tr>
+        ${trs}
+      </table>
+      <a href="index.html" style="display:block; text-align:center; margin-top:12px; background:#4338ca; color:white; padding:10px; border-radius:14px; text-decoration:none; font-weight:bold;">🏠 返回首頁</a>
+    </div>
+  `;
+}
+</script>
+</body>
+</html>
