@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Unit 4: I can do it 每日課堂</title>
+<link rel="stylesheet" href="theme.css">
+<style>
+    body {
+        margin: 0;
+        padding: 20px;
+        background: linear-gradient(135deg, #E0F2FE 0%, #F0F9FF 100%);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    .hub-container {
+        width: 100%;
+        max-width: 780px;
+        background: #FFFFFF;
+        border: 5px solid #38BDF8;
+        border-bottom-width: 10px;
+        border-color: #38BDF8 #38BDF8 #0284C7 #38BDF8;
+        border-radius: 36px;
+        padding: 24px;
+        box-shadow: 0 12px 28px rgba(56, 189, 248, 0.18);
+    }
+    .top-nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 18px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .page-title {
+        font-size: 1.35rem;
+        font-weight: 900;
+        color: #0369A1;
+        margin: 0;
+    }
+    .anna-tip {
+        background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%);
+        border: 3px solid #93C5FD;
+        border-bottom-width: 6px;
+        border-bottom-color: #3B82F6;
+        border-radius: 20px;
+        padding: 12px 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 22px;
+        font-size: 0.95rem;
+        font-weight: 800;
+        color: #1E3A8A;
+    }
+    .days-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 14px;
+    }
+    .day-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 16px 8px;
+        border-radius: 22px;
+        text-decoration: none;
+        border: 3px solid;
+        border-bottom-width: 7px;
+        transition: all 0.1s ease;
+        text-align: center;
+    }
+    .day-card:active {
+        transform: translateY(4px);
+        border-bottom-width: 3px;
+    }
+    .day-card.unlocked {
+        background: linear-gradient(135deg, #E0F2FE 0%, #BAE6FD 100%);
+        border-color: #38BDF8;
+        border-bottom-color: #0284C7;
+        color: #0369A1;
+    }
+    .day-card.locked {
+        background: #F8FAFC;
+        border: 3px dashed #CBD5E1;
+        border-bottom-width: 5px;
+        color: #94A3B8;
+        pointer-events: none;
+    }
+    .day-icon { font-size: 1.8rem; margin-bottom: 4px; }
+    .day-num { font-size: 1.15rem; font-weight: 900; }
+    .day-sub { font-size: 0.78rem; font-weight: 800; margin-top: 2px; }
+    @media (max-width: 600px) {
+        .days-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+</style>
+</head>
+<body>
+
+<div class="hub-container animate-bounce-in">
+    <div class="top-nav">
+        <button class="btn-3d nav-btn-pink" style="padding: 8px 16px; font-size: 0.95rem;" onclick="goHome()">🏠 返回學習大門</button>
+        <h1 class="page-title">🔤 Unit 4: I can do it 每日課堂</h1>
+        <button class="btn-3d nav-btn-blue" style="padding: 8px 14px; font-size: 0.9rem;" onclick="goHome()">✨ 樂園首頁</button>
+    </div>
+
+    <div class="anna-tip">
+        <span style="font-size: 2rem;">🦉</span>
+        <span>Hello Lingling! 今日由 Anna 老師同你一齊玩 <b>Unit 4 Day 1</b> 英文微課堂，快啲撳下面藍色卡片開始啦！</span>
+    </div>
+
+    <div class="days-grid">
+        <a href="en-unit4-day1.html" class="day-card unlocked">
+            <span class="day-icon">🚀</span>
+            <span class="day-num">Day 1</span>
+            <span class="day-sub">I can do it 新詞</span>
+        </a>
+        <div class="day-card locked"><span class="day-icon">🔒</span><span class="day-num">Day 2</span><span class="day-sub">Coming Soon</span></div>
+        <div class="day-card locked"><span class="day-icon">🔒</span><span class="day-num">Day 3</span><span class="day-sub">Coming Soon</span></div>
+        <div class="day-card locked"><span class="day-icon">🔒</span><span class="day-num">Day 4</span><span class="day-sub">Coming Soon</span></div>
+        <div class="day-card locked"><span class="day-icon">🔒</span><span class="day-num">Day 5</span><span class="day-sub">Coming Soon</span></div>
+        <div class="day-card locked"><span class="day-icon">🔒</span><span class="day-num">Day 6</span><span class="day-sub">Coming Soon</span></div>
+        <div class="day-card locked"><span class="day-icon">🔒</span><span class="day-num">Day 7</span><span class="day-sub">Coming Soon</span></div>
+        <div class="day-card locked"><span class="day-icon">🔒</span><span class="day-num">Day 8</span><span class="day-sub">Coming Soon</span></div>
+        <div class="day-card locked"><span class="day-icon">🔒</span><span class="day-num">Day 9</span><span class="day-sub">Coming Soon</span></div>
+        <div class="day-card locked"><span class="day-icon">🔒</span><span class="day-num">Day 10</span><span class="day-sub">Graduation</span></div>
+    </div>
+</div>
+
+<script>
+    function goHome() {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.pause();
+            window.speechSynthesis.cancel();
+        }
+        setTimeout(() => {
+            window.location.href = 'index.html?v=7';
+        }, 60);
+    }
+</script>
+</body>
+</html>
