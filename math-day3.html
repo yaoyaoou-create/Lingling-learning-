@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Day 3: Tickles 糖果屋大冒險</title>
+    <!-- 若有全域樣式可解除註解 <link rel="stylesheet" href="theme.css"> -->
+    <style>
+        :root {
+            --bg-color: linear-gradient(135deg, #FFEAA7 0%, #FFD1FF 100%);
+            --btn-blue: linear-gradient(135deg, #7DD3FC, #0EA5E9);
+            --btn-blue-shadow: #0369A1;
+            --btn-green: linear-gradient(135deg, #6EE7B7, #10B981);
+            --btn-green-shadow: #047857;
+            --btn-red: linear-gradient(135deg, #FDA4AF, #F43F5E);
+            --btn-red-shadow: #BE123C;
+            --text-dark: #2C3E50;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Comic Sans MS', 'Chalkboard SE', 'PingFang HK', sans-serif;
+            background: var(--bg-color);
+            color: var(--text-dark);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* 防止滾動，鎖定一屏 */
+        }
+
+        /* 頂部導航列 */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.6);
+            border-bottom: 4px solid white;
+        }
+        
+        .btn-3d {
+            background: var(--btn-blue);
+            border: none;
+            border-radius: 18px;
+            border-bottom: 8px solid var(--btn-blue-shadow);
+            color: white;
+            font-size: 18px;
+            font-weight: 900;
+            padding: 12px 24px;
+            cursor: pointer;
+            transition: all 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .btn-3d:active {
+            transform: translateY(4px);
+            border-bottom-width: 4px;
+        }
+        .btn-3d.correct {
+            background: var(--btn-green);
+            border-bottom-color: var(--btn-green-shadow);
+        }
+
+        .progress-dots {
+            display: flex;
+            gap: 8px;
+        }
+        .dot {
+            width: 16px;
+            height: 16px;
+            background: #E2E8F0;
+            border-radius: 50%;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .dot.active { background: #F59E0B; box-shadow: 0 0 8px #FCD34D; }
+
+        /* 遊戲主舞台 */
+        .game-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* 大畫布視覺區 (Zero-Upload Emoji/SVG) */
+        .visual-area {
+            background: white;
+            border-radius: 30px;
+            padding: 40px 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            border: 6px solid #FFF;
+            text-align: center;
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 70px;
+            line-height: 1.2;
+            width: 90%;
+            max-width: 800px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        /* 發音喇叭按鈕 */
+        .speaker-btn {
+            position: absolute;
+            top: -20px;
+            left: -20px;
+            background: var(--btn-red);
+            border: none;
+            border-bottom: 6px solid var(--btn-red-shadow);
+            border-radius: 50%;
+            width: 70px;
+            height: 70px;
+            font-size: 30px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(244, 63, 94, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.1s;
+        }
+        .speaker-btn:active {
+            transform: translateY(3px);
+            border-bottom-width: 3px;
+        }
+
+        /* 選項按鈕區 */
+        .options-area {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .opt-btn {
+            font-size: 40px;
+            padding: 20px 40px;
+            border-radius: 24px;
+            background: white;
+            border: 4px solid #E2E8F0;
+            border-bottom: 10px solid #CBD5E1;
+            cursor: pointer;
+            transition: all 0.1s;
+        }
+        .opt-btn:active {
+            transform: translateY(5px);
+            border-bottom-width: 5px;
+        }
+        .opt-btn.wrong-shake {
+            animation: shake 0.4s ease-in-out;
+            background: #FEE2E2;
+            border-color: #FCA5A5;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px) rotate(-3deg); }
+            75% { transform: translateX(8px) rotate(3deg); }
+        }
+
+        /* 診斷報告 Modal */
+        #report-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            align-items: center; justify-content: center;
+            z-index: 100;
+        }
+        .report-content {
+            background: white;
+            border-radius: 30px;
+            padding: 30px;
+            width: 90%;
+            max-width: 700px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            text-align: center;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 16px; }
+        th, td { border: 2px solid #E2E8F0; padding: 12px; }
+        th { background: #F8FAFC; color: #475569; }
+        td { font-weight: bold; }
+        .success-text { color: #10B981; }
+        .warning-text { color: #EF4444; }
+
+        /* 啟動畫面 */
+        #start-screen {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+        }
+        .anna-avatar { font-size: 100px; margin-bottom: 20px; animation: float 2s infinite ease-in-out; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+    </style>
+</head>
+<body>
+
+    <!-- 啟動畫面 (必須由用家點擊啟動，以解鎖 Safari 語音權限) -->
+    <div id="start-screen">
+        <div class="anna-avatar">🧚‍♀️</div>
+        <h1 style="color:#D97706; text-shadow: 2px 2px white; text-align:center;">Day 3: Tickles 糖果屋大冒險</h1>
+        <p style="color:#64748B; font-weight:bold;">包含 8 題進階邏輯與加減法挑戰</p>
+        <button class="btn-3d" style="font-size: 24px; padding: 15px 40px; margin-top: 20px; background:var(--btn-green); border-bottom-color:var(--btn-green-shadow);" onclick="startGame()">▶️ 點擊開始闖關</button>
+    </div>
+
+    <header>
+        <button class="btn-3d" onclick="goHome()">🏠 返回主目錄</button>
+        <div class="progress-dots" id="dots">
+            <!-- JS 動態生成 8 粒星 -->
+        </div>
+    </header>
+
+    <div class="game-container">
+        <div class="visual-area" id="visual-board">
+            <button class="speaker-btn" onclick="playVoicePrompt()">🧚‍♀️🔊</button>
+            <div id="question-content"></div>
+        </div>
+        <div class="options-area" id="options-board">
+            <!-- 按鈕動態生成 -->
+        </div>
+    </div>
+
+    <!-- 診斷報告 -->
+    <div id="report-modal">
+        <div class="report-content">
+            <h2 style="color: #6D28D9; margin-top:0;">📊 媽媽進階診斷報告 (資優挑戰)</h2>
+            <p style="color: #64748B;">Anna 老師根據玲玲嘅答題速度與準確度生成：</p>
+            <table id="report-table">
+                <tr>
+                    <th>關卡目標</th>
+                    <th>結果</th>
+                    <th>耗時</th>
+                    <th>Anna 診斷</th>
+                </tr>
+                <!-- JS 填入 -->
+            </table>
+            <button class="btn-3d" onclick="goHome()">🏠 返回首頁</button>
+        </div>
+    </div>
+
+<script>
+    // 【8 題精確測試劇本】
+    const quizData = [
+        // 階段一：邏輯規律 (Pattern)
+        {
+            stage: "【第 1 題：邏輯規律 (AABB)】",
+            visual: "🍬🍫🍬🍫🍬 <span style='border-bottom:6px dashed #ccc; color:#ccc;'>?</span>",
+            voice: "Look at the pattern! Candy, chocolate, candy, chocolate, candy... What comes next?",
+            options: ["🍬", "🍫", "🍩"],
+            correct: 1
+        },
+        {
+            stage: "【第 2 題：邏輯規律 (ABC)】",
+            visual: "🔴🟡🔵🔴🟡🔵 <span style='border-bottom:6px dashed #ccc; color:#ccc;'>?</span>",
+            voice: "Red, yellow, blue, red, yellow, blue... What's next?",
+            options: ["🟡", "🔵", "🔴"],
+            correct: 2
+        },
+        // 階段二：加法特訓 (Addition)
+        {
+            stage: "【第 3 題：加法 (1+1 具體視覺)】",
+            visual: "🍭 ➕ 🍭 🟰 <span style='border-bottom:6px dashed #ccc; color:#ccc;'>?</span>",
+            voice: "One candy, and one more candy. Let's add them up! How many candies?",
+            options: ["1", "2", "3"],
+            correct: 1
+        },
+        {
+            stage: "【第 4 題：加法 (2+1 點數群組)】",
+            visual: "🍩🍩 ➕ 🍩 🟰 <span style='border-bottom:6px dashed #ccc; color:#ccc;'>?</span>",
+            voice: "Tickles has two donuts. Anna gives him one more. How many donuts does Tickles have now?",
+            options: ["2", "3", "4"],
+            correct: 1
+        },
+        {
+            stage: "【第 5 題：加法 (2+2 數字與物件)】",
+            visual: "<div style='display:flex; align-items:center; gap:20px; font-size:50px;'><div><span style='color:#E74C3C;'>2</span> 🍪🍪</div> <div>➕</div> <div><span style='color:#E74C3C;'>2</span> 🍪🍪</div> <div>🟰 <span style='border-bottom:6px dashed #ccc; color:#ccc;'>?</span></div></div>",
+            voice: "Two cookies, plus two cookies. Make a guess, how many in total?",
+            options: ["3", "4", "5"],
+            correct: 1
+        },
+        {
+            stage: "【第 6 題：加法 (3+1 隱藏抽象)】",
+            visual: "<div style='position:relative; display:inline-block;'>🎰<span style='position:absolute; top:-20px; left:-20px; background:white; border-radius:50%; width:45px; height:45px; line-height:45px; text-align:center; color:red; border:4px solid red; font-size:30px; font-weight:bold;'>3</span></div> ➕ 🍬 🟰 <span style='border-bottom:6px dashed #ccc; color:#ccc;'>?</span>",
+            voice: "There are three candies hidden in the machine. We put one more inside! Wow, how many candies are in the machine now?",
+            options: ["3", "4", "5"],
+            correct: 1
+        },
+        // 階段三：減法鞏固 (Subtraction)
+        {
+            stage: "【第 7 題：減法 (3-1 視覺消除)】",
+            visual: "🍦 🍦 <span style='opacity:0.3; filter:grayscale(100%);'>🍦</span> 🟰 <span style='border-bottom:6px dashed #ccc; color:#ccc;'>?</span>",
+            voice: "We had three ice creams. Tickles ate one! Oh dear! How many are left?",
+            options: ["1", "2", "3"],
+            correct: 1
+        },
+        {
+            stage: "【第 8 題：減法 (4-2 動態減法)】",
+            visual: "🎈 🎈 <span style='opacity:0.3;'>💥</span> <span style='opacity:0.3;'>💥</span> 🟰 <span style='border-bottom:6px dashed #ccc; color:#ccc;'>?</span>",
+            voice: "Four balloons in the sky... Pop! Pop! Two popped! How many balloons are left?",
+            options: ["1", "2", "4"],
+            correct: 1
+        }
+    ];
+
+    let currentQ = 0;
+    let startTime = 0;
+    let attemptsCount = 0;
+    let reportData = [];
+
+    // 初始化點點
+    const dotsContainer = document.getElementById('dots');
+    for (let i = 0; i < quizData.length; i++) {
+        let dot = document.createElement('div');
+        dot.className = 'dot';
+        dotsContainer.appendChild(dot);
+    }
+
+    // 啟動遊戲
+    function startGame() {
+        document.getElementById('start-screen').style.display = 'none';
+        // 初始化 Safari 語音引擎
+        let initUtter = new SpeechSynthesisUtterance("Let's go!");
+        initUtter.volume = 0;
+        window.speechSynthesis.speak(initUtter);
+        
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        attemptsCount = 0;
+        startTime = Date.now();
+        const q = quizData[currentQ];
+        
+        // 更新點點
+        const dots = document.querySelectorAll('.dot');
+        dots.forEach((d, idx) => {
+            if (idx === currentQ) d.classList.add('active');
+            else d.classList.remove('active');
+        });
+
+        // 載入畫面
+        document.getElementById('question-content').innerHTML = q.visual;
+        const optionsBoard = document.getElementById('options-board');
+        optionsBoard.innerHTML = '';
+        
+        q.options.forEach((opt, idx) => {
+            let btn = document.createElement('button');
+            btn.className = 'opt-btn';
+            btn.innerHTML = opt;
+            btn.onclick = () => checkAnswer(idx, btn);
+            optionsBoard.appendChild(btn);
+        });
+
+        // 延遲一點點播語音，讓頁面渲染完成
+        setTimeout(playVoicePrompt, 300);
+    }
+
+    // 【核心要求：活潑英式女聲 (Funny British Voice)】
+    function speakText(text) {
+        window.speechSynthesis.cancel();
+        let utter = new SpeechSynthesisUtterance(text);
+        
+        // 尋找英式女聲
+        let voices = window.speechSynthesis.getVoices();
+        let ukVoice = voices.find(v => v.lang.includes('en-GB') && (v.name.includes('Female') || v.name.includes('Siri'))) || 
+                      voices.find(v => v.lang.includes('en-GB'));
+        
+        if(ukVoice) utter.voice = ukVoice;
+        
+        // 微調 pitch 讓聲音有「卡通姐姐」的俏皮感，rate 微慢確保聽清
+        utter.pitch = 1.3; 
+        utter.rate = 0.85; 
+        
+        window.speechSynthesis.speak(utter);
+    }
+
+    function playVoicePrompt() {
+        speakText(quizData[currentQ].voice);
+    }
+
+    function checkAnswer(selectedIdx, btnElement) {
+        const q = quizData[currentQ];
+        attemptsCount++;
+
+        if (selectedIdx === q.correct) {
+            // 答對處理
+            btnElement.style.background = "var(--btn-green)";
+            btnElement.style.borderColor = "#10B981";
+            btnElement.style.color = "white";
+            
+            const timeTaken = Math.round((Date.now() - startTime) / 1000);
+            
+            // 記錄報告
+            reportData.push({
+                stage: q.stage,
+                attempts: attemptsCount,
+                time: timeTaken
+            });
+
+            speakText(["Excellent!", "Spot on!", "Super clever!", "Wow, brilliant!"][Math.floor(Math.random()*4)]);
+            
+            setTimeout(() => {
+                currentQ++;
+                if (currentQ < quizData.length) {
+                    loadQuestion();
+                } else {
+                    showReport();
+                }
+            }, 1200);
+
+        } else {
+            // 答錯處理 (不劇透，防呆搖晃)
+            btnElement.classList.add('wrong-shake');
+            speakText("Oops! Let's count again carefully!");
+            setTimeout(() => btnElement.classList.remove('wrong-shake'), 500);
+        }
+    }
+
+    // 生成診斷報告
+    function showReport() {
+        document.getElementById('report-modal').style.display = 'flex';
+        const table = document.getElementById('report-table');
+        
+        reportData.forEach((data, index) => {
+            let tr = document.createElement('tr');
+            
+            // 結果判斷
+            let resultHtml = data.attempts === 1 
+                ? `<span class="success-text">✅ 1次答對</span>` 
+                : `<span class="warning-text">❌ 需提示(${data.attempts}次)</span>`;
+            
+            // Anna AI 智能診斷語
+            let diagnosis = "";
+            if (index < 2) { // 規律題
+                diagnosis = data.attempts === 1 ? "邏輯清晰" : "需引導觀察";
+            } else if (index >= 2 && index <= 5) { // 加法題
+                if (data.attempts === 1 && data.time < 10) diagnosis = "概念極穩固";
+                else if (data.attempts === 1) diagnosis = "需時思考運算";
+                else diagnosis = "概念需強化";
+            } else { // 減法題
+                diagnosis = data.attempts === 1 ? "減法概念穩固" : "需實物輔助";
+            }
+
+            tr.innerHTML = `
+                <td>${data.stage}</td>
+                <td>${resultHtml}</td>
+                <td>${data.time} 秒</td>
+                <td>${diagnosis}</td>
+            `;
+            table.appendChild(tr);
+        });
+        
+        speakText("Great job Lingling! You have finished all the challenges!");
+    }
+
+    // 【核心要求：iPad Safari 雙重斷音鎖】
+    function goHome() {
+        window.speechSynthesis.pause();
+        window.speechSynthesis.cancel();
+        // 如果想彈返去首頁，解除下面註解
+        setTimeout(() => { window.location.href = 'index.html'; }, 300);
+    }
+
+    // 確保離開頁面時斷音
+    window.addEventListener('beforeunload', goHome);
+</script>
+</body>
+</html>
