@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Miss Anna 課堂 - 英文 Unit 4 (Day 1)</title>
+  <style>
+    * { box-sizing: border-box; user-select: none; -webkit-user-select: none; font-family: 'Comic Sans MS', 'Chalkboard SE', "PingFang HK", sans-serif; }
+    body { margin: 0; padding: 8px; background: linear-gradient(135deg, #e0f2fe 0%, #dcfce7 100%); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .container { width: 100%; max-width: 740px; background: #fff; border-radius: 26px; border: 4px solid #38bdf8; box-shadow: 0 10px 25px rgba(2, 132, 199, 0.15); padding: 12px 16px; position: relative; }
+
+    /* 頂部極簡導航列 */
+    .top-bar { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px dashed #bae6fd; padding-bottom: 8px; margin-bottom: 8px; }
+    .nav-btn { text-decoration: none; background: #f0f9ff; border: 2px solid #38bdf8; color: #0369a1; padding: 5px 12px; border-radius: 14px; font-weight: 800; font-size: 0.85rem; cursor: pointer; }
+    
+    /* Miss Anna 語音橫幅 */
+    .tutor-banner { background: #fffbeb; border: 2px solid #fcd34d; border-radius: 18px; padding: 8px 12px; display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .tutor-avatar { font-size: 2.1rem; flex-shrink: 0; }
+    .tutor-speech { flex: 1; text-align: left; font-size: 0.96rem; font-weight: 800; color: #78350f; line-height: 1.4; }
+    .replay-btn { background: #f59e0b; color: white; border: none; border-radius: 50%; width: 40px; height: 40px; font-size: 1.2rem; cursor: pointer; flex-shrink: 0; box-shadow: 0 3px 6px rgba(245, 158, 11, 0.3); }
+
+    /* 單一焦點主舞台 */
+    .stage-box { background: #f0f9ff; border: 3px dashed #7dd3fc; border-radius: 22px; padding: 14px; min-height: 290px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; text-align: center; position: relative; }
+
+    /* 進度小圓點 */
+    .step-dots { display: flex; gap: 8px; justify-content: center; margin-bottom: 4px; }
+    .dot { width: 12px; height: 12px; border-radius: 50%; background: #e0f2fe; border: 2px solid #38bdf8; }
+    .dot.active { background: #0284c7; transform: scale(1.25); border-color: #0369a1; }
+    .dot.done { background: #22c55e; border-color: #16a34a; }
+
+    /* 單一焦點大卡片 */
+    .single-focus-card { background: white; border: 4px solid #38bdf8; border-radius: 24px; padding: 14px 28px; width: 92%; max-width: 480px; box-shadow: 0 8px 20px rgba(2, 132, 199, 0.12); display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 4px 0; cursor: pointer; }
+    .single-focus-card:active { transform: scale(0.98); background: #f8fafc; }
+    .big-emoji { font-size: 4rem; line-height: 1.1; margin-bottom: 6px; }
+    .big-en { font-size: 2.8rem; font-weight: 900; color: #0369a1; margin-bottom: 2px; }
+    .big-zh { font-size: 1.1rem; font-weight: 800; color: #64748b; margin-top: 4px; }
+    
+    /* 句式積木卡 */
+    .sentence-box { background: #ffedd5; border: 4px solid #f97316; border-radius: 20px; padding: 14px 22px; font-size: 2rem; font-weight: 900; color: #334155; margin: 10px 0; cursor: pointer; display: inline-block;}
+    .pink-word { color: #db2777; background: #fce7f3; padding: 2px 10px; border-radius: 12px; border: 3px dashed #f472b6; }
+
+    /* 底部大按鈕 */
+    .next-action-btn { background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: white; border: none; border-radius: 20px; padding: 12px 28px; font-size: 1.15rem; font-weight: 900; cursor: pointer; box-shadow: 0 5px 12px rgba(34, 197, 94, 0.3); transition: transform 0.1s; margin-top: 8px;}
+    .next-action-btn:active { transform: scale(0.96); }
+
+    /* 單頁互動問題選項 */
+    .quiz-choices { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; width: 100%; margin: 8px 0; }
+    .choice-btn { background: white; border: 4px solid #0284c7; border-radius: 20px; padding: 12px 18px; font-size: 1.8rem; font-weight: 900; color: #0369a1; cursor: pointer; min-width: 150px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: transform 0.1s; display: flex; flex-direction: column; align-items: center; }
+    .choice-btn:active { transform: scale(0.95); }
+    .choice-label { font-size: 1rem; font-weight: 800; color: #475569; margin-top: 4px; }
+    .gentle-hint-box { background: #ecfdf5; border: 2px solid #10b981; color: #065f46; border-radius: 16px; padding: 10px 14px; font-size: 0.95rem; font-weight: 800; margin-top: 6px; max-width: 95%; line-height: 1.35; display: none; }
+  </style>
+</head>
+<body>
+
+<div class="container" id="main-container" style="display:none;">
+  <div class="top-bar">
+    <a href="index.html" class="nav-btn">🏠 返回學習大門</a>
+    <span style="font-weight:900; color:#0369a1; font-size:0.95rem;">👩‍🏫 Miss Anna：Day 1 課堂</span>
+  </div>
+
+  <div class="tutor-banner">
+    <div class="tutor-avatar">👩‍🏫</div>
+    <div class="tutor-speech" id="tutor-text"></div>
+    <button class="replay-btn" onclick="replayAudio()" title="重聽 Miss Anna 說話">🔊</button>
+  </div>
+
+  <div class="stage-box" id="stage-content"></div>
+</div>
+
+<!-- 進入畫面 -->
+<div id="start-screen" style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; width:100%;">
+  <button onclick="startLesson()" style="font-size:1.6rem; font-weight:900; padding:20px 40px; border-radius:30px; background:#0284c7; color:white; border:none; box-shadow:0 8px 20px rgba(2, 132, 199, 0.4); cursor:pointer;">
+    🌟 點擊開始 Day 1 英文課堂 🌟
+  </button>
+</div>
+
+<script>
+// Anna 老師 Day 1 劇本 (雙語音無縫切換系統)
+const slides = [
+  {
+    type: 'teach_single',
+    emoji: '🚴‍♀️',
+    en: 'Look after your body!',
+    zh: '保護身體 (P.17)',
+    displayText: 'Hello Lingling! I am Miss Anna! 今日 Miss Anna 帶妳去做運動小超人！妳睇下第 17 頁，踩單車同溜冰都要戴好橙色嘅安全帽。我哋要好好保護身體：Look after your body! 來，跟 Miss Anna 講一次：Look after your body!',
+    audioSeq: [
+      {lang: 'en-GB', rate: 0.6, text: 'Hello Lingling! I am Miss Anna!'},
+      {lang: 'zh-HK', rate: 0.72, text: '今日 Miss Anna 帶妳去做運動小超人！妳睇下第 17 頁，踩單車同溜冰都要戴好橙色嘅安全帽。我哋要好好保護身體：'},
+      {lang: 'en-GB', rate: 0.6, text: 'Look after your body!'},
+      {lang: 'zh-HK', rate: 0.72, text: '來，跟 Miss Anna 講一次：'},
+      {lang: 'en-GB', rate: 0.55, text: 'Look after your body!'}
+    ]
+  },
+  {
+    type: 'teach_single',
+    emoji: '🏃‍♂️',
+    en: 'run',
+    zh: '跑',
+    displayText: '我哋去第 18 頁！第一幅圖，有個哥哥揹住書包跑得好快呀！「跑」嘅英文叫做 run。來，企起身跟 Miss Anna 慢速讀一次：run, run!',
+    audioSeq: [
+      {lang: 'zh-HK', rate: 0.72, text: '我哋去第 18 頁！第一幅圖，有個哥哥揹住書包跑得好快呀！跑，英文叫做'},
+      {lang: 'en-GB', rate: 0.6, text: 'run'},
+      {lang: 'zh-HK', rate: 0.72, text: '來，企起身跟 Miss Anna 慢速讀一次：'},
+      {lang: 'en-GB', rate: 0.5, text: 'run, run!'}
+    ]
+  },
+  {
+    type: 'teach_single',
+    emoji: '🤸',
+    en: 'jump',
+    zh: '跳',
+    displayText: '第二幅圖，哥哥雙手張開跳得好高呀，好似小白兔咁跳！「跳」叫做 jump。來，一齊跳起跟讀：jump, jump!',
+    audioSeq: [
+      {lang: 'zh-HK', rate: 0.72, text: '第二幅圖，哥哥雙手張開跳得好高呀，好似小白兔咁跳！跳，叫做'},
+      {lang: 'en-GB', rate: 0.6, text: 'jump'},
+      {lang: 'zh-HK', rate: 0.72, text: '來，一齊跳起跟讀：'},
+      {lang: 'en-GB', rate: 0.5, text: 'jump, jump!'}
+    ]
+  },
+  {
+    type: 'build_sentence',
+    sentenceHtml: 'I can <span class="pink-word">jump</span>!',
+    displayText: '好叻女呀！而家我哋將動作變成一句話。用手指篤一下畫面上面粉紅色嘅字卡，大聲話畀 Miss Anna 聽「我識得跳」：I can jump!',
+    audioSeq: [
+      {lang: 'zh-HK', rate: 0.72, text: '好叻女呀！而家我哋將動作變成一句話。用手指篤一下畫面上面粉紅色嘅字卡，大聲話畀 Miss Anna 聽，我識得跳：'},
+      {lang: 'en-GB', rate: 0.55, text: 'I can jump!'}
+    ]
+  },
+  {
+    type: 'quiz_step',
+    levelTag: '【第 1 題：聽音選圖（淺）】',
+    visual: '👂 聽 Miss Anna 讀',
+    displayText: '第 1 題：Lingling，請睇下畫面。如果 Miss Anna 講 run，妳應該揀邊一個動作呀？',
+    audioSeq: [
+      {lang: 'zh-HK', rate: 0.72, text: '第 1 題：Lingling，請睇下畫面。如果 Miss Anna 講'},
+      {lang: 'en-GB', rate: 0.6, text: 'run'},
+      {lang: 'zh-HK', rate: 0.72, text: '妳應該揀邊一個動作呀？'}
+    ],
+    options: [
+      {val: 'run', emoji: '🏃‍♂️', label: 'run'},
+      {val: 'draw', emoji: '🖍️', label: 'draw'}
+    ],
+    answer: 'run',
+    hintText: 'Oops！唔緊要，我哋再聽一次喔：run！諗下頭先 Miss Anna 話揹住書包跑得好快嗰個哥哥，係邊一幅圖呢？再試下啦！',
+    hintAudio: [
+      {lang: 'zh-HK', rate: 0.72, text: 'Oops！唔緊要，我哋再聽一次喔：'},
+      {lang: 'en-GB', rate: 0.55, text: 'run'},
+      {lang: 'zh-HK', rate: 0.72, text: '諗下頭先 Miss Anna 話揹住書包跑得好快嗰個哥哥，係邊一幅圖呢？再試下啦！'}
+    ],
+    praiseText: 'Good job! 跑就係 run！',
+    praiseAudio: [{lang: 'en-GB', rate: 0.65, text: 'Good job!'}, {lang: 'zh-HK', rate: 0.72, text: '跑就係 run！'}]
+  },
+  {
+    type: 'quiz_step',
+    levelTag: '【第 2 題：句式聽音選字（中）】',
+    visual: 'I can ... ❓',
+    displayText: '第 2 題：聽一聽英文：如果我想講「我識得跳」，I can 後面應該加邊個字呀？',
+    audioSeq: [
+      {lang: 'zh-HK', rate: 0.72, text: '第 2 題：聽一聽英文：如果我想講，我識得跳，'},
+      {lang: 'en-GB', rate: 0.6, text: 'I can'},
+      {lang: 'zh-HK', rate: 0.72, text: '後面應該加邊個字呀？'}
+    ],
+    options: [
+      {val: 'jump', emoji: 'jump', label: ''},
+      {val: 'sing', emoji: 'sing', label: ''}
+    ],
+    answer: 'jump',
+    hintText: 'Almost there! 「跳」好似小白兔咁樣，開頭有個 /dʒ/ 嘅音。jump 定係 sing 呀？',
+    hintAudio: [
+      {lang: 'en-GB', rate: 0.65, text: 'Almost there!'},
+      {lang: 'zh-HK', rate: 0.72, text: '「跳」好似小白兔咁樣，開頭有個 dʒ 嘅音。'},
+      {lang: 'en-GB', rate: 0.55, text: 'jump'},
+      {lang: 'zh-HK', rate: 0.72, text: '定係'},
+      {lang: 'en-GB', rate: 0.55, text: 'sing'},
+      {lang: 'zh-HK', rate: 0.72, text: '呀？'}
+    ],
+    praiseText: 'Yes! I can jump!',
+    praiseAudio: [{lang: 'en-GB', rate: 0.65, text: 'Yes! I can jump!'}]
+  },
+  {
+    type: 'quiz_step',
+    levelTag: '【第 3 題：情境安全題（深）】',
+    visual: '🚲 踩單車',
+    displayText: '最後一題！第 17 頁話要 Look after your body。如果妳要踩單車，妳個頭上面必須要戴住咩嘢去保護自己呀？',
+    audioSeq: [
+      {lang: 'zh-HK', rate: 0.72, text: '最後一題！第 17 頁話要'},
+      {lang: 'en-GB', rate: 0.6, text: 'Look after your body.'},
+      {lang: 'zh-HK', rate: 0.72, text: '如果妳要踩單車，妳個頭上面必須要戴住咩嘢去保護自己呀？'}
+    ],
+    options: [
+      {val: 'helmet', emoji: '⛑️', label: '安全帽'},
+      {val: 'partyhat', emoji: '🥳', label: '生日帽'}
+    ],
+    answer: 'helmet',
+    hintText: '諗下喔，生日帽係用嚟食生日蛋糕嘅；踩單車跌親會痛痛，要戴硬梆梆、可以保護頭仔嘅橙色帽喔！',
+    hintAudio: [{lang: 'zh-HK', rate: 0.72, text: '諗下喔，生日帽係用嚟食生日蛋糕嘅；踩單車跌親會痛痛，要戴硬梆梆、可以保護頭仔嘅橙色帽喔！'}],
+    praiseText: 'Very good! 戴好安全帽，I can do it!',
+    praiseAudio: [{lang: 'en-GB', rate: 0.65, text: 'Very good!'}, {lang: 'zh-HK', rate: 0.72, text: '戴好安全帽，'}, {lang: 'en-GB', rate: 0.65, text: 'I can do it!'}]
+  }
+];
+
+let currentSlideIdx = 0;
+// 記錄錯字嘅籃子（LocalStorage）
+let wrongCounts = JSON.parse(localStorage.getItem('lingling_en_u4_d1_errors') || '{}');
+let audioChain = [];
+
+function saveErrors() {
+  localStorage.setItem('lingling_en_u4_d1_errors', JSON.stringify(wrongCounts));
+}
+
+// 雙語音無縫播放系統
+function playAudioSequence(sequence) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  audioChain = sequence;
+  let i = 0;
+  
+  function playNext() {
+    if (i >= audioChain.length) return;
+    let u = new SpeechSynthesisUtterance(audioChain[i].text);
+    u.lang = audioChain[i].lang;
+    u.rate = audioChain[i].rate;
+    u.onend = playNext;
+    window.speechSynthesis.speak(u);
+    i++;
+  }
+  playNext();
+}
+
+function replayAudio() {
+  if (currentSlideIdx < slides.length) {
+    playAudioSequence(slides[currentSlideIdx].audioSeq);
+  }
+}
+
+function startLesson() {
+  document.getElementById('start-screen').style.display = 'none';
+  document.getElementById('main-container').style.display = 'block';
+  renderSlide();
+}
+
+function renderSlide() {
+  if (currentSlideIdx >= slides.length) {
+    playAudioSequence([
+      {lang: 'en-GB', rate: 0.65, text: 'Well done Lingling!'},
+      {lang: 'zh-HK', rate: 0.72, text: '今日 Day 1 嘅課堂已經全部完成啦！妳攞到今日嘅大獎盃！而家可以去搵媽媽睇報告同抱抱妳啦！'}
+    ]);
+    document.getElementById('stage-content').innerHTML = `
+      <div style="background:white; border:4px solid #f59e0b; border-radius:24px; padding:18px; width:92%; max-width:480px;">
+        <div style="font-size:4rem;">🏆🎉</div>
+        <div style="font-size:1.5rem; font-weight:900; color:#b45309; margin:6px 0;">Day 1 成功下課啦！</div>
+        <div style="font-size:0.95rem; font-weight:800; color:#475569; margin-bottom:14px;">
+          小寶貝今日好專心跟 Miss Anna 學英文！<br>快啲叫媽媽睇下妳有幾叻啦！
+        </div>
+        <a href="index.html" class="next-action-btn" style="text-decoration:none; display:inline-block;">🏠 離開課堂</a>
+      </div>
+    `;
+    return;
+  }
+
+  const slide = slides[currentSlideIdx];
+  document.getElementById('tutor-text').innerText = slide.displayText;
+  playAudioSequence(slide.audioSeq);
+
+  const dotsHtml = slides.map((_, idx) => {
+    let cls = idx < currentSlideIdx ? 'done' : (idx === currentSlideIdx ? 'active' : '');
+    return `<div class="dot ${cls}"></div>`;
+  }).join('');
+
+  if (slide.type === 'teach_single') {
+    document.getElementById('stage-content').innerHTML = `
+      <div class="step-dots">${dotsHtml}</div>
+      <div class="single-focus-card" onclick="playAudioSequence([{lang: 'en-GB', rate: 0.55, text: '${slide.en}'}])">
+        <div class="big-emoji">${slide.emoji}</div>
+        <div class="big-en">${slide.en}</div>
+        <div class="big-zh">${slide.zh}</div>
+      </div>
+      <button class="next-action-btn" onclick="nextSlide()">🌟 Miss Anna，我讀好啦！下一個 ➔</button>
+    `;
+  } else if (slide.type === 'build_sentence') {
+    document.getElementById('stage-content').innerHTML = `
+      <div class="step-dots">${dotsHtml}</div>
+      <div class="sentence-box" onclick="playAudioSequence([{lang: 'en-GB', rate: 0.55, text: 'I can jump!'}])">
+        ${slide.sentenceHtml} 🔊
+      </div>
+      <button class="next-action-btn" onclick="nextSlide()">🌟 讀好啦！下一個 ➔</button>
+    `;
+  } else if (slide.type === 'quiz_step') {
+    let choicesHtml = slide.options.map(opt => `
+      <button class="choice-btn" onclick="checkAnswer('${opt.val}')">
+        <span style="font-size:3rem; line-height:1;">${opt.emoji}</span>
+        ${opt.label ? `<span class="choice-label">${opt.label}</span>` : ''}
+      </button>
+    `).join('');
+
+    document.getElementById('stage-content').innerHTML = `
+      <div class="step-dots">${dotsHtml}</div>
+      <div style="font-size:0.95rem; font-weight:900; color:#0369a1;">${slide.levelTag}</div>
+      <div style="font-size:1.8rem; font-weight:900; color:#0369a1; background:white; padding:8px 24px; border-radius:20px; border:3px solid #bae6fd; margin: 6px 0;">
+        ${slide.visual}
+      </div>
+      <div class="quiz-choices">${choicesHtml}</div>
+      <div class="gentle-hint-box" id="slide-hint"></div>
+    `;
+  }
+}
+
+function nextSlide() {
+  currentSlideIdx++;
+  renderSlide();
+}
+
+function checkAnswer(selected) {
+  const slide = slides[currentSlideIdx];
+  const hintBox = document.getElementById('slide-hint');
+  if (selected === slide.answer) {
+    document.getElementById('tutor-text').innerText = slide.praiseText;
+    playAudioSequence(slide.praiseAudio);
+    setTimeout(() => {
+      nextSlide();
+    }, 2500);
+  } else {
+    wrongCounts[slide.answer] = (wrongCounts[slide.answer] || 0) + 1;
+    saveErrors();
+    hintBox.style.display = 'block';
+    hintBox.innerText = '💡 Miss Anna 提示：' + slide.hintText;
+    document.getElementById('tutor-text').innerText = slide.hintText;
+    playAudioSequence(slide.hintAudio);
+  }
+}
+</script>
+</body>
+</html>
