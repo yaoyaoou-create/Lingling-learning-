@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Anna 老師 - 數學啟蒙 Day 1 (評估)</title>
+  <style>
+    * { box-sizing: border-box; user-select: none; -webkit-user-select: none; font-family: "PingFang HK", 'Comic Sans MS', sans-serif; }
+    body { margin: 0; padding: 8px; background: linear-gradient(135deg, #e0e7ff 0%, #fae8ff 100%); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .container { width: 100%; max-width: 720px; background: #fff; border-radius: 26px; border: 4px solid #818cf8; box-shadow: 0 10px 25px rgba(129, 140, 248, 0.15); padding: 12px 16px; position: relative; }
+
+    /* 頂部極簡導航列 */
+    .top-bar { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px dashed #c7d2fe; padding-bottom: 8px; margin-bottom: 8px; }
+    .nav-btn { text-decoration: none; background: #eef2ff; border: 2px solid #818cf8; color: #4338ca; padding: 5px 12px; border-radius: 14px; font-weight: 900; font-size: 0.85rem; cursor: pointer; }
+    .mom-btn { background: #fdf2f8; border: 2px solid #f472b6; color: #be185d; padding: 5px 12px; border-radius: 14px; font-weight: 900; font-size: 0.85rem; cursor: pointer; }
+    
+    /* Anna 老師語音橫幅 */
+    .tutor-banner { background: #fffbeb; border: 2px solid #fcd34d; border-radius: 18px; padding: 8px 12px; display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .tutor-avatar { font-size: 2.1rem; flex-shrink: 0; }
+    .tutor-speech { flex: 1; text-align: left; font-size: 0.96rem; font-weight: 900; color: #78350f; line-height: 1.4; }
+    .replay-btn { background: #f59e0b; color: white; border: none; border-radius: 50%; width: 40px; height: 40px; font-size: 1.2rem; cursor: pointer; flex-shrink: 0; box-shadow: 0 3px 6px rgba(245, 158, 11, 0.3); }
+
+    /* 主舞台 */
+    .stage-box { background: #f8fafc; border: 3px dashed #94a3b8; border-radius: 22px; padding: 14px; min-height: 290px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; text-align: center; position: relative; }
+
+    /* 進度圓點 */
+    .step-dots { display: flex; gap: 8px; justify-content: center; margin-bottom: 8px; }
+    .dot { width: 14px; height: 14px; border-radius: 50%; background: #e2e8f0; border: 2px solid #94a3b8; }
+    .dot.active { background: #3b82f6; transform: scale(1.25); border-color: #1d4ed8; }
+    .dot.done { background: #22c55e; border-color: #16a34a; }
+
+    /* 題目顯示區 */
+    .question-visual { font-size: 3.5rem; line-height: 1.2; letter-spacing: 4px; background: white; padding: 12px 24px; border-radius: 20px; border: 3px solid #cbd5e1; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+    
+    /* 選項區 */
+    .quiz-choices { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; width: 100%; margin: 8px 0; }
+    .choice-btn { background: white; border: 4px solid #6366f1; border-radius: 20px; padding: 12px 22px; font-size: 2rem; font-weight: 900; color: #3730a3; cursor: pointer; min-width: 140px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: transform 0.1s; display: flex; align-items: center; justify-content: center;}
+    .choice-btn:active { transform: scale(0.95); }
+    .gentle-hint-box { background: #ecfdf5; border: 2px solid #10b981; color: #065f46; border-radius: 16px; padding: 8px 14px; font-size: 0.95rem; font-weight: 900; margin-top: 6px; max-width: 95%; display: none; }
+
+    /* 大按鈕 */
+    .next-action-btn { background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%); color: white; border: none; border-radius: 20px; padding: 12px 28px; font-size: 1.15rem; font-weight: 900; cursor: pointer; box-shadow: 0 5px 12px rgba(79, 70, 229, 0.3); transition: transform 0.1s; margin-top: 8px; text-decoration: none;}
+    .next-action-btn:active { transform: scale(0.96); }
+
+    /* 報告表格 */
+    .report-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+    .report-table th, .report-table td { border: 2px solid #cbd5e1; padding: 6px 8px; font-size: 0.9rem; text-align: center; }
+    .report-table th { background: #f1f5f9; color: #334155; font-weight: 900; }
+    .status-fast { color: #16a34a; font-weight: 900; }
+    .status-slow { color: #d97706; font-weight: 900; }
+    .status-error { color: #dc2626; font-weight: 900; }
+  </style>
+</head>
+<body>
+
+<div class="container" id="main-container" style="display:none;">
+  <div class="top-bar">
+    <a href="index.html" class="nav-btn">🏠 返回學習大門</a>
+    <span style="font-weight:900; color:#4338ca; font-size:0.95rem;">🔢 Anna 老師：數學啟蒙 Day 1</span>
+    <button class="mom-btn" onclick="showMomReport(true)">👩 媽媽查看進度</button>
+  </div>
+
+  <div class="tutor-banner">
+    <div class="tutor-avatar">👩‍🏫</div>
+    <div class="tutor-speech" id="tutor-text"></div>
+    <button class="replay-btn" onclick="speakText(currentSpeech, 0.72)" title="重聽 Anna 老師說話">🔊</button>
+  </div>
+
+  <div class="stage-box" id="stage-content"></div>
+</div>
+
+<!-- 進入畫面 -->
+<div id="start-screen" style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; width:100%;">
+  <button onclick="startLesson()" style="font-size:1.8rem; font-weight:900; padding:20px 40px; border-radius:30px; background:#6366f1; color:white; border:none; box-shadow:0 8px 20px rgba(99, 102, 241, 0.4); cursor:pointer;">
+    🛒 點擊開始超市購物任務 🛒
+  </button>
+</div>
+
+<script>
+// Anna 老師數學 Day 1 評估劇本
+const slides = [
+  {
+    type: 'intro',
+    speech: '哈囉玲玲！我係 Anna 老師！今日我哋去超級市場買嘢食啦！請妳幫老師睇清楚籃入面有幾多嘢，準備好我哋就出發啦！'
+  },
+  {
+    type: 'quiz',
+    levelTag: '【第 1 關：數蘋果】',
+    visual: '🍎 🍎 🍎',
+    speech: '第一關：請妳用手指數下，畫面上面總共有幾多個紅蘋果呀？',
+    options: [
+      { val: '2', label: '✌️ (2)' },
+      { val: '3', label: '👌 (3)' },
+      { val: '4', label: '🖐️ (4)' }
+    ],
+    answer: '3',
+    hint: '不如我哋一齊用手指指住數：一、二、三！總共有三個紅蘋果喔，試下撳代表 3 嘅掣啦！',
+    praise: '好叻呀！1、2、3，總共有三個紅蘋果！'
+  },
+  {
+    type: 'quiz',
+    levelTag: '【第 2 關：搵士多啤梨】',
+    visual: '🛒 買 5 粒士多啤梨',
+    speech: '第二關：Anna 老師想買 5 粒士多啤梨！請妳睇下下面邊個籃子入面，啱啱好有 5 粒士多啤梨呀？',
+    options: [
+      { val: '3', label: '🍓🍓🍓' },
+      { val: '5', label: '🍓🍓🍓🍓🍓' }
+    ],
+    answer: '5',
+    hint: '我哋數下第一個籃子得 3 粒；第二個籃子有：一、二、三、四、五！邊個先係 5 粒呀？',
+    praise: '好眼力呀！呢個籃子啱啱好有 5 粒士多啤梨！'
+  },
+  {
+    type: 'quiz',
+    levelTag: '【第 3 關：比較邊個多】',
+    visual: '🍬 邊隻碟糖果比較「多」？',
+    speech: '最後一關：嘩，有好多糖果呀！請妳睇下左邊同右邊嘅碟，邊一隻碟上面嘅糖果比較「多」呀？',
+    options: [
+      { val: '2', label: '🍬🍬' },
+      { val: '4', label: '🍬🍬🍬🍬' }
+    ],
+    answer: '4',
+    hint: '「多」嘅意思就係密密麻麻、一大堆！左邊得兩粒，右邊有四粒咁多，邊面比較多呀？',
+    praise: '完全正確！4 粒糖果比 2 粒糖果多！任務完成！'
+  }
+];
+
+let currentSlideIdx = 0;
+let currentSpeech = '';
+let questionStartTime = 0; // 隱藏計時器
+
+// 紀錄成績與耗時 [{ q: '第1關', status: 'correct', time: 3 }, ...]
+let resultsLog = []; 
+let currentFails = 0;
+
+function speakText(text, rate = 0.72) {
+  currentSpeech = text;
+  document.getElementById('tutor-text').innerText = text;
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'zh-HK';
+    u.rate = rate;
+    window.speechSynthesis.speak(u);
+  }
+}
+
+function startLesson() {
+  document.getElementById('start-screen').style.display = 'none';
+  document.getElementById('main-container').style.display = 'block';
+  renderSlide();
+}
+
+function renderSlide() {
+  if (currentSlideIdx >= slides.length) {
+    speakText('太棒啦！今日嘅超級市場任務全部完成啦！妳攞到今日嘅數學小天才獎盃！快啲叫媽媽過嚟睇下妳有幾叻啦！', 0.75);
+    document.getElementById('stage-content').innerHTML = `
+      <div style="background:white; border:4px solid #f59e0b; border-radius:24px; padding:18px; width:92%; max-width:480px;">
+        <div style="font-size:4rem;">🏆🛒</div>
+        <div style="font-size:1.5rem; font-weight:900; color:#b45309; margin:6px 0;">數學 Day 1 成功下課！</div>
+        <button class="next-action-btn" onclick="showMomReport(false)">👩 叫媽媽睇今日診斷報告</button>
+      </div>
+    `;
+    return;
+  }
+
+  const slide = slides[currentSlideIdx];
+  const dotsHtml = slides.filter(s => s.type === 'quiz').map((_, idx) => {
+    let quizIdx = currentSlideIdx - 1; // 扣除 intro
+    let cls = idx < quizIdx ? 'done' : (idx === quizIdx ? 'active' : '');
+    return `<div class="dot ${cls}"></div>`;
+  }).join('');
+
+  if (slide.type === 'intro') {
+    speakText(slide.speech, 0.72);
+    document.getElementById('stage-content').innerHTML = `
+      <div style="font-size:4rem;">🛒🏃‍♀️</div>
+      <div style="font-size:1.5rem; font-weight:900; color:#3730a3; margin:10px 0;">準備好出發未呀？</div>
+      <button class="next-action-btn" onclick="nextSlide()">🌟 出發去超市！ ➔</button>
+    `;
+  } else if (slide.type === 'quiz') {
+    currentFails = 0; // 重置這題錯誤次數
+    questionStartTime = Date.now(); // 🕒 啟動隱形計時器
+    
+    speakText(slide.speech, 0.72);
+    let choicesHtml = slide.options.map(opt => `
+      <button class="choice-btn" onclick="checkAnswer('${opt.val}')">${opt.label}</button>
+    `).join('');
+
+    document.getElementById('stage-content').innerHTML = `
+      <div class="step-dots">${dotsHtml}</div>
+      <div style="font-size:0.95rem; font-weight:900; color:#4338ca;">${slide.levelTag}</div>
+      <div class="question-visual">${slide.visual}</div>
+      <div class="quiz-choices">${choicesHtml}</div>
+      <div class="gentle-hint-box" id="slide-hint"></div>
+    `;
+  }
+}
+
+function nextSlide() {
+  currentSlideIdx++;
+  renderSlide();
+}
+
+function checkAnswer(selected) {
+  const slide = slides[currentSlideIdx];
+  const hintBox = document.getElementById('slide-hint');
+  
+  // 計算耗時 (秒)
+  let timeSpent = Math.round((Date.now() - questionStartTime) / 1000);
+
+  if (selected === slide.answer) {
+    // 答對了！記錄數據
+    if (currentFails === 0) {
+      resultsLog.push({ q: slide.levelTag, status: 'correct', time: timeSpent });
+    } else {
+      resultsLog.push({ q: slide.levelTag, status: 'hinted', time: timeSpent });
+    }
+    
+    speakText(slide.praise, 0.78);
+    setTimeout(() => {
+      nextSlide();
+    }, 2000);
+  } else {
+    // 答錯
+    currentFails++;
+    hintBox.style.display = 'block';
+    hintBox.innerText = '💡 Anna 老師提示：' + slide.hint;
+    speakText(slide.hint, 0.72);
+  }
+}
+
+function showMomReport(isInterrupt) {
+  if(resultsLog.length === 0 && isInterrupt) {
+    alert("玲玲仲未開始答題喔！");
+    return;
+  }
+  
+  let trs = resultsLog.map(r => {
+    let statusTxt = r.status === 'correct' ? '✅ 1次答對' : '❌ 需溫和提示';
+    let timeClass = '';
+    let analysis = '';
+    
+    if(r.time <= 4) {
+      timeClass = 'status-fast';
+      analysis = '秒答 (極熟練)';
+    } else if (r.time > 4 && r.time <= 10) {
+      timeClass = '';
+      analysis = '正常點數思考';
+    } else {
+      timeClass = 'status-slow';
+      analysis = '耗時較長 (需強化概念)';
+    }
+    if (r.status === 'hinted') {
+      timeClass = 'status-error';
+      analysis = '卡關 (請媽媽介入)';
+    }
+
+    return `
+      <tr>
+        <td style="font-weight:900;">${r.q}</td>
+        <td>${statusTxt}</td>
+        <td class="${timeClass}">${r.time} 秒</td>
+        <td class="${timeClass}" style="font-size:0.8rem;">${analysis}</td>
+      </tr>
+    `;
+  }).join('');
+
+  document.getElementById('stage-content').innerHTML = `
+    <div style="text-align:left; width:100%; background:white; padding:12px 14px; border-radius:18px; border:3px solid #6366f1;">
+      <h3 style="margin:0 0 8px 0; color:#3730a3; font-size:1.1rem;">📊 媽媽 1 分鐘數學診斷報告</h3>
+      <p style="font-size:0.85rem; color:#475569; margin-bottom:8px; font-weight:800;">💡 Anna 老師分析：答題時間 1-4 秒代表已掌握概念，超過 10 秒代表小朋友仍在心裡默默數，需要更多生活實物練習。</p>
+      
+      <table class="report-table">
+        <tr>
+          <th>關卡</th>
+          <th>對錯結果</th>
+          <th>答題耗時</th>
+          <th>Anna 診斷</th>
+        </tr>
+        ${trs}
+      </table>
+      
+      <button class="next-action-btn" style="width:100%; text-align:center;" onclick="${isInterrupt ? 'renderSlide()' : 'window.location.href=\'index.html\''}">
+        ${isInterrupt ? '➔ 返回課堂' : '🏠 返回首頁'}
+      </button>
+    </div>
+  `;
+  speakText('呢個係媽媽專屬數學診斷報告，記錄咗玲玲每一題用咗幾多秒喔！', 0.82);
+}
+</script>
+</body>
+</html>
