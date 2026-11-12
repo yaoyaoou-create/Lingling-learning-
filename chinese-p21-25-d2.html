@@ -54,7 +54,7 @@
 
 <div class="container" id="main-container" style="display:none;">
   <div class="top-bar">
-    <a href="index.html" class="nav-btn">🏠 返回學習大門</a>
+    <button class="nav-btn" onclick="goBackHome()">🏠 返回學習大門</button>
     <span style="font-weight:900; color:#be185d; font-size:0.95rem;">👩‍🏫 Anna 老師：Day 2 課堂</span>
   </div>
 
@@ -137,13 +137,23 @@ const slides = [
     options: ['新鮮的食物', '甜甜的食物'],
     answer: '新鮮的食物',
     hint: '溫柔提示：甜甜的一般用嚟講蜜糖或者糖果；剛剛煮好熱辣辣乾淨嘅，叫做「新鮮的食物」喔！',
-    praise: '好叻呀！新鮮的食物！今日 Day 2 嘅任務全部完成啦！'https://yaoyaoou-create.github.io/Lingling-learning-/index.html
+    praise: '好叻呀！新鮮的食物！今日 Day 2 嘅任務全部完成啦！'
   }
 ];
 
 let currentSlideIdx = 0;
 let currentSpeech = '';
 let wrongCounts = JSON.parse(localStorage.getItem('lingling_cn_day2_errors') || '{}');
+
+function goBackHome() {
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.pause();
+    window.speechSynthesis.cancel();
+  }
+  setTimeout(() => {
+    window.location.href = 'index.html';
+  }, 120);
+}
 
 function speakText(text, rate = 0.72) {
   currentSpeech = text;
@@ -178,7 +188,7 @@ function renderSlide() {
         <div style="font-size:0.95rem; font-weight:800; color:#475569; margin-bottom:14px;">
           小寶貝今日好專心跟 Anna 老師學字！<br>快啲叫媽媽睇下妳有幾叻啦！
         </div>
-        <a href="index.html" class="next-action-btn" style="text-decoration:none; display:inline-block;">🏠 離開課堂</a>
+        <button class="next-action-btn" onclick="goBackHome()">🏠 離開課堂</button>
       </div>
     `;
     return;
