@@ -35,7 +35,7 @@
             --video-bg: linear-gradient(135deg, #FFD2D2 0%, #FF4757 100%);
             --video-shadow: #C0392B;
 
-            /* 7. 新增數學探索島 3D 湖水藍 */
+            /* 7. 數學探索島 3D 湖水藍 */
             --math-main: #10AC84;
             --math-bg: linear-gradient(135deg, #E3FCF7 0%, #10AC84 100%);
             --math-shadow: #0D8264;
@@ -89,7 +89,7 @@
             margin: 0;
         }
 
-        /* 兩排自動適應按鈕 (智能彈性多列 + 居中包裝) */
+        /* 兩排自動適應按鈕 */
         .category-nav {
             display: flex;
             flex-wrap: wrap;
@@ -102,7 +102,7 @@
         .nav-tab {
             background: #FFFFFF;
             border: 4px solid #E2E8F0;
-            border-bottom: 8px solid #CBD5E1; /* 3D厚度 */
+            border-bottom: 8px solid #CBD5E1;
             border-radius: 24px;
             padding: 10px 8px;
             cursor: pointer;
@@ -114,12 +114,11 @@
             transition: all 0.12s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             box-shadow: 0 6px 12px rgba(0,0,0,0.04);
             font-family: inherit;
-            flex: 1 1 calc(25% - 12px); /* 在 iPad 橫屏上完美拆分 4 + 3 */
+            flex: 1 1 calc(25% - 12px);
             min-width: 120px;
             max-width: 190px;
         }
 
-        /* 點擊時的 Q 彈壓按回饋 */
         .nav-tab:active {
             transform: translateY(4px);
             border-bottom-width: 4px;
@@ -130,10 +129,10 @@
             width: 60px;
             height: 60px;
             object-fit: contain;
+            border-radius: 14px;
             transition: transform 0.2s;
         }
 
-        /* 懸停或選中時，3D 卡通微縮放 */
         .nav-tab:hover .tab-icon {
             transform: scale(1.1) rotate(2deg);
         }
@@ -146,7 +145,7 @@
             line-height: 1.25;
         }
 
-        /* 選中狀態：注入 3D 專屬色彩與厚度 */
+        /* 選中狀態 */
         .nav-tab.active-cn-class { background: var(--cn-class-bg); border-color: #F39C12; border-bottom-color: var(--cn-class-shadow); }
         .nav-tab.active-en-class { background: var(--en-class-bg); border-color: #2980B9; border-bottom-color: var(--en-class-shadow); }
         .nav-tab.active-cn-quiz  { background: var(--cn-quiz-bg);  border-color: #27AE60; border-bottom-color: var(--cn-quiz-shadow); }
@@ -232,7 +231,7 @@
             display: block;
         }
 
-        /* 任務卡片網格 (雙列/多列 Q彈積木) */
+        /* 任務卡片網格 */
         .unit-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -298,7 +297,7 @@
             line-height: 1.25;
         }
 
-        /* 3D卡片個別專屬裝飾色 (3D 疊加按鍵樣式) */
+        /* 3D卡片專屬裝飾色 */
         .card-cn-class { background: #FFF9E6; border-color: #FCD34D; border-bottom-color: #F59E0B; }
         .card-cn-class .unit-tag { color: #B45309; }
 
@@ -317,7 +316,6 @@
         .card-video    { background: #FFF5F5; border-color: #FEB2B2; border-bottom-color: #EF4444; }
         .card-video .unit-tag    { color: #B91C1C; }
 
-        /* 7. 數學探索島卡片樣式 */
         .card-math     { background: #EAFDF8; border-color: #48DBB4; border-bottom-color: #10AC84; }
         .card-math .unit-tag     { color: #0D8264; }
 
@@ -372,7 +370,7 @@
         @media (max-width: 720px) {
             .category-nav {
                 display: grid;
-                grid-template-columns: repeat(3, 1fr); /* 摺疊成 3 列 */
+                grid-template-columns: repeat(3, 1fr);
                 justify-content: center;
             }
             .nav-tab {
@@ -390,35 +388,34 @@
         <p class="header-subtitle">中文、英文、數學探索、點讀書與視頻大堂入口</p>
     </header>
 
-    <!-- Q彈雙排導航列 (1-7 號圓潤 3D 按鍵，支援你的 icon1.png - icon7.png) -->
+    <!-- Q彈雙排導航列 (精準對應 icon1.jpeg - icon7.jpeg) -->
     <nav class="category-nav">
         <button class="nav-tab active-cn-class" onclick="switchCategory('cn-class', this)">
-            <img class="tab-icon" src="icon1.jpg" alt="中文課堂">
+            <img class="tab-icon" src="icon1.jpeg" alt="中文課堂">
             <span class="tab-label">1. 中文AI課堂</span>
         </button>
         <button class="nav-tab" onclick="switchCategory('en-class', this)">
-            <img class="tab-icon" src="icon2.jpg" alt="英文課堂">
+            <img class="tab-icon" src="icon2.jpeg" alt="英文課堂">
             <span class="tab-label">2. 英文AI課堂</span>
         </button>
         <button class="nav-tab" onclick="switchCategory('cn-quiz', this)">
-            <img class="tab-icon" src="icon3.jpg" alt="中文闖關">
+            <img class="tab-icon" src="icon3.jpeg" alt="中文闖關">
             <span class="tab-label">3. 中文闖關</span>
         </button>
         <button class="nav-tab" onclick="switchCategory('en-quiz', this)">
-            <img class="tab-icon" src="icon4.jpg" alt="英文闖關">
+            <img class="tab-icon" src="icon4.jpeg" alt="英文闖關">
             <span class="tab-label">4. 英文闖關</span>
         </button>
         <button class="nav-tab" onclick="switchCategory('book', this)">
-            <img class="tab-icon" src="icon5.jpg" alt="點讀書">
+            <img class="tab-icon" src="icon5.jpeg" alt="點讀書">
             <span class="tab-label">5. 點讀書</span>
         </button>
         <button class="nav-tab" onclick="switchCategory('video', this)">
-            <img class="tab-icon" src="icon6.jpg" alt="小視頻">
+            <img class="tab-icon" src="icon6.jpeg" alt="小視頻">
             <span class="tab-label">6. 小視頻</span>
         </button>
-        <!-- 7. 新增的數學探索島 -->
         <button class="nav-tab" onclick="switchCategory('math', this)">
-            <img class="tab-icon" src="icon7.jpg" alt="數學探索">
+            <img class="tab-icon" src="icon7.jpeg" alt="數學探索">
             <span class="tab-label">7. 數學探索島</span>
         </button>
     </nav>
@@ -435,12 +432,17 @@
 
         <div id="cn-term-1" class="term-group active">
             <div class="unit-grid">
-                <!-- 已連結到 Anna 老師製作的專屬 D1 目錄 -->
+                <a href="cn-day2.html" class="unit-card card-cn-class">
+                    <span class="unit-card-icon">🌟</span>
+                    <span class="unit-tag">今日新課 · Day 2</span>
+                    <h3 class="unit-name">P.21-25 中文 Day 2</h3>
+                    <p class="unit-desc">錯字溫習 · 新詞挑戰</p>
+                </a>
                 <a href="cn-thankyou.html" class="unit-card card-cn-class">
                     <span class="unit-card-icon">💝</span>
-                    <span class="unit-tag">上週 AI 導師</span>
+                    <span class="unit-tag">單元總目錄</span>
                     <h3 class="unit-name">P.21-25 我要謝謝你</h3>
-                    <p class="unit-desc">故事教學 · 兒歌圈熟字</p>
+                    <p class="unit-desc">故事教學 · D1-D10 總覽</p>
                 </a>
                 <a href="#" class="unit-card card-cn-class locked">
                     <span class="unit-card-icon">📖</span>
@@ -466,12 +468,6 @@
                     <h3 class="unit-name">待上傳新單元</h3>
                     <p class="unit-desc">預留課堂位置</p>
                 </a>
-                <a href="#" class="unit-card card-cn-class locked">
-                    <span class="unit-card-icon">📖</span>
-                    <span class="unit-tag">上學期 · 單元六</span>
-                    <h3 class="unit-name">待上傳新單元</h3>
-                    <p class="unit-desc">預留課堂位置</p>
-                </a>
             </div>
         </div>
 
@@ -481,8 +477,6 @@
                 <a href="#" class="unit-card card-cn-class locked"><span class="unit-card-icon">🌱</span><span class="unit-tag">下學期</span><h3 class="unit-name">下學期單元二</h3><p class="unit-desc">預留位置</p></a>
                 <a href="#" class="unit-card card-cn-class locked"><span class="unit-card-icon">🌱</span><span class="unit-tag">下學期</span><h3 class="unit-name">下學期單元三</h3><p class="unit-desc">預留位置</p></a>
                 <a href="#" class="unit-card card-cn-class locked"><span class="unit-card-icon">🌱</span><span class="unit-tag">下學期</span><h3 class="unit-name">下學期單元四</h3><p class="unit-desc">預留位置</p></a>
-                <a href="#" class="unit-card card-cn-class locked"><span class="unit-card-icon">🌱</span><span class="unit-tag">下學期</span><h3 class="unit-name">下學期單元五</h3><p class="unit-desc">預留位置</p></a>
-                <a href="#" class="unit-card card-cn-class locked"><span class="unit-card-icon">🌱</span><span class="unit-tag">下學期</span><h3 class="unit-name">下學期單元六</h3><p class="unit-desc">預留位置</p></a>
             </div>
         </div>
     </section>
@@ -499,9 +493,15 @@
 
         <div id="en-term-1" class="term-group active">
             <div class="unit-grid">
+                <a href="en-day1.html" class="unit-card card-en-class">
+                    <span class="unit-card-icon">🚀</span>
+                    <span class="unit-tag">今日新課 · Day 1</span>
+                    <h3 class="unit-name">English Day 1</h3>
+                    <p class="unit-desc">Unit 4 每日微課堂</p>
+                </a>
                 <a href="en-unit4.html" class="unit-card card-en-class">
                     <span class="unit-card-icon">🤸</span>
-                    <span class="unit-tag">本週 AI 導師</span>
+                    <span class="unit-tag">單元總目錄</span>
                     <h3 class="unit-name">Unit 4: I can do it</h3>
                     <p class="unit-desc">P.17-20 動作·年齡·字母 m</p>
                 </a>
@@ -509,7 +509,6 @@
                 <a href="#" class="unit-card card-en-class locked"><span class="unit-card-icon">📘</span><span class="unit-tag">上學期</span><h3 class="unit-name">Unit 2</h3><p class="unit-desc">預留單元位置</p></a>
                 <a href="#" class="unit-card card-en-class locked"><span class="unit-card-icon">📘</span><span class="unit-tag">上學期</span><h3 class="unit-name">Unit 3</h3><p class="unit-desc">預留單元位置</p></a>
                 <a href="#" class="unit-card card-en-class locked"><span class="unit-card-icon">📘</span><span class="unit-tag">上學期</span><h3 class="unit-name">Unit 5</h3><p class="unit-desc">預留單元位置</p></a>
-                <a href="#" class="unit-card card-en-class locked"><span class="unit-card-icon">📘</span><span class="unit-tag">上學期</span><h3 class="unit-name">Unit 6</h3><p class="unit-desc">預留單元位置</p></a>
             </div>
         </div>
 
@@ -519,8 +518,6 @@
                 <a href="#" class="unit-card card-en-class locked"><span class="unit-card-icon">🌱</span><span class="unit-tag">下學期</span><h3 class="unit-name">Unit 2</h3><p class="unit-desc">預留位置</p></a>
                 <a href="#" class="unit-card card-en-class locked"><span class="unit-card-icon">🌱</span><span class="unit-tag">下學期</span><h3 class="unit-name">Unit 3</h3><p class="unit-desc">預留位置</p></a>
                 <a href="#" class="unit-card card-en-class locked"><span class="unit-card-icon">🌱</span><span class="unit-tag">下學期</span><h3 class="unit-name">Unit 4</h3><p class="unit-desc">預留位置</p></a>
-                <a href="#" class="unit-card card-en-class locked"><span class="unit-card-icon">🌱</span><span class="unit-tag">下學期</span><h3 class="unit-name">Unit 5</h3><p class="unit-desc">預留位置</p></a>
-                <a href="#" class="unit-card card-en-class locked"><span class="unit-card-icon">🌱</span><span class="unit-tag">下學期</span><h3 class="unit-name">Unit 6</h3><p class="unit-desc">預留位置</p></a>
             </div>
         </div>
     </section>
@@ -538,13 +535,13 @@
                 <p class="unit-desc">Test 1-5 綜合闖關</p>
             </a>
             <a href="#" class="unit-card card-cn-quiz locked">
-                <span class="unit-emoji">🔒</span>
+                <span class="unit-card-icon">🔒</span>
                 <span class="unit-tag">預留闖關</span>
                 <h3 class="unit-name">P.21-25 錯字特訓</h3>
                 <p class="unit-desc">動態複習題庫</p>
             </a>
             <a href="#" class="unit-card card-cn-quiz locked">
-                <span class="unit-emoji">🔒</span>
+                <span class="unit-card-icon">🔒</span>
                 <span class="unit-tag">預留闖關</span>
                 <h3 class="unit-name">生活詞語 4 選 1</h3>
                 <p class="unit-desc">待解鎖新挑戰</p>
@@ -636,17 +633,17 @@
         </div>
     </section>
 
-    <!-- 7. 新增的數學探索島專區 -->
+    <!-- 7. 數學探索島專區 (已解鎖 math-day1.html) -->
     <section id="sec-math" class="category-section" style="border-color: #48DBB4;">
         <div class="section-header">
             <h2 class="section-title" style="color: #0D8264;">🚀 數學探索島 (K2 邏輯思維挑戰)</h2>
         </div>
         <div class="unit-grid">
-            <a href="#" class="unit-card card-math locked">
+            <a href="math-day1.html" class="unit-card card-math">
                 <span class="unit-card-icon">🍭</span>
-                <span class="unit-tag">待上傳</span>
-                <h3 class="unit-name">K2 基礎數數</h3>
-                <p class="unit-desc">1-20 趣味數點點 · 準備中</p>
+                <span class="unit-tag">今日新課 · Day 1</span>
+                <h3 class="unit-name">Maths Day 1</h3>
+                <p class="unit-desc">K2 趣味數學啟蒙互動</p>
             </a>
             <a href="#" class="unit-card card-math locked">
                 <span class="unit-card-icon">🔺</span>
@@ -670,7 +667,6 @@
 </div>
 
 <script>
-    // 進門自動消音鎖：只要一回到總首頁，立刻強制切斷所有上一頁殘留的語音
     function silenceAllSpeech() {
         if ('speechSynthesis' in window) {
             window.speechSynthesis.pause();
@@ -687,7 +683,7 @@
         'en-quiz':  'active-en-quiz',
         'book':     'active-book',
         'video':    'active-video',
-        'math':     'active-math' // 7. 數學
+        'math':     'active-math'
     };
 
     let isShowingAll = false;
