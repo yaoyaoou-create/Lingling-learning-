@@ -1,249 +1,638 @@
 <!DOCTYPE html>
 <html lang="zh-HK">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Anna 老師課堂 - 中文 Day 1 (P.21)</title>
-  <style>
-    * { box-sizing: border-box; user-select: none; -webkit-user-select: none; font-family: "PingFang HK", "Microsoft JhengHei", "Chalkboard SE", sans-serif; }
-    body { margin: 0; padding: 8px; background: linear-gradient(135deg, #fdf2f8 0%, #fef9c3 100%); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-    .container { width: 100%; max-width: 720px; background: #fff; border-radius: 26px; border: 4px solid #f472b6; box-shadow: 0 10px 25px rgba(244, 114, 182, 0.15); padding: 12px 16px; position: relative; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>玲玲K2嘅學習成長樂園</title>
+    <style>
+        :root {
+            --bg-main: #FDFBF7;
+            --text-dark: #2D3748;
+            --text-muted: #718096;
 
-    /* 頂部極簡導航列 */
-    .top-bar { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px dashed #fbcfe8; padding-bottom: 8px; margin-bottom: 8px; }
-    .nav-btn { text-decoration: none; background: #fdf2f8; border: 2px solid #f472b6; color: #be185d; padding: 5px 12px; border-radius: 14px; font-weight: 800; font-size: 0.85rem; cursor: pointer; }
-    
-    /* Anna 老師語音橫幅 */
-    .tutor-banner { background: #fffbeb; border: 2px solid #fcd34d; border-radius: 18px; padding: 8px 12px; display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-    .tutor-avatar { font-size: 2.1rem; flex-shrink: 0; }
-    .tutor-speech { flex: 1; text-align: left; font-size: 0.96rem; font-weight: 800; color: #78350f; line-height: 1.4; }
-    .replay-btn { background: #f59e0b; color: white; border: none; border-radius: 50%; width: 40px; height: 40px; font-size: 1.2rem; cursor: pointer; flex-shrink: 0; box-shadow: 0 3px 6px rgba(245, 158, 11, 0.3); }
+            --cn-class-main: #F59E0B;
+            --cn-class-bg: #FEF3C7;
+            --cn-class-border: #FCD34D;
 
-    /* 單一焦點主舞台 */
-    .stage-box { background: #fff1f2; border: 3px dashed #f9a8d4; border-radius: 22px; padding: 14px; min-height: 290px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; text-align: center; position: relative; }
+            --en-class-main: #0EA5E9;
+            --en-class-bg: #E0F2FE;
+            --en-class-border: #7DD3FC;
 
-    /* 進度小圓點 */
-    .step-dots { display: flex; gap: 8px; justify-content: center; margin-bottom: 4px; }
-    .dot { width: 12px; height: 12px; border-radius: 50%; background: #fce7f3; border: 2px solid #f472b6; }
-    .dot.active { background: #ec4899; transform: scale(1.25); }
-    .dot.done { background: #22c55e; border-color: #16a34a; }
+            --cn-quiz-main: #10B981;
+            --cn-quiz-bg: #D1FAE5;
+            --cn-quiz-border: #6EE7B7;
 
-    /* 單一詞語超大大卡 */
-    .single-focus-card { background: white; border: 4px solid #f472b6; border-radius: 24px; padding: 14px 28px; width: 92%; max-width: 480px; box-shadow: 0 8px 20px rgba(244, 114, 182, 0.12); display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 4px 0; cursor: pointer; }
-    .single-focus-card:active { transform: scale(0.98); }
-    .big-emoji { font-size: 3.8rem; line-height: 1.1; margin-bottom: 6px; }
-    .big-adj { font-size: 1.55rem; font-weight: 900; color: #db2777; margin-bottom: 2px; letter-spacing: 2px; }
-    .big-noun { font-size: 2.7rem; font-weight: 900; color: #831843; letter-spacing: 4px; line-height: 1.15; }
-    .char-structure-note { background: #fef3c7; color: #b45309; font-size: 0.9rem; font-weight: 800; padding: 5px 12px; border-radius: 12px; margin-top: 8px; border: 1px solid #fde68a; }
+            --en-quiz-main: #8B5CF6;
+            --en-quiz-bg: #EDE9FE;
+            --en-quiz-border: #C4B5FD;
 
-    /* 底部大按鈕 */
-    .next-action-btn { background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: white; border: none; border-radius: 20px; padding: 10px 26px; font-size: 1.15rem; font-weight: 900; cursor: pointer; box-shadow: 0 5px 12px rgba(34, 197, 94, 0.3); transition: transform 0.1s; margin-top: 8px;}
-    .next-action-btn:active { transform: scale(0.96); }
+            --book-main: #F43F5E;
+            --book-bg: #FFE4E6;
+            --book-border: #FDA4AF;
 
-    /* 單頁互動問題選項 */
-    .quiz-choices { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; width: 100%; margin: 8px 0; }
-    .choice-btn { background: white; border: 4px solid #ec4899; border-radius: 20px; padding: 12px 22px; font-size: 1.5rem; font-weight: 900; color: #831843; cursor: pointer; min-width: 170px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: transform 0.1s; }
-    .choice-btn:active { transform: scale(0.95); }
-    .gentle-hint-box { background: #ecfdf5; border: 2px solid #10b981; color: #065f46; border-radius: 16px; padding: 8px 14px; font-size: 0.92rem; font-weight: 800; margin-top: 6px; max-width: 95%; line-height: 1.35; display: none; }
-  </style>
+            --video-main: #EF4444;
+            --video-bg: #FEE2E2;
+            --video-border: #FCA5A5;
+        }
+
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            margin: 0;
+            padding: 16px 20px 24px 20px;
+            font-family: 'Comic Sans MS', 'Chalkboard SE', 'PingFang HK', 'Microsoft JhengHei', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1080px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 14px;
+        }
+
+        .header-title {
+            font-size: 26px;
+            font-weight: 800;
+            color: #1E293B;
+            margin: 0 0 4px 0;
+            letter-spacing: 1px;
+        }
+
+        .header-subtitle {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        .category-nav {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .nav-tab {
+            background: #FFFFFF;
+            border: 3px solid #E2E8F0;
+            border-radius: 16px;
+            padding: 8px 4px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            transition: all 0.18s ease;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.03);
+            font-family: inherit;
+        }
+
+        .nav-tab:active {
+            transform: scale(0.95);
+        }
+
+        .nav-tab .tab-icon {
+            font-size: 24px;
+            line-height: 1;
+        }
+
+        .nav-tab .tab-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-dark);
+            text-align: center;
+        }
+
+        .nav-tab.active-cn-class { background: var(--cn-class-bg); border-color: var(--cn-class-main); }
+        .nav-tab.active-en-class { background: var(--en-class-bg); border-color: var(--en-class-main); }
+        .nav-tab.active-cn-quiz  { background: var(--cn-quiz-bg);  border-color: var(--cn-quiz-main); }
+        .nav-tab.active-en-quiz  { background: var(--en-quiz-bg);  border-color: var(--en-quiz-main); }
+        .nav-tab.active-book     { background: var(--book-bg);     border-color: var(--book-main); }
+        .nav-tab.active-video    { background: var(--video-bg);    border-color: var(--video-main); }
+
+        .category-section {
+            display: none;
+            background: #FFFFFF;
+            border-radius: 22px;
+            padding: 18px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.04);
+            border: 3px solid #EDF2F7;
+            margin-bottom: 16px;
+        }
+
+        .category-section.active {
+            display: block;
+            animation: fadeIn 0.2s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 14px;
+            padding-bottom: 10px;
+            border-bottom: 2px dashed #E2E8F0;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 800;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .term-switcher {
+            display: flex;
+            gap: 6px;
+            background: #F1F5F9;
+            padding: 3px;
+            border-radius: 12px;
+        }
+
+        .term-btn {
+            border: none;
+            background: transparent;
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .term-btn.active {
+            background: #FFFFFF;
+            color: var(--text-dark);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+        }
+
+        .term-group {
+            display: none;
+        }
+
+        .term-group.active {
+            display: block;
+        }
+
+        .unit-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+        }
+
+        .unit-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 14px 10px;
+            border-radius: 18px;
+            text-decoration: none;
+            color: var(--text-dark);
+            border: 3px solid transparent;
+            transition: transform 0.15s ease;
+            min-height: 125px;
+        }
+
+        .unit-card:active {
+            transform: scale(0.95);
+        }
+
+        .unit-emoji {
+            font-size: 32px;
+            margin-bottom: 6px;
+            line-height: 1;
+        }
+
+        .unit-tag {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 8px;
+            margin-bottom: 4px;
+            background: rgba(255,255,255,0.85);
+        }
+
+        .unit-name {
+            font-size: 14px;
+            font-weight: 800;
+            margin: 0 0 2px 0;
+            line-height: 1.25;
+        }
+
+        .unit-desc {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        .card-cn-class { background: var(--cn-class-bg); border-color: var(--cn-class-border); }
+        .card-cn-class .unit-tag { color: #B45309; }
+
+        .card-en-class { background: var(--en-class-bg); border-color: var(--en-class-border); }
+        .card-en-class .unit-tag { color: #0369A1; }
+
+        .card-cn-quiz  { background: var(--cn-quiz-bg);  border-color: var(--cn-quiz-border); }
+        .card-cn-quiz .unit-tag  { color: #047857; }
+
+        .card-en-quiz  { background: var(--en-quiz-bg);  border-color: var(--en-quiz-border); }
+        .card-en-quiz .unit-tag  { color: #6D28D9; }
+
+        .card-book     { background: var(--book-bg);     border-color: var(--book-border); }
+        .card-book .unit-tag     { color: #BE123C; }
+
+        .card-video    { background: var(--video-bg);    border-color: var(--video-border); }
+        .card-video .unit-tag    { color: #B91C1C; }
+
+        .unit-card.locked {
+            background: #F8FAFC;
+            border: 2px dashed #CBD5E1;
+            color: #94A3B8;
+            pointer-events: none;
+        }
+
+        .unit-card.locked .unit-emoji {
+            opacity: 0.55;
+            filter: grayscale(40%);
+        }
+
+        .unit-card.locked .unit-tag {
+            background: #E2E8F0;
+            color: #64748B;
+        }
+
+        .footer-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: #94A3B8;
+            margin-top: 6px;
+        }
+
+        .show-all-btn {
+            background: #F1F5F9;
+            border: 1px solid #CBD5E1;
+            color: #475569;
+            padding: 5px 12px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        @media (max-width: 720px) {
+            .category-nav {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
 </head>
 <body>
 
-<div class="container" id="main-container" style="display:none;">
-  <div class="top-bar">
-    <a href="index.html" class="nav-btn">🏠 返回學習大門</a>
-    <span style="font-weight:900; color:#be185d; font-size:0.95rem;">👩‍🏫 Anna 老師：Day 1 課堂</span>
-  </div>
+<div class="container">
+    <header>
+        <h1 class="header-title">🌟 玲玲K2嘅學習成長樂園 🌟</h1>
+        <p class="header-subtitle">中文、英文、闖關測驗與有聲故事書總入口</p>
+    </header>
 
-  <div class="tutor-banner">
-    <div class="tutor-avatar">👩‍🏫</div>
-    <div class="tutor-speech" id="tutor-text"></div>
-    <button class="replay-btn" onclick="speakText(currentSpeech, 0.72)" title="重聽 Anna 老師說話">🔊</button>
-  </div>
+    <nav class="category-nav">
+        <button class="nav-tab active-cn-class" onclick="switchCategory('cn-class', this)">
+            <span class="tab-icon">🏮</span>
+            <span class="tab-label">1. 中文AI課堂</span>
+        </button>
+        <button class="nav-tab" onclick="switchCategory('en-class', this)">
+            <span class="tab-icon">🔤</span>
+            <span class="tab-label">2. 英文AI課堂</span>
+        </button>
+        <button class="nav-tab" onclick="switchCategory('cn-quiz', this)">
+            <span class="tab-icon">🎯</span>
+            <span class="tab-label">3. 中文闖關</span>
+        </button>
+        <button class="nav-tab" onclick="switchCategory('en-quiz', this)">
+            <span class="tab-icon">🏆</span>
+            <span class="tab-label">4. 英文闖關</span>
+        </button>
+        <button class="nav-tab" onclick="switchCategory('book', this)">
+            <span class="tab-icon">📚</span>
+            <span class="tab-label">5. 點讀書</span>
+        </button>
+        <button class="nav-tab" onclick="switchCategory('video', this)">
+            <span class="tab-icon">🎬</span>
+            <span class="tab-label">6. 小視頻</span>
+        </button>
+    </nav>
 
-  <div class="stage-box" id="stage-content"></div>
-</div>
+    <!-- 1. 中文AI導師課堂 -->
+    <section id="sec-cn-class" class="category-section active" style="border-color: var(--cn-class-border);">
+        <div class="section-header">
+            <h2 class="section-title" style="color: #B45309;">🏮 中文AI導師課堂</h2>
+            <div class="term-switcher">
+                <button class="term-btn active" onclick="switchTerm('cn-term-1', 'cn-term-2', this)">☀️ 上學期</button>
+                <button class="term-btn" onclick="switchTerm('cn-term-2', 'cn-term-1', this)">🌱 下學期預留</button>
+            </div>
+        </div>
 
-<!-- 進入畫面：強制用戶點擊以啟動語音 -->
-<div id="start-screen" style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; width:100%;">
-  <button onclick="startLesson()" style="font-size:1.8rem; font-weight:900; padding:20px 40px; border-radius:30px; background:#ec4899; color:white; border:none; box-shadow:0 8px 20px rgba(236,72,153,0.4); cursor:pointer;">
-    🌟 點擊開始 Day 1 課堂 🌟
-  </button>
+        <div id="cn-term-1" class="term-group active">
+            <div class="unit-grid">
+                <a href="cn-thankyou.html" class="unit-card card-cn-class">
+                    <span class="unit-emoji">💝</span>
+                    <span class="unit-tag">上週 AI 導師</span>
+                    <h3 class="unit-name">P.21-25 我要謝謝你</h3>
+                    <p class="unit-desc">故事教學 · 兒歌圈熟字</p>
+                </a>
+                <a href="#" class="unit-card card-cn-class locked">
+                    <span class="unit-emoji">📖</span>
+                    <span class="unit-tag">上學期 · 單元二</span>
+                    <h3 class="unit-name">待上傳新單元</h3>
+                    <p class="unit-desc">預留課堂位置</p>
+                </a>
+                <a href="#" class="unit-card card-cn-class locked">
+                    <span class="unit-emoji">📖</span>
+                    <span class="unit-tag">上學期 · 單元三</span>
+                    <h3 class="unit-name">待上傳新單元</h3>
+                    <p class="unit-desc">預留課堂位置</p>
+                </a>
+                <a href="#" class="unit-card card-cn-class locked">
+                    <span class="unit-emoji">📖</span>
+                    <span class="unit-tag">上學期 · 單元四</span>
+                    <h3 class="unit-name">待上傳新單元</h3>
+                    <p class="unit-desc">預留課堂位置</p>
+                </a>
+                <a href="#" class="unit-card card-cn-class locked">
+                    <span class="unit-emoji">📖</span>
+                    <span class="unit-tag">上學期 · 單元五</span>
+                    <h3 class="unit-name">待上傳新單元</h3>
+                    <p class="unit-desc">預留課堂位置</p>
+                </a>
+                <a href="#" class="unit-card card-cn-class locked">
+                    <span class="unit-emoji">📖</span>
+                    <span class="unit-tag">上學期 · 單元六</span>
+                    <h3 class="unit-name">待上傳新單元</h3>
+                    <p class="unit-desc">預留課堂位置</p>
+                </a>
+            </div>
+        </div>
+
+        <div id="cn-term-2" class="term-group">
+            <div class="unit-grid">
+                <a href="#" class="unit-card card-cn-class locked"><span class="unit-emoji">🌱</span><span class="unit-tag">下學期</span><h3 class="unit-name">下學期單元一</h3><p class="unit-desc">預留位置</p></a>
+                <a href="#" class="unit-card card-cn-class locked"><span class="unit-emoji">🌱</span><span class="unit-tag">下學期</span><h3 class="unit-name">下學期單元二</h3><p class="unit-desc">預留位置</p></a>
+                <a href="#" class="unit-card card-cn-class locked"><span class="unit-emoji">🌱</span><span class="unit-tag">下學期</span><h3 class="unit-name">下學期單元三</h3><p class="unit-desc">預留位置</p></a>
+                <a href="#" class="unit-card card-cn-class locked"><span class="unit-emoji">🌱</span><span class="unit-tag">下學期</span><h3 class="unit-name">下學期單元四</h3><p class="unit-desc">預留位置</p></a>
+                <a href="#" class="unit-card card-cn-class locked"><span class="unit-emoji">🌱</span><span class="unit-tag">下學期</span><h3 class="unit-name">下學期單元五</h3><p class="unit-desc">預留位置</p></a>
+                <a href="#" class="unit-card card-cn-class locked"><span class="unit-emoji">🌱</span><span class="unit-tag">下學期</span><h3 class="unit-name">下學期單元六</h3><p class="unit-desc">預留位置</p></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. 英文AI導師課堂 -->
+    <section id="sec-en-class" class="category-section" style="border-color: var(--en-class-border);">
+        <div class="section-header">
+            <h2 class="section-title" style="color: #0369A1;">🔤 英文AI導師課堂</h2>
+            <div class="term-switcher">
+                <button class="term-btn active" onclick="switchTerm('en-term-1', 'en-term-2', this)">☀️ 上學期</button>
+                <button class="term-btn" onclick="switchTerm('en-term-2', 'en-term-1', this)">🌱 下學期預留</button>
+            </div>
+        </div>
+
+        <div id="en-term-1" class="term-group active">
+            <div class="unit-grid">
+                <a href="en-unit4.html" class="unit-card card-en-class">
+                    <span class="unit-emoji">🤸</span>
+                    <span class="unit-tag">本週 AI 導師</span>
+                    <h3 class="unit-name">Unit 4: I can do it</h3>
+                    <p class="unit-desc">P.17-20 動作·年齡·字母 m</p>
+                </a>
+                <a href="#" class="unit-card card-en-class locked"><span class="unit-emoji">📘</span><span class="unit-tag">上學期</span><h3 class="unit-name">Unit 1</h3><p class="unit-desc">預留單元位置</p></a>
+                <a href="#" class="unit-card card-en-class locked"><span class="unit-emoji">📘</span><span class="unit-tag">上學期</span><h3 class="unit-name">Unit 2</h3><p class="unit-desc">預留單元位置</p></a>
+                <a href="#" class="unit-card card-en-class locked"><span class="unit-emoji">📘</span><span class="unit-tag">上學期</span><h3 class="unit-name">Unit 3</h3><p class="unit-desc">預留單元位置</p></a>
+                <a href="#" class="unit-card card-en-class locked"><span class="unit-emoji">📘</span><span class="unit-tag">上學期</span><h3 class="unit-name">Unit 5</h3><p class="unit-desc">預留單元位置</p></a>
+                <a href="#" class="unit-card card-en-class locked"><span class="unit-emoji">📘</span><span class="unit-tag">上學期</span><h3 class="unit-name">Unit 6</h3><p class="unit-desc">預留單元位置</p></a>
+            </div>
+        </div>
+
+        <div id="en-term-2" class="term-group">
+            <div class="unit-grid">
+                <a href="#" class="unit-card card-en-class locked"><span class="unit-emoji">🌱</span><span class="unit-tag">下學期</span><h3 class="unit-name">Unit 1</h3><p class="unit-desc">預留位置</p></a>
+                <a href="#" class="unit-card card-en-class locked"><span class="unit-emoji">🌱</span><span class="unit-tag">下學期</span><h3 class="unit-name">Unit 2</h3><p class="unit-desc">預留位置</p></a>
+                <a href="#" class="unit-card card-en-class locked"><span class="unit-emoji">🌱</span><span class="unit-tag">下學期</span><h3 class="unit-name">Unit 3</h3><p class="unit-desc">預留位置</p></a>
+                <a href="#" class="unit-card card-en-class locked"><span class="unit-emoji">🌱</span><span class="unit-tag">下學期</span><h3 class="unit-name">Unit 4</h3><p class="unit-desc">預留位置</p></a>
+                <a href="#" class="unit-card card-en-class locked"><span class="unit-emoji">🌱</span><span class="unit-tag">下學期</span><h3 class="unit-name">Unit 5</h3><p class="unit-desc">預留位置</p></a>
+                <a href="#" class="unit-card card-en-class locked"><span class="unit-emoji">🌱</span><span class="unit-tag">下學期</span><h3 class="unit-name">Unit 6</h3><p class="unit-desc">預留位置</p></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. 中文闖關 -->
+    <section id="sec-cn-quiz" class="category-section" style="border-color: var(--cn-quiz-border);">
+        <div class="section-header">
+            <h2 class="section-title" style="color: #047857;">🎯 中文闖關測驗</h2>
+        </div>
+        <div class="unit-grid">
+            <a href="chinese.html" class="unit-card card-cn-quiz">
+                <span class="unit-emoji">🐥</span>
+                <span class="unit-tag">識字闖關</span>
+                <h3 class="unit-name">中文字寶寶 好朋友課室唱歌</h3>
+                <p class="unit-desc">Test 1-5 綜合闖關</p>
+            </a>
+            <a href="#" class="unit-card card-cn-quiz locked">
+                <span class="unit-emoji">🔒</span>
+                <span class="unit-tag">預留闖關</span>
+                <h3 class="unit-name">P.21-25 錯字特訓</h3>
+                <p class="unit-desc">動態複習題庫</p>
+            </a>
+            <a href="#" class="unit-card card-cn-quiz locked">
+                <span class="unit-emoji">🔒</span>
+                <span class="unit-tag">預留闖關</span>
+                <h3 class="unit-name">生活詞語 4 選 1</h3>
+                <p class="unit-desc">待解鎖新挑戰</p>
+            </a>
+        </div>
+    </section>
+
+    <!-- 4. 英文闖關 -->
+    <section id="sec-en-quiz" class="category-section" style="border-color: var(--en-quiz-border);">
+        <div class="section-header">
+            <h2 class="section-title" style="color: #6D28D9;">🏆 英文闖關測驗</h2>
+        </div>
+        <div class="unit-grid">
+            <a href="en-animals.html" class="unit-card card-en-quiz">
+                <span class="unit-emoji">🐾</span>
+                <span class="unit-tag">主題挑戰 · 1</span>
+                <h3 class="unit-name">動物家庭</h3>
+                <p class="unit-desc">Cat, Dog, Family</p>
+            </a>
+            <a href="en-emotions.html" class="unit-card card-en-quiz">
+                <span class="unit-emoji">😄</span>
+                <span class="unit-tag">主題挑戰 · 2</span>
+                <h3 class="unit-name">情緒句子</h3>
+                <p class="unit-desc">Happy, Sad, Angry</p>
+            </a>
+            <a href="en-stationery.html" class="unit-card card-en-quiz">
+                <span class="unit-emoji">✏️</span>
+                <span class="unit-tag">主題挑戰 · 3</span>
+                <h3 class="unit-name">校園文具</h3>
+                <p class="unit-desc">發音預習與連線</p>
+            </a>
+            <a href="en-master.html" class="unit-card card-en-quiz">
+                <span class="unit-emoji">🏆</span>
+                <span class="unit-tag">期末必備</span>
+                <h3 class="unit-name">全能總測</h3>
+                <p class="unit-desc">K2 總考與錯題本</p>
+            </a>
+            <a href="#" class="unit-card card-en-quiz locked">
+                <span class="unit-emoji">🔒</span>
+                <span class="unit-tag">預留關卡</span>
+                <h3 class="unit-name">Unit 4 單字拼字考</h3>
+                <p class="unit-desc">0.5x 慢速英音聽測</p>
+            </a>
+        </div>
+    </section>
+
+    <!-- 5. 點讀書 -->
+    <section id="sec-book" class="category-section" style="border-color: var(--book-border);">
+        <div class="section-header">
+            <h2 class="section-title" style="color: #BE123C;">📚 點讀書（每週三英文繪本閱讀）</h2>
+        </div>
+        <div class="unit-grid">
+            <a href="thomas.html" class="unit-card card-book">
+                <span class="unit-emoji">🚂</span>
+                <span class="unit-tag">繪本點讀 · 本週</span>
+                <h3 class="unit-name">Thomas Goes Fishing</h3>
+                <p class="unit-desc">真人發音 + 釣魚遊戲</p>
+            </a>
+            <a href="#" class="unit-card card-book locked"><span class="unit-emoji">📕</span><span class="unit-tag">週三小書</span><h3 class="unit-name">待上傳繪本 2</h3><p class="unit-desc">預留點讀位置</p></a>
+            <a href="#" class="unit-card card-book locked"><span class="unit-emoji">📗</span><span class="unit-tag">週三小書</span><h3 class="unit-name">待上傳繪本 3</h3><p class="unit-desc">預留點讀位置</p></a>
+            <a href="#" class="unit-card card-book locked"><span class="unit-emoji">📘</span><span class="unit-tag">週三小書</span><h3 class="unit-name">待上傳繪本 4</h3><p class="unit-desc">預留點讀位置</p></a>
+        </div>
+    </section>
+
+    <!-- 6. 小視頻 -->
+    <section id="sec-video" class="category-section" style="border-color: var(--video-border);">
+        <div class="section-header">
+            <h2 class="section-title" style="color: #B91C1C;">🎬 小視頻（教學動畫與兒歌律動）</h2>
+        </div>
+        <div class="unit-grid">
+            <a href="#" class="unit-card card-video locked">
+                <span class="unit-emoji">🎥</span>
+                <span class="unit-tag">故事動畫</span>
+                <h3 class="unit-name">Thomas 釣魚動畫</h3>
+                <p class="unit-desc">生成中 · 敬請期待</p>
+            </a>
+            <a href="#" class="unit-card card-video locked">
+                <span class="unit-emoji">🎵</span>
+                <span class="unit-tag">兒歌短片</span>
+                <h3 class="unit-name">待上傳律動影片</h3>
+                <p class="unit-desc">預留播放位置</p>
+            </a>
+            <a href="#" class="unit-card card-video locked">
+                <span class="unit-emoji">🎵</span>
+                <span class="unit-tag">兒歌短片</span>
+                <h3 class="unit-name">待上傳律動影片</h3>
+                <p class="unit-desc">預留播放位置</p>
+            </a>
+        </div>
+    </section>
+
+    <div class="footer-bar">
+        <span>Lingling's K2 Learning Park &copy; 2026</span>
+        <button class="show-all-btn" onclick="toggleAllSections(this)">🌈 展開全部分類一覽</button>
+    </div>
 </div>
 
 <script>
-// Anna 老師的 Day 1 劇本 (一頁一詞 / 一頁一題)
-const slides = [
-  {
-    type: 'teach_single',
-    emoji: '🎂',
-    adj: '香香的',
-    noun: '蛋糕',
-    readTarget: '香香的蛋糕',
-    note: '📖 課本 P.21 第 1 組詞語',
-    speech: '哈囉玲玲！我係 Anna 老師！今日由 Anna 老師陪妳去野餐啦！妳睇下第一樣嘢，係生日會食嘅「蛋糕」。蛋糕剛焗好嗰陣，鼻哥聞到好香，我哋叫佢做「香香的蛋糕」。來，撳一下張卡，跟 Anna 老師細細聲讀一次：香、香、的、蛋、糕！'
-  },
-  {
-    type: 'teach_single',
-    emoji: '🥬',
-    adj: '翠綠的',
-    noun: '蔬菜',
-    readTarget: '翠綠的蔬菜',
-    note: '📖 課本 P.21 第 2 組詞語',
-    speech: '第二樣嘢，係好健康、顏色好似樹葉咁靚嘅「蔬菜」！課本叫佢做「翠綠的蔬菜」。來，跟 Anna 老師慢速讀一次：翠、綠、的、蔬、菜！'
-  },
-  {
-    type: 'teach_single',
-    emoji: '🍯',
-    adj: '甜甜的',
-    noun: '蜜糖',
-    readTarget: '甜甜的蜜糖',
-    note: '📖 課本 P.21 第 3 組詞語',
-    speech: '第三樣係小蜜蜂整嘅「蜜糖」。放一滴落嘴仔度，嘩，好甜呀！我哋叫佢做「甜甜的蜜糖」。跟 Anna 老師讀一次：甜、甜、的、蜜、糖！'
-  },
-  {
-    type: 'teach_single',
-    emoji: '🫘',
-    adj: '',
-    noun: '豆',
-    readTarget: '豆',
-    note: '💡 字形小秘密：上面一橫，中間一個口，好似豆仔擺喺碟上面！',
-    speech: '最後睇下呢個單字，係一粒圓碌碌嘅「豆」字！「豆」字上面有一橫，中間有個細細嘅「口」字，好似一粒豆仔擺喺隻碟上面咁樣！跟 Anna 老師讀一次：豆！'
-  },
-  {
-    type: 'quiz_step',
-    levelTag: '【第 1 題：認一認單字】',
-    visual: '🫘',
-    speech: '小寶貝，請妳用手指搵下——邊個字係圓碌碌、好似小珠珠咁樣嘅「豆」字呀？',
-    options: ['豆', '肉'],
-    answer: '豆',
-    hint: '唔緊要，我哋再睇真啲！「豆」字上面有一橫，中間有個細細嘅「口」字，好似一粒豆仔擺喺隻碟上面咁樣！再試一次啦！',
-    praise: '好叻女呀！一眼就認出圓碌碌嘅「豆」字啦！'
-  },
-  {
-    type: 'quiz_step',
-    levelTag: '【第 2 題：形容詞配對】',
-    visual: '🐝 🍯 蜜糖',
-    speech: '小蜜蜂採花蜜整出嚟嘅「蜜糖」，食落口係咩味道㗎？係「翠綠的」定係「甜甜的」呀？',
-    options: ['翠綠的', '甜甜的'],
-    answer: '甜甜的',
-    hint: '諗下喔，「翠綠」係樹葉同埋蔬菜嘅綠色嚟㗎；蜜糖食落嘴仔會笑眯眯、好甜好甜，應該係邊個呢？',
-    praise: '答啱啦！甜甜的蜜糖！妳讀得好棒呀！'
-  },
-  {
-    type: 'quiz_step',
-    levelTag: '【第 3 題：看圖說句式】',
-    visual: '🍎 大蘋果 (P.22)',
-    speech: '如果我哋見到一個好大嘅紅蘋果，想將佢變成一句話「（形容詞）（食物名稱）。」，妳會揀邊句呀？',
-    options: ['甜甜的蘋果。', '翠綠的肉。'],
-    answer: '甜甜的蘋果。',
-    hint: '蘋果聞落去好香，食落去又好甜！妳可以試下揀「甜甜的蘋果。」喔！',
-    praise: '太棒啦！「甜甜的蘋果。」今日 Day 1 嘅任務全部完成啦！'
-  }
-];
+    // 進門自動消音鎖：只要一回到總首頁，立刻強制切斷上一頁殘留的語音
+    function silenceAllSpeech() {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.pause();
+            window.speechSynthesis.cancel();
+        }
+    }
+    window.addEventListener('load', silenceAllSpeech);
+    window.addEventListener('pageshow', silenceAllSpeech);
 
-let currentSlideIdx = 0;
-let currentSpeech = '';
-// 記錄錯字嘅籃子（LocalStorage）
-let wrongCounts = JSON.parse(localStorage.getItem('lingling_cn_day1_errors') || '{}');
+    const categoryColorMap = {
+        'cn-class': 'active-cn-class',
+        'en-class': 'active-en-class',
+        'cn-quiz':  'active-cn-quiz',
+        'en-quiz':  'active-en-quiz',
+        'book':     'active-book',
+        'video':    'active-video'
+    };
 
-function speakText(text, rate = 0.72) {
-  currentSpeech = text;
-  document.getElementById('tutor-text').innerText = text;
-  if ('speechSynthesis' in window) {
-    window.speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = 'zh-HK';
-    u.rate = rate;
-    window.speechSynthesis.speak(u);
-  }
-}
+    let isShowingAll = false;
 
-function saveErrors() {
-  localStorage.setItem('lingling_cn_day1_errors', JSON.stringify(wrongCounts));
-}
+    function switchCategory(catKey, tabElement) {
+        silenceAllSpeech();
+        isShowingAll = false;
+        document.querySelector('.show-all-btn').innerText = '🌈 展開全部分類一覽';
 
-function startLesson() {
-  document.getElementById('start-screen').style.display = 'none';
-  document.getElementById('main-container').style.display = 'block';
-  renderSlide();
-}
+        document.querySelectorAll('.nav-tab').forEach(btn => {
+            Object.values(categoryColorMap).forEach(cls => btn.classList.remove(cls));
+        });
+        tabElement.classList.add(categoryColorMap[catKey]);
 
-function renderSlide() {
-  // 如果做完所有題目
-  if (currentSlideIdx >= slides.length) {
-    speakText('太棒啦！今日 Day 1 嘅課堂已經全部完成啦！妳攞到今日嘅大獎盃！而家可以收起 iPad，去搵媽媽抱抱妳啦！', 0.75);
-    document.getElementById('stage-content').innerHTML = `
-      <div style="background:white; border:4px solid #f59e0b; border-radius:24px; padding:18px; width:92%; max-width:480px;">
-        <div style="font-size:4rem;">🏆🎉</div>
-        <div style="font-size:1.5rem; font-weight:900; color:#b45309; margin:6px 0;">Day 1 成功下課啦！</div>
-        <div style="font-size:0.95rem; font-weight:800; color:#475569; margin-bottom:14px;">
-          小寶貝今日好專心跟 Anna 老師學字！<br>快啲叫媽媽睇下妳有幾叻啦！
-        </div>
-        <a href="index.html" class="next-action-btn" style="text-decoration:none; display:inline-block;">🏠 離開課堂</a>
-      </div>
-    `;
-    return;
-  }
+        document.querySelectorAll('.category-section').forEach(sec => {
+            sec.classList.remove('active');
+        });
+        document.getElementById('sec-' + catKey).classList.add('active');
+    }
 
-  const slide = slides[currentSlideIdx];
-  const dotsHtml = slides.map((_, idx) => {
-    let cls = idx < currentSlideIdx ? 'done' : (idx === currentSlideIdx ? 'active' : '');
-    return `<div class="dot ${cls}"></div>`;
-  }).join('');
+    function switchTerm(showId, hideId, btnElement) {
+        document.getElementById(showId).classList.add('active');
+        document.getElementById(hideId).classList.remove('active');
 
-  if (slide.type === 'teach_single') {
-    speakText(slide.speech, 0.72);
-    document.getElementById('stage-content').innerHTML = `
-      <div class="step-dots">${dotsHtml}</div>
-      <div class="single-focus-card" onclick="speakText('${slide.readTarget}', 0.65)">
-        <div class="big-emoji">${slide.emoji}</div>
-        ${slide.adj ? `<div class="big-adj">${slide.adj}</div>` : ''}
-        <div class="big-noun">${slide.noun.replace(/\n/g, '<br>')}</div>
-        <div class="char-structure-note">${slide.note}（撳卡片可慢速重聽 🔊）</div>
-      </div>
-      <button class="next-action-btn" onclick="nextSlide()">🌟 Anna 老師，我讀好啦！下一個 ➔</button>
-    `;
-  } else if (slide.type === 'quiz_step') {
-    speakText(slide.speech, 0.72);
-    let choicesHtml = slide.options.map(opt => `
-      <button class="choice-btn" onclick="checkAnswer('${opt}')">${opt}</button>
-    `).join('');
+        const parentSwitcher = btnElement.parentElement;
+        parentSwitcher.querySelectorAll('.term-btn').forEach(b => b.classList.remove('active'));
+        btnElement.classList.add('active');
+    }
 
-    document.getElementById('stage-content').innerHTML = `
-      <div class="step-dots">${dotsHtml}</div>
-      <div style="font-size:0.95rem; font-weight:900; color:#be185d;">${slide.levelTag}</div>
-      <div style="font-size:2.4rem; font-weight:900; color:#831843; background:white; padding:8px 24px; border-radius:20px; border:3px solid #fbcfe8;">
-        ${slide.visual}
-      </div>
-      <div class="quiz-choices">${choicesHtml}</div>
-      <div class="gentle-hint-box" id="slide-hint"></div>
-    `;
-  }
-}
-
-function nextSlide() {
-  currentSlideIdx++;
-  renderSlide();
-}
-
-function checkAnswer(selected) {
-  const slide = slides[currentSlideIdx];
-  const hintBox = document.getElementById('slide-hint');
-  if (selected === slide.answer) {
-    speakText(slide.praise, 0.78);
-    setTimeout(() => {
-      nextSlide();
-    }, 2000);
-  } else {
-    // 記低錯題畀聽日 Day 2 抽查
-    wrongCounts[slide.answer] = (wrongCounts[slide.answer] || 0) + 1;
-    saveErrors();
-    hintBox.style.display = 'block';
-    hintBox.innerText = '💡 Anna 老師溫柔提示：' + slide.hint;
-    speakText(slide.hint, 0.72);
-  }
-}
+    function toggleAllSections(btn) {
+        isShowingAll = !isShowingAll;
+        const sections = document.querySelectorAll('.category-section');
+        if (isShowingAll) {
+            sections.forEach(sec => sec.classList.add('active'));
+            btn.innerText = '📁 恢復單頁切換模式';
+        } else {
+            sections.forEach((sec, idx) => {
+                if (idx === 0) sec.classList.add('active');
+                else sec.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-tab').forEach((tab, idx) => {
+                Object.values(categoryColorMap).forEach(cls => tab.classList.remove(cls));
+                if (idx === 0) tab.classList.add('active-cn-class');
+            });
+            btn.innerText = '🌈 展開全部分類一覽';
+        }
+    }
 </script>
+
 </body>
 </html>
