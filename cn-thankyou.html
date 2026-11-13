@@ -4,37 +4,154 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>《我要謝謝你》雙週課堂總覽</title>
-    <!-- 強制引入全站共用 3D 樣式 -->
+    <!-- 引入全站共用背景與按鈕樣式 (點點背景等) -->
     <link rel="stylesheet" href="theme.css">
     <style>
-        /* 針對此總覽頁的局部微調 */
+        /* ====================================================
+           目錄頁專屬排版樣式 (補足 theme.css 沒有的網格系統)
+           ==================================================== */
+        
+        .container {
+            width: 100%;
+            max-width: 1080px;
+            margin: 0 auto;
+        }
+
         .page-header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
         .theme-title {
             color: #B45309;
-            font-size: 26px;
+            font-size: 28px;
             font-weight: 800;
-            margin: 0 0 5px 0;
+            margin: 0 0 8px 0;
+            letter-spacing: 1px;
         }
         .theme-subtitle {
             color: #718096;
-            font-size: 14px;
+            font-size: 15px;
             margin: 0;
         }
+        
         .back-btn-container {
             margin-bottom: 20px;
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        /* 單元卡片響應式網格 */
+        .unit-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+            gap: 16px;
+            padding-bottom: 30px;
+        }
+
+        /* 3D 單元卡片 (借鑑 index.html 的完美比例) */
+        .unit-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 16px 12px;
+            border-radius: 20px;
+            text-decoration: none;
+            color: #2D3748;
+            border: 3px solid transparent;
+            border-bottom-width: 7px;
+            transition: transform 0.12s ease, border-bottom-width 0.12s ease;
+            min-height: 140px;
+            position: relative;
+            background: #FFFFFF;
+        }
+
+        .unit-card:active {
+            transform: translateY(4px);
+            border-bottom-width: 3px;
+        }
+
+        /* 中文課堂專屬配色 */
+        .card-cn-class { 
+            background: #FEF3C7; /* var(--cn-class-bg) */
+            border-color: #FCD34D; /* var(--cn-class-border) */
+        }
+        .card-cn-class .unit-tag { color: #B45309; }
+
+        /* 卡片內部元素 */
+        .unit-emoji {
+            font-size: 38px;
+            margin-bottom: 10px;
+            line-height: 1;
+        }
+
+        .unit-tag {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 12px;
+            margin-bottom: 6px;
+            background: rgba(255,255,255,0.85);
+        }
+
+        .unit-name {
+            font-size: 16px;
+            font-weight: 800;
+            margin: 0 0 6px 0;
+            line-height: 1.25;
+            color: #1E293B;
+        }
+
+        .unit-desc {
+            font-size: 12px;
+            color: #64748B;
+            margin: 0;
+            font-weight: 600;
+        }
+
+        /* 最新更新徽章 */
+        .badge-new {
+            position: absolute;
+            top: -8px;
+            right: -6px;
+            background: #EF4444;
+            color: #FFFFFF;
+            font-size: 11px;
+            font-weight: 900;
+            padding: 4px 8px;
+            border-radius: 12px;
+            border: 2px solid #FFFFFF;
+            box-shadow: 0 2px 6px rgba(239, 68, 68, 0.35);
+        }
+
+        /* 預留位（待解鎖）卡片樣式 */
+        .unit-card.locked {
+            background: #F8FAFC;
+            border: 2px dashed #CBD5E1;
+            color: #94A3B8;
+            pointer-events: none;
+        }
+        .unit-card.locked .unit-emoji {
+            opacity: 0.5;
+            filter: grayscale(100%);
+        }
+        .unit-card.locked .unit-tag {
+            background: #E2E8F0;
+            color: #64748B;
+        }
+        .unit-card.locked .unit-name {
+            color: #94A3B8;
         }
     </style>
 </head>
-<body>
+<body class="animate-bounce-in">
 
 <div class="container">
-    <!-- 返回主頁按鈕 -->
+    <!-- 返回主頁按鈕 (使用 theme.css 定義的 btn-3d) -->
     <div class="back-btn-container">
-        <button class="btn-3d" style="background:var(--cn-class-bg); color:#B45309; border-bottom-color:var(--cn-class-border);" onclick="window.location.href='index.html'">
-            🏠 返回學習成長樂園
+        <button class="btn-3d" style="padding: 10px 20px; font-size: 16px; color: #D97706; border-color: #FCD34D; background: #FFFBEB;" onclick="window.location.href='index.html'">
+            🏠 返回學習樂園
         </button>
     </div>
 
@@ -63,7 +180,7 @@
             <p class="unit-desc">食物、肉 + 拆字魔法</p>
         </a>
 
-        <!-- Day 3：✅ 本次最新解鎖！ -->
+        <!-- Day 3：✅ 最新解鎖 (修正了檔名為 d3) -->
         <a href="cn-p21-p25-d3.html" class="unit-card card-cn-class">
             <span class="badge-new">NEW</span>
             <span class="unit-emoji">🍰</span>
