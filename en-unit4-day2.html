@@ -3,361 +3,377 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Unit 4 Day 2: I can do it (Advanced)</title>
-    <!-- 若有全域樣式可解除註解 <link rel="stylesheet" href="theme.css"> -->
+    <title>Unit 4 Day 2: I can do it (盲聽積木)</title>
+    <!-- 強制套用全域 3D 樣式 -->
+    <link rel="stylesheet" href="theme.css">
     <style>
-        :root {
-            --bg-color: linear-gradient(135deg, #E0F2FE 0%, #BAE6FD 100%);
-            --btn-blue: linear-gradient(135deg, #7DD3FC, #0EA5E9);
-            --btn-blue-shadow: #0369A1;
-            --btn-green: linear-gradient(135deg, #6EE7B7, #10B981);
-            --btn-green-shadow: #047857;
-            --btn-red: linear-gradient(135deg, #FDA4AF, #F43F5E);
-            --btn-red-shadow: #BE123C;
-            --btn-yellow: linear-gradient(135deg, #FDE047, #EAB308);
-            --btn-yellow-shadow: #A16207;
-            --text-dark: #1E293B;
-        }
-
+        /* ====================================================
+           Unit 8 魔法闖關頂級風格 (背景與頂部導航)
+           ==================================================== */
         body {
-            margin: 0; padding: 0;
-            font-family: 'Comic Sans MS', 'Chalkboard SE', 'PingFang HK', sans-serif;
-            background: var(--bg-color);
-            color: var(--text-dark);
-            height: 100vh;
-            display: flex; flex-direction: column;
-            overflow: hidden;
+            background: linear-gradient(180deg, #E0F2FE 0%, #F0F9FF 100%);
+            padding: 0;
+            margin: 0;
+            min-height: 100vh;
         }
 
-        header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 15px 20px;
-            background: rgba(255, 255, 255, 0.7);
-            border-bottom: 4px solid white;
+        /* 深色頂部導航列 */
+        .top-nav {
+            background: linear-gradient(90deg, #1E3A8A 0%, #3B82F6 100%);
+            padding: 14px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 6px solid #1D4ED8;
+            border-radius: 0 0 24px 24px;
+            box-shadow: 0 6px 15px rgba(29, 78, 216, 0.25);
+            margin-bottom: 24px;
         }
 
-        .btn-3d {
-            background: var(--btn-blue);
-            border: none; border-radius: 18px;
-            border-bottom: 8px solid var(--btn-blue-shadow);
-            color: white; font-size: 18px; font-weight: 900;
-            padding: 12px 24px; cursor: pointer;
-            transition: all 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-        .btn-3d:active { transform: translateY(4px); border-bottom-width: 4px; }
-
-        .progress-dots { display: flex; gap: 8px; }
-        .dot { width: 16px; height: 16px; background: #CBD5E1; border-radius: 50%; }
-        .dot.active { background: #F59E0B; box-shadow: 0 0 8px #FCD34D; }
-
-        .game-container {
-            flex: 1; display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            padding: 20px;
+        .top-nav h1 {
+            color: #FFFFFF;
+            font-size: 20px;
+            margin: 0;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
 
-        /* 視覺展示區 */
-        .visual-area {
-            background: white; border-radius: 30px; padding: 40px 30px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-            border: 6px solid #FFF; text-align: center;
-            min-height: 200px; width: 90%; max-width: 800px;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            font-size: 80px; position: relative; margin-bottom: 30px;
+        .progress-dots {
+            display: flex;
+            gap: 6px;
         }
-        .speaker-btn {
-            position: absolute; top: -20px; left: -20px;
-            background: var(--btn-red); border: none; border-bottom: 6px solid var(--btn-red-shadow);
-            border-radius: 50%; width: 70px; height: 70px; font-size: 30px;
-            cursor: pointer; box-shadow: 0 5px 15px rgba(244, 63, 94, 0.4);
-            display: flex; align-items: center; justify-content: center; transition: all 0.1s;
-        }
-        .speaker-btn:active { transform: translateY(3px); border-bottom-width: 3px; }
+        .dot { width: 12px; height: 12px; border-radius: 50%; background: rgba(255,255,255,0.3); }
+        .dot.active { background: #FCD34D; box-shadow: 0 0 8px #FCD34D; }
 
-        /* 積木與選項區 */
-        .interaction-area { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; width: 100%; max-width: 800px; }
+        /* 返回按鈕 (3D 積木風) */
+        .btn-home {
+            background: #F43F5E;
+            color: white;
+            border: 2px solid #E11D48;
+            border-bottom: 5px solid #BE123C;
+            border-radius: 14px;
+            padding: 8px 16px;
+            font-weight: 900;
+            font-size: 15px;
+            cursor: pointer;
+            transition: transform 0.1s, border-bottom-width 0.1s;
+        }
+        .btn-home:active { transform: translateY(3px); border-bottom-width: 2px; }
+
+        .main-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 16px 40px;
+        }
+
+        /* ====================================================
+           Anna 老師專屬提示橫幅
+           ==================================================== */
+        .tutor-banner {
+            background: #FFFBEB;
+            border: 4px solid #FCD34D;
+            border-bottom-width: 8px;
+            border-bottom-color: #F59E0B;
+            border-radius: 20px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            margin-bottom: 24px;
+            box-shadow: 0 6px 12px rgba(245, 158, 11, 0.15);
+        }
+
+        .tutor-avatar {
+            font-size: 45px;
+            background: #FEF3C7;
+            border-radius: 50%;
+            width: 75px;
+            height: 75px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 4px solid #FDE68A;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .tutor-text {
+            font-size: 17px;
+            color: #92400E;
+            font-weight: 800;
+            line-height: 1.5;
+        }
+        .highlight { color: #D97706; background: #FEF3C7; padding: 2px 8px; border-radius: 8px; border: 1px solid #FCD34D; }
+
+        /* ====================================================
+           魔法互動舞台卡片
+           ==================================================== */
+        .stage-box {
+            background: #FFFFFF;
+            border: 4px solid #BAE6FD;
+            border-bottom-width: 10px;
+            border-bottom-color: #7DD3FC;
+            border-radius: 36px;
+            padding: 40px 20px;
+            text-align: center;
+            box-shadow: 0 12px 25px rgba(14, 165, 233, 0.15);
+        }
+
+        /* 替換大腦/耳朵的超靚播放按鈕 */
+        .listen-btn {
+            background: linear-gradient(135deg, #A78BFA 0%, #8B5CF6 100%);
+            border: 4px solid #7C3AED;
+            border-bottom-width: 8px;
+            border-radius: 50%;
+            width: 95px;
+            height: 95px;
+            font-size: 45px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 35px;
+            cursor: pointer;
+            box-shadow: 0 8px 15px rgba(139, 92, 246, 0.35);
+            transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            animation: pulse 2s infinite;
+        }
+        .listen-btn:active { transform: translateY(5px); border-bottom-width: 3px; animation: none; }
         
-        /* 句子插槽 (Slots) */
-        .slots-container {
-            display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
-            margin-bottom: 30px; width: 100%; min-height: 60px;
-        }
-        .slot-box {
-            background: #F1F5F9; border: 4px dashed #CBD5E1;
-            border-radius: 16px; padding: 10px 20px;
-            font-size: 28px; font-weight: bold; color: #334155;
-            min-width: 60px; text-align: center;
-        }
-        .slot-box.filled { background: var(--btn-yellow); border: 4px solid var(--btn-yellow-shadow); color: #713F12; border-style: solid; }
-
-        /* 文字積木按鈕 */
-        .word-block {
-            background: white; border: 4px solid #E2E8F0; border-bottom: 8px solid #CBD5E1;
-            border-radius: 20px; padding: 15px 30px; font-size: 30px; font-weight: bold; color: #334155;
-            cursor: pointer; transition: all 0.1s;
-        }
-        .word-block:active { transform: translateY(4px); border-bottom-width: 4px; }
-        .word-block.used { opacity: 0; pointer-events: none; }
-        .wrong-shake { animation: shake 0.4s ease-in-out; }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-8px) rotate(-3deg); }
-            75% { transform: translateX(8px) rotate(3deg); }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(139, 92, 246, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0); }
         }
 
-        /* 啟動與結算畫面 */
-        #start-screen, #end-screen {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg-color); display: flex; flex-direction: column;
-            align-items: center; justify-content: center; z-index: 200;
+        .listen-hint {
+            position: absolute;
+            bottom: -30px;
+            font-size: 15px;
+            color: #6D28D9;
+            font-weight: 900;
+            background: #EDE9FE;
+            padding: 4px 12px;
+            border-radius: 12px;
+            border: 2px solid #C4B5FD;
+            white-space: nowrap;
         }
-        #end-screen { display: none; }
-        .anna-avatar { font-size: 100px; margin-bottom: 20px; animation: float 2s infinite ease-in-out; }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+
+        /* 句子填充區 */
+        .sentence-slots {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 35px;
+            min-height: 65px;
+        }
+        
+        .slot {
+            border: 3px dashed #CBD5E1;
+            border-radius: 14px;
+            width: 85px;
+            height: 55px;
+            background: #F8FAFC;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 900;
+            color: #334155;
+            transition: all 0.2s;
+        }
+        
+        .slot.filled {
+            border: 3px solid #34D399;
+            border-bottom-width: 6px;
+            background: #D1FAE5;
+            color: #065F46;
+            cursor: pointer;
+            transform: scale(1.05);
+        }
+        .slot.filled:active { transform: scale(1) translateY(3px); border-bottom-width: 3px; }
+
+        /* 字庫積木區 */
+        .word-bank {
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+        
+        .word-btn {
+            background: #FFFFFF;
+            border: 3px solid #E2E8F0;
+            border-bottom-width: 7px;
+            border-radius: 16px;
+            padding: 12px 24px;
+            font-size: 24px;
+            font-weight: 900;
+            color: #1E293B;
+            cursor: pointer;
+            transition: transform 0.1s, border-bottom-width 0.1s;
+        }
+        .word-btn:active { transform: translateY(4px); border-bottom-width: 3px; }
+        .word-btn.hidden { visibility: hidden; opacity: 0; }
+        
+        #feedback {
+            margin-top: 25px;
+            font-size: 24px;
+            font-weight: 900;
+            min-height: 35px;
+        }
     </style>
 </head>
-<body>
+<body class="animate-bounce-in">
 
-    <!-- 啟動畫面 -->
-    <div id="start-screen">
-        <div class="anna-avatar">🧚‍♀️</div>
-        <h1 style="color:#0369A1; text-shadow: 2px 2px white; text-align:center;">Unit 4 Day 2: I can do it!</h1>
-        <p style="color:#334155; font-weight:bold;">進階挑戰：無圖盲聽與常識陷阱</p>
-        <button class="btn-3d" style="font-size: 24px; padding: 15px 40px; margin-top: 20px;" onclick="startGame()">▶️ 點擊開始課堂</button>
-    </div>
-
-    <!-- 頂部列 -->
-    <header>
-        <button class="btn-3d" style="background:#64748B; border-bottom-color:#475569;" onclick="goHome()">🏠 返回</button>
-        <div class="progress-dots" id="dots"></div>
-    </header>
-
-    <!-- 主遊戲區 -->
-    <div class="game-container">
-        <div class="visual-area" id="visual-board">
-            <button class="speaker-btn" onclick="playVoicePrompt()">🧚‍♀️🔊</button>
-            <div id="content-display"></div>
-            <!-- 句式積木插槽 -->
-            <div class="slots-container" id="slots-area" style="display:none; margin-top:20px;"></div>
-        </div>
-        <div class="interaction-area" id="interaction-board">
-            <!-- 動態生成積木或按鈕 -->
+    <!-- 頂部魔法導航列 -->
+    <div class="top-nav">
+        <button class="btn-home" onclick="goBack()">🏠 返回</button>
+        <h1>Unit 4 Day 2: I can do it (盲聽積木)</h1>
+        <div class="progress-dots">
+            <div class="dot active"></div>
+            <div class="dot active"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
         </div>
     </div>
 
-    <!-- 結算畫面 -->
-    <div id="end-screen">
-        <div class="anna-avatar">🎉</div>
-        <h1 style="color:#10B981; text-shadow: 2px 2px white; text-align:center;">Well Done Lingling!</h1>
-        <div style="background:white; padding:20px; border-radius:20px; text-align:center; box-shadow:0 10px 20px rgba(0,0,0,0.1); width:80%;">
-            <h3 style="color:#F59E0B; margin:0 0 10px 0;">👩‍👧 媽媽 1 分鐘激勵時間</h3>
-            <p style="color:#475569; font-weight:bold; margin:0;">請俾一支顏色筆玲玲，請佢一邊畫畫，一邊親口講出：<br><span style="color:#E20074; font-size:24px;">"I can draw!"</span></p>
+    <div class="main-container">
+        <!-- Anna 老師提示橫幅 -->
+        <div class="tutor-banner">
+            <div class="tutor-avatar">👩‍🏫</div>
+            <div class="tutor-text">
+                Hello Lingling！今日嘅挑戰係<span class="highlight">「無圖片盲聽」</span>呀！<br>
+                請撳紫色按鈕聽我讀句子，然後將下面嘅單字積木排返好啦！
+            </div>
         </div>
-        <button class="btn-3d" style="margin-top:30px;" onclick="goHome()">🏠 銷案並返回</button>
+
+        <!-- 魔法互動舞台 -->
+        <div class="stage-box">
+            
+            <!-- 播放聲音按鈕 (取代核突耳朵) -->
+            <div class="listen-btn" onclick="playSentence()">
+                🎧
+                <span class="listen-hint">點擊聽句子🎶</span>
+            </div>
+
+            <!-- 積木放置區 -->
+            <div class="sentence-slots" id="slots">
+                <div class="slot" data-index="0"></div>
+                <div class="slot" data-index="1"></div>
+                <div class="slot" data-index="2"></div>
+                <div class="slot" data-index="3"></div>
+                <div class="slot" data-index="4"></div>
+            </div>
+
+            <!-- 待選字庫積木 (已打亂順序) -->
+            <div class="word-bank" id="wordBank">
+                <button class="word-btn" onclick="selectWord(this, 'can')">can</button>
+                <button class="word-btn" onclick="selectWord(this, 'cat')">cat</button>
+                <button class="word-btn" onclick="selectWord(this, 'I')">I</button>
+                <button class="word-btn" onclick="selectWord(this, 'a')">a</button>
+                <button class="word-btn" onclick="selectWord(this, 'draw')">draw</button>
+            </div>
+            
+            <!-- 對錯回饋顯示區 -->
+            <div id="feedback"></div>
+        </div>
     </div>
 
-<script>
-    // 【新舊融合進階劇本】
-    const lessonData = [
-        {
-            type: "teach",
-            visual: "🖍️ 🐱",
-            voice: "Look! I have a crayon. I can draw a cat.",
-            actionText: "Next ➡️"
-        },
-        {
-            type: "build",
-            visual: "👂🧠", // 無圖盲聽
-            voice: "Now listen carefully. I can draw a cat. Can you build the sentence?",
-            target: ["I", "can", "draw", "a", "cat"],
-            shuffled: ["can", "cat", "I", "a", "draw"]
-        },
-        {
-            type: "teach",
-            visual: "🎤 😄",
-            voice: "I can sing. I am very happy.",
-            actionText: "Next ➡️"
-        },
-        {
-            type: "build",
-            visual: "👂🧠", // 無圖盲聽
-            voice: "Your turn to build. I can sing.",
-            target: ["I", "can", "sing"],
-            shuffled: ["sing", "can", "I"]
-        },
-        {
-            type: "trap",
-            visual: "Tickles 🐱❓",
-            voice: "Listen to Tickles. Tickles is a cat. He can sing. Is that true?",
-            options: ["✅ Yes", "❌ No"],
-            correct: 1 // No
-        },
-        {
-            type: "trap",
-            visual: "✏️ ❓",
-            voice: "Listen to this. I can draw a pencil. Is that true?",
-            options: ["✅ Yes", "❌ No"],
-            correct: 0 // Yes
-        }
-    ];
-
-    let currentStage = 0;
-    let selectedWords = [];
-
-    // 初始化進度點點
-    const dotsContainer = document.getElementById('dots');
-    lessonData.forEach(() => {
-        let dot = document.createElement('div');
-        dot.className = 'dot';
-        dotsContainer.appendChild(dot);
-    });
-
-    function startGame() {
-        document.getElementById('start-screen').style.display = 'none';
-        let initUtter = new SpeechSynthesisUtterance("");
-        initUtter.volume = 0; window.speechSynthesis.speak(initUtter);
-        loadStage();
-    }
-
-    // 【核心要求：活潑英式女聲】
-    function speakText(text) {
-        window.speechSynthesis.cancel();
-        let utter = new SpeechSynthesisUtterance(text);
-        let voices = window.speechSynthesis.getVoices();
-        let ukVoice = voices.find(v => v.lang.includes('en-GB') && (v.name.includes('Female') || v.name.includes('Siri'))) || 
-                      voices.find(v => v.lang.includes('en-GB'));
-        if(ukVoice) utter.voice = ukVoice;
-        utter.pitch = 1.3; // 卡通調皮感
-        utter.rate = 0.85; // 稍慢清晰
-        window.speechSynthesis.speak(utter);
-    }
-
-    function playVoicePrompt() {
-        speakText(lessonData[currentStage].voice);
-    }
-
-    function loadStage() {
-        if(currentStage >= lessonData.length) {
-            document.getElementById('end-screen').style.display = 'flex';
-            speakText("Wow, brilliant! You did a great job today.");
-            return;
+    <script>
+        // 修正發音：鎖定高音調(卡通聲)與慢速
+        function playSentence() {
+            window.speechSynthesis.cancel(); 
+            const utterance = new SpeechSynthesisUtterance("I can draw a cat.");
+            utterance.lang = "en-GB"; 
+            utterance.pitch = 1.3; // 提高音調變女聲/卡通聲
+            utterance.rate = 0.75; // 慢速確保聽得清
+            window.speechSynthesis.speak(utterance);
         }
 
-        const data = lessonData[currentStage];
-        const display = document.getElementById('content-display');
-        const slotsArea = document.getElementById('slots-area');
-        const interaction = document.getElementById('interaction-board');
-        
-        // 更新進度條
-        document.querySelectorAll('.dot').forEach((d, idx) => {
-            if (idx === currentStage) d.classList.add('active');
-            else d.classList.remove('active');
-        });
-
-        display.innerHTML = data.visual;
-        slotsArea.style.display = 'none';
-        slotsArea.innerHTML = '';
-        interaction.innerHTML = '';
-        selectedWords = [];
-
-        if (data.type === "teach") {
-            let btn = document.createElement('button');
-            btn.className = 'btn-3d';
-            btn.style.background = 'var(--btn-green)';
-            btn.style.borderBottomColor = 'var(--btn-green-shadow)';
-            btn.style.fontSize = '24px';
-            btn.innerText = data.actionText;
-            btn.onclick = () => { currentStage++; loadStage(); };
-            interaction.appendChild(btn);
-
-        } else if (data.type === "build") {
-            slotsArea.style.display = 'flex';
-            // 創建空格
-            data.target.forEach(() => {
-                let slot = document.createElement('div');
-                slot.className = 'slot-box';
-                slot.innerText = '_';
-                slotsArea.appendChild(slot);
-            });
-            // 創建打亂的積木
-            data.shuffled.forEach((word, idx) => {
-                let block = document.createElement('div');
-                block.className = 'word-block';
-                block.innerText = word;
-                block.onclick = () => handleBlockClick(word, block, data);
-                interaction.appendChild(block);
-            });
-
-        } else if (data.type === "trap") {
-            data.options.forEach((opt, idx) => {
-                let btn = document.createElement('button');
-                btn.className = 'word-block';
-                btn.style.fontSize = '40px';
-                btn.style.padding = '20px 40px';
-                btn.innerText = opt;
-                btn.onclick = () => handleTrapClick(idx, data.correct, btn);
-                interaction.appendChild(btn);
-            });
+        // 雙重斷音返回總覽頁
+        function goBack() {
+            window.speechSynthesis.cancel();
+            window.location.href = 'en-unit4.html';
         }
 
-        setTimeout(playVoicePrompt, 300);
-    }
+        // 積木遊戲邏輯
+        const targetSentence = ["I", "can", "draw", "a", "cat"];
+        let currentAnswers = [];
 
-    // 處理積木點擊
-    function handleBlockClick(word, blockElement, data) {
-        if(blockElement.classList.contains('used')) return;
-        
-        selectedWords.push(word);
-        blockElement.classList.add('used');
-        
-        // 填入 Slot
-        const slots = document.getElementById('slots-area').children;
-        slots[selectedWords.length - 1].innerText = word;
-        slots[selectedWords.length - 1].classList.add('filled');
+        function selectWord(btn, word) {
+            if (currentAnswers.length < targetSentence.length) {
+                // 讀出點擊的單字 (同樣用慢速卡通聲)
+                const u = new SpeechSynthesisUtterance(word);
+                u.lang = "en-GB"; u.pitch = 1.3; u.rate = 0.85;
+                window.speechSynthesis.speak(u);
 
-        // 如果填滿了，檢查對錯
-        if(selectedWords.length === data.target.length) {
-            let isCorrect = selectedWords.join(" ") === data.target.join(" ");
-            if(isCorrect) {
-                speakText("Spot on!");
-                document.getElementById('slots-area').classList.add('correct');
-                setTimeout(() => { currentStage++; loadStage(); }, 1500);
-            } else {
-                speakText("Oops, that's not right. Try again!");
-                document.getElementById('visual-board').classList.add('wrong-shake');
-                setTimeout(() => {
-                    document.getElementById('visual-board').classList.remove('wrong-shake');
-                    // 重置積木
-                    loadStage(); 
-                }, 1000);
+                // 填入插槽
+                currentAnswers.push(word);
+                updateSlots();
+                btn.classList.add('hidden'); // 隱藏已選按鈕
+                btn.dataset.index = currentAnswers.length - 1; 
+                
+                checkWin();
             }
         }
-    }
 
-    // 處理陷阱題點擊
-    function handleTrapClick(selectedIndex, correctIndex, btnElement) {
-        if(selectedIndex === correctIndex) {
-            btnElement.style.background = 'var(--btn-green)';
-            btnElement.style.color = 'white';
-            speakText("You got it!");
-            setTimeout(() => { currentStage++; loadStage(); }, 1200);
-        } else {
-            btnElement.classList.add('wrong-shake');
-            speakText("Think again!");
-            setTimeout(() => btnElement.classList.remove('wrong-shake'), 600);
+        // 更新空格狀態
+        function updateSlots() {
+            const slots = document.querySelectorAll('.slot');
+            slots.forEach((slot, index) => {
+                if (currentAnswers[index]) {
+                    slot.textContent = currentAnswers[index];
+                    slot.classList.add('filled');
+                    slot.onclick = () => removeWord(index); // 允許點擊取消重選
+                } else {
+                    slot.textContent = '';
+                    slot.classList.remove('filled');
+                    slot.onclick = null;
+                }
+            });
         }
-    }
 
-    // 【雙重斷音保護】
-    function goHome() {
-        window.speechSynthesis.pause();
-        window.speechSynthesis.cancel();
-        setTimeout(() => { window.location.href = 'index.html'; }, 300);
-    }
+        // 點擊空格取消單字
+        function removeWord(index) {
+            const word = currentAnswers[index];
+            currentAnswers.splice(index, 1);
+            updateSlots();
+            
+            // 恢復字庫按鈕顯示
+            const btns = document.querySelectorAll('.word-btn');
+            btns.forEach(btn => {
+                if (btn.textContent === word && btn.classList.contains('hidden')) {
+                    btn.classList.remove('hidden');
+                }
+            });
+            document.getElementById('feedback').textContent = "";
+        }
 
-    window.addEventListener('beforeunload', goHome);
-</script>
+        // 檢查答案對錯
+        function checkWin() {
+            if (currentAnswers.length === targetSentence.length) {
+                const isCorrect = currentAnswers.join(" ") === targetSentence.join(" ");
+                const fb = document.getElementById('feedback');
+                
+                if (isCorrect) {
+                    fb.innerHTML = "<span style='color:#10B981;'>🎉 Very Good! I can draw a cat!</span>";
+                    setTimeout(playSentence, 500); // 贏咗再讀一次全句
+                } else {
+                    fb.innerHTML = "<span style='color:#EF4444;'>❌ Oops! 順序錯咗，試下重新排過啦！</span>";
+                    // 答錯後兩秒自動清空
+                    setTimeout(() => {
+                        currentAnswers = [];
+                        updateSlots();
+                        document.querySelectorAll('.word-btn').forEach(b => b.classList.remove('hidden'));
+                        fb.innerHTML = "";
+                    }, 2000);
+                }
+            }
+        }
+    </script>
 </body>
 </html>
