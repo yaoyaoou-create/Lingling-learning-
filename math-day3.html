@@ -4,12 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Day 3: Tickles 糖果屋大冒險</title>
-    <!-- 若有全域樣式可解除註解 <link rel="stylesheet" href="theme.css"> -->
     <style>
-        /* 【升級 1：加入防雙擊放大鎖】 */
-        * {
-            touch-action: manipulation;
-        }
+        * { touch-action: manipulation; box-sizing: border-box; }
 
         :root {
             --bg-color: linear-gradient(135deg, #FFEAA7 0%, #FFD1FF 100%);
@@ -28,19 +24,18 @@
             font-family: 'Comic Sans MS', 'Chalkboard SE', 'PingFang HK', sans-serif;
             background: var(--bg-color);
             color: var(--text-dark);
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            overflow: hidden; /* 防止滾動，鎖定一屏 */
+            overflow-x: hidden;
         }
 
-        /* 頂部導航列 */
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 15px 20px;
-            background: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.75);
             border-bottom: 4px solid white;
         }
         
@@ -54,16 +49,12 @@
             font-weight: 900;
             padding: 12px 24px;
             cursor: pointer;
-            transition: all 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.1s;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
         .btn-3d:active {
             transform: translateY(4px);
             border-bottom-width: 4px;
-        }
-        .btn-3d.correct {
-            background: var(--btn-green);
-            border-bottom-color: var(--btn-green-shadow);
         }
 
         .progress-dots {
@@ -71,69 +62,77 @@
             gap: 8px;
         }
         .dot {
-            width: 16px;
-            height: 16px;
+            width: 18px;
+            height: 18px;
             background: #E2E8F0;
             border-radius: 50%;
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
         }
-        .dot.active { background: #F59E0B; box-shadow: 0 0 8px #FCD34D; }
+        .dot.active { background: #F59E0B; box-shadow: 0 0 8px #FCD34D; transform: scale(1.15); }
+        .dot.done { background: #10B981; }
 
-        /* 遊戲主舞台 */
         .game-container {
             flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 24px 20px;
         }
 
-        /* 大畫布視覺區 (Zero-Upload Emoji/SVG) */
+        .stage-label {
+            font-size: 18px;
+            font-weight: 900;
+            color: #9333EA;
+            background: rgba(255,255,255,0.85);
+            padding: 6px 18px;
+            border-radius: 16px;
+            margin-bottom: 16px;
+        }
+
         .visual-area {
             background: white;
             border-radius: 30px;
             padding: 40px 30px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.06);
             border: 6px solid #FFF;
             text-align: center;
             min-height: 200px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 70px;
+            font-size: 64px;
             line-height: 1.2;
-            width: 90%;
+            width: 92%;
             max-width: 800px;
             margin-bottom: 30px;
             position: relative;
+            cursor: pointer;
         }
 
-        /* 發音喇叭按鈕 */
         .speaker-btn {
             position: absolute;
-            top: -20px;
-            left: -20px;
+            top: -22px;
+            left: -16px;
             background: var(--btn-red);
             border: none;
             border-bottom: 6px solid var(--btn-red-shadow);
-            border-radius: 50%;
-            width: 70px;
-            height: 70px;
-            font-size: 30px;
+            border-radius: 24px;
+            padding: 8px 16px;
+            font-size: 22px;
+            font-weight: 900;
+            color: white;
             cursor: pointer;
-            box-shadow: 0 5px 15px rgba(244, 63, 94, 0.4);
+            box-shadow: 0 5px 15px rgba(244, 63, 94, 0.35);
             display: flex;
             align-items: center;
-            justify-content: center;
-            transition: all 0.1s;
+            gap: 6px;
         }
         .speaker-btn:active {
             transform: translateY(3px);
             border-bottom-width: 3px;
         }
 
-        /* 選項按鈕區 */
         .options-area {
             display: flex;
             gap: 20px;
@@ -141,14 +140,16 @@
             justify-content: center;
         }
         .opt-btn {
-            font-size: 40px;
-            padding: 20px 40px;
+            font-size: 42px;
+            font-weight: 900;
+            padding: 20px 42px;
             border-radius: 24px;
             background: white;
             border: 4px solid #E2E8F0;
             border-bottom: 10px solid #CBD5E1;
             cursor: pointer;
             transition: all 0.1s;
+            color: #1E293B;
         }
         .opt-btn:active {
             transform: translateY(5px);
@@ -166,7 +167,6 @@
             75% { transform: translateX(8px) rotate(3deg); }
         }
 
-        /* 診斷報告 Modal */
         #report-modal {
             display: none;
             position: fixed;
@@ -193,9 +193,8 @@
         .success-text { color: #10B981; }
         .warning-text { color: #EF4444; }
 
-        /* 啟動畫面 */
         #start-screen {
-            position: absolute;
+            position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: var(--bg-color);
             display: flex;
@@ -203,33 +202,34 @@
             align-items: center;
             justify-content: center;
             z-index: 200;
+            padding: 20px;
         }
-        .anna-avatar { font-size: 100px; margin-bottom: 20px; animation: float 2s infinite ease-in-out; }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        .anna-avatar { font-size: 96px; margin-bottom: 16px; animation: float 2s infinite ease-in-out; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
     </style>
 </head>
 <body>
 
+    <!-- 啟動畫面 -->
     <div id="start-screen">
         <div class="anna-avatar">🧚‍♀️</div>
-        <h1 style="color:#D97706; text-shadow: 2px 2px white; text-align:center;">Day 3: Tickles 糖果屋大冒險</h1>
-        <p style="color:#64748B; font-weight:bold;">包含 8 題進階邏輯與加減法挑戰</p>
-        <button class="btn-3d" style="font-size: 24px; padding: 15px 40px; margin-top: 20px; background:var(--btn-green); border-bottom-color:var(--btn-green-shadow);" onclick="startGame()">▶️ 點擊開始闖關</button>
+        <h1 style="color:#D97706; text-shadow: 2px 2px white; text-align:center; margin:0 0 10px 0;">Day 3: Tickles 糖果屋大冒險</h1>
+        <p style="color:#64748B; font-weight:bold; font-size:18px; margin:0 0 24px 0;">包含 8 題進階邏輯與加減法挑戰</p>
+        <button class="btn-3d" style="font-size: 24px; padding: 16px 42px; background:var(--btn-green); border-bottom-color:var(--btn-green-shadow);" onclick="startGame()">▶️ 點擊開始闖關</button>
     </div>
 
     <header>
         <button class="btn-3d" onclick="goHome()">🏠 返回主目錄</button>
-        <div class="progress-dots" id="dots">
-        </div>
+        <div class="progress-dots" id="dots"></div>
     </header>
 
     <div class="game-container">
-        <div class="visual-area" id="visual-board">
-            <button class="speaker-btn" onclick="playVoicePrompt()">🧚‍♀️🔊</button>
+        <div class="stage-label" id="stage-title">【第 1 題：邏輯規律 (AABB)】</div>
+        <div class="visual-area" id="visual-board" onclick="playVoicePrompt()">
+            <button class="speaker-btn" onclick="event.stopPropagation(); playVoicePrompt();">🧚‍♀️🔊 聽題目</button>
             <div id="question-content"></div>
         </div>
-        <div class="options-area" id="options-board">
-        </div>
+        <div class="options-area" id="options-board"></div>
     </div>
 
     <div id="report-modal">
@@ -249,10 +249,211 @@
     </div>
 
 <script>
-    // 【升級 2：加入防垃圾回收全域變數】
     window.utterancePool = [];
+    let isLocked = false;
 
     const quizData = [
         {
             stage: "【第 1 題：邏輯規律 (AABB)】",
-            visual: "🍬🍫🍬🍫🍬 <span style='border-
+            visual: "🍬🍫🍬🍫🍬 <span style='border-bottom:6px dashed #ccc; color:#ccc;'>?</span>",
+            voice: "Look at the pattern! Candy, chocolate, candy, chocolate, candy. What comes next?",
+            options: ["🍬", "🍫", "🍩"],
+            correct: 1
+        },
+        {
+            stage: "【第 2 題：邏輯規律 (ABC)】",
+            visual: "🔴🟡🔵🔴🟡🔵 <span style='border-bottom:6px dashed #ccc; color:#ccc;'>?</span>",
+            voice: "Red, yellow, blue, red, yellow, blue. What is next?",
+            options: ["🟡", "🔵", "🔴"],
+            correct: 2
+        },
+        {
+            stage: "【第 3 題：加法 (1+1 具體視覺)】",
+            visual: "🍭 ➕ 🍭 🟰 <span style='border-bottom:6px dashed #ccc; color:#ccc;'>?</span>",
+            voice: "One candy, and one more candy. Let's add them up! How many candies?",
+            options: ["1", "2", "3"],
+            correct: 1
+        },
+        {
+            stage: "【第 4 題：加法 (2+1 點數群組)】",
+            visual: "🍩🍩 ➕ 🍩 🟰 <span style='border-bottom:6px dashed #ccc; color:#ccc;'>?</span>",
+            voice: "Tickles has two donuts. Anna gives him one more. How many donuts does Tickles have now?",
+            options: ["2", "3", "4"],
+            correct: 1
+        },
+        {
+            stage: "【第 5 題：加法 (2+2 數字與物件)】",
+            visual: "<div style='display:flex; align-items:center; gap:20px; font-size:50px;'><div><span style='color:#E74C3C;'>2</span> 🍪🍪</div> <div>➕</div> <div><span style='color:#E74C3C;'>2</span> 🍪🍪</div> <div>🟰 <span style='border-bottom:6px dashed #ccc; color:#ccc;'>?</span></div></div>",
+            voice: "Two cookies, plus two cookies. Make a guess, how many in total?",
+            options: ["3", "4", "5"],
+            correct: 1
+        },
+        {
+            stage: "【第 6 題：加法 (3+1 隱藏抽象)】",
+            visual: "<div style='position:relative; display:inline-block;'>🎰<span style='position:absolute; top:-20px; left:-20px; background:white; border-radius:50%; width:45px; height:45px; line-height:45px; text-align:center; color:red; border:4px solid red; font-size:30px; font-weight:bold;'>3</span></div> ➕ 🍬 🟰 <span style='border-bottom:6px dashed #ccc; color:#ccc;'>?</span>",
+            voice: "There are three candies hidden in the machine. We put one more inside! Wow, how many candies are in the machine now?",
+            options: ["3", "4", "5"],
+            correct: 1
+        },
+        {
+            stage: "【第 7 題：減法 (3-1 視覺消除)】",
+            visual: "🍦 🍦 <span style='opacity:0.3; filter:grayscale(100%);'>🍦</span> 🟰 <span style='border-bottom:6px dashed #ccc; color:#ccc;'>?</span>",
+            voice: "We had three ice creams. Tickles ate one! Oh dear! How many are left?",
+            options: ["1", "2", "3"],
+            correct: 1
+        },
+        {
+            stage: "【第 8 題：減法 (4-2 動態減法)】",
+            visual: "🎈 🎈 <span style='opacity:0.3;'>💥</span> <span style='opacity:0.3;'>💥</span> 🟰 <span style='border-bottom:6px dashed #ccc; color:#ccc;'>?</span>",
+            voice: "Four balloons in the sky. Pop! Pop! Two popped! How many balloons are left?",
+            options: ["1", "2", "4"],
+            correct: 1
+        }
+    ];
+
+    let currentQ = 0;
+    let startTime = 0;
+    let attemptsCount = 0;
+    let reportData = [];
+
+    const dotsContainer = document.getElementById('dots');
+    for (let i = 0; i < quizData.length; i++) {
+        let dot = document.createElement('div');
+        dot.className = 'dot';
+        dotsContainer.appendChild(dot);
+    }
+
+    if ('speechSynthesis' in window) {
+        window.speechSynthesis.onvoiceschanged = () => { window.speechSynthesis.getVoices(); };
+        window.speechSynthesis.getVoices();
+    }
+
+    function pickUkVoice() {
+        if (!('speechSynthesis' in window)) return null;
+        const voices = window.speechSynthesis.getVoices();
+        if (!voices || voices.length === 0) return null;
+        const preferredEn = ['Serena', 'Martha', 'Kate', 'Shelley', 'Flo', 'Sandy'];
+        for (let name of preferredEn) {
+            const found = voices.find(v => v.name.includes(name) && v.lang.includes('en'));
+            if (found) return found;
+        }
+        return voices.find(v => v.lang === 'en-GB') || voices.find(v => v.lang.startsWith('en'));
+    }
+
+    // 100分終極安全發音引擎（已強制補回 utter.lang = 'en-GB'）
+    function speakText(text) {
+        if (!('speechSynthesis' in window) || !text) return;
+        if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
+            window.speechSynthesis.cancel();
+        }
+        setTimeout(() => {
+            const utter = new SpeechSynthesisUtterance(text);
+            utter.lang = 'en-GB'; // 關鍵修正：強制指定英文語系，防止被 html lang="zh-HK" 卡死
+            const ukVoice = pickUkVoice();
+            if (ukVoice) utter.voice = ukVoice;
+            utter.pitch = 1.08;
+            utter.rate = 0.78;
+            window.utterancePool.push(utter);
+            window.speechSynthesis.speak(utter);
+        }, 40);
+    }
+
+    function startGame() {
+        document.getElementById('start-screen').style.display = 'none';
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        isLocked = false;
+        attemptsCount = 0;
+        startTime = Date.now();
+        const q = quizData[currentQ];
+        
+        const dots = document.querySelectorAll('.dot');
+        dots.forEach((d, idx) => {
+            d.classList.remove('active', 'done');
+            if (idx < currentQ) d.classList.add('done');
+            if (idx === currentQ) d.classList.add('active');
+        });
+
+        document.getElementById('stage-title').innerText = q.stage;
+        document.getElementById('question-content').innerHTML = q.visual;
+        const optionsBoard = document.getElementById('options-board');
+        optionsBoard.innerHTML = '';
+        
+        q.options.forEach((opt, idx) => {
+            let btn = document.createElement('button');
+            btn.className = 'opt-btn';
+            btn.innerHTML = opt;
+            btn.onclick = () => checkAnswer(idx, btn);
+            optionsBoard.appendChild(btn);
+        });
+
+        // 同步直接觸發語音，唔再用 300ms 延遲避免 Safari 攔截
+        playVoicePrompt();
+    }
+
+    function playVoicePrompt() {
+        speakText(quizData[currentQ].voice);
+    }
+
+    function checkAnswer(selectedIdx, btnElement) {
+        if (isLocked) return;
+        const q = quizData[currentQ];
+        attemptsCount++;
+
+        if (selectedIdx === q.correct) {
+            isLocked = true;
+            btnElement.style.background = "var(--btn-green)";
+            btnElement.style.borderColor = "#10B981";
+            btnElement.style.color = "white";
+            
+            const timeTaken = Math.round((Date.now() - startTime) / 1000);
+            reportData.push({
+                stage: q.stage,
+                attempts: attemptsCount,
+                time: timeTaken
+            });
+
+            speakText(["Excellent!", "Spot on!", "Super clever!", "Wow, brilliant!"][Math.floor(Math.random()*4)]);
+            
+            setTimeout(() => {
+                currentQ++;
+                if (currentQ < quizData.length) {
+                    loadQuestion();
+                } else {
+                    showReport();
+                }
+            }, 1300);
+
+        } else {
+            btnElement.classList.add('wrong-shake');
+            speakText("Oops! Let's count again carefully!");
+            setTimeout(() => btnElement.classList.remove('wrong-shake'), 500);
+        }
+    }
+
+    function showReport() {
+        document.getElementById('report-modal').style.display = 'flex';
+        const table = document.getElementById('report-table');
+        
+        reportData.forEach((data, index) => {
+            let tr = document.createElement('tr');
+            let resultHtml = data.attempts === 1 
+                ? `<span class="success-text">✅ 1次答對</span>` 
+                : `<span class="warning-text">❌ 需提示(${data.attempts}次)</span>`;
+            
+            let diagnosis = "";
+            if (index < 2) { 
+                diagnosis = data.attempts === 1 ? "邏輯清晰" : "需引導觀察";
+            } else if (index >= 2 && index <= 5) { 
+                if (data.attempts === 1 && data.time < 10) diagnosis = "概念極穩固";
+                else if (data.attempts === 1) diagnosis = "需時思考運算";
+                else diagnosis = "概念需強化";
+            } else { 
+                diagnosis = data.attempts === 1 ? "減法概念穩固" : "需實物輔助";
+            }
+
+            tr.innerHTML = `
+                <td>${data.stage}</td>
+                
