@@ -6,6 +6,11 @@
     <title>Day 3: Tickles 糖果屋大冒險</title>
     <!-- 若有全域樣式可解除註解 <link rel="stylesheet" href="theme.css"> -->
     <style>
+        /* 【升級 1：加入防雙擊放大鎖】 */
+        * {
+            touch-action: manipulation;
+        }
+
         :root {
             --bg-color: linear-gradient(135deg, #FFEAA7 0%, #FFD1FF 100%);
             --btn-blue: linear-gradient(135deg, #7DD3FC, #0EA5E9);
@@ -205,7 +210,6 @@
 </head>
 <body>
 
-    <!-- 啟動畫面 (必須由用家點擊啟動，以解鎖 Safari 語音權限) -->
     <div id="start-screen">
         <div class="anna-avatar">🧚‍♀️</div>
         <h1 style="color:#D97706; text-shadow: 2px 2px white; text-align:center;">Day 3: Tickles 糖果屋大冒險</h1>
@@ -216,7 +220,6 @@
     <header>
         <button class="btn-3d" onclick="goHome()">🏠 返回主目錄</button>
         <div class="progress-dots" id="dots">
-            <!-- JS 動態生成 8 粒星 -->
         </div>
     </header>
 
@@ -226,11 +229,9 @@
             <div id="question-content"></div>
         </div>
         <div class="options-area" id="options-board">
-            <!-- 按鈕動態生成 -->
         </div>
     </div>
 
-    <!-- 診斷報告 -->
     <div id="report-modal">
         <div class="report-content">
             <h2 style="color: #6D28D9; margin-top:0;">📊 媽媽進階診斷報告 (資優挑戰)</h2>
@@ -242,237 +243,16 @@
                     <th>耗時</th>
                     <th>Anna 診斷</th>
                 </tr>
-                <!-- JS 填入 -->
             </table>
             <button class="btn-3d" onclick="goHome()">🏠 返回首頁</button>
         </div>
     </div>
 
 <script>
-    // 【8 題精確測試劇本】
+    // 【升級 2：加入防垃圾回收全域變數】
+    window.utterancePool = [];
+
     const quizData = [
-        // 階段一：邏輯規律 (Pattern)
         {
             stage: "【第 1 題：邏輯規律 (AABB)】",
-            visual: "🍬🍫🍬🍫🍬 <span style='border-bottom:6px dashed #ccc; color:#ccc;'>?</span>",
-            voice: "Look at the pattern! Candy, chocolate, candy, chocolate, candy... What comes next?",
-            options: ["🍬", "🍫", "🍩"],
-            correct: 1
-        },
-        {
-            stage: "【第 2 題：邏輯規律 (ABC)】",
-            visual: "🔴🟡🔵🔴🟡🔵 <span style='border-bottom:6px dashed #ccc; color:#ccc;'>?</span>",
-            voice: "Red, yellow, blue, red, yellow, blue... What's next?",
-            options: ["🟡", "🔵", "🔴"],
-            correct: 2
-        },
-        // 階段二：加法特訓 (Addition)
-        {
-            stage: "【第 3 題：加法 (1+1 具體視覺)】",
-            visual: "🍭 ➕ 🍭 🟰 <span style='border-bottom:6px dashed #ccc; color:#ccc;'>?</span>",
-            voice: "One candy, and one more candy. Let's add them up! How many candies?",
-            options: ["1", "2", "3"],
-            correct: 1
-        },
-        {
-            stage: "【第 4 題：加法 (2+1 點數群組)】",
-            visual: "🍩🍩 ➕ 🍩 🟰 <span style='border-bottom:6px dashed #ccc; color:#ccc;'>?</span>",
-            voice: "Tickles has two donuts. Anna gives him one more. How many donuts does Tickles have now?",
-            options: ["2", "3", "4"],
-            correct: 1
-        },
-        {
-            stage: "【第 5 題：加法 (2+2 數字與物件)】",
-            visual: "<div style='display:flex; align-items:center; gap:20px; font-size:50px;'><div><span style='color:#E74C3C;'>2</span> 🍪🍪</div> <div>➕</div> <div><span style='color:#E74C3C;'>2</span> 🍪🍪</div> <div>🟰 <span style='border-bottom:6px dashed #ccc; color:#ccc;'>?</span></div></div>",
-            voice: "Two cookies, plus two cookies. Make a guess, how many in total?",
-            options: ["3", "4", "5"],
-            correct: 1
-        },
-        {
-            stage: "【第 6 題：加法 (3+1 隱藏抽象)】",
-            visual: "<div style='position:relative; display:inline-block;'>🎰<span style='position:absolute; top:-20px; left:-20px; background:white; border-radius:50%; width:45px; height:45px; line-height:45px; text-align:center; color:red; border:4px solid red; font-size:30px; font-weight:bold;'>3</span></div> ➕ 🍬 🟰 <span style='border-bottom:6px dashed #ccc; color:#ccc;'>?</span>",
-            voice: "There are three candies hidden in the machine. We put one more inside! Wow, how many candies are in the machine now?",
-            options: ["3", "4", "5"],
-            correct: 1
-        },
-        // 階段三：減法鞏固 (Subtraction)
-        {
-            stage: "【第 7 題：減法 (3-1 視覺消除)】",
-            visual: "🍦 🍦 <span style='opacity:0.3; filter:grayscale(100%);'>🍦</span> 🟰 <span style='border-bottom:6px dashed #ccc; color:#ccc;'>?</span>",
-            voice: "We had three ice creams. Tickles ate one! Oh dear! How many are left?",
-            options: ["1", "2", "3"],
-            correct: 1
-        },
-        {
-            stage: "【第 8 題：減法 (4-2 動態減法)】",
-            visual: "🎈 🎈 <span style='opacity:0.3;'>💥</span> <span style='opacity:0.3;'>💥</span> 🟰 <span style='border-bottom:6px dashed #ccc; color:#ccc;'>?</span>",
-            voice: "Four balloons in the sky... Pop! Pop! Two popped! How many balloons are left?",
-            options: ["1", "2", "4"],
-            correct: 1
-        }
-    ];
-
-    let currentQ = 0;
-    let startTime = 0;
-    let attemptsCount = 0;
-    let reportData = [];
-
-    // 初始化點點
-    const dotsContainer = document.getElementById('dots');
-    for (let i = 0; i < quizData.length; i++) {
-        let dot = document.createElement('div');
-        dot.className = 'dot';
-        dotsContainer.appendChild(dot);
-    }
-
-    // 啟動遊戲
-    function startGame() {
-        document.getElementById('start-screen').style.display = 'none';
-        // 初始化 Safari 語音引擎
-        let initUtter = new SpeechSynthesisUtterance("Let's go!");
-        initUtter.volume = 0;
-        window.speechSynthesis.speak(initUtter);
-        
-        loadQuestion();
-    }
-
-    function loadQuestion() {
-        attemptsCount = 0;
-        startTime = Date.now();
-        const q = quizData[currentQ];
-        
-        // 更新點點
-        const dots = document.querySelectorAll('.dot');
-        dots.forEach((d, idx) => {
-            if (idx === currentQ) d.classList.add('active');
-            else d.classList.remove('active');
-        });
-
-        // 載入畫面
-        document.getElementById('question-content').innerHTML = q.visual;
-        const optionsBoard = document.getElementById('options-board');
-        optionsBoard.innerHTML = '';
-        
-        q.options.forEach((opt, idx) => {
-            let btn = document.createElement('button');
-            btn.className = 'opt-btn';
-            btn.innerHTML = opt;
-            btn.onclick = () => checkAnswer(idx, btn);
-            optionsBoard.appendChild(btn);
-        });
-
-        // 延遲一點點播語音，讓頁面渲染完成
-        setTimeout(playVoicePrompt, 300);
-    }
-
-    // 【核心要求：活潑英式女聲 (Funny British Voice)】
-    function speakText(text) {
-        window.speechSynthesis.cancel();
-        let utter = new SpeechSynthesisUtterance(text);
-        
-        // 尋找英式女聲
-        let voices = window.speechSynthesis.getVoices();
-        let ukVoice = voices.find(v => v.lang.includes('en-GB') && (v.name.includes('Female') || v.name.includes('Siri'))) || 
-                      voices.find(v => v.lang.includes('en-GB'));
-        
-        if(ukVoice) utter.voice = ukVoice;
-        
-        // 微調 pitch 讓聲音有「卡通姐姐」的俏皮感，rate 微慢確保聽清
-        utter.pitch = 1.3; 
-        utter.rate = 0.85; 
-        
-        window.speechSynthesis.speak(utter);
-    }
-
-    function playVoicePrompt() {
-        speakText(quizData[currentQ].voice);
-    }
-
-    function checkAnswer(selectedIdx, btnElement) {
-        const q = quizData[currentQ];
-        attemptsCount++;
-
-        if (selectedIdx === q.correct) {
-            // 答對處理
-            btnElement.style.background = "var(--btn-green)";
-            btnElement.style.borderColor = "#10B981";
-            btnElement.style.color = "white";
-            
-            const timeTaken = Math.round((Date.now() - startTime) / 1000);
-            
-            // 記錄報告
-            reportData.push({
-                stage: q.stage,
-                attempts: attemptsCount,
-                time: timeTaken
-            });
-
-            speakText(["Excellent!", "Spot on!", "Super clever!", "Wow, brilliant!"][Math.floor(Math.random()*4)]);
-            
-            setTimeout(() => {
-                currentQ++;
-                if (currentQ < quizData.length) {
-                    loadQuestion();
-                } else {
-                    showReport();
-                }
-            }, 1200);
-
-        } else {
-            // 答錯處理 (不劇透，防呆搖晃)
-            btnElement.classList.add('wrong-shake');
-            speakText("Oops! Let's count again carefully!");
-            setTimeout(() => btnElement.classList.remove('wrong-shake'), 500);
-        }
-    }
-
-    // 生成診斷報告
-    function showReport() {
-        document.getElementById('report-modal').style.display = 'flex';
-        const table = document.getElementById('report-table');
-        
-        reportData.forEach((data, index) => {
-            let tr = document.createElement('tr');
-            
-            // 結果判斷
-            let resultHtml = data.attempts === 1 
-                ? `<span class="success-text">✅ 1次答對</span>` 
-                : `<span class="warning-text">❌ 需提示(${data.attempts}次)</span>`;
-            
-            // Anna AI 智能診斷語
-            let diagnosis = "";
-            if (index < 2) { // 規律題
-                diagnosis = data.attempts === 1 ? "邏輯清晰" : "需引導觀察";
-            } else if (index >= 2 && index <= 5) { // 加法題
-                if (data.attempts === 1 && data.time < 10) diagnosis = "概念極穩固";
-                else if (data.attempts === 1) diagnosis = "需時思考運算";
-                else diagnosis = "概念需強化";
-            } else { // 減法題
-                diagnosis = data.attempts === 1 ? "減法概念穩固" : "需實物輔助";
-            }
-
-            tr.innerHTML = `
-                <td>${data.stage}</td>
-                <td>${resultHtml}</td>
-                <td>${data.time} 秒</td>
-                <td>${diagnosis}</td>
-            `;
-            table.appendChild(tr);
-        });
-        
-        speakText("Great job Lingling! You have finished all the challenges!");
-    }
-
-    // 【核心要求：iPad Safari 雙重斷音鎖】
-    function goHome() {
-        window.speechSynthesis.pause();
-        window.speechSynthesis.cancel();
-        // 如果想彈返去首頁，解除下面註解
-        setTimeout(() => { window.location.href = 'index.html'; }, 300);
-    }
-
-    // 確保離開頁面時斷音
-    window.addEventListener('beforeunload', goHome);
-</script>
-</body>
-</html>
+            visual: "🍬🍫🍬🍫🍬 <span style='border-
