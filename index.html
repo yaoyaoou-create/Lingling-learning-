@@ -4,43 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>🌟 玲玲K2嘅學習成長樂園 🌟</title>
+    <!-- 若有 theme.css 可保留，這裡已內建所需防護與樣式 -->
     <link rel="stylesheet" href="theme.css">
     <style>
-        * { touch-action: manipulation; }
+        * { touch-action: manipulation; box-sizing: border-box; }
         :root {
             --bg-main: #FFFDF9;
             --text-dark: #2C3E50;
             --text-muted: #7F8C8D;
-
-            --cn-class-main: #F39C12;
             --cn-class-bg: linear-gradient(135deg, #FFEAA7 0%, #F9CA24 100%);
             --cn-class-shadow: #D58D00;
-
-            --en-class-main: #3498DB;
             --en-class-bg: linear-gradient(135deg, #DFF9FB 0%, #68B3F4 100%);
             --en-class-shadow: #2471A3;
-
-            --cn-quiz-main: #2ECC71;
             --cn-quiz-bg: linear-gradient(135deg, #E5FBEB 0%, #2ECC71 100%);
             --cn-quiz-shadow: #219653;
-
-            --en-quiz-main: #9B59B6;
             --en-quiz-bg: linear-gradient(135deg, #F3E5F5 0%, #9B59B6 100%);
             --en-quiz-shadow: #6C3483;
-
-            --book-main: #FF7675;
             --book-bg: linear-gradient(135deg, #FFEAA7 0%, #FF7675 100%);
             --book-shadow: #C0392B;
-
-            --video-main: #FF4757;
             --video-bg: linear-gradient(135deg, #FFD2D2 0%, #FF4757 100%);
             --video-shadow: #C0392B;
-
-            --math-main: #10AC84;
             --math-bg: linear-gradient(135deg, #E3FCF7 0%, #10AC84 100%);
             --math-shadow: #0D8264;
         }
 
+        /* 修復：確保內容從頂部開始排列，防止卡片過多時頂部溢出 */
         body {
             margin: 0;
             padding: 24px 20px;
@@ -54,6 +42,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: flex-start;
         }
 
         .container { width: 100%; max-width: 1080px; }
@@ -114,6 +103,11 @@
         }
         .category-section.active { display: block; animation: bounceIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 
+        @keyframes bounceIn {
+            0% { opacity: 0; transform: scale(0.95) translateY(10px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
         .section-header {
             display: flex;
             align-items: center;
@@ -147,6 +141,7 @@
             transition: all 0.1s ease;
             min-height: 155px;
             box-shadow: 0 8px 14px rgba(0,0,0,0.03);
+            cursor: pointer;
         }
         .unit-card:active { transform: translateY(4px); border-bottom-width: 4px !important; box-shadow: 0 2px 4px rgba(0,0,0,0.04); }
         .unit-card-icon { font-size: 44px; margin-bottom: 6px; line-height: 1; transition: transform 0.2s; }
@@ -170,6 +165,7 @@
         .card-math     { background: #EAFDF8; border-color: #48DBB4; border-bottom-color: #10AC84; }
         .card-math .unit-tag     { color: #0D8264; }
 
+        /* 預留格樣式 */
         .unit-card.locked {
             background: #F8FAFC;
             border: 3px dashed #CBD5E1;
@@ -185,6 +181,45 @@
         .footer-bar { display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: #94A3B8; margin-top: 10px; font-weight: 800; }
         .show-all-btn { background: #F1F5F9; border: 2px solid #CBD5E1; color: #475569; padding: 6px 14px; border-radius: 14px; font-size: 13px; font-weight: 900; cursor: pointer; font-family: inherit; }
 
+        /* =========================================================
+           升級：Unit 子欄目彈窗 Modal 專屬 3D 樣式
+           ========================================================= */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(4px);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 1000; opacity: 0; visibility: hidden; transition: all 0.25s;
+        }
+        .modal-overlay.show { opacity: 1; visibility: visible; }
+        .modal-content {
+            background: #fff; width: 90%; max-width: 420px;
+            border-radius: 32px; padding: 24px;
+            border: 6px solid #C4B5FD; border-bottom-width: 12px; border-bottom-color: #8B5CF6;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+            position: relative; transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .modal-overlay.show .modal-content { transform: scale(1); }
+        .modal-close {
+            position: absolute; top: -16px; right: -16px;
+            width: 44px; height: 44px; border-radius: 50%;
+            background: #EF4444; color: white; border: 4px solid white;
+            font-size: 20px; font-weight: bold; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: transform 0.1s;
+        }
+        .modal-close:active { transform: scale(0.9); }
+        .modal-title { font-size: 22px; font-weight: 900; color: #1E293B; margin-top: 0; margin-bottom: 18px; text-align: center; }
+        .modal-list { display: flex; flex-direction: column; gap: 12px; }
+        
+        .modal-item {
+            display: flex; align-items: center; padding: 14px 16px;
+            border-radius: 18px; text-decoration: none; font-weight: 800; font-size: 15px;
+            border: 3px solid transparent; border-bottom-width: 6px; transition: all 0.1s;
+        }
+        .modal-item:active { transform: translateY(3px); border-bottom-width: 3px; }
+        .modal-item.unlocked { background: #E0F2FE; border-color: #7DD3FC; border-bottom-color: #0EA5E9; color: #0369A1; }
+        .modal-item.locked { background: #F1F5F9; border-color: #E2E8F0; border-bottom-color: #CBD5E1; color: #94A3B8; pointer-events: none; border-bottom-style: dashed; }
+        
         @media (max-width: 720px) {
             .category-nav { display: grid; grid-template-columns: repeat(3, 1fr); }
             .nav-tab { max-width: none; flex: none; }
@@ -239,36 +274,14 @@
                 <button class="term-btn" onclick="switchTerm('cn-term-2', 'cn-term-1', this)">🌱 下學期預留</button>
             </div>
         </div>
-
         <div id="cn-term-1" class="term-group active">
             <div class="unit-grid">
-                <a href="cn-thankyou.html?v=2" class="unit-card card-cn-class">
-                    <span class="unit-card-icon">💝</span>
-                    <span class="unit-tag">上學期 · 單元一</span>
-                    <h3 class="unit-name">P.21-25 我要謝謝你</h3>
-                    <p class="unit-desc">點擊進入 D1-D10 每日課堂</p>
-                </a>
-                <a href="#" class="unit-card card-cn-class locked">
-                    <span class="unit-card-icon">📖</span>
-                    <span class="unit-tag">上學期 · 單元二</span>
-                    <h3 class="unit-name">待上傳新單元</h3>
-                    <p class="unit-desc">預留課堂位置</p>
-                </a>
-                <a href="#" class="unit-card card-cn-class locked">
-                    <span class="unit-card-icon">📖</span>
-                    <span class="unit-tag">上學期 · 單元三</span>
-                    <h3 class="unit-name">待上傳新單元</h3>
-                    <p class="unit-desc">預留課堂位置</p>
-                </a>
-                <a href="#" class="unit-card card-cn-class locked">
-                    <span class="unit-card-icon">📖</span>
-                    <span class="unit-tag">上學期 · 單元四</span>
-                    <h3 class="unit-name">待上傳新單元</h3>
-                    <p class="unit-desc">預留課堂位置</p>
-                </a>
+                <a href="cn-thankyou.html?v=2" class="unit-card card-cn-class"><span class="unit-card-icon">💝</span><span class="unit-tag">上學期 · 單元一</span><h3 class="unit-name">P.21-25 我要謝謝你</h3><p class="unit-desc">點擊進入 D1-D10 每日課堂</p></a>
+                <a href="#" class="unit-card card-cn-class locked"><span class="unit-card-icon">📖</span><span class="unit-tag">上學期 · 單元二</span><h3 class="unit-name">待上傳新單元</h3><p class="unit-desc">預留課堂位置</p></a>
+                <a href="#" class="unit-card card-cn-class locked"><span class="unit-card-icon">📖</span><span class="unit-tag">上學期 · 單元三</span><h3 class="unit-name">待上傳新單元</h3><p class="unit-desc">預留課堂位置</p></a>
+                <a href="#" class="unit-card card-cn-class locked"><span class="unit-card-icon">📖</span><span class="unit-tag">上學期 · 單元四</span><h3 class="unit-name">待上傳新單元</h3><p class="unit-desc">預留課堂位置</p></a>
             </div>
         </div>
-
         <div id="cn-term-2" class="term-group">
             <div class="unit-grid">
                 <a href="#" class="unit-card card-cn-class locked"><span class="unit-card-icon">🌱</span><span class="unit-tag">下學期</span><h3 class="unit-name">下學期單元一</h3><p class="unit-desc">預留位置</p></a>
@@ -286,21 +299,14 @@
                 <button class="term-btn" onclick="switchTerm('en-term-2', 'en-term-1', this)">🌱 下學期預留</button>
             </div>
         </div>
-
         <div id="en-term-1" class="term-group active">
             <div class="unit-grid">
-                <a href="en-unit4.html?v=2" class="unit-card card-en-class">
-                    <span class="unit-card-icon">🤸</span>
-                    <span class="unit-tag">上學期 · Unit 4</span>
-                    <h3 class="unit-name">Unit 4: I can do it</h3>
-                    <p class="unit-desc">點擊進入 D1-D10 每日課堂</p>
-                </a>
+                <a href="en-unit4.html?v=2" class="unit-card card-en-class"><span class="unit-card-icon">🤸</span><span class="unit-tag">上學期 · Unit 4</span><h3 class="unit-name">Unit 4: I can do it</h3><p class="unit-desc">點擊進入 D1-D10 每日課堂</p></a>
                 <a href="#" class="unit-card card-en-class locked"><span class="unit-card-icon">📘</span><span class="unit-tag">上學期</span><h3 class="unit-name">Unit 1</h3><p class="unit-desc">預留單元位置</p></a>
                 <a href="#" class="unit-card card-en-class locked"><span class="unit-card-icon">📘</span><span class="unit-tag">上學期</span><h3 class="unit-name">Unit 2</h3><p class="unit-desc">預留單元位置</p></a>
                 <a href="#" class="unit-card card-en-class locked"><span class="unit-card-icon">📘</span><span class="unit-tag">上學期</span><h3 class="unit-name">Unit 3</h3><p class="unit-desc">預留單元位置</p></a>
             </div>
         </div>
-
         <div id="en-term-2" class="term-group">
             <div class="unit-grid">
                 <a href="#" class="unit-card card-en-class locked"><span class="unit-card-icon">🌱</span><span class="unit-tag">下學期</span><h3 class="unit-name">Unit 1</h3><p class="unit-desc">預留位置</p></a>
@@ -315,17 +321,14 @@
             <h2 class="section-title" style="color: #047857;">🎯 中文闖關測驗</h2>
         </div>
         <div class="unit-grid">
-            <a href="chinese.html" class="unit-card card-cn-quiz">
-                <span class="unit-card-icon">🐥</span>
-                <span class="unit-tag">識字闖關</span>
-                <h3 class="unit-name">中文字寶寶 好朋友課室唱歌</h3>
-                <p class="unit-desc">Test 1-5 綜合闖關</p>
-            </a>
-            <a href="#" class="unit-card card-cn-quiz locked">
-                <span class="unit-card-icon">🔒</span>
-                <span class="unit-tag">預留闖關</span>
-                <h3 class="unit-name">P.21-25 錯字特訓</h3>
-                <p class="unit-desc">動態複習題庫</p>
+            <a href="chinese.html" class="unit-card card-cn-quiz"><span class="unit-card-icon">🐥</span><span class="unit-tag">識字闖關</span><h3 class="unit-name">好朋友課室唱歌</h3><p class="unit-desc">Test 1-5 綜合闖關</p></a>
+            
+            <!-- 升級：中文子欄目彈窗入口 -->
+            <a href="javascript:void(0)" onclick="openModal('modal-cn-p21')" class="unit-card card-cn-quiz">
+                <span class="unit-card-icon">💝</span>
+                <span class="unit-tag">單元闖關</span>
+                <h3 class="unit-name">P.21-25 我要謝謝你</h3>
+                <p class="unit-desc">點擊展開 Test 1-3 列表</p>
             </a>
         </div>
     </section>
@@ -336,51 +339,28 @@
             <h2 class="section-title" style="color: #6D28D9;">🏆 英文闖關測驗</h2>
         </div>
         <div class="unit-grid">
-            <a href="en-animals.html" class="unit-card card-en-quiz">
-                <span class="unit-card-icon">🐾</span>
-                <span class="unit-tag">主題挑戰 · 1</span>
-                <h3 class="unit-name">動物家庭</h3>
-                <p class="unit-desc">Cat, Dog, Family</p>
-            </a>
-            <a href="en-emotions.html" class="unit-card card-en-quiz">
-                <span class="unit-card-icon">😄</span>
-                <span class="unit-tag">主題挑戰 · 2</span>
-                <h3 class="unit-name">情緒句子</h3>
-                <p class="unit-desc">Happy, Sad, Angry</p>
-            </a>
-            <a href="en-stationery.html" class="unit-card card-en-quiz">
-                <span class="unit-card-icon">✏️</span>
-                <span class="unit-tag">主題挑戰 · 3</span>
-                <h3 class="unit-name">校園文具</h3>
-                <p class="unit-desc">發音預習與連線</p>
-            </a>
-            <a href="en-master.html" class="unit-card card-en-quiz">
-                <span class="unit-card-icon">🏆</span>
-                <span class="unit-tag">期末必備</span>
-                <h3 class="unit-name">全能總測</h3>
-                <p class="unit-desc">K2 總考與錯題本</p>
-            </a>
-            <a href="en-unit8-test1.html" class="unit-card card-en-quiz">
+            <!-- 升級：英文子欄目彈窗入口 -->
+            <a href="javascript:void(0)" onclick="openModal('modal-en-unit8')" class="unit-card card-en-quiz">
                 <span class="unit-card-icon">🏡</span>
-                <span class="unit-tag">主題挑戰 · 4</span>
-                <h3 class="unit-name">Unit 8 test1</h3>
-                <p class="unit-desc">Love at Home & Phonics s</p>
+                <span class="unit-tag">單元闖關入口</span>
+                <h3 class="unit-name">Unit 8: Love at Home</h3>
+                <p class="unit-desc">點擊展開 Test 1-3 列表</p>
             </a>
+            
+            <a href="en-animals.html" class="unit-card card-en-quiz"><span class="unit-card-icon">🐾</span><span class="unit-tag">專題挑戰 · 1</span><h3 class="unit-name">動物家庭</h3><p class="unit-desc">Cat, Dog, Family</p></a>
+            <a href="en-emotions.html" class="unit-card card-en-quiz"><span class="unit-card-icon">😄</span><span class="unit-tag">專題挑戰 · 2</span><h3 class="unit-name">情緒句子</h3><p class="unit-desc">Happy, Sad, Angry</p></a>
+            <a href="en-stationery.html" class="unit-card card-en-quiz"><span class="unit-card-icon">✏️</span><span class="unit-tag">專題挑戰 · 3</span><h3 class="unit-name">校園文具</h3><p class="unit-desc">發音預習與連線</p></a>
+            <a href="en-master.html" class="unit-card card-en-quiz"><span class="unit-card-icon">🏆</span><span class="unit-tag">期末必備</span><h3 class="unit-name">全能總測</h3><p class="unit-desc">K2 總考與錯題本</p></a>
         </div>
     </section>
 
     <!-- 5. 點讀書 -->
     <section id="sec-book" class="category-section" style="border-color: #FDA4AF;">
         <div class="section-header">
-            <h2 class="section-title" style="color: #BE123C;">📚 點讀書（每週三英文繪本閱讀）</h2>
+            <h2 class="section-title" style="color: #BE123C;">📚 點讀書（每週三英文繪本）</h2>
         </div>
         <div class="unit-grid">
-            <a href="thomas.html" class="unit-card card-book">
-                <span class="unit-card-icon">🚂</span>
-                <span class="unit-tag">繪本點讀 · 本週</span>
-                <h3 class="unit-name">Thomas Goes Fishing</h3>
-                <p class="unit-desc">真人發音 + 釣魚遊戲</p>
-            </a>
+            <a href="thomas.html" class="unit-card card-book"><span class="unit-card-icon">🚂</span><span class="unit-tag">繪本點讀 · 本週</span><h3 class="unit-name">Thomas Goes Fishing</h3><p class="unit-desc">真人發音 + 釣魚遊戲</p></a>
             <a href="#" class="unit-card card-book locked"><span class="unit-card-icon">📕</span><span class="unit-tag">週三小書</span><h3 class="unit-name">待上傳繪本 2</h3><p class="unit-desc">預留點讀位置</p></a>
         </div>
     </section>
@@ -388,48 +368,33 @@
     <!-- 6. 小視頻 -->
     <section id="sec-video" class="category-section" style="border-color: #FEB2B2;">
         <div class="section-header">
-            <h2 class="section-title" style="color: #B91C1C;">🎬 小視頻（教學動畫與兒歌律動）</h2>
+            <h2 class="section-title" style="color: #B91C1C;">🎬 小視頻（動畫與兒歌）</h2>
         </div>
         <div class="unit-grid">
-            <a href="#" class="unit-card card-video locked">
-                <span class="unit-card-icon">🎥</span>
-                <span class="unit-tag">故事動畫</span>
-                <h3 class="unit-name">Thomas 釣魚動畫</h3>
-                <p class="unit-desc">生成中 · 敬請期待</p>
-            </a>
-            <a href="#" class="unit-card card-video locked">
-                <span class="unit-card-icon">🎵</span>
-                <span class="unit-tag">兒歌短片</span>
-                <h3 class="unit-name">待上傳律動影片</h3>
-                <p class="unit-desc">預留播放位置</p>
-            </a>
+            <a href="#" class="unit-card card-video locked"><span class="unit-card-icon">🎥</span><span class="unit-tag">故事動畫</span><h3 class="unit-name">Thomas 釣魚動畫</h3><p class="unit-desc">生成中 · 敬請期待</p></a>
+            <a href="#" class="unit-card card-video locked"><span class="unit-card-icon">🎵</span><span class="unit-tag">兒歌短片</span><h3 class="unit-name">待上傳律動影片</h3><p class="unit-desc">預留播放位置</p></a>
         </div>
     </section>
 
     <!-- 7. 數學探索島 -->
     <section id="sec-math" class="category-section" style="border-color: #48DBB4;">
         <div class="section-header">
-            <h2 class="section-title" style="color: #0D8264;">🚀 數學探索島 (K2 邏輯思維挑戰)</h2>
+            <h2 class="section-title" style="color: #0D8264;">🚀 數學探索島 (K2 邏輯思維)</h2>
         </div>
+        <!-- 升級：數學一行式預留格架構 (解鎖只需刪除 locked 並替換標題) -->
         <div class="unit-grid">
-            <a href="math-day1.html" class="unit-card card-math">
-                <span class="unit-card-icon">🍭</span>
-                <span class="unit-tag">啟蒙挑戰 · Day 1</span>
-                <h3 class="unit-name">Maths Day 1</h3>
-                <p class="unit-desc">K2 趣味數學啟蒙互動</p>
-            </a>
-            <a href="math-day2-adv.html" class="unit-card card-math">
-                <span class="unit-card-icon">🚀</span>
-                <span class="unit-tag">進階挑戰 · Day 2</span>
-                <h3 class="unit-name">Maths Day 2</h3>
-                <p class="unit-desc">邏輯思維進階大冒險</p>
-            </a>
-            <a href="math-day3.html?v=2" class="unit-card card-math">
-                <span class="unit-card-icon">🍬</span>
-                <span class="unit-tag">邏輯與加減 · Day 3</span>
-                <h3 class="unit-name">Maths Day 3</h3>
-                <p class="unit-desc">Tickles 糖果屋大冒險</p>
-            </a>
+            <a href="math-day1.html" class="unit-card card-math"><span class="unit-card-icon">🍭</span><span class="unit-tag">Day 1 · 已解鎖</span><h3 class="unit-name">Maths Day 1</h3><p class="unit-desc">超市購物啟蒙互動</p></a>
+            <a href="math-day2-adv.html" class="unit-card card-math"><span class="unit-card-icon">🚀</span><span class="unit-tag">Day 2 · 已解鎖</span><h3 class="unit-name">Maths Day 2</h3><p class="unit-desc">邏輯思維進階大冒險</p></a>
+            <a href="math-day3.html?v=2" class="unit-card card-math"><span class="unit-card-icon">🍬</span><span class="unit-tag">Day 3 · 已解鎖</span><h3 class="unit-name">Maths Day 3</h3><p class="unit-desc">Tickles 糖果屋大冒險</p></a>
+            
+            <!-- 日常更新：只需修改下面這一行代碼！ -->
+            <a href="math-day4.html" class="unit-card card-math locked"><span class="unit-card-icon">🔒</span><span class="unit-tag">Day 4 · 預留位置</span><h3 class="unit-name">Maths Day 4</h3><p class="unit-desc">待上傳新挑戰</p></a>
+            <a href="math-day5.html" class="unit-card card-math locked"><span class="unit-card-icon">🔒</span><span class="unit-tag">Day 5 · 預留位置</span><h3 class="unit-name">Maths Day 5</h3><p class="unit-desc">待上傳新挑戰</p></a>
+            <a href="math-day6.html" class="unit-card card-math locked"><span class="unit-card-icon">🔒</span><span class="unit-tag">Day 6 · 預留位置</span><h3 class="unit-name">Maths Day 6</h3><p class="unit-desc">待上傳新挑戰</p></a>
+            <a href="math-day7.html" class="unit-card card-math locked"><span class="unit-card-icon">🔒</span><span class="unit-tag">Day 7 · 預留位置</span><h3 class="unit-name">Maths Day 7</h3><p class="unit-desc">待上傳新挑戰</p></a>
+            <a href="math-day8.html" class="unit-card card-math locked"><span class="unit-card-icon">🔒</span><span class="unit-tag">Day 8 · 預留位置</span><h3 class="unit-name">Maths Day 8</h3><p class="unit-desc">待上傳新挑戰</p></a>
+            <a href="math-day9.html" class="unit-card card-math locked"><span class="unit-card-icon">🔒</span><span class="unit-tag">Day 9 · 預留位置</span><h3 class="unit-name">Maths Day 9</h3><p class="unit-desc">待上傳新挑戰</p></a>
+            <a href="math-day10.html" class="unit-card card-math locked"><span class="unit-card-icon">🔒</span><span class="unit-tag">Day 10 · 總考</span><h3 class="unit-name">Maths Day 10</h3><p class="unit-desc">待上傳小博士總考</p></a>
         </div>
     </section>
 
@@ -439,15 +404,62 @@
     </div>
 </div>
 
+<!-- =========================================================
+     升級：3D 彈出式子欄目 (Modals) 代碼區塊
+     ========================================================= -->
+
+<!-- 英文闖關：Unit 8 子欄目彈窗 -->
+<div id="modal-en-unit8" class="modal-overlay" onclick="closeModal('modal-en-unit8')">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <button class="modal-close" onclick="closeModal('modal-en-unit8')">✖</button>
+        <h2 class="modal-title">🏡 Unit 8: Love at Home</h2>
+        <div class="modal-list">
+            <!-- Test 1 (已解鎖) -->
+            <a href="en-unit8-test1.html?v=1" class="modal-item unlocked">
+                <span class="text-xl mr-2">🏆</span> Test 1：家庭成員與 Phonics s
+            </a>
+            <!-- Test 2 (預留格) -->
+            <a href="en-unit8-test2.html" class="modal-item locked">
+                <span class="text-xl mr-2">🔒</span> Test 2：四大寵物綜合挑戰 (預留)
+            </a>
+            <!-- Test 3 (預留格) -->
+            <a href="en-unit8-test3.html" class="modal-item locked">
+                <span class="text-xl mr-2">🔒</span> Test 3：全單元錯題特訓 (預留)
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- 中文闖關：P.21-25 子欄目彈窗 -->
+<div id="modal-cn-p21" class="modal-overlay" onclick="closeModal('modal-cn-p21')">
+    <div class="modal-content" style="border-color: #6EE7B7; border-bottom-color: #10B981;" onclick="event.stopPropagation()">
+        <button class="modal-close" onclick="closeModal('modal-cn-p21')">✖</button>
+        <h2 class="modal-title">💝 P.21-25 謝謝你闖關</h2>
+        <div class="modal-list">
+            <!-- Test 1 (預留格) -->
+            <a href="cn-p21-p25-test1.html" class="modal-item locked">
+                <span class="text-xl mr-2">🔒</span> Test 1：詞語與句式盲測 (預留)
+            </a>
+            <!-- Test 2 (預留格) -->
+            <a href="cn-p21-p25-test2.html" class="modal-item locked">
+                <span class="text-xl mr-2">🔒</span> Test 2：兒歌與拆字盲測 (預留)
+            </a>
+            <!-- Test 3 (預留格) -->
+            <a href="cn-p21-p25-test3.html" class="modal-item locked">
+                <span class="text-xl mr-2">🔒</span> Test 3：全單元錯字特訓 (預留)
+            </a>
+        </div>
+    </div>
+</div>
+
 <script>
+    // 雙重防護：進入主頁即切斷所有語音
     function silenceAllSpeech() {
         if ('speechSynthesis' in window) {
             window.speechSynthesis.pause();
             window.speechSynthesis.cancel();
         }
     }
-    window.addEventListener('load', silenceAllSpeech);
-    window.addEventListener('pageshow', silenceAllSpeech);
 
     const categoryColorMap = {
         'cn-class': 'active-cn-class',
@@ -461,10 +473,15 @@
 
     let isShowingAll = false;
 
+    // 升級：切換板塊時，同步寫入 sessionStorage 記憶！
     function switchCategory(catKey, tabElement) {
         silenceAllSpeech();
         isShowingAll = false;
         document.querySelector('.show-all-btn').innerText = '🌈 展開全部分類一覽';
+        
+        // 記憶最後點擊的板塊
+        sessionStorage.setItem('lingling_last_tab', catKey);
+
         document.querySelectorAll('.nav-tab').forEach(btn => {
             Object.values(categoryColorMap).forEach(cls => btn.classList.remove(cls));
         });
@@ -488,17 +505,44 @@
             sections.forEach(sec => sec.classList.add('active'));
             btn.innerText = '📁 恢復單頁切換模式';
         } else {
-            sections.forEach((sec, idx) => {
-                if (idx === 0) sec.classList.add('active');
-                else sec.classList.remove('active');
-            });
-            document.querySelectorAll('.nav-tab').forEach((tab, idx) => {
-                Object.values(categoryColorMap).forEach(cls => tab.classList.remove(cls));
-                if (idx === 0) tab.classList.add('active-cn-class');
-            });
-            btn.innerText = '🌈 展開全部分類一覽';
+            // 返回單頁時，讀取記憶
+            const lastTab = sessionStorage.getItem('lingling_last_tab') || 'cn-class';
+            const targetBtn = document.querySelector(`.nav-tab[onclick*="'${lastTab}'"]`);
+            if (targetBtn) {
+                switchCategory(lastTab, targetBtn);
+            }
         }
     }
+
+    // 升級：Modal 彈窗控制邏輯
+    function openModal(modalId) {
+        silenceAllSpeech();
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.classList.add('show');
+        }
+    }
+
+    function closeModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.classList.remove('show');
+        }
+    }
+
+    // 初始化：防殘留語音 ＋ 自動跳轉記憶板塊
+    window.addEventListener('load', () => {
+        silenceAllSpeech();
+        const lastTab = sessionStorage.getItem('lingling_last_tab');
+        if (lastTab) {
+            const targetBtn = document.querySelector(`.nav-tab[onclick*="'${lastTab}'"]`);
+            if (targetBtn) {
+                switchCategory(lastTab, targetBtn);
+            }
+        }
+    });
+    
+    window.addEventListener('pageshow', silenceAllSpeech);
 </script>
 </body>
 </html>
