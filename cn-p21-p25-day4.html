@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>玲玲中文AI課堂｜《我要謝謝你》Day 4 彩虹超市大冒險</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* iPad Safari 終極防護引擎：防雙擊放大鎖與版面鎖定 */
+    * {
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    body {
+      display: block !important;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      font-family: "PingFang HK", "Heiti TC", "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+      background: linear-gradient(135deg, #FFF9EB 0%, #FFEED6 45%, #E8F8F0 100%);
+      color: #3D2C1E;
+      overflow-x: hidden;
+    }
+
+    /* 溫馨立體按鈕與卡片 */
+    .card-3d {
+      background: #FFFFFF;
+      border: 4px solid #F3D9B1;
+      box-shadow: 0 8px 0 #E5C18B, 0 12px 20px rgba(139, 94, 52, 0.12);
+      border-radius: 28px;
+      transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.2s ease, background-color 0.2s ease;
+    }
+
+    .card-3d:active {
+      transform: translateY(5px);
+      box-shadow: 0 3px 0 #E5C18B, 0 6px 10px rgba(139, 94, 52, 0.12);
+    }
+
+    .card-learned {
+      background: #F0FDF4 !important;
+      border-color: #34D399 !important;
+      box-shadow: 0 8px 0 #10B981, 0 12px 20px rgba(16, 185, 129, 0.18) !important;
+    }
+
+    .btn-primary {
+      background: linear-gradient(180deg, #FF9E2C 0%, #F97316 100%);
+      border: 4px solid #FFF7ED;
+      box-shadow: 0 7px 0 #C2410C, 0 10px 18px rgba(194, 65, 12, 0.25);
+      color: #FFFFFF;
+      border-radius: 9999px;
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+
+    .btn-primary:active {
+      transform: translateY(5px);
+      box-shadow: 0 2px 0 #C2410C;
+    }
+
+    .btn-green {
+      background: linear-gradient(180deg, #34D399 0%, #10B981 100%);
+      border: 4px solid #ECFDF5;
+      box-shadow: 0 7px 0 #047857, 0 10px 18px rgba(4, 120, 87, 0.25);
+      color: #FFFFFF;
+      border-radius: 9999px;
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+
+    .btn-green:active {
+      transform: translateY(5px);
+      box-shadow: 0 2px 0 #047857;
+    }
+
+    /* Anna 老師黃色常駐橫幅 */
+    .tutor-banner {
+      background: linear-gradient(90deg, #FEF08A 0%, #FDE047 100%);
+      border: 4px solid #FACC15;
+      box-shadow: 0 6px 0 #EAB308;
+      border-radius: 24px;
+      cursor: pointer;
+    }
+
+    .tutor-banner:active {
+      transform: translateY(3px);
+      box-shadow: 0 3px 0 #EAB308;
+    }
+
+    /* 溫柔搖晃提示（零壓力，無紅叉） */
+    @keyframes gentleWobble {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-8px) rotate(-2deg); }
+      75% { transform: translateX(8px) rotate(2deg); }
+    }
+
+    .wobble-hint {
+      animation: gentleWobble 0.45s ease-in-out;
+    }
+
+    /* 彈跳出現動畫 */
+    @keyframes popIn {
+      0% { transform: scale(0.75); opacity: 0; }
+      75% { transform: scale(1.06); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .pop-in {
+      animation: popIn 0.32s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    /* 煙花粒子 */
+    .confetti-piece {
+      position: fixed;
+      width: 14px;
+      height: 14px;
+      border-radius: 4px;
+      pointer-events: none;
+      z-index: 9999;
+      animation: confettiFall 1.3s ease-out forwards;
+    }
+
+    @keyframes confettiFall {
+      0% { transform: translate(0, 0) rotate(0deg) scale(1); opacity: 1; }
+      100% { transform: translate(var(--dx), var(--dy)) rotate(540deg) scale(0.4); opacity: 0; }
+    }
+
+    /* 句式積木槽位 */
+    .block-slot {
+      min-width: 130px;
+      min-height: 76px;
+      border: 4px dashed #F59E0B;
+      background: #FFFBEB;
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 18px;
+    }
+
+    .block-slot-filled {
+      border-style: solid;
+      border-color: #10B981;
+      background: #D1FAE5;
+      color: #065F46;
+    }
+  </style>
+</head>
+<body class="pb-10">
+
+  <!-- 頂部導航欄 -->
+  <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b-4 border-amber-200 px-4 py-3 shadow-sm">
+    <div class="max-w-5xl mx-auto flex flex-wrap items-center justify-between gap-2">
+      <!-- 返回按鈕 -->
+      <button onclick="handleBackHome()" class="flex items-center gap-2 bg-amber-100 hover:bg-amber-200 text-amber-900 font-extrabold text-xl px-4 py-2 rounded-2xl border-2 border-amber-300 shadow-sm active:scale-95">
+        <span>🏠</span>
+        <span>返回</span>
+      </button>
+
+      <!-- 四部曲進度地圖 -->
+      <div class="flex items-center gap-1.5 sm:gap-2 bg-orange-50 px-3 py-1.5 rounded-2xl border-2 border-orange-200">
+        <span id="actBadge1" class="px-2.5 py-1 rounded-xl text-sm sm:text-base font-extrabold bg-amber-400 text-amber-950">1.故事詞語</span>
+        <span class="text-amber-400 font-bold">➔</span>
+        <span id="actBadge2" class="px-2.5 py-1 rounded-xl text-sm sm:text-base font-bold text-amber-700/60">2.拆字魔法</span>
+        <span class="text-amber-400 font-bold">➔</span>
+        <span id="actBadge3" class="px-2.5 py-1 rounded-xl text-sm sm:text-base font-bold text-amber-700/60">3.句式積木</span>
+        <span class="text-amber-400 font-bold">➔</span>
+        <span id="actBadge4" class="px-2.5 py-1 rounded-xl text-sm sm:text-base font-bold text-amber-700/60">4.兒歌尋寶</span>
+      </div>
+
+      <!-- 廣東話語音標章與頁數 -->
+      <div class="flex items-center gap-2">
+        <span class="bg-emerald-100 text-emerald-800 border-2 border-emerald-300 font-extrabold text-base sm:text-lg px-3 py-1.5 rounded-2xl">
+          🇭🇰 廣東話
+        </span>
+        <span id="pageIndicator" class="bg-amber-500 text-white font-extrabold text-base sm:text-lg px-3 py-1.5 rounded-2xl">
+          1 / 14
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- 主內容容器 -->
+  <main class="max-w-5xl mx-auto px-4 pt-4">
+
+    <!-- Anna 老師黃色常駐橫幅 (點擊任何位置皆可重聽廣東話指引) -->
+    <div id="tutorBanner" onclick="replayTutorGuide()" class="tutor-banner p-4 sm:p-5 mb-5 flex items-center gap-4">
+      <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white border-4 border-amber-400 flex items-center justify-center text-4xl sm:text-5xl shrink-0 shadow-inner">
+        👩‍🏫
+      </div>
+      <div class="flex-1">
+        <div class="flex items-center gap-2 mb-1">
+          <span class="bg-amber-500 text-white text-sm sm:text-base font-extrabold px-3 py-0.5 rounded-full">Anna 老師帶讀</span>
+          <span class="text-amber-900 text-sm sm:text-base font-bold">🔊 點擊呢度可以再聽一次</span>
+        </div>
+        <p id="tutorText" class="text-xl sm:text-2xl font-extrabold text-amber-950 leading-snug">
+          玲玲你好！歡迎嚟到《我要謝謝你》Day 4 彩虹超市大冒險！
+        </p>
+      </div>
+    </div>
+
+    <!-- ==================== SLIDE 0: 開場歡迎頁 ==================== -->
+    <section id="slide-0" class="slide-page text-center py-6">
+      <div class="card-3d p-8 sm:p-10 bg-white/95">
+        <div class="text-7xl sm:text-8xl mb-4">🛒🥬🍚🍯</div>
+        <div class="inline-block bg-orange-100 text-orange-800 font-extrabold text-xl px-5 py-1.5 rounded-full border-2 border-orange-300 mb-3">
+          課本 P.22 句式積木二 ＋ 弱點重溫
+        </div>
+        <h1 class="text-4xl sm:text-5xl font-black text-amber-900 mb-4 leading-tight">
+          彩虹超市大採購
+        </h1>
+        <p class="text-2xl sm:text-3xl font-bold text-stone-700 mb-8 leading-relaxed">
+          今日我哋要認識「蔬菜類」同「五穀類」食物，<br class="hidden sm:inline" />仲有拆字魔法同超市分類小推車等緊你玩！
+        </p>
+        <button onclick="startLesson()" class="btn-primary text-3xl sm:text-4xl font-black px-10 py-5 inline-flex items-center gap-3">
+          <span>🚀</span>
+          <span>開始上堂啦！</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ==================== 第一幕：故事與詞語 (Slides 1 - 2) ==================== -->
+    <!-- SLIDE 1: 蔬菜類四寶 -->
+    <section id="slide-1" class="slide-page hidden">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-2xl sm:text-3xl font-black text-emerald-800 bg-emerald-100 px-5 py-2 rounded-2xl border-2 border-emerald-300">
+          🥬 第一幕：蔬菜類四寶（點一點圖卡跟讀）
+        </h2>
+        <span id="s1Counter" class="text-xl font-extrabold text-emerald-700 bg-white px-4 py-2 rounded-2xl border-2 border-emerald-200">
+          已點讀：0 / 4
+        </span>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4 sm:gap-6 mb-6">
+        <button id="vCard-0" onclick="tapVocabCard(1, 0, '椰菜', '翠綠的椰菜，一塊塊葉子包埋一齊！')" class="card-3d p-5 sm:p-7 flex flex-col items-center text-center">
+          <span class="text-6xl sm:text-7xl mb-3">🥬</span>
+          <span class="text-4xl sm:text-5xl font-black text-stone-800 mb-2">椰菜</span>
+          <span class="text-lg sm:text-xl font-bold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-xl">🔊 點擊聽讀音</span>
+        </button>
+
+        <button id="vCard-1" onclick="tapVocabCard(1, 1, '紅蘿蔔', '新鮮的紅蘿蔔，橙紅色脆卜卜！')" class="card-3d p-5 sm:p-7 flex flex-col items-center text-center">
+          <span class="text-6xl sm:text-7xl mb-3">🥕</span>
+          <span class="text-4xl sm:text-5xl font-black text-stone-800 mb-2">紅蘿蔔</span>
+          <span class="text-lg sm:text-xl font-bold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-xl">🔊 點擊聽讀音</span>
+        </button>
+
+        <button id="vCard-2" onclick="tapVocabCard(1, 2, '洋蔥', '圓碌碌嘅洋蔥，一層又一層！')" class="card-3d p-5 sm:p-7 flex flex-col items-center text-center">
+          <span class="text-6xl sm:text-7xl mb-3">🧅</span>
+          <span class="text-4xl sm:text-5xl font-black text-stone-800 mb-2">洋蔥</span>
+          <span class="text-lg sm:text-xl font-bold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-xl">🔊 點擊聽讀音</span>
+        </button>
+
+        <button id="vCard-3" onclick="tapVocabCard(1, 3, '馬鈴薯', '黃色嘅馬鈴薯，又叫薯仔，整薯蓉好好味！')" class="card-3d p-5 sm:p-7 flex flex-col items-center text-center">
+          <span class="text-6xl sm:text-7xl mb-3">🥔</span>
+          <span class="text-4xl sm:text-5xl font-black text-stone-800 mb-2">馬鈴薯</span>
+          <span class="text-lg sm:text-xl font-bold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-xl">🔊 點擊聽讀音</span>
+        </button>
+      </div>
+
+      <div id="s1NextWrap" class="hidden text-center pop-in">
+        <button onclick="goToSlide(2)" class="btn-green text-2xl sm:text-3xl font-black px-8 py-4 inline-flex items-center gap-3">
+          <span>✅ 全部讀完啦！去下一站</span>
+          <span>➔</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- SLIDE 2: 五穀類三寶 ＋ 弱點重溫蜜糖 -->
+    <section id="slide-2" class="slide-page hidden">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-2xl sm:text-3xl font-black text-amber-900 bg-amber-100 px-5 py-2 rounded-2xl border-2 border-amber-300">
+          🍚 第一幕：五穀類三寶 ＋ 甜蜜重溫
+        </h2>
+        <span id="s2Counter" class="text-xl font-extrabold text-amber-800 bg-white px-4 py-2 rounded-2xl border-2 border-amber-200">
+          已點讀：0 / 4
+        </span>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4 sm:gap-6 mb-6">
+        <button id="vCard2-0" onclick="tapVocabCard(2, 0, '麵包', '軟綿綿嘅麵包，早餐食最精神！')" class="card-3d p-5 sm:p-7 flex flex-col items-center text-center">
+          <span class="text-6xl sm:text-7xl mb-3">🍞</span>
+          <span class="text-4xl sm:text-5xl font-black text-stone-800 mb-2">麵包</span>
+          <span class="text-lg sm:text-xl font-bold text-amber-700 bg-amber-50 px-3 py-1 rounded-xl">五穀類 · 點擊跟讀</span>
+        </button>
+
+        <button id="vCard2-1" onclick="tapVocabCard(2, 1, '白飯', '熱辣辣嘅白飯，香噴噴！')" class="card-3d p-5 sm:p-7 flex flex-col items-center text-center">
+          <span class="text-6xl sm:text-7xl mb-3">🍚</span>
+          <span class="text-4xl sm:text-5xl font-black text-stone-800 mb-2">白飯</span>
+          <span class="text-lg sm:text-xl font-bold text-amber-700 bg-amber-50 px-3 py-1 rounded-xl">五穀類 · 點擊跟讀</span>
+        </button>
+
+        <button id="vCard2-2" onclick="tapVocabCard(2, 2, '麵條', '長長嘅麵條，瀡一聲食落肚！')" class="card-3d p-5 sm:p-7 flex flex-col items-center text-center">
+          <span class="text-6xl sm:text-7xl mb-3">🍜</span>
+          <span class="text-4xl sm:text-5xl font-black text-stone-800 mb-2">麵條</span>
+          <span class="text-lg sm:text-xl font-bold text-amber-700 bg-amber-50 px-3 py-1 rounded-xl">五穀類 · 點擊跟讀</span>
+        </button>
+
+        <button id="vCard2-3" onclick="tapVocabCard(2, 3, '甜甜的蜜糖', '重溫好朋友！金黃色甜甜的蜜糖，小蜜蜂最鍾意！')" class="card-3d p-5 sm:p-7 flex flex-col items-center text-center border-pink-300 bg-pink-50/40">
+          <div class="text-xs sm:text-sm font-black bg-pink-500 text-white px-3 py-0.5 rounded-full mb-1">⭐ 溫故知新</div>
+          <span class="text-5xl sm:text-6xl mb-2">🍯🐝</span>
+          <span class="text-3xl sm:text-4xl font-black text-pink-900 mb-1">甜甜的蜜糖</span>
+          <span class="text-lg sm:text-xl font-bold text-pink-700 bg-pink-100 px-3 py-1 rounded-xl">🔊 點擊重溫</span>
+        </button>
+      </div>
+
+      <div id="s2NextWrap" class="hidden text-center pop-in">
+        <button onclick="goToSlide(3)" class="btn-primary text-2xl sm:text-3xl font-black px-8 py-4 inline-flex items-center gap-3">
+          <span>🪄 進入第二幕：視覺拆字魔法</span>
+          <span>➔</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ==================== 第二幕：視覺拆字魔法 (Slides 3 - 5) ==================== -->
+    <!-- SLIDE 3: 拆字「菜」 -->
+    <section id="slide-3" class="slide-page hidden">
+      <div class="card-3d p-6 sm:p-8 text-center">
+        <div class="inline-block bg-purple-100 text-purple-800 font-black text-xl px-5 py-1.5 rounded-full border-2 border-purple-300 mb-3">
+          🪄 拆字魔法 1 / 3：點一點上下兩個部件
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-black text-stone-800 mb-6">
+          「菜」字變變變！
+        </h2>
+
+        <div class="flex flex-col items-center justify-center gap-4 max-w-md mx-auto mb-6">
+          <!-- 上部件：艹 -->
+          <button id="rad-3-0" onclick="tapRadical(3, 0, '草字頭，好似兩棵綠色小草，代表植物同蔬菜！')" class="w-full card-3d py-5 px-6 flex items-center justify-between bg-emerald-50 border-emerald-300">
+            <span class="text-6xl sm:text-7xl font-black text-emerald-700">艹</span>
+            <div class="text-left">
+              <div class="text-2xl sm:text-3xl font-black text-emerald-900">草字頭 🌱</div>
+              <div class="text-lg sm:text-xl font-bold text-emerald-700">點擊變色聽魔法！</div>
+            </div>
+          </button>
+
+          <div class="text-3xl font-black text-amber-500">➕</div>
+
+          <!-- 下部件：采 -->
+          <button id="rad-3-1" onclick="tapRadical(3, 1, '下面係采字，用手去採摘新鮮蔬菜！合埋就係蔬菜嘅菜字！')" class="w-full card-3d py-5 px-6 flex items-center justify-between bg-amber-50 border-amber-300">
+            <span class="text-6xl sm:text-7xl font-black text-amber-700">采</span>
+            <div class="text-left">
+              <div class="text-2xl sm:text-3xl font-black text-amber-900">采字 🧺</div>
+              <div class="text-lg sm:text-xl font-bold text-amber-700">點擊變色聽魔法！</div>
+            </div>
+          </button>
+        </div>
+
+        <div id="radResult-3" class="hidden mb-6 pop-in">
+          <div class="inline-flex items-center gap-4 bg-emerald-100 border-4 border-emerald-400 px-8 py-4 rounded-3xl">
+            <span class="text-6xl sm:text-7xl font-black text-emerald-800">菜</span>
+            <span class="text-2xl sm:text-3xl font-extrabold text-emerald-900">🥬 蔬菜 · 椰菜</span>
+          </div>
+        </div>
+
+        <div id="s3NextWrap" class="hidden pop-in">
+          <button onclick="goToSlide(4)" class="btn-green text-2xl sm:text-3xl font-black px-8 py-4">
+            ✨ 好叻呀！學下一個字 ➔
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 4: 拆字「飯」 -->
+    <section id="slide-4" class="slide-page hidden">
+      <div class="card-3d p-6 sm:p-8 text-center">
+        <div class="inline-block bg-purple-100 text-purple-800 font-black text-xl px-5 py-1.5 rounded-full border-2 border-purple-300 mb-3">
+          🪄 拆字魔法 2 / 3：點一點左右兩個部件
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-black text-stone-800 mb-6">
+          「飯」字變變變！
+        </h2>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto mb-6">
+          <!-- 左部件：飠 -->
+          <button id="rad-4-0" onclick="tapRadical(4, 0, '左邊係食字旁，凡係可以食落肚嘅食物都有佢！')" class="card-3d py-6 px-5 flex flex-col items-center bg-orange-50 border-orange-300">
+            <span class="text-7xl sm:text-8xl font-black text-orange-600 mb-2">飠</span>
+            <div class="text-2xl sm:text-3xl font-black text-orange-900">食字旁 🍚</div>
+            <div class="text-lg font-bold text-orange-700 mt-1">點擊變色聽魔法！</div>
+          </button>
+
+          <!-- 右部件：反 -->
+          <button id="rad-4-1" onclick="tapRadical(4, 1, '右邊係反字，食字旁加反字，合埋就係白飯嘅飯！')" class="card-3d py-6 px-5 flex flex-col items-center bg-sky-50 border-sky-300">
+            <span class="text-7xl sm:text-8xl font-black text-sky-600 mb-2">反</span>
+            <div class="text-2xl sm:text-3xl font-black text-sky-900">反字 ✨</div>
+            <div class="text-lg font-bold text-sky-700 mt-1">點擊變色聽魔法！</div>
+          </button>
+        </div>
+
+        <div id="radResult-4" class="hidden mb-6 pop-in">
+          <div class="inline-flex items-center gap-4 bg-orange-100 border-4 border-orange-400 px-8 py-4 rounded-3xl">
+            <span class="text-6xl sm:text-7xl font-black text-orange-800">飯</span>
+            <span class="text-2xl sm:text-3xl font-extrabold text-orange-900">🍚 白飯 · 米飯</span>
+          </div>
+        </div>
+
+        <div id="s4NextWrap" class="hidden pop-in">
+          <button onclick="goToSlide(5)" class="btn-green text-2xl sm:text-3xl font-black px-8 py-4">
+            ✨ 記住「食字旁」啦！最後一個拆字 ➔
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 5: 拆字「蜜糖」弱點鞏固 -->
+    <section id="slide-5" class="slide-page hidden">
+      <div class="card-3d p-6 sm:p-8 text-center">
+        <div class="inline-block bg-pink-100 text-pink-800 font-black text-xl px-5 py-1.5 rounded-full border-2 border-pink-300 mb-3">
+          🪄 拆字魔法 3 / 3：重溫難記好朋友「蜜糖」
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-black text-stone-800 mb-6">
+          「蜜」字下面藏住邊個小動物？
+        </h2>
+
+        <div class="flex flex-col items-center justify-center gap-4 max-w-md mx-auto mb-6">
+          <button id="rad-5-0" onclick="tapRadical(5, 0, '上面係屋頂加個必字，好似蜜蜂嘅小蜂巢！')" class="w-full card-3d py-5 px-6 flex items-center justify-between bg-amber-50 border-amber-300">
+            <span class="text-6xl sm:text-7xl font-black text-amber-600">宓</span>
+            <div class="text-left">
+              <div class="text-2xl sm:text-3xl font-black text-amber-900">小蜂巢 🏠</div>
+              <div class="text-lg font-bold text-amber-700">點擊變色聽魔法！</div>
+            </div>
+          </button>
+
+          <button id="rad-5-1" onclick="tapRadical(5, 1, '下面係虫字，代表勤力採花蜜嘅小蜜蜂！合埋就係蜜糖嘅蜜！')" class="w-full card-3d py-5 px-6 flex items-center justify-between bg-yellow-50 border-yellow-400">
+            <span class="text-6xl sm:text-7xl font-black text-yellow-700">虫</span>
+            <div class="text-left">
+              <div class="text-2xl sm:text-3xl font-black text-yellow-900">小蜜蜂 🐝</div>
+              <div class="text-lg font-bold text-yellow-700">點擊變色聽魔法！</div>
+            </div>
+          </button>
+        </div>
+
+        <div id="radResult-5" class="hidden mb-6 pop-in">
+          <div class="inline-flex items-center gap-4 bg-pink-100 border-4 border-pink-400 px-8 py-4 rounded-3xl">
+            <span class="text-6xl sm:text-7xl font-black text-pink-800">蜜糖</span>
+            <span class="text-2xl sm:text-3xl font-extrabold text-pink-900">🍯🍭 甜甜的蜜糖</span>
+          </div>
+        </div>
+
+        <div id="s5NextWrap" class="hidden pop-in">
+          <button onclick="goToSlide(6)" class="btn-primary text-2xl sm:text-3xl font-black px-8 py-4">
+            🧱 進入第三幕：句式積木大挑戰 ➔
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====
