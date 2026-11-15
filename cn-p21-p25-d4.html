@@ -11,6 +11,7 @@
       touch-action: manipulation;
       -webkit-tap-highlight-color: transparent;
       box-sizing: border-box;
+      /* 全局鎖定，防止幼兒誤按 */
       user-select: none;
       -webkit-user-select: none;
     }
@@ -24,6 +25,12 @@
       background: linear-gradient(135deg, #FFF9EB 0%, #FFEED6 45%, #E8F8F0 100%);
       color: #3D2C1E;
       overflow-x: hidden;
+    }
+
+    /* 【Bug 修復 1】局部解鎖 textarea，確保媽媽可以長按複製暗號 */
+    textarea {
+      user-select: text !important;
+      -webkit-user-select: text !important;
     }
 
     /* 溫馨立體按鈕與卡片 */
@@ -184,7 +191,7 @@
   <!-- 主內容容器 -->
   <main class="max-w-5xl mx-auto px-4 pt-4">
 
-    <!-- Anna 老師黃色常駐橫幅 (點擊任何位置皆可重聽廣東話指引) -->
+    <!-- Anna 老師黃色常駐橫幅 -->
     <div id="tutorBanner" onclick="replayTutorGuide()" class="tutor-banner p-4 sm:p-5 mb-5 flex items-center gap-4">
       <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white border-4 border-amber-400 flex items-center justify-center text-4xl sm:text-5xl shrink-0 shadow-inner">
         👩‍🏫
@@ -221,7 +228,6 @@
     </section>
 
     <!-- ==================== 第一幕：故事與詞語 (Slides 1 - 2) ==================== -->
-    <!-- SLIDE 1: 蔬菜類四寶 -->
     <section id="slide-1" class="slide-page hidden">
       <div class="flex items-center justify-between mb-4">
         <h2 class="text-2xl sm:text-3xl font-black text-emerald-800 bg-emerald-100 px-5 py-2 rounded-2xl border-2 border-emerald-300">
@@ -238,19 +244,16 @@
           <span class="text-4xl sm:text-5xl font-black text-stone-800 mb-2">椰菜</span>
           <span class="text-lg sm:text-xl font-bold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-xl">🔊 點擊聽讀音</span>
         </button>
-
         <button id="vCard-1" onclick="tapVocabCard(1, 1, '紅蘿蔔', '新鮮的紅蘿蔔，橙紅色脆卜卜！')" class="card-3d p-5 sm:p-7 flex flex-col items-center text-center">
           <span class="text-6xl sm:text-7xl mb-3">🥕</span>
           <span class="text-4xl sm:text-5xl font-black text-stone-800 mb-2">紅蘿蔔</span>
           <span class="text-lg sm:text-xl font-bold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-xl">🔊 點擊聽讀音</span>
         </button>
-
         <button id="vCard-2" onclick="tapVocabCard(1, 2, '洋蔥', '圓碌碌嘅洋蔥，一層又一層！')" class="card-3d p-5 sm:p-7 flex flex-col items-center text-center">
           <span class="text-6xl sm:text-7xl mb-3">🧅</span>
           <span class="text-4xl sm:text-5xl font-black text-stone-800 mb-2">洋蔥</span>
           <span class="text-lg sm:text-xl font-bold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-xl">🔊 點擊聽讀音</span>
         </button>
-
         <button id="vCard-3" onclick="tapVocabCard(1, 3, '馬鈴薯', '黃色嘅馬鈴薯，又叫薯仔，整薯蓉好好味！')" class="card-3d p-5 sm:p-7 flex flex-col items-center text-center">
           <span class="text-6xl sm:text-7xl mb-3">🥔</span>
           <span class="text-4xl sm:text-5xl font-black text-stone-800 mb-2">馬鈴薯</span>
@@ -266,7 +269,6 @@
       </div>
     </section>
 
-    <!-- SLIDE 2: 五穀類三寶 ＋ 弱點重溫蜜糖 -->
     <section id="slide-2" class="slide-page hidden">
       <div class="flex items-center justify-between mb-4">
         <h2 class="text-2xl sm:text-3xl font-black text-amber-900 bg-amber-100 px-5 py-2 rounded-2xl border-2 border-amber-300">
@@ -283,19 +285,16 @@
           <span class="text-4xl sm:text-5xl font-black text-stone-800 mb-2">麵包</span>
           <span class="text-lg sm:text-xl font-bold text-amber-700 bg-amber-50 px-3 py-1 rounded-xl">五穀類 · 點擊跟讀</span>
         </button>
-
         <button id="vCard2-1" onclick="tapVocabCard(2, 1, '白飯', '熱辣辣嘅白飯，香噴噴！')" class="card-3d p-5 sm:p-7 flex flex-col items-center text-center">
           <span class="text-6xl sm:text-7xl mb-3">🍚</span>
           <span class="text-4xl sm:text-5xl font-black text-stone-800 mb-2">白飯</span>
           <span class="text-lg sm:text-xl font-bold text-amber-700 bg-amber-50 px-3 py-1 rounded-xl">五穀類 · 點擊跟讀</span>
         </button>
-
         <button id="vCard2-2" onclick="tapVocabCard(2, 2, '麵條', '長長嘅麵條，瀡一聲食落肚！')" class="card-3d p-5 sm:p-7 flex flex-col items-center text-center">
           <span class="text-6xl sm:text-7xl mb-3">🍜</span>
           <span class="text-4xl sm:text-5xl font-black text-stone-800 mb-2">麵條</span>
           <span class="text-lg sm:text-xl font-bold text-amber-700 bg-amber-50 px-3 py-1 rounded-xl">五穀類 · 點擊跟讀</span>
         </button>
-
         <button id="vCard2-3" onclick="tapVocabCard(2, 3, '甜甜的蜜糖', '重溫好朋友！金黃色甜甜的蜜糖，小蜜蜂最鍾意！')" class="card-3d p-5 sm:p-7 flex flex-col items-center text-center border-pink-300 bg-pink-50/40">
           <div class="text-xs sm:text-sm font-black bg-pink-500 text-white px-3 py-0.5 rounded-full mb-1">⭐ 溫故知新</div>
           <span class="text-5xl sm:text-6xl mb-2">🍯🐝</span>
@@ -313,7 +312,6 @@
     </section>
 
     <!-- ==================== 第二幕：視覺拆字魔法 (Slides 3 - 5) ==================== -->
-    <!-- SLIDE 3: 拆字「菜」 -->
     <section id="slide-3" class="slide-page hidden">
       <div class="card-3d p-6 sm:p-8 text-center">
         <div class="inline-block bg-purple-100 text-purple-800 font-black text-xl px-5 py-1.5 rounded-full border-2 border-purple-300 mb-3">
@@ -324,7 +322,6 @@
         </h2>
 
         <div class="flex flex-col items-center justify-center gap-4 max-w-md mx-auto mb-6">
-          <!-- 上部件：艹 -->
           <button id="rad-3-0" onclick="tapRadical(3, 0, '草字頭，好似兩棵綠色小草，代表植物同蔬菜！')" class="w-full card-3d py-5 px-6 flex items-center justify-between bg-emerald-50 border-emerald-300">
             <span class="text-6xl sm:text-7xl font-black text-emerald-700">艹</span>
             <div class="text-left">
@@ -332,10 +329,7 @@
               <div class="text-lg sm:text-xl font-bold text-emerald-700">點擊變色聽魔法！</div>
             </div>
           </button>
-
           <div class="text-3xl font-black text-amber-500">➕</div>
-
-          <!-- 下部件：采 -->
           <button id="rad-3-1" onclick="tapRadical(3, 1, '下面係采字，用手去採摘新鮮蔬菜！合埋就係蔬菜嘅菜字！')" class="w-full card-3d py-5 px-6 flex items-center justify-between bg-amber-50 border-amber-300">
             <span class="text-6xl sm:text-7xl font-black text-amber-700">采</span>
             <div class="text-left">
@@ -360,7 +354,6 @@
       </div>
     </section>
 
-    <!-- SLIDE 4: 拆字「飯」 -->
     <section id="slide-4" class="slide-page hidden">
       <div class="card-3d p-6 sm:p-8 text-center">
         <div class="inline-block bg-purple-100 text-purple-800 font-black text-xl px-5 py-1.5 rounded-full border-2 border-purple-300 mb-3">
@@ -371,14 +364,11 @@
         </h2>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto mb-6">
-          <!-- 左部件：飠 -->
           <button id="rad-4-0" onclick="tapRadical(4, 0, '左邊係食字旁，凡係可以食落肚嘅食物都有佢！')" class="card-3d py-6 px-5 flex flex-col items-center bg-orange-50 border-orange-300">
             <span class="text-7xl sm:text-8xl font-black text-orange-600 mb-2">飠</span>
             <div class="text-2xl sm:text-3xl font-black text-orange-900">食字旁 🍚</div>
             <div class="text-lg font-bold text-orange-700 mt-1">點擊變色聽魔法！</div>
           </button>
-
-          <!-- 右部件：反 -->
           <button id="rad-4-1" onclick="tapRadical(4, 1, '右邊係反字，食字旁加反字，合埋就係白飯嘅飯！')" class="card-3d py-6 px-5 flex flex-col items-center bg-sky-50 border-sky-300">
             <span class="text-7xl sm:text-8xl font-black text-sky-600 mb-2">反</span>
             <div class="text-2xl sm:text-3xl font-black text-sky-900">反字 ✨</div>
@@ -401,7 +391,6 @@
       </div>
     </section>
 
-    <!-- SLIDE 5: 拆字「蜜糖」弱點鞏固 -->
     <section id="slide-5" class="slide-page hidden">
       <div class="card-3d p-6 sm:p-8 text-center">
         <div class="inline-block bg-pink-100 text-pink-800 font-black text-xl px-5 py-1.5 rounded-full border-2 border-pink-300 mb-3">
@@ -419,7 +408,6 @@
               <div class="text-lg font-bold text-amber-700">點擊變色聽魔法！</div>
             </div>
           </button>
-
           <button id="rad-5-1" onclick="tapRadical(5, 1, '下面係虫字，代表勤力採花蜜嘅小蜜蜂！合埋就係蜜糖嘅蜜！')" class="w-full card-3d py-5 px-6 flex items-center justify-between bg-yellow-50 border-yellow-400">
             <span class="text-6xl sm:text-7xl font-black text-yellow-700">虫</span>
             <div class="text-left">
@@ -444,4 +432,696 @@
       </div>
     </section>
 
-    <!-- ====
+    <!-- ==================== 第三幕：句式積木 (Slides 6 - 10) ==================== -->
+    <section id="slide-6" class="slide-page hidden">
+      <div class="card-3d p-6 sm:p-8 text-center">
+        <div class="inline-block bg-sky-100 text-sky-800 font-black text-xl px-5 py-1.5 rounded-full border-2 border-sky-300 mb-3">
+          🧱 句式積木 1 / 5：熱身形容詞組合
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-black text-stone-800 mb-6">
+          點一點積木，砌出兩句好聽嘅食物詞語！
+        </h2>
+
+        <!-- 組合 A -->
+        <div class="bg-emerald-50/80 border-2 border-emerald-200 rounded-3xl p-4 sm:p-5 mb-5">
+          <div class="flex flex-wrap items-center justify-center gap-3 text-3xl sm:text-4xl font-black mb-4">
+            <button id="wu-0-1" onclick="fillWarmupPart(0, 1, '翠綠的')" class="card-3d px-5 py-3 bg-emerald-500 text-white border-emerald-200">翠綠的</button>
+            <span>➕</span>
+            <button id="wu-0-2" onclick="fillWarmupPart(0, 2, '椰菜')" class="card-3d px-5 py-3 bg-white text-emerald-900">🥬 椰菜</button>
+          </div>
+          <div id="warmupOut-0" class="text-3xl sm:text-4xl font-black text-emerald-800 min-h-[48px]">
+            👆 點上面積木試吓！
+          </div>
+        </div>
+
+        <!-- 組合 B -->
+        <div class="bg-orange-50/80 border-2 border-orange-200 rounded-3xl p-4 sm:p-5 mb-6">
+          <div class="flex flex-wrap items-center justify-center gap-3 text-3xl sm:text-4xl font-black mb-4">
+            <button id="wu-1-1" onclick="fillWarmupPart(1, 1, '新鮮的')" class="card-3d px-5 py-3 bg-orange-500 text-white border-orange-200">新鮮的</button>
+            <span>➕</span>
+            <button id="wu-1-2" onclick="fillWarmupPart(1, 2, '紅蘿蔔')" class="card-3d px-5 py-3 bg-white text-orange-900">🥕 紅蘿蔔</button>
+          </div>
+          <div id="warmupOut-1" class="text-3xl sm:text-4xl font-black text-orange-800 min-h-[48px]">
+            👆 點上面積木試吓！
+          </div>
+        </div>
+
+        <div id="s6NextWrap" class="hidden pop-in">
+          <button onclick="goToSlide(7)" class="btn-green text-2xl sm:text-3xl font-black px-8 py-4">
+            ✅ 玲玲讀得好叻！下一句 ➔
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section id="slide-7" class="slide-page hidden">
+      <div class="card-3d p-6 sm:p-8 text-center">
+        <div class="inline-block bg-emerald-100 text-emerald-800 font-black text-xl px-5 py-1.5 rounded-full border-2 border-emerald-300 mb-3">
+          🧱 句式積木 2 / 5：蔬菜類長句
+        </div>
+        <div class="text-7xl mb-3">🥬</div>
+
+        <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-3xl sm:text-4xl font-black text-stone-800 bg-amber-50 p-5 rounded-3xl border-4 border-amber-200 mb-6">
+          <span id="slot-7-0" class="block-slot">（食物）</span>
+          <span>是</span>
+          <span id="slot-7-1" class="block-slot">（類別）</span>
+          <span>的食物。</span>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-center gap-4 mb-6">
+          <button id="blk-7-0" onclick="pickSentenceBlock(7, 0, '椰菜', '椰菜是蔬菜類的食物。')" class="card-3d px-7 py-4 text-3xl sm:text-4xl font-black text-emerald-900 bg-emerald-50">
+            🥬 椰菜
+          </button>
+          <button id="blk-7-1" onclick="pickSentenceBlock(7, 1, '蔬菜類', '椰菜是蔬菜類的食物。')" class="card-3d px-7 py-4 text-3xl sm:text-4xl font-black text-teal-900 bg-teal-50">
+            🌿 蔬菜類
+          </button>
+        </div>
+
+        <div id="s7NextWrap" class="hidden pop-in space-y-3">
+          <button onclick="speakCantonese('椰菜是蔬菜類的食物。')" class="bg-amber-100 text-amber-900 border-2 border-amber-400 text-2xl font-extrabold px-6 py-3 rounded-2xl mr-2">
+            🔊 再聽一次完整句子
+          </button>
+          <button onclick="goToSlide(8)" class="btn-green text-2xl sm:text-3xl font-black px-8 py-4">
+            ✅ 玲玲讀得好叻！
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section id="slide-8" class="slide-page hidden">
+      <div class="card-3d p-6 sm:p-8 text-center">
+        <div class="inline-block bg-emerald-100 text-emerald-800 font-black text-xl px-5 py-1.5 rounded-full border-2 border-emerald-300 mb-3">
+          🧱 句式積木 3 / 5：蔬菜類長句
+        </div>
+        <div class="text-7xl mb-3">🥕</div>
+
+        <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-3xl sm:text-4xl font-black text-stone-800 bg-amber-50 p-5 rounded-3xl border-4 border-amber-200 mb-6">
+          <span id="slot-8-0" class="block-slot">（食物）</span>
+          <span>是</span>
+          <span id="slot-8-1" class="block-slot">（類別）</span>
+          <span>的食物。</span>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-center gap-4 mb-6">
+          <button id="blk-8-0" onclick="pickSentenceBlock(8, 0, '紅蘿蔔', '紅蘿蔔是蔬菜類的食物。')" class="card-3d px-7 py-4 text-3xl sm:text-4xl font-black text-orange-900 bg-orange-50">
+            🥕 紅蘿蔔
+          </button>
+          <button id="blk-8-1" onclick="pickSentenceBlock(8, 1, '蔬菜類', '紅蘿蔔是蔬菜類的食物。')" class="card-3d px-7 py-4 text-3xl sm:text-4xl font-black text-teal-900 bg-teal-50">
+            🌿 蔬菜類
+          </button>
+        </div>
+
+        <div id="s8NextWrap" class="hidden pop-in space-y-3">
+          <button onclick="speakCantonese('紅蘿蔔是蔬菜類的食物。')" class="bg-amber-100 text-amber-900 border-2 border-amber-400 text-2xl font-extrabold px-6 py-3 rounded-2xl mr-2">
+            🔊 再聽一次完整句子
+          </button>
+          <button onclick="goToSlide(9)" class="btn-green text-2xl sm:text-3xl font-black px-8 py-4">
+            ✅ 玲玲讀得好叻！
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section id="slide-9" class="slide-page hidden">
+      <div class="card-3d p-6 sm:p-8 text-center">
+        <div class="inline-block bg-amber-100 text-amber-900 font-black text-xl px-5 py-1.5 rounded-full border-2 border-amber-300 mb-3">
+          🧱 句式積木 4 / 5：五穀類長句
+        </div>
+        <div class="text-7xl mb-3">🍚🍜</div>
+
+        <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-3xl sm:text-4xl font-black text-stone-800 bg-amber-50 p-5 rounded-3xl border-4 border-amber-200 mb-6">
+          <span id="slot-9-0" class="block-slot">（五穀食物）</span>
+          <span>是</span>
+          <span id="slot-9-1" class="block-slot">（類別）</span>
+          <span>的食物。</span>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-center gap-4 mb-6">
+          <button onclick="pickGrainBlock('白飯')" class="card-3d px-7 py-4 text-3xl sm:text-4xl font-black text-amber-950 bg-white">
+            🍚 白飯
+          </button>
+          <button onclick="pickGrainBlock('麵條')" class="card-3d px-7 py-4 text-3xl sm:text-4xl font-black text-amber-950 bg-white">
+            🍜 麵條
+          </button>
+          <button onclick="pickGrainCategory()" class="card-3d px-7 py-4 text-3xl sm:text-4xl font-black text-yellow-950 bg-yellow-100 border-yellow-400">
+            🌾 五穀類
+          </button>
+        </div>
+
+        <div id="s9NextWrap" class="hidden pop-in space-y-3">
+          <button onclick="replayGrainSentence()" class="bg-amber-100 text-amber-900 border-2 border-amber-400 text-2xl font-extrabold px-6 py-3 rounded-2xl mr-2">
+            🔊 再聽一次句子
+          </button>
+          <button onclick="goToSlide(10)" class="btn-green text-2xl sm:text-3xl font-black px-8 py-4">
+            ✅ 玲玲讀得好叻！去小廚師自選題 ➔
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section id="slide-10" class="slide-page hidden">
+      <div class="card-3d p-6 sm:p-8 text-center">
+        <div class="inline-block bg-pink-100 text-pink-800 font-black text-xl px-5 py-1.5 rounded-full border-2 border-pink-300 mb-3">
+          👩‍🍳 句式積木 5 / 5：玲玲小廚師自選創作
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-black text-stone-800 mb-5">
+          揀一款食物，再幫佢配啱「蔬菜類」定「五穀類」！
+        </h2>
+
+        <div class="flex flex-wrap items-center justify-center gap-4 mb-4">
+          <button onclick="chooseChefFood('洋蔥', '蔬菜類', '🧅')" class="card-3d px-6 py-3 text-3xl font-black bg-purple-50 text-purple-900">🧅 洋蔥</button>
+          <button onclick="chooseChefFood('馬鈴薯', '蔬菜類', '🥔')" class="card-3d px-6 py-3 text-3xl font-black bg-amber-50 text-amber-900">🥔 馬鈴薯</button>
+          <button onclick="chooseChefFood('麵包', '五穀類', '🍞')" class="card-3d px-6 py-3 text-3xl font-black bg-orange-50 text-orange-900">🍞 麵包</button>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-center gap-4 mb-6">
+          <button onclick="chooseChefCat('蔬菜類')" class="card-3d px-6 py-3 text-3xl font-black bg-emerald-100 text-emerald-900 border-emerald-400">🥬 蔬菜類</button>
+          <button onclick="chooseChefCat('五穀類')" class="card-3d px-6 py-3 text-3xl font-black bg-yellow-100 text-yellow-900 border-yellow-400">🌾 五穀類</button>
+        </div>
+
+        <div id="chefSentenceBox" class="bg-amber-50 border-4 border-amber-300 rounded-3xl p-5 text-3xl sm:text-4xl font-black text-amber-950 mb-6">
+          <span id="chefFoodSlot" class="text-orange-600">（先揀食物）</span> 是 <span id="chefCatSlot" class="text-emerald-700">（再揀類別）</span> 的食物。
+        </div>
+
+        <div id="s10NextWrap" class="hidden pop-in">
+          <button onclick="goToSlide(11)" class="btn-primary text-2xl sm:text-3xl font-black px-8 py-4">
+            🎵 進入第四幕：兒歌與分類尋寶 ➔
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 第四幕：兒歌與尋寶 (Slides 11 - 12) ==================== -->
+    <section id="slide-11" class="slide-page hidden">
+      <div class="card-3d p-6 sm:p-8 text-center">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+          <span class="bg-rose-100 text-rose-800 font-black text-xl px-4 py-1.5 rounded-full border-2 border-rose-300">
+            🎵 尋寶關卡 A：《健康食物分類歌》
+          </span>
+          <span id="rhymeScore" class="bg-amber-100 text-amber-900 font-black text-xl px-4 py-1.5 rounded-full border-2 border-amber-300">
+            已搵到熟字星星：0 / 6 ⭐
+          </span>
+        </div>
+
+        <p class="text-xl sm:text-2xl font-bold text-stone-700 mb-5">
+          請喺兒歌入面點出呢 6 個學過嘅熟字：<br />
+          <span class="inline-block mt-2 bg-yellow-100 border-2 border-yellow-400 px-4 py-1 rounded-2xl text-2xl sm:text-3xl font-black text-amber-950">
+            菜 、 飯 、 甜 、 蜜 、 水 、 果
+          </span>
+        </p>
+
+        <div class="bg-orange-50/90 border-4 border-orange-200 rounded-3xl p-5 sm:p-7 space-y-4 text-4xl sm:text-5xl font-black text-stone-800 mb-6">
+          <div class="flex justify-center gap-2 sm:gap-4">
+            <span>翠</span><span>綠</span>
+            <button id="rw-菜" onclick="tapRhymeWord('菜')" class="px-3 py-1 rounded-2xl bg-white border-2 border-amber-300 shadow-sm">菜</button>
+            <span>，</span><span>香</span><span>白</span>
+            <button id="rw-飯" onclick="tapRhymeWord('飯')" class="px-3 py-1 rounded-2xl bg-white border-2 border-amber-300 shadow-sm">飯</button>
+            <span>，</span>
+          </div>
+          <div class="flex justify-center gap-2 sm:gap-4">
+            <button id="rw-甜" onclick="tapRhymeWord('甜')" class="px-3 py-1 rounded-2xl bg-white border-2 border-amber-300 shadow-sm">甜</button>
+            <button id="rw-蜜" onclick="tapRhymeWord('蜜')" class="px-3 py-1 rounded-2xl bg-white border-2 border-amber-300 shadow-sm">蜜</button>
+            <span>滋</span><span>味</span><span>真</span><span>好</span><span>讚</span><span>！</span>
+          </div>
+          <div class="flex justify-center gap-2 sm:gap-4">
+            <span>健</span><span>康</span><span>食</span><span>物</span><span>天</span><span>天</span><span>吃</span><span>，</span>
+          </div>
+          <div class="flex justify-center gap-2 sm:gap-4">
+            <span>還</span><span>有</span>
+            <button id="rw-水" onclick="tapRhymeWord('水')" class="px-3 py-1 rounded-2xl bg-white border-2 border-amber-300 shadow-sm">水</button>
+            <button id="rw-果" onclick="tapRhymeWord('果')" class="px-3 py-1 rounded-2xl bg-white border-2 border-amber-300 shadow-sm">果</button>
+            <span>人</span><span>人</span><span>愛</span><span>。</span>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap justify-center gap-4">
+          <button onclick="speakCantonese('翠綠菜，香白飯，甜蜜滋味真好讚！健康食物天天吃，還有水果人人愛。')" class="bg-amber-100 text-amber-900 border-2 border-amber-400 text-2xl font-extrabold px-6 py-3 rounded-2xl">
+            🔊 聽 Anna 老師讀兒歌
+          </button>
+          <button id="s11NextBtn" onclick="goToSlide(12)" class="hidden btn-green text-2xl sm:text-3xl font-black px-8 py-4 pop-in">
+            🛒 集齊 6 粒星星！去超市分類推車 ➔
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section id="slide-12" class="slide-page hidden">
+      <div class="card-3d p-6 sm:p-8 text-center">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+          <span class="bg-teal-100 text-teal-800 font-black text-xl px-4 py-1.5 rounded-full border-2 border-teal-300">
+            🛒 尋寶關卡 B：超市分類小推車
+          </span>
+          <span id="cartProgress" class="bg-amber-100 text-amber-900 font-black text-xl px-4 py-1.5 rounded-full border-2 border-amber-300">
+            第 1 / 6 架推車
+          </span>
+        </div>
+
+        <div id="cartItemCard" class="max-w-md mx-auto bg-amber-50 border-4 border-amber-300 rounded-3xl p-6 mb-6">
+          <div id="cartItemEmoji" class="text-7xl sm:text-8xl mb-2">🥬</div>
+          <div id="cartItemName" class="text-4xl sm:text-5xl font-black text-stone-900 mb-2">椰菜</div>
+          <button onclick="speakCurrentCartItem()" class="text-lg font-extrabold text-amber-800 bg-white px-4 py-1 rounded-full border-2 border-amber-300">
+            🔊 再聽一次食物名
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-3xl mx-auto">
+          <button id="btnCartVeg" onclick="sortFoodIntoCart('蔬菜類')" class="card-3d p-6 bg-emerald-50 border-emerald-400 flex flex-col items-center">
+            <span class="text-6xl mb-2">🛒🥬</span>
+            <span class="text-3xl sm:text-4xl font-black text-emerald-900">蔬菜類推車</span>
+            <span class="text-lg font-bold text-emerald-700 mt-1">椰菜、紅蘿蔔、洋蔥、馬鈴薯</span>
+          </button>
+          <button id="btnCartGrain" onclick="sortFoodIntoCart('五穀類')" class="card-3d p-6 bg-yellow-50 border-yellow-400 flex flex-col items-center">
+            <span class="text-6xl mb-2">🛒🌾</span>
+            <span class="text-3xl sm:text-4xl font-black text-amber-900">五穀類推車</span>
+            <span class="text-lg font-bold text-amber-700 mt-1">麵包、白飯、麵條</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SLIDE 13: 結算畫面 ＋ 一鍵複製進度暗號 ==================== -->
+    <section id="slide-13" class="slide-page hidden">
+      <div class="card-3d p-6 sm:p-10 text-center bg-gradient-to-b from-white to-amber-50">
+        <div class="text-7xl sm:text-8xl mb-3">🏆🎉🌟</div>
+        <h2 class="text-3xl sm:text-5xl font-black text-amber-900 mb-3">
+          太叻啦！玲玲完成 Day 4 課堂！
+        </h2>
+        <p class="text-xl sm:text-2xl font-bold text-stone-700 mb-6">
+          今日學識咗「蔬菜類」同「五穀類」食物分類，仲完成晒所有拆字同句式積木！
+        </p>
+
+        <!-- 【Bug 修復 2】修正 border-3 為 Tailwind 支持的 border-4 -->
+        <div class="bg-white border-4 border-amber-200 rounded-3xl p-5 max-w-2xl mx-auto mb-6 text-left">
+          <div class="text-lg sm:text-xl font-black text-amber-900 mb-2">
+            👩‍👧 媽媽觀察小記錄（如有覺得難記嘅字可輕點標記，無則直接複製）：
+          </div>
+          <div class="flex flex-wrap gap-2" id="weakTagGroup">
+            <button onclick="toggleWeakWord(this, '蜜糖')" class="px-4 py-2 rounded-2xl border-2 border-stone-300 bg-stone-50 text-lg font-extrabold text-stone-700">蜜糖</button>
+            <button onclick="toggleWeakWord(this, '蔬菜類')" class="px-4 py-2 rounded-2xl border-2 border-stone-300 bg-stone-50 text-lg font-extrabold text-stone-700">蔬菜類</button>
+            <button onclick="toggleWeakWord(this, '五穀類')" class="px-4 py-2 rounded-2xl border-2 border-stone-300 bg-stone-50 text-lg font-extrabold text-stone-700">五穀類</button>
+            <button onclick="toggleWeakWord(this, '洋蔥')" class="px-4 py-2 rounded-2xl border-2 border-stone-300 bg-stone-50 text-lg font-extrabold text-stone-700">洋蔥</button>
+            <button onclick="toggleWeakWord(this, '馬鈴薯')" class="px-4 py-2 rounded-2xl border-2 border-stone-300 bg-stone-50 text-lg font-extrabold text-stone-700">馬鈴薯</button>
+            <button onclick="toggleWeakWord(this, '長句朗讀')" class="px-4 py-2 rounded-2xl border-2 border-stone-300 bg-stone-50 text-lg font-extrabold text-stone-700">長句朗讀</button>
+          </div>
+        </div>
+
+        <div class="max-w-2xl mx-auto mb-6">
+          <!-- 已經在 CSS 頂部為 textarea 設定解鎖，確保媽媽可以長按複製 -->
+          <textarea id="reportCodeBox" readonly rows="3" class="w-full p-4 rounded-2xl border-4 border-amber-300 bg-amber-100/70 text-lg sm:text-xl font-bold text-amber-950 resize-none focus:outline-none"></textarea>
+        </div>
+
+        <button onclick="copyProgressReport()" class="btn-primary text-2xl sm:text-3xl font-black px-8 py-5 inline-flex items-center gap-3 mb-4">
+          <span>📋</span>
+          <span>一鍵複製進度暗號俾 Anna 老師</span>
+        </button>
+
+        <!-- 【Bug 修復 4】將「就会」修正為「就會」 -->
+        <p id="copyFeedback" class="text-xl font-black text-emerald-700 min-h-[32px]">
+          複製後直接貼返去對話框，我就會自動幫你更新 Google Drive 總庫！
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    /* =====================================================================
+       iPad Safari 終極防護語音引擎 (純廣東話 zh-HK + Anti-GC 池)
+    ===================================================================== */
+    window.utterancePool = [];
+    let hkVoice = null;
+    let currentGuideText = "玲玲你好！歡迎嚟到《我要謝謝你》Day 4 彩虹超市大冒險！";
+
+    function loadCantoneseVoice() {
+      if (!('speechSynthesis' in window)) return;
+      const voices = window.speechSynthesis.getVoices();
+      hkVoice =
+        voices.find(v => v.lang === 'zh-HK' && (v.name.includes('Sinji') || v.name.includes('Female') || v.name.includes('女'))) ||
+        voices.find(v => v.lang === 'zh-HK') ||
+        voices.find(v => v.lang.toLowerCase().includes('zh-hk')) ||
+        voices.find(v => v.lang.toLowerCase().includes('yue')) ||
+        null;
+    }
+
+    if ('speechSynthesis' in window) {
+      loadCantoneseVoice();
+      window.speechSynthesis.onvoiceschanged = loadCantoneseVoice;
+    }
+
+    function sanitizeCantonese(raw) {
+      return String(raw || '').replace(/[A-Za-z]/g, '').trim();
+    }
+
+    function speakCantonese(text) {
+      const clean = sanitizeCantonese(text);
+      if (!clean || !('speechSynthesis' in window)) return;
+      try { window.speechSynthesis.cancel(); } catch (e) {}
+
+      setTimeout(() => {
+        const u = new SpeechSynthesisUtterance(clean);
+        u.lang = 'zh-HK';
+        if (hkVoice) u.voice = hkVoice;
+        u.rate = 0.9;
+        u.pitch = 1.05;
+
+        window.utterancePool.push(u);
+        u.onend = () => {
+          const idx = window.utterancePool.indexOf(u);
+          if (idx > -1) window.utterancePool.splice(idx, 1);
+        };
+        u.onerror = () => {
+          const idx = window.utterancePool.indexOf(u);
+          if (idx > -1) window.utterancePool.splice(idx, 1);
+        };
+        window.speechSynthesis.speak(u);
+      }, 40);
+    }
+
+    function setTutorGuide(text, autoSpeak = true) {
+      currentGuideText = text;
+      document.getElementById('tutorText').textContent = text;
+      if (autoSpeak) speakCantonese(text);
+    }
+
+    function replayTutorGuide() {
+      speakCantonese(currentGuideText);
+    }
+
+    /* =====================================================================
+       煙花特效
+    ===================================================================== */
+    function launchFireworks() {
+      const colors = ['#F59E0B', '#10B981', '#EC4899', '#3B82F6', '#FACC15', '#8B5CF6'];
+      for (let i = 0; i < 34; i++) {
+        const el = document.createElement('div');
+        el.className = 'confetti-piece';
+        el.style.left = (20 + Math.random() * 60) + 'vw';
+        el.style.top = (25 + Math.random() * 35) + 'vh';
+        el.style.backgroundColor = colors[i % colors.length];
+        el.style.setProperty('--dx', ((Math.random() - 0.5) * 320) + 'px');
+        el.style.setProperty('--dy', ((Math.random() - 0.2) * 360) + 'px');
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 1350);
+      }
+    }
+
+    /* =====================================================================
+       單向幻燈片導航與四部曲狀態
+    ===================================================================== */
+    const totalSlides = 14;
+    let currentSlide = 0;
+    let engineUnlocked = false;
+
+    const slideGuides = {
+      0: "玲玲你好！歡迎嚟到《我要謝謝你》Day 4 彩虹超市大冒險！",
+      1: "第一站去蔬菜區！請點一點下面四張圖卡，跟住老師讀出蔬菜嘅名！",
+      2: "第二站去五穀區！點一點麵包、白飯、麵條，仲有好朋友甜甜的蜜糖！",
+      3: "拆字魔法時間！點一點「菜」字上面嘅草字頭，同下面嘅采字，睇吓會點變！",
+      4: "再嚟拆「飯」字！點一點左邊嘅食字旁，同右邊嘅反字！",
+      5: "重溫難記好朋友「蜜糖」！點一點上面嘅小蜂巢同下面嘅小蜜蜂！",
+      6: "嚟到句式積木啦！先點一點積木，砌出「翠綠的椰菜」同「新鮮的紅蘿蔔」！",
+      7: "請幫「椰菜」搵出佢屬於邊一類食物，砌成完整句子再大聲讀出嚟！",
+      8: "呢個係「紅蘿蔔」！點一點積木砌出完整句子，再大聲讀俾媽媽聽！",
+      9: "輪到五穀類啦！試吓用「白飯」同「麵條」砌出五穀類嘅句子！",
+      10: "玲玲小廚師時間！自己揀一款食物，再配啱蔬菜類定五穀類積木！",
+      11: "兒歌尋寶開始！請喺兒歌入面點出「菜、飯、甜、蜜、水、果」六個熟字！",
+      12: "最後一關：超市分類小推車！幫每一款食物搵到啱嘅推車！",
+      13: "恭喜玲玲完成今日所有任務！媽媽可以按下面掣複製進度暗號俾我！"
+    };
+
+    function updateHeaderMap(slideIdx) {
+      document.getElementById('pageIndicator').textContent = `${slideIdx + 1} / ${totalSlides}`;
+      let activeAct = 1;
+      if (slideIdx >= 3 && slideIdx <= 5) activeAct = 2;
+      else if (slideIdx >= 6 && slideIdx <= 10) activeAct = 3;
+      else if (slideIdx >= 11) activeAct = 4;
+
+      for (let i = 1; i <= 4; i++) {
+        const badge = document.getElementById(`actBadge${i}`);
+        if (i === activeAct) {
+          badge.className = "px-2.5 py-1 rounded-xl text-sm sm:text-base font-extrabold bg-amber-400 text-amber-950 shadow-sm";
+        } else if (i < activeAct) {
+          badge.className = "px-2.5 py-1 rounded-xl text-sm sm:text-base font-extrabold bg-emerald-100 text-emerald-800";
+        } else {
+          badge.className = "px-2.5 py-1 rounded-xl text-sm sm:text-base font-bold text-amber-700/60";
+        }
+      }
+    }
+
+    function goToSlide(idx) {
+      document.querySelectorAll('.slide-page').forEach(el => el.classList.add('hidden'));
+      const target = document.getElementById(`slide-${idx}`);
+      if (target) target.classList.remove('hidden');
+
+      currentSlide = idx;
+      updateHeaderMap(idx);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      if (idx === 12) renderCartChallenge();
+      if (idx === 13) {
+        updateReportCode();
+        launchFireworks();
+      }
+      if (slideGuides[idx]) setTutorGuide(slideGuides[idx], true);
+    }
+
+    function startLesson() {
+      // 【Bug 修復 3】iOS 語音引擎首次點擊解鎖機制：必須同步播放空語音
+      if (!engineUnlocked && 'speechSynthesis' in window) {
+        window.speechSynthesis.speak(new SpeechSynthesisUtterance(''));
+        engineUnlocked = true;
+      }
+      goToSlide(1);
+    }
+
+    function handleBackHome() {
+      if (currentSlide === 0) {
+        if (window.history.length > 1) window.history.back();
+        else setTutorGuide("我哋已經喺課堂大門口啦！按「開始上堂啦」就可以入去玩！", true);
+      } else {
+        goToSlide(0);
+      }
+    }
+
+    /* =====================================================================
+       第一幕：詞語圖卡
+    ===================================================================== */
+    const s1Seen = new Set();
+    const s2Seen = new Set();
+
+    function tapVocabCard(slideNum, cardIdx, word, hint) {
+      if (slideNum === 1) {
+        s1Seen.add(cardIdx);
+        document.getElementById(`vCard-${cardIdx}`).classList.add('card-learned');
+        document.getElementById('s1Counter').textContent = `已點讀：${s1Seen.size} / 4`;
+        if (s1Seen.size >= 4) document.getElementById('s1NextWrap').classList.remove('hidden');
+      } else {
+        s2Seen.add(cardIdx);
+        document.getElementById(`vCard2-${cardIdx}`).classList.add('card-learned');
+        document.getElementById('s2Counter').textContent = `已點讀：${s2Seen.size} / 4`;
+        if (s2Seen.size >= 4) document.getElementById('s2NextWrap').classList.remove('hidden');
+      }
+      setTutorGuide(`${word}！${hint}`, true);
+    }
+
+    /* =====================================================================
+       第二幕：視覺拆字魔法
+    ===================================================================== */
+    const radState = { 3: new Set(), 4: new Set(), 5: new Set() };
+    function tapRadical(slideNum, partIdx, desc) {
+      radState[slideNum].add(partIdx);
+      document.getElementById(`rad-${slideNum}-${partIdx}`).classList.add('card-learned');
+      if (radState[slideNum].size >= 2) {
+        document.getElementById(`radResult-${slideNum}`).classList.remove('hidden');
+        document.getElementById(`s${slideNum}NextWrap`).classList.remove('hidden');
+        launchFireworks();
+      }
+      setTutorGuide(desc, true);
+    }
+
+    /* =====================================================================
+       第三幕：句式積木大挑戰
+    ===================================================================== */
+    // 【Bug 修復 4】熱身積木邏輯重寫：必須四個部件（2個形容詞＋2個名詞）全部點齊才解鎖
+    const warmupPartsState = {
+      0: new Set(), // 儲存句 0 點過的部件 (1, 2)
+      1: new Set()  // 儲存句 1 點過的部件 (1, 2)
+    };
+
+    function fillWarmupPart(sentenceIdx, partIdx, partText) {
+      warmupPartsState[sentenceIdx].add(partIdx);
+      const btn = document.getElementById(`wu-${sentenceIdx}-${partIdx}`);
+      btn.classList.add('card-learned');
+
+      // 檢查該句兩個部件是否點齊
+      if (warmupPartsState[sentenceIdx].size === 2) {
+        const fullPhrase = sentenceIdx === 0 ? '翠綠的椰菜' : '新鮮的紅蘿蔔';
+        document.getElementById(`warmupOut-${sentenceIdx}`).textContent = `✨ ${fullPhrase} ✨`;
+        setTutorGuide(`好棒呀！${fullPhrase}！請玲玲跟住讀一次！`, true);
+      } else {
+        speakCantonese(partText);
+      }
+
+      // 檢查兩句（共四個部件）是否全部點齊
+      if (warmupPartsState[0].size === 2 && warmupPartsState[1].size === 2) {
+        document.getElementById('s6NextWrap').classList.remove('hidden');
+      }
+    }
+
+    const sentenceSlots = { 7: [false, false], 8: [false, false] };
+    function pickSentenceBlock(slideNum, slotIdx, text, fullSentence) {
+      const slotEl = document.getElementById(`slot-${slideNum}-${slotIdx}`);
+      slotEl.textContent = text;
+      slotEl.classList.add('block-slot-filled');
+      document.getElementById(`blk-${slideNum}-${slotIdx}`).classList.add('card-learned');
+      sentenceSlots[slideNum][slotIdx] = true;
+
+      if (sentenceSlots[slideNum][0] && sentenceSlots[slideNum][1]) {
+        document.getElementById(`s${slideNum}NextWrap`).classList.remove('hidden');
+        launchFireworks();
+        setTutorGuide(`砌好啦！${fullSentence} 請玲玲大聲讀一次俾媽媽聽！`, true);
+      } else {
+        speakCantonese(text);
+      }
+    }
+
+    let grainFood = ''; let grainCat = false; const grainTested = new Set();
+    function pickGrainBlock(food) {
+      grainFood = food; grainTested.add(food);
+      const slot0 = document.getElementById('slot-9-0');
+      slot0.textContent = food; slot0.classList.add('block-slot-filled');
+      checkGrainComplete(food);
+    }
+    function pickGrainCategory() {
+      grainCat = true;
+      const slot1 = document.getElementById('slot-9-1');
+      slot1.textContent = '五穀類'; slot1.classList.add('block-slot-filled');
+      checkGrainComplete('五穀類');
+    }
+    function checkGrainComplete(justClicked) {
+      if (grainFood && grainCat) {
+        const sentence = `${grainFood}是五穀類的食物。`;
+        document.getElementById('s9NextWrap').classList.remove('hidden');
+        if (grainTested.size >= 2) launchFireworks();
+        setTutorGuide(`好叻呀！${sentence} 試吓再撳埋另一款五穀食物砌多句！`, true);
+      } else speakCantonese(justClicked);
+    }
+    function replayGrainSentence() {
+      if (grainFood && grainCat) speakCantonese(`${grainFood}是五穀類的食物。`);
+    }
+
+    let chefFood = ''; let chefExpectedCat = '';
+    function chooseChefFood(food, expectedCat, emoji) {
+      chefFood = food; chefExpectedCat = expectedCat;
+      document.getElementById('chefFoodSlot').textContent = `${emoji} ${food}`;
+      document.getElementById('chefCatSlot').textContent = '（請揀類別）';
+      setTutorGuide(`你揀咗${food}！咁${food}係蔬菜類定五穀類呢？`, true);
+    }
+    function chooseChefCat(cat) {
+      if (!chefFood) { setTutorGuide("請先揀食物啦！", true); return; }
+      if (cat === chefExpectedCat) {
+        document.getElementById('chefCatSlot').textContent = cat;
+        document.getElementById('s10NextWrap').classList.remove('hidden');
+        launchFireworks();
+        setTutorGuide(`答啱啦！${chefFood}是${cat}的食物。玲玲小廚師好厲害！`, true);
+      } else {
+        const box = document.getElementById('chefSentenceBox');
+        box.classList.remove('wobble-hint'); void box.offsetWidth; box.classList.add('wobble-hint');
+        setTutorGuide(`試吓隔離嗰個積木啦！${chefFood}係邊一類呢？`, true);
+      }
+    }
+
+    /* =====================================================================
+       第四幕：兒歌尋寶 & 超市推車
+    ===================================================================== */
+    const foundRhymeWords = new Set();
+    function tapRhymeWord(char) {
+      if (!foundRhymeWords.has(char)) {
+        foundRhymeWords.add(char);
+        const btn = document.getElementById(`rw-${char}`);
+        btn.classList.add('bg-amber-300', 'border-amber-600', 'text-amber-950', 'scale-110');
+        document.getElementById('rhymeScore').textContent = `已搵到熟字星星：${foundRhymeWords.size} / 6 ⭐`;
+        launchFireworks();
+      }
+      if (foundRhymeWords.size >= 6) {
+        document.getElementById('s11NextBtn').classList.remove('hidden');
+        setTutorGuide(`搵到「${char}」字！六粒熟字星星全部集齊啦！`, true);
+      } else {
+        setTutorGuide(`搵到「${char}」字啦！仲差${6 - foundRhymeWords.size}個熟字！`, true);
+      }
+    }
+
+    const cartItems = [
+      { name: '椰菜', emoji: '🥬', category: '蔬菜類' },
+      { name: '麵包', emoji: '🍞', category: '五穀類' },
+      { name: '洋蔥', emoji: '🧅', category: '蔬菜類' },
+      { name: '白飯', emoji: '🍚', category: '五穀類' },
+      { name: '馬鈴薯', emoji: '🥔', category: '蔬菜類' },
+      { name: '麵條', emoji: '🍜', category: '五穀類' }
+    ];
+    let cartIdx = 0; let cartLock = false;
+
+    function renderCartChallenge() {
+      const item = cartItems[cartIdx];
+      document.getElementById('cartProgress').textContent = `第 ${cartIdx + 1} / ${cartItems.length} 架推車`;
+      document.getElementById('cartItemEmoji').textContent = item.emoji;
+      document.getElementById('cartItemName').textContent = item.name;
+    }
+    function speakCurrentCartItem() {
+      if (cartItems[cartIdx]) speakCantonese(`${cartItems[cartIdx].name}，放入邊架推車呢？`);
+    }
+    function sortFoodIntoCart(chosenCat) {
+      if (cartLock) return;
+      const item = cartItems[cartIdx];
+      if (!item) return;
+      if (chosenCat === item.category) {
+        cartLock = true; launchFireworks();
+        setTutorGuide(`答啱啦！${item.name}是${item.category}的食物！`, true);
+        setTimeout(() => {
+          cartIdx++; cartLock = false;
+          if (cartIdx < cartItems.length) {
+            renderCartChallenge(); speakCantonese(`下一款：${cartItems[cartIdx].name}！`);
+          } else goToSlide(13);
+        }, 1200);
+      } else {
+        const card = document.getElementById('cartItemCard');
+        card.classList.remove('wobble-hint'); void card.offsetWidth; card.classList.add('wobble-hint');
+        setTutorGuide(`試吓隔離嗰架推車啦！`, true);
+      }
+    }
+
+    /* =====================================================================
+       結算畫面暗號
+    ===================================================================== */
+    const weakSet = new Set();
+    function toggleWeakWord(btn, word) {
+      if (weakSet.has(word)) {
+        weakSet.delete(word);
+        btn.classList.remove('bg-pink-200', 'border-pink-500', 'text-pink-950');
+        btn.classList.add('bg-stone-50', 'border-stone-300', 'text-stone-700');
+      } else {
+        weakSet.add(word);
+        btn.classList.remove('bg-stone-50', 'border-stone-300', 'text-stone-700');
+        btn.classList.add('bg-pink-200', 'border-pink-500', 'text-pink-950');
+      }
+      updateReportCode();
+    }
+    function updateReportCode() {
+      const weakText = weakSet.size > 0 ? Array.from(weakSet).join(', ') : '無（全部表現優異）';
+      const code = `【中文課堂回報】P.22 Day 4（加長充實版）| 新詞掌握: 蔬菜類(椰菜, 紅蘿蔔, 洋蔥, 馬鈴薯), 五穀類(麵包, 白飯, 麵條) | 句式掌握: 是…的食物 | 弱點重溫: 蜜糖, 翠綠的, 新鮮的 | 需加強: ${weakText}`;
+      document.getElementById('reportCodeBox').value = code;
+    }
+    function copyProgressReport() {
+      const box = document.getElementById('reportCodeBox');
+      const text = box.value;
+      const feedback = document.getElementById('copyFeedback');
+      feedback.textContent = "✅ 已複製進度暗號！請直接貼上給 Anna 老師更新雲端總庫！";
+      launchFireworks();
+      speakCantonese("進度暗號已經複製好啦！請媽媽貼返去對話框俾我更新紀錄！");
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).catch(() => { box.select(); document.execCommand('copy'); });
+      } else { box.select(); document.execCommand('copy'); }
+    }
+  </script>
+</body>
+</html>
