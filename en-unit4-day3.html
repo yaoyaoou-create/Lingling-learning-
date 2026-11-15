@@ -1,369 +1,649 @@
 <!DOCTYPE html>
 <html lang="zh-HK">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Unit 4 Day 3: jump</title>
-    <link rel="stylesheet" href="theme.css">
-    <style>
-        * { touch-action: manipulation; }
-        body {
-            background: linear-gradient(180deg, #60A5FA 0%, #DBEAFE 35%, #EFF6FF 100%) !important;
-            padding: 16px !important;
-            margin: 0 !important;
-            min-height: 100vh !important;
-            display: block !important;
-            font-family: "PingFang HK", "Microsoft JhengHei", "Chalkboard SE", sans-serif;
-        }
-        .app-wrapper { max-width: 920px; margin: 0 auto; width: 100%; }
-        .top-nav {
-            background: linear-gradient(135deg, #312E81 0%, #4338CA 50%, #3B82F6 100%);
-            padding: 14px 20px; display: flex; justify-content: space-between; align-items: center;
-            border: 3px solid #6366F1; border-bottom: 7px solid #1E1B4B; border-radius: 26px;
-            box-shadow: 0 10px 20px rgba(30, 27, 75, 0.25); margin-bottom: 20px; gap: 10px; flex-wrap: wrap;
-        }
-        .btn-home {
-            background: linear-gradient(135deg, #FB7185 0%, #E11D48 100%); color: white;
-            border: 2px solid #FDA4AF; border-bottom: 5px solid #9F1239; border-radius: 16px;
-            padding: 8px 16px; font-weight: 900; font-size: 15px; cursor: pointer; transition: transform 0.1s;
-        }
-        .btn-home:active { transform: translateY(3px); border-bottom-width: 2px; }
-        .progress-map { display: flex; align-items: center; gap: 6px; background: rgba(15, 23, 42, 0.35); padding: 6px 14px; border-radius: 20px; }
-        .step-dot {
-            width: 28px; height: 28px; border-radius: 50%; background: rgba(255, 255, 255, 0.2);
-            color: #CBD5E1; font-weight: 900; font-size: 13px; display: flex; align-items: center; justify-content: center;
-            border: 2px solid rgba(255,255,255,0.3);
-        }
-        .step-dot.active { background: #FCD34D; color: #78350F; border-color: #FFFFFF; box-shadow: 0 0 10px #FCD34D; transform: scale(1.1); }
-        .step-dot.done { background: #34D399; color: #064E3B; border-color: #A7F3D0; }
-        .voice-badge { background: rgba(15, 23, 42, 0.45); color: #F8FAFC; padding: 7px 14px; border-radius: 16px; font-size: 13px; font-weight: 800; border: 1px solid rgba(255,255,255,0.2); }
-        .outer-frame { background: #FFFDF7; border: 4px solid #FDE68A; border-bottom: 10px solid #F59E0B; border-radius: 34px; padding: 22px; box-shadow: 0 14px 30px rgba(30, 58, 138, 0.18); }
-        .tutor-banner {
-            background: linear-gradient(135deg, #FFF1F2 0%, #FEF3C7 100%); border: 3px solid #FDA4AF; border-bottom: 7px solid #F43F5E;
-            border-radius: 24px; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 22px; cursor: pointer; transition: transform 0.1s;
-        }
-        .tutor-banner:active { transform: translateY(3px); border-bottom-width: 4px; }
-        .tutor-left { display: flex; align-items: center; gap: 16px; }
-        .tutor-avatar { font-size: 44px; background: #FFFFFF; border-radius: 50%; min-width: 72px; height: 72px; display: flex; align-items: center; justify-content: center; border: 3px solid #F43F5E; box-shadow: 0 4px 8px rgba(0,0,0,0.08); }
-        .unit-pill { display: inline-block; background: #9333EA; color: white; font-size: 12px; font-weight: 900; padding: 3px 12px; border-radius: 12px; margin-bottom: 5px; }
-        .tutor-text { font-size: 18px; color: #1E293B; font-weight: 900; line-height: 1.45; }
-        .banner-speaker { background: #FCD34D; border: 2px solid #D97706; border-bottom: 4px solid #B45309; border-radius: 16px; padding: 8px 14px; font-size: 14px; font-weight: 900; color: #78350F; white-space: nowrap; }
-        .step-stage { display: none; background: #FFFFFF; border: 3px solid #E2E8F0; border-bottom: 8px solid #CBD5E1; border-radius: 28px; padding: 28px 20px; text-align: center; }
-        .step-stage.active { display: block; animation: bounceIn 0.35s ease forwards; }
-        @keyframes bounceIn { 0% { opacity: 0; transform: scale(0.95) translateY(10px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
-        .word-showcase-card { background: #FFFBEB; border: 4px solid #FCD34D; border-bottom: 9px solid #F59E0B; border-radius: 28px; padding: 24px 20px; max-width: 340px; margin: 0 auto 20px; cursor: pointer; transition: transform 0.12s; }
-        .word-showcase-card:active { transform: translateY(4px); border-bottom-width: 5px; }
-        .picture-box { background: #FEF3C7; border-radius: 22px; padding: 22px; font-size: 82px; line-height: 1.1; margin-bottom: 14px; }
-        .word-title { font-size: 44px; font-weight: 900; color: #1E293B; margin: 0 0 6px 0; }
-        .word-meaning { font-size: 18px; font-weight: 800; color: #64748B; margin-bottom: 14px; }
-        .listen-pill { display: inline-block; background: #DBEAFE; color: #1D4ED8; border: 2px solid #93C5FD; border-bottom: 4px solid #3B82F6; padding: 8px 20px; border-radius: 18px; font-size: 17px; font-weight: 900; }
-        .letter-blocks { display: flex; justify-content: center; gap: 14px; margin: 22px 0; flex-wrap: wrap; }
-        .letter { background: #FEF3C7; border: 3px solid #F59E0B; border-bottom: 8px solid #D97706; border-radius: 18px; width: 76px; height: 86px; display: flex; align-items: center; justify-content: center; font-size: 42px; font-weight: 900; color: #B45309; cursor: pointer; transition: transform 0.1s; }
-        .letter:active { transform: translateY(4px); border-bottom-width: 4px; }
-        .letter.clicked { background: #D1FAE5; border-color: #10B981; border-bottom-color: #047857; color: #065F46; transform: scale(1.06); }
-        .whole-word-btn { background: #EFF6FF; border: 3px solid #93C5FD; border-bottom: 6px solid #3B82F6; border-radius: 20px; padding: 10px 28px; font-size: 36px; font-weight: 900; color: #1D4ED8; display: inline-block; cursor: pointer; margin-top: 8px; }
-        .match-cards { display: flex; justify-content: center; gap: 24px; margin: 20px 0; flex-wrap: wrap; }
-        .match-card { background: #FFFBEB; border: 4px solid #FCD34D; border-bottom: 9px solid #F59E0B; border-radius: 24px; padding: 24px; width: 175px; cursor: pointer; transition: transform 0.1s; }
-        .match-card:active { transform: translateY(4px); border-bottom-width: 5px; }
-        .match-card.correct { background: #D1FAE5; border-color: #10B981; border-bottom-color: #047857; }
-        .match-card.gentle-try { background: #FFF1F2; border-color: #FDA4AF; }
-        .btn-next { background: linear-gradient(135deg, #34D399 0%, #10B981 100%); color: white; border: 3px solid #059669; border-bottom: 7px solid #047857; border-radius: 22px; padding: 14px 36px; font-size: 21px; font-weight: 900; margin-top: 20px; cursor: pointer; display: none; }
-        .btn-next.show { display: inline-block; animation: bounceIn 0.3s ease forwards; }
-        .btn-next:active { transform: translateY(4px); border-bottom-width: 3px; }
-        .btn-mom { background: linear-gradient(135deg, #FDE047 0%, #F59E0B 100%); color: #78350F; border: 3px solid #D97706; border-bottom: 7px solid #92400E; border-radius: 24px; padding: 16px 32px; font-size: 22px; font-weight: 900; margin-top: 22px; cursor: pointer; }
-        .btn-mom:active { transform: translateY(4px); border-bottom-width: 3px; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Unit 4 Day 4 - I can do it! | 玲玲學習樂園</title>
+  <style>
+    /* iPad Safari 終極防護引擎：防雙擊放大鎖 & 強制區塊排版 */
+    * {
+      box-sizing: border-box;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      min-height: 100vh;
+      display: block !important;
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang HK", "Microsoft JhengHei", "Rounded Mplus 1c", sans-serif;
+      background: linear-gradient(180deg, #60A5FA 0%, #93C5FD 55%, #DBEAFE 100%);
+      color: #1E293B;
+      overflow-x: hidden;
+    }
+
+    #fireworksCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    .top-nav {
+      background: linear-gradient(180deg, #1E3A8A 0%, #1D4ED8 100%);
+      color: #FFFFFF;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      box-shadow: 0 5px 0 #172554;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .btn-home {
+      background: #F59E0B;
+      color: #1E293B;
+      text-decoration: none;
+      font-weight: 900;
+      font-size: 16px;
+      padding: 8px 14px;
+      border-radius: 16px;
+      box-shadow: 0 4px 0 #B45309;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+      transition: transform 0.1s;
+    }
+
+    .btn-home:active { transform: translateY(3px); box-shadow: 0 1px 0 #B45309; }
+    .nav-title { font-size: 17px; font-weight: 900; letter-spacing: 0.5px; text-align: center; text-shadow: 0 2px 4px rgba(0,0,0,0.25); }
+
+    .act-map { display: flex; align-items: center; gap: 6px; }
+    .act-pill {
+      padding: 6px 10px; border-radius: 14px; font-size: 13px; font-weight: 800;
+      background: rgba(255, 255, 255, 0.18); color: #DBEAFE; border: 2px solid transparent;
+      cursor: pointer; transition: all 0.15s;
+    }
+    .act-pill.active { background: #FACC15; color: #1E3A8A; border-color: #FEF08A; box-shadow: 0 3px 0 #CA8A04; transform: scale(1.05); }
+    .act-pill.done { background: #34D399; color: #064E3B; }
+
+    .container { max-width: 820px; margin: 0 auto; padding: 16px 16px 48px; }
+
+    .teacher-banner {
+      background: linear-gradient(135deg, #FEF08A 0%, #FDE047 100%);
+      border: 3px solid #EAB308; border-radius: 24px; padding: 14px 18px; margin-bottom: 18px;
+      display: flex; align-items: center; gap: 14px; box-shadow: 0 6px 0 #CA8A04; cursor: pointer; transition: transform 0.1s;
+    }
+    .teacher-banner:active { transform: translateY(3px); box-shadow: 0 3px 0 #CA8A04; }
+    .teacher-avatar {
+      width: 58px; height: 58px; border-radius: 50%; background: #FFFBEB; border: 3px solid #F59E0B;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 3px 0 #D97706;
+    }
+    .teacher-text-box { flex: 1; }
+    .teacher-name { font-size: 13px; font-weight: 900; color: #92400E; margin-bottom: 3px; display: flex; align-items: center; gap: 6px; }
+    .teacher-msg { font-size: 17px; font-weight: 800; color: #451A03; line-height: 1.4; }
+    .replay-chip { background: #F59E0B; color: #FFFFFF; font-size: 13px; font-weight: 900; padding: 7px 12px; border-radius: 14px; box-shadow: 0 3px 0 #B45309; white-space: nowrap; }
+
+    .stage-card {
+      background: #FFFFFF; border-radius: 32px; padding: 24px 20px;
+      box-shadow: 0 10px 0 #93C5FD, 0 14px 28px rgba(30, 58, 138, 0.18); border: 4px solid #EFF6FF; text-align: center;
+    }
+    .stage-badge { display: inline-block; background: #DBEAFE; color: #1D4ED8; font-size: 15px; font-weight: 900; padding: 6px 16px; border-radius: 999px; margin-bottom: 14px; }
+    .stage-badge.warmup { background: #FEF3C7; color: #B45309; border: 2px solid #F59E0B; }
+
+    .flashcard-3d {
+      background: linear-gradient(180deg, #F8FAFC 0%, #EFF6FF 100%); border: 4px solid #60A5FA; border-radius: 28px;
+      padding: 22px 18px; margin: 8px auto 18px; max-width: 460px; box-shadow: 0 8px 0 #3B82F6; cursor: pointer; transition: transform 0.12s ease;
+    }
+    .flashcard-3d:active, .flashcard-3d.pop { transform: scale(1.03); }
+    .illustration-wrap { width: 170px; height: 170px; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; }
+    
+    .word-en { font-size: 48px; font-weight: 900; color: #1E3A8A; letter-spacing: 1px; margin: 4px 0; }
+    .word-en .highlight-m { color: #EA580C; background: #FFEDD5; padding: 0 8px; border-radius: 12px; border-bottom: 4px solid #F97316; }
+    .word-zh { font-size: 26px; font-weight: 800; color: #475569; margin-bottom: 8px; }
+    .sentence-box { background: #DBEAFE; color: #1E40AF; font-size: 24px; font-weight: 900; padding: 10px 18px; border-radius: 18px; display: inline-block; margin-top: 6px; }
+
+    .btn-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 16px; }
+    .btn-3d {
+      border: none; border-radius: 20px; padding: 14px 22px; font-size: 19px; font-weight: 900; cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: transform 0.1s;
+    }
+    .btn-3d:active { transform: translateY(4px); }
+    .btn-blue { background: #3B82F6; color: #FFFFFF; box-shadow: 0 5px 0 #1D4ED8; }
+    .btn-blue:active { box-shadow: 0 1px 0 #1D4ED8; }
+    .btn-amber { background: #F59E0B; color: #FFFFFF; box-shadow: 0 5px 0 #B45309; }
+    .btn-amber:active { box-shadow: 0 1px 0 #B45309; }
+    .btn-green { background: #10B981; color: #FFFFFF; box-shadow: 0 6px 0 #047857; font-size: 21px; padding: 16px 26px; }
+    .btn-green:active { box-shadow: 0 2px 0 #047857; }
+    .btn-purple { background: #8B5CF6; color: #FFFFFF; box-shadow: 0 5px 0 #6D28D9; }
+    .btn-purple:active { box-shadow: 0 1px 0 #6D28D9; }
+
+    .blocks-arena { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin: 22px 0; }
+    .letter-block {
+      width: 68px; height: 78px; border-radius: 20px; background: #F1F5F9; border: 3px solid #CBD5E1; box-shadow: 0 7px 0 #94A3B8;
+      font-size: 40px; font-weight: 900; color: #334155; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; position: relative; transition: transform 0.12s, background-color 0.12s;
+    }
+    .letter-block.key-letter { border-color: #F59E0B; background: #FFFBEB; color: #B45309; box-shadow: 0 7px 0 #D97706; }
+    .letter-block.lit {
+      background: linear-gradient(180deg, #F97316 0%, #EA580C 100%); color: #FFFFFF; border-color: #FDBA74; box-shadow: 0 7px 0 #9A3412; transform: translateY(-4px) scale(1.08);
+    }
+    .letter-block.lit.alt-color { background: linear-gradient(180deg, #06B6D4 0%, #0284C7 100%); border-color: #67E8F9; box-shadow: 0 7px 0 #0369A1; }
+    .star-tag { position: absolute; top: -10px; right: -8px; font-size: 18px; }
+
+    .speaking-status {
+      display: inline-flex; align-items: center; gap: 8px; background: #ECFDF5; color: #065F46; border: 2px solid #34D399;
+      padding: 8px 18px; border-radius: 16px; font-size: 18px; font-weight: 900; margin-top: 12px;
+    }
+
+    .choice-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; max-width: 540px; margin: 18px auto; }
+    .choice-card {
+      background: #F8FAFC; border: 4px solid #93C5FD; border-radius: 26px; padding: 18px 12px;
+      box-shadow: 0 7px 0 #60A5FA; cursor: pointer; transition: transform 0.12s, background-color 0.15s, border-color 0.15s;
+    }
+    .choice-card:active { transform: translateY(4px); }
+    .choice-card.correct { background: #DCFCE7; border-color: #22C55E; box-shadow: 0 7px 0 #15803D; transform: scale(1.04); }
+    .choice-card.gentle-try { background: #FEF3C7; border-color: #F59E0B; box-shadow: 0 7px 0 #D97706; animation: gentleWiggle 0.4s ease; }
+    @keyframes gentleWiggle { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(-3deg); } 75% { transform: rotate(3deg); } }
+
+    .gentle-hint-banner {
+      min-height: 44px; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 900;
+      color: #B45309; background: #FEF3C7; border-radius: 16px; padding: 8px 16px; margin: 10px auto 0; max-width: 460px;
+    }
+    .gentle-hint-banner.success { color: #065F46; background: #D1FAE5; }
+
+    .dots-row { display: flex; justify-content: center; gap: 8px; margin-bottom: 12px; }
+    .dot { width: 14px; height: 14px; border-radius: 50%; background: #CBD5E1; transition: all 0.2s; }
+    .dot.active { width: 30px; border-radius: 8px; background: #2563EB; }
+    .dot.completed { background: #10B981; }
+
+    .secret-code-box {
+      background: #F1F5F9; border: 3px dashed #64748B; border-radius: 20px; padding: 16px; margin: 18px auto; max-width: 560px;
+      font-size: 15px; font-weight: 700; color: #334155; line-height: 1.5; text-align: left; user-select: text; -webkit-user-select: text;
+    }
+    .summary-badges { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 16px 0; }
+    .summary-chip { background: #EFF6FF; border: 2px solid #60A5FA; color: #1E3A8A; font-size: 17px; font-weight: 900; padding: 8px 16px; border-radius: 16px; }
+
+    @media (max-width: 600px) {
+      .nav-title { font-size: 14px; } .act-pill { padding: 5px 8px; font-size: 12px; }
+      .word-en { font-size: 40px; } .letter-block { width: 56px; height: 66px; font-size: 34px; }
+      .illustration-wrap { width: 140px; height: 140px; }
+    }
+  </style>
 </head>
 <body>
 
-<div class="app-wrapper">
-    <div class="top-nav">
-        <button class="btn-home" onclick="goBack()">🏠 返回大門</button>
-        <div class="progress-map">
-            <div class="step-dot active" id="dot1">1</div>
-            <div class="step-dot" id="dot2">2</div>
-            <div class="step-dot" id="dot3">3</div>
-            <div class="step-dot" id="dot4">4</div>
-            <div class="step-dot" id="dot5">5</div>
-            <div class="step-dot" id="dot6">🏆</div>
-        </div>
-        <div class="voice-badge">🇬🇧 British English</div>
+<canvas id="fireworksCanvas"></canvas>
+
+<nav class="top-nav">
+  <a href="index.html" class="btn-home">🏠 返回</a>
+  <div class="nav-title">Unit 4 · Day 4</div>
+  <div class="act-map" id="actMap">
+    <button class="act-pill active" onclick="jumpToAct(0)">1. 學新詞</button>
+    <button class="act-pill" onclick="jumpToAct(1)">2. 拼積木</button>
+    <button class="act-pill" onclick="jumpToAct(2)">3. 大聲讀</button>
+    <button class="act-pill" onclick="jumpToAct(3)">4. 小遊戲</button>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="teacher-banner" onclick="replayGuide()">
+    <div class="teacher-avatar" aria-hidden="true">
+      <svg viewBox="0 0 80 80" width="48" height="48">
+        <circle cx="40" cy="40" r="36" fill="#FDE68A"/>
+        <path d="M18 38 C18 18, 62 18, 62 38 L64 56 C64 60, 56 60, 56 54 L56 42 L24 42 L24 54 C24 60, 16 60, 16 56 Z" fill="#78350F"/>
+        <circle cx="40" cy="42" r="18" fill="#FED7AA"/>
+        <path d="M22 36 Q40 22 58 36" fill="#78350F"/>
+        <circle cx="34" cy="41" r="2.5" fill="#1E293B"/>
+        <circle cx="46" cy="41" r="2.5" fill="#1E293B"/>
+        <circle cx="29" cy="46" r="3" fill="#FCA5A5" opacity="0.7"/>
+        <circle cx="51" cy="46" r="3" fill="#FCA5A5" opacity="0.7"/>
+        <path d="M35 48 Q40 53 45 48" stroke="#DC2626" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      </svg>
     </div>
-
-    <div class="outer-frame">
-        <div class="tutor-banner" onclick="speakCurrentInstruction()">
-            <div class="tutor-left">
-                <div class="tutor-avatar">👩‍🏫</div>
-                <div>
-                    <span class="unit-pill">Unit 4: I can do it (Day 3)</span>
-                    <div class="tutor-text" id="bannerText">
-                        Hello Lingling！撳吓下面張圖卡，聽吓「跳躍」嘅英文點讀啦！
-                    </div>
-                </div>
-            </div>
-            <div class="banner-speaker">🔊 聽老師講</div>
-        </div>
-
-        <!-- ================= 第 1 幕：認識 jump ================= -->
-        <div id="step1" class="step-stage active">
-            <div class="word-showcase-card" onclick="learnJump()">
-                <div class="picture-box">🦘⬆️</div>
-                <div class="word-title">jump</div>
-                <div class="word-meaning">跳躍 · I can jump.</div>
-                <div class="listen-pill">🔊 點擊聽英式發音</div>
-            </div>
-            <br>
-            <button class="btn-next" id="btnNext1" onclick="goToStep(2)">好叻呀！下一頁 ➡️</button>
-        </div>
-
-        <!-- ================= 第 2 幕：拼讀 jump ================= -->
-        <div id="step2" class="step-stage">
-            <div style="font-size:18px; font-weight:800; color:#475569;">
-                請用手指逐粒撳吓下面 4 粒字母積木：
-            </div>
-            <div class="letter-blocks">
-                <div class="letter" onclick="tapLetterJump('j', this)">j</div>
-                <div class="letter" onclick="tapLetterJump('u', this)">u</div>
-                <div class="letter" onclick="tapLetterJump('m', this)">m</div>
-                <div class="letter" onclick="tapLetterJump('p', this)">p</div>
-            </div>
-            <div class="whole-word-btn" onclick="speakEnglish('jump. I can jump.')">
-                🔊 jump
-            </div>
-            <br>
-            <button class="btn-next" id="btnNext2" onclick="goToStep(3)">拼好啦！下一頁 ➡️</button>
-        </div>
-
-        <!-- ================= 第 3 幕：認識 run ================= -->
-        <div id="step3" class="step-stage">
-            <div class="word-showcase-card" onclick="learnRun()">
-                <div class="picture-box">🏃💨</div>
-                <div class="word-title">run</div>
-                <div class="word-meaning">跑步 · I can run.</div>
-                <div class="listen-pill">🔊 點擊聽英式發音</div>
-            </div>
-            <br>
-            <button class="btn-next" id="btnNext3" onclick="goToStep(4)">好叻呀！下一頁 ➡️</button>
-        </div>
-
-        <!-- ================= 第 4 幕：拼讀 run ================= -->
-        <div id="step4" class="step-stage">
-            <div style="font-size:18px; font-weight:800; color:#475569;">
-                請用手指逐粒撳吓下面 3 粒字母積木：
-            </div>
-            <div class="letter-blocks">
-                <div class="letter" onclick="tapLetterRun('r', this)">r</div>
-                <div class="letter" onclick="tapLetterRun('u', this)">u</div>
-                <div class="letter" onclick="tapLetterRun('n', this)">n</div>
-            </div>
-            <div class="whole-word-btn" onclick="speakEnglish('run. I can run.')">
-                🔊 run
-            </div>
-            <br>
-            <button class="btn-next" id="btnNext4" onclick="goToStep(5)">拼好啦！下一頁 ➡️</button>
-        </div>
-
-        <!-- ================= 第 5 幕：開口會說 (媽媽見證) ================= -->
-        <div id="step5" class="step-stage">
-            <div style="font-size:19px; font-weight:900; color:#1E293B; margin-bottom:16px;">
-                🎤 點擊圖卡跟住讀，然後大聲讀俾媽媽聽！
-            </div>
-            <div class="match-cards">
-                <div class="match-card" onclick="speakEnglish('jump. I can jump.')">
-                    <div style="font-size:56px;">🦘⬆️</div>
-                    <div style="font-size:30px; font-weight:900; color:#1D4ED8; margin-top:8px;">jump</div>
-                    <div style="font-size:14px; font-weight:800; color:#64748B;">🔊 聽發音</div>
-                </div>
-                <div class="match-card" onclick="speakEnglish('run. I can run.')">
-                    <div style="font-size:56px;">🏃💨</div>
-                    <div style="font-size:30px; font-weight:900; color:#1D4ED8; margin-top:8px;">run</div>
-                    <div style="font-size:14px; font-weight:800; color:#64748B;">🔊 聽發音</div>
-                </div>
-            </div>
-            <button class="btn-mom" onclick="momApprove()">✅ 玲玲讀得好叻！(媽媽撳過關)</button>
-        </div>
-
-        <!-- ================= 第 6 幕：輕鬆配對溫習 ================= -->
-        <div id="step6" class="step-stage">
-            <div class="whole-word-btn" onclick="speakQuizPrompt()" style="margin-bottom:12px;">
-                🔊 題目：<span id="quizTargetWord">jump</span>
-            </div>
-            <div style="font-size:17px; font-weight:800; color:#475569;">
-                請幫 Anna 老師搵出正確嘅圖卡：
-            </div>
-            <div class="match-cards">
-                <div class="match-card" id="cardRun" onclick="checkGentleMatch('run', this)">
-                    <div style="font-size:68px;">🏃💨</div>
-                </div>
-                <div class="match-card" id="cardJump" onclick="checkGentleMatch('jump', this)">
-                    <div style="font-size:68px;">🦘⬆️</div>
-                </div>
-            </div>
-            <button class="btn-next" id="btnFinish" onclick="goBack()">🎉 完成 Day 3 課堂！返回目錄</button>
-        </div>
-
+    <div class="teacher-text-box">
+      <div class="teacher-name">🌟 Anna 老師語音指引</div>
+      <div class="teacher-msg" id="teacherMsg">歡迎返到英文大本營！今日我哋先熱身重溫畫畫，再認識新嘅英文字母發音！</div>
     </div>
+    <div class="replay-chip">🔊 重聽</div>
+  </div>
+
+  <main class="stage-card" id="stageContainer"></main>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 <script>
-    window.utterancePool = [];
-    let currentStep = 1;
-    let quizTarget = 'jump';
+  // ==========================================
+  // 1. iPad Safari 終極語音修復引擎 (中英徹底分流 + 觸控喚醒 + 防卡死)
+  // ==========================================
+  window.utterancePool = [];
+  let cachedVoices = [];
+  let ttsInitialized = false;
+  let currentGuideCantonese = "歡迎返到英文大本營！今日我哋先熱身重溫畫畫，再認識新嘅英文字母發音！";
+  let currentGuideEnglish = "";
 
-    function pickVoice(langPrefix) {
-        if (!('speechSynthesis' in window)) return null;
-        const voices = window.speechSynthesis.getVoices();
-        if (!voices || voices.length === 0) return null;
-        if (langPrefix === 'en') {
-            const preferredEn = ['Serena', 'Martha', 'Kate', 'Shelley', 'Flo', 'Sandy'];
-            for (let name of preferredEn) {
-                const found = voices.find(v => v.name.includes(name) && v.lang.includes('en'));
-                if (found) return found;
-            }
-            return voices.find(v => v.lang === 'en-GB') || voices.find(v => v.lang.startsWith('en'));
-        } else {
-            return voices.find(v => v.lang === 'zh-HK') || voices.find(v => v.lang.includes('HK'));
-        }
-    }
+  // 【修復 1】觸控喚醒機制：解決 iPad Safari 第一次發音變成奇怪中文聲的問題
+  function initTTS() {
+    if (ttsInitialized || !('speechSynthesis' in window)) return;
+    let u = new SpeechSynthesisUtterance('');
+    u.volume = 0;
+    window.speechSynthesis.speak(u);
+    ttsInitialized = true;
+    setTimeout(() => { cachedVoices = window.speechSynthesis.getVoices(); }, 100);
+  }
+  document.addEventListener('touchstart', initTTS, { once: true });
+  document.addEventListener('click', initTTS, { once: true });
 
+  function loadVoices() {
     if ('speechSynthesis' in window) {
-        window.speechSynthesis.onvoiceschanged = () => { window.speechSynthesis.getVoices(); };
-        window.speechSynthesis.getVoices();
+      cachedVoices = window.speechSynthesis.getVoices();
     }
+  }
+  loadVoices();
+  if ('speechSynthesis' in window && window.speechSynthesis.onvoiceschanged !== undefined) {
+    window.speechSynthesis.onvoiceschanged = loadVoices;
+  }
 
-    function playSpeechQueue(items) {
-        if (!('speechSynthesis' in window)) return;
-        if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
-            window.speechSynthesis.cancel();
-        }
-        setTimeout(() => {
-            items.forEach(item => {
-                if (!item.text) return;
-                const u = new SpeechSynthesisUtterance(item.text);
-                if (item.lang === 'en') {
-                    u.lang = 'en-GB';
-                    const v = pickVoice('en');
-                    if (v) u.voice = v;
-                    u.pitch = 1.08;
-                    u.rate = 0.78;
-                } else {
-                    u.lang = 'zh-HK';
-                    const v = pickVoice('zh');
-                    if (v) u.voice = v;
-                    u.pitch = 1.05;
-                    u.rate = 0.9;
-                }
-                window.utterancePool.push(u);
-                window.speechSynthesis.speak(u);
-            });
-        }, 40);
+  function pickVoice(langType) {
+    if (!cachedVoices.length) loadVoices();
+    if (langType === 'zh-HK') {
+      return cachedVoices.find(v => v.lang === 'zh-HK' && (v.name.includes('Sin') || v.name.includes('Female')))
+          || cachedVoices.find(v => v.lang === 'zh-HK')
+          || cachedVoices.find(v => v.lang.includes('zh'));
+    } else {
+      // 擴大女聲搜索範圍，保證抓到純正英文聲
+      const femaleHints = ['Kate', 'Serena', 'Martha', 'Stephanie', 'Samantha', 'Karen', 'Tessa', 'Female'];
+      return cachedVoices.find(v => (v.lang === 'en-GB' || v.lang === 'en-US' || v.lang === 'en-AU') && femaleHints.some(h => v.name.includes(h)))
+          || cachedVoices.find(v => v.lang.startsWith('en') && !v.name.includes('Daniel') && !v.name.includes('Oliver') && !v.name.includes('Arthur'))
+          || cachedVoices.find(v => v.lang.startsWith('en'));
     }
+  }
 
-    function speakCantoneseAndEnglish(zhText, enText) {
-        const list = [];
-        if (zhText) list.push({ text: zhText, lang: 'zh' });
-        if (enText) list.push({ text: enText, lang: 'en' });
-        playSpeechQueue(list);
+  function speakQueue(segments) {
+    if (!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    window.utterancePool = [];
+
+    if (!segments || segments.length === 0) return;
+    if (!ttsInitialized) initTTS(); // 確保已喚醒
+
+    let idx = 0;
+    function playNext() {
+      if (idx >= segments.length) return;
+      const seg = segments[idx];
+      idx++;
+
+      // 【修復 2】Phonics 發音修正：把單獨的 m 替換成 mmm，強迫發出自然拼讀的鼻音，而非讀字母 "em"
+      let textToSpeak = seg.text;
+      if (seg.lang === 'en-GB') {
+        textToSpeak = textToSpeak.replace(/\bm\b/g, "mmm");
+      }
+
+      const u = new SpeechSynthesisUtterance(textToSpeak);
+      window.utterancePool.push(u); // 防回收
+
+      const voice = pickVoice(seg.lang);
+      if (voice) {
+        u.voice = voice;
+      } else {
+        u.lang = seg.lang === 'zh-HK' ? 'zh-HK' : 'en-US'; // 終極防中文聲亂入 fallback
+      }
+
+      if (seg.lang === 'zh-HK') {
+        u.lang = 'zh-HK';
+        u.pitch = 1.05;
+        u.rate = 0.9;
+      } else {
+        u.lang = u.voice ? u.voice.lang : 'en-US';
+        u.pitch = 1.08;
+        u.rate = 0.85; // 稍微調快至 0.85，解決 0.78 可能導致的拖音變形
+      }
+
+      let advanced = false;
+      const done = () => {
+        if (advanced) return;
+        advanced = true;
+        setTimeout(playNext, 140);
+      };
+
+      u.onend = done;
+      u.onerror = done;
+
+      // 【修復 3】4秒強制解鎖防呆：防止 iOS 隨機吃掉 onend 信號導致全網頁卡死
+      setTimeout(() => { if (!advanced) done(); }, 4000);
+
+      window.speechSynthesis.speak(u);
     }
+    playNext();
+  }
 
-    function speakEnglish(enText) {
-        playSpeechQueue([{ text: enText, lang: 'en' }]);
+  function setGuide(zhText, enText = "", autoSpeak = true) {
+    currentGuideCantonese = zhText;
+    currentGuideEnglish = enText;
+    document.getElementById('teacherMsg').textContent = zhText;
+    if (autoSpeak) replayGuide();
+  }
+
+  function replayGuide() {
+    const seq = [{ lang: 'zh-HK', text: currentGuideCantonese }];
+    if (currentGuideEnglish) seq.push({ lang: 'en-GB', text: currentGuideEnglish });
+    speakQueue(seq);
+  }
+
+  // ==========================================
+  // 2. 可愛童趣 SVG 圖庫
+  // ==========================================
+  const ILLUSTRATIONS = {
+    draw: `<svg viewBox="0 0 180 180" width="165" height="165"><rect x="24" y="26" width="118" height="106" rx="18" fill="#FEF3C7" stroke="#F59E0B" stroke-width="6"/><rect x="34" y="36" width="98" height="86" rx="12" fill="#FFFFFF"/><path d="M46 104 A36 36 0 0 1 118 104" fill="none" stroke="#F43F5E" stroke-width="7" stroke-linecap="round"/><path d="M54 104 A28 28 0 0 1 110 104" fill="none" stroke="#FACC15" stroke-width="7" stroke-linecap="round"/><path d="M62 104 A20 20 0 0 1 102 104" fill="none" stroke="#38BDF8" stroke-width="7" stroke-linecap="round"/><circle cx="62" cy="58" r="11" fill="#FBBF24"/><g transform="rotate(-32 132 122)"><rect x="122" y="76" width="18" height="72" rx="9" fill="#3B82F6" stroke="#1D4ED8" stroke-width="4"/><rect x="122" y="66" width="18" height="14" rx="3" fill="#CBD5E1"/><path d="M121 66 Q131 38 141 66 Z" fill="#EC4899"/></g></svg>`,
+    mouth: `<svg viewBox="0 0 180 180" width="165" height="165"><circle cx="44" cy="46" r="22" fill="#FBBF24" stroke="#D97706" stroke-width="5"/><circle cx="136" cy="46" r="22" fill="#FBBF24" stroke="#D97706" stroke-width="5"/><circle cx="90" cy="94" r="64" fill="#FDE68A" stroke="#F59E0B" stroke-width="6"/><path d="M60 72 Q68 62 76 72" stroke="#78350F" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M104 72 Q112 62 120 72" stroke="#78350F" stroke-width="5" fill="none" stroke-linecap="round"/><ellipse cx="52" cy="92" rx="11" ry="7" fill="#FDA4AF" opacity="0.8"/><ellipse cx="128" cy="92" rx="11" ry="7" fill="#FDA4AF" opacity="0.8"/><ellipse cx="90" cy="84" rx="8" ry="6" fill="#78350F"/><path d="M64 102 Q90 144 116 102 Z" fill="#FB7185" stroke="#E11D48" stroke-width="5" stroke-linejoin="round"/><path d="M74 118 Q90 132 106 118" fill="#FDA4AF"/><text x="134" y="132" font-size="26">✨</text></svg>`,
+    meat: `<svg viewBox="0 0 180 180" width="165" height="165"><g transform="rotate(-25 90 90)"><rect x="96" y="78" width="52" height="24" rx="10" fill="#FFFBEB" stroke="#D97706" stroke-width="5"/><circle cx="148" cy="78" r="13" fill="#FFFBEB" stroke="#D97706" stroke-width="5"/><circle cx="148" cy="102" r="13" fill="#FFFBEB" stroke="#D97706" stroke-width="5"/><rect x="132" y="76" width="16" height="28" fill="#FFFBEB"/><ellipse cx="76" cy="90" rx="52" ry="38" fill="#F97316" stroke="#C2410C" stroke-width="6"/><ellipse cx="70" cy="82" rx="34" ry="20" fill="#FB923C"/><circle cx="62" cy="88" r="4" fill="#431407"/><circle cx="86" cy="88" r="4" fill="#431407"/><path d="M68 96 Q74 103 80 96" stroke="#431407" stroke-width="3.5" fill="none" stroke-linecap="round"/></g><text x="26" y="46" font-size="24">✨</text></svg>`,
+    milk: `<svg viewBox="0 0 180 180" width="165" height="165"><polygon points="56,52 90,28 124,52" fill="#60A5FA" stroke="#1D4ED8" stroke-width="5" stroke-linejoin="round"/><rect x="56" y="52" width="68" height="98" rx="14" fill="#FFFFFF" stroke="#2563EB" stroke-width="5"/><rect x="56" y="88" width="68" height="36" fill="#93C5FD"/><circle cx="78" cy="74" r="4.5" fill="#1E3A8A"/><circle cx="102" cy="74" r="4.5" fill="#1E3A8A"/><path d="M84 80 Q90 87 96 80" stroke="#1E3A8A" stroke-width="3.5" fill="none" stroke-linecap="round"/><circle cx="70" cy="79" r="5" fill="#FDA4AF" opacity="0.8"/><circle cx="110" cy="79" r="5" fill="#FDA4AF" opacity="0.8"/><path d="M90 95 C90 95 100 107 100 113 A10 10 0 0 1 80 113 C80 107 90 95 90 95 Z" fill="#FFFFFF"/></svg>`,
+    hand: `<svg viewBox="0 0 180 180" width="165" height="165"><g transform="rotate(-10 90 95)"><rect x="54" y="64" width="72" height="74" rx="34" fill="#FBBF24" stroke="#B45309" stroke-width="6"/><rect x="34" y="84" width="32" height="24" rx="12" transform="rotate(-25 50 96)" fill="#FBBF24" stroke="#B45309" stroke-width="6"/><ellipse cx="90" cy="106" rx="20" ry="16" fill="#FEF3C7"/><circle cx="74" cy="82" r="7" fill="#FEF3C7"/><circle cx="90" cy="78" r="7" fill="#FEF3C7"/><circle cx="106" cy="82" r="7" fill="#FEF3C7"/><circle cx="83" cy="104" r="3" fill="#78350F"/><circle cx="97" cy="104" r="3" fill="#78350F"/><path d="M86 110 Q90 115 94 110" stroke="#78350F" stroke-width="3" fill="none" stroke-linecap="round"/></g><path d="M132 48 Q144 58 140 72" stroke="#3B82F6" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M144 42 Q158 55 152 72" stroke="#60A5FA" stroke-width="5" fill="none" stroke-linecap="round"/></svg>`
+  };
+
+  // ==========================================
+  // 3. 課程資料定義
+  // ==========================================
+  const ACT1_CARDS = [
+    { id: 'draw', isWarmup: true, badge: '🔥 熱身重溫弱點詞', en: 'draw', zh: '畫畫', sentence: 'I can draw.', guideZh: '歡迎返到英文大本營！我哋先嚟熱身，重溫一個好重要嘅動作詞語，畫畫！跟我一齊讀啦！', guideEn: 'draw. I can draw.', zhSpeak: '畫畫，我可以畫畫！', enSpeak: 'draw. I can draw.' },
+    { id: 'mouth', isWarmup: false, badge: '🌟 新學發音單字 1', en: 'mouth', highlightFirst: true, zh: '嘴巴', sentence: '', guideZh: '好棒呀！今日我哋要認識新嘅英文字母發音！第一個字係，嘴巴！點擊圖卡聽下點讀啦！', guideEn: 'm, mouth.', zhSpeak: '嘴巴！', enSpeak: 'm, mouth.' },
+    { id: 'meat', isWarmup: false, badge: '🌟 新學發音單字 2', en: 'meat', highlightFirst: true, zh: '肉', sentence: '', guideZh: '第二個同一個開頭發音嘅字係，肉！美味嘅肉肉！點擊圖卡一齊讀啦！', guideEn: 'm, meat.', zhSpeak: '肉！', enSpeak: 'm, meat.' },
+    { id: 'milk', isWarmup: false, badge: '🌟 新學發音單字 3', en: 'milk', highlightFirst: true, zh: '牛奶', sentence: '', guideZh: '第三個字係香噴噴嘅，牛奶！佢都係同一個開頭發音㗎！點擊聽下啦！', guideEn: 'm, milk.', zhSpeak: '牛奶！', enSpeak: 'm, milk.' },
+    { id: 'hand', isWarmup: false, badge: '🔍 聲音小對比', en: 'hand', highlightFirst: false, zh: '手', sentence: '', guideZh: '咦，呢個係小手手！聽下佢嘅開頭發音，同頭先嗰三個字一唔一樣呢？', guideEn: 'h, hand.', zhSpeak: '手！', enSpeak: 'h, hand.' }
+  ];
+
+  const ACT2_WORDS = [
+    { id: 'mouth', zh: '嘴巴', letters: ['m', 'o', 'u', 't', 'h'], isMWord: true, guideZh: '嚟到第二幕字母積木！逐粒點擊下面嘅彩色積木，聽下每個字母嘅發音啦！', guideEn: 'm, o, u, t, h. mouth!' },
+    { id: 'meat', zh: '肉', letters: ['m', 'e', 'a', 't'], isMWord: true, guideZh: '再嚟拼下美味嘅肉肉！逐粒拍打積木，聽下第一個字母嘅發音！', guideEn: 'm, e, a, t. meat!' },
+    { id: 'milk', zh: '牛奶', letters: ['m', 'i', 'l', 'k'], isMWord: true, guideZh: '跟住拼下香噴噴嘅牛奶！逐粒點擊積木拼出成個字啦！', guideEn: 'm, i, l, k. milk!' },
+    { id: 'hand', zh: '手', letters: ['h', 'a', 'n', 'd'], isMWord: false, guideZh: '最後睇下小手手！佢嘅第一個字母係唔同嘅，點擊聽下有咩分別啦！', guideEn: 'h, a, n, d. hand!' }
+  ];
+
+  const ACT3_SPEAK = [
+    { id: 'draw', badge: '🔥 熱身挑戰：弱點重溫', en: 'draw', sentence: 'I can draw.', zh: '畫畫 · 我可以畫畫', guideZh: '嚟到第三幕開口大聲讀！請玲玲大聲讀出畫畫同埋句式，讀完就請媽媽按綠色掣放煙花啦！', guideEn: 'draw. I can draw.' },
+    { id: 'mouth', badge: '🎤 大聲讀挑戰 2', en: 'mouth', sentence: 'm · mouth', zh: '嘴巴', guideZh: '請玲玲大聲讀出，嘴巴！記得讀出開頭發音呀！', guideEn: 'm, mouth.' },
+    { id: 'meat', badge: '🎤 大聲讀挑戰 3', en: 'meat', sentence: 'm · meat', zh: '肉', guideZh: '好棒呀！跟住請玲玲大聲讀出，肉！', guideEn: 'm, meat.' },
+    { id: 'milk', badge: '🎤 大聲讀挑戰 4', en: 'milk', sentence: 'm · milk', zh: '牛奶', guideZh: '最後一個大聲讀挑戰！請玲玲大聲讀出，牛奶！', guideEn: 'm, milk.' }
+  ];
+
+  const ACT4_QUIZ = [
+    { badge: '🎮 輕鬆小遊戲 1 · 熱身重溫', questionZh: '聽下邊一張圖卡係「畫畫」呢？', promptSeq: [{ lang: 'zh-HK', text: '細心聽下，請找出，畫畫，我可以畫畫！' }, { lang: 'en-GB', text: 'draw. I can draw.' }], guideZh: '嚟到最後一幕輕鬆小遊戲！細心聽下聲音，揀出啱嘅圖卡啦！', guideEn: 'draw. I can draw.', correctId: 'draw', correctEn: 'draw. I can draw.', options: [{ id: 'draw', label: 'draw (畫畫)' }, { id: 'milk', label: 'milk (牛奶)' }] },
+    { badge: '🎮 輕鬆小遊戲 2 · 聽音選圖', questionZh: '聽下邊一張圖卡係「嘴巴」呢？', promptSeq: [{ lang: 'zh-HK', text: '請找出，嘴巴！' }, { lang: 'en-GB', text: 'm, mouth.' }], guideZh: '第二題！聽下邊一張圖卡係嘴巴呢？', guideEn: 'm, mouth.', correctId: 'mouth', correctEn: 'mouth.', options: [{ id: 'mouth', label: 'mouth (嘴巴)' }, { id: 'hand', label: 'hand (手)' }] },
+    { badge: '🎮 輕鬆小遊戲 3 · 聽音選圖', questionZh: '聽下邊一張圖卡係「肉」呢？', promptSeq: [{ lang: 'zh-HK', text: '請找出，肉！' }, { lang: 'en-GB', text: 'm, meat.' }], guideZh: '第三題！聽下邊一張圖卡係美味嘅肉呢？', guideEn: 'm, meat.', correctId: 'meat', correctEn: 'meat.', options: [{ id: 'draw', label: 'draw (畫畫)' }, { id: 'meat', label: 'meat (肉)' }] },
+    { badge: '⭐ 課本貼紙辨音小挑戰', questionZh: '邊一張圖卡嘅開頭發音同「嘴巴、肉」一樣呢？', promptSeq: [{ lang: 'zh-HK', text: '課本貼紙大挑戰！邊一張圖卡嘅開頭發音係' }, { lang: 'en-GB', text: 'm' }, { lang: 'zh-HK', text: '呢？' }], guideZh: '最後一題課本貼紙大挑戰！邊一張圖卡嘅開頭發音同嘴巴、肉一樣呢？', guideEn: 'm, m, milk.', correctId: 'milk', correctEn: 'm, milk!', options: [{ id: 'milk', label: 'milk (牛奶)' }, { id: 'hand', label: 'hand (手)' }] }
+  ];
+
+  // ==========================================
+  // 4. 狀態管理與渲染
+  // ==========================================
+  let currentAct = 0;
+  let subIndex = 0;
+  let litBlocks = [];
+  let speakingDone = [false, false, false, false];
+  let quizSolved = false;
+  let quizWrongPicked = null;
+
+  function updateActNav() {
+    const pills = document.querySelectorAll('.act-pill');
+    pills.forEach((p, idx) => {
+      p.classList.remove('active', 'done');
+      if (currentAct === 4 || idx < currentAct) p.classList.add('done');
+      else if (idx === currentAct) p.classList.add('active');
+    });
+  }
+
+  function jumpToAct(actIdx) {
+    currentAct = actIdx; subIndex = 0; litBlocks = []; quizSolved = false; quizWrongPicked = null;
+    updateActNav(); renderStage(true);
+  }
+
+  function renderStage(shouldSpeak = true) {
+    const container = document.getElementById('stageContainer');
+    updateActNav();
+
+    if (currentAct === 0) {
+      const card = ACT1_CARDS[subIndex];
+      if (shouldSpeak) setGuide(card.guideZh, card.guideEn, true);
+      const wordHtml = card.highlightFirst ? `<span class="highlight-m">${card.en[0]}</span>${card.en.slice(1)}` : card.en;
+
+      container.innerHTML = `
+        <div class="dots-row">${ACT1_CARDS.map((_, i) => `<span class="dot ${i === subIndex ? 'active' : (i < subIndex ? 'completed' : '')}"></span>`).join('')}</div>
+        <div class="stage-badge ${card.isWarmup ? 'warmup' : ''}">${card.badge}</div>
+        <div class="flashcard-3d" id="meaningCard" onclick="playMeaningCard()">
+          <div class="illustration-wrap">${ILLUSTRATIONS[card.id]}</div>
+          <div class="word-en">${wordHtml}</div>
+          <div class="word-zh">${card.zh}</div>
+          ${card.sentence ? `<div class="sentence-box">💬 ${card.sentence}</div>` : ''}
+        </div>
+        <div class="btn-row">
+          <button class="btn-3d btn-amber" onclick="playMeaningZh()">🇭🇰 聽中文意思</button>
+          <button class="btn-3d btn-blue" onclick="playMeaningEn()">🇬🇧 聽英文發音</button>
+        </div>
+        <div class="btn-row" style="margin-top: 20px;">
+          ${subIndex > 0 ? `<button class="btn-3d btn-purple" onclick="prevAct1()">⬅️ 上一張</button>` : ''}
+          <button class="btn-3d btn-green" onclick="nextAct1()">${subIndex < ACT1_CARDS.length - 1 ? '下一張圖卡 ➡️' : '進入第 2 幕：字母積木 🧩'}</button>
+        </div>
+      `;
     }
+    else if (currentAct === 1) {
+      const item = ACT2_WORDS[subIndex];
+      if (shouldSpeak) setGuide(item.guideZh, item.guideEn, true);
 
-    const stepInstructions = {
-        1: { banner: "Hello Lingling！撳吓下面張圖卡，聽吓「跳躍」嘅英文點讀啦！", zh: "Hello Lingling！睇吓幅圖，佢喺度跳躍呀！撳吓張圖卡聽英文啦！", en: "jump. I can jump." },
-        2: { banner: "我哋一齊拼出 jump 呢個字！請順序撳吓下面四粒字母積木啦！", zh: "我哋一齊睇吓跳躍呢個字點樣拼出嚟！請撳吓下面四粒字母積木啦！", en: "jump" },
-        3: { banner: "認識第二個新字！撳吓圖卡，聽吓「跑步」嘅英文點讀啦！", zh: "好叻呀！再睇吓呢幅圖，佢喺度跑步呀！跑步嘅英文係：", en: "run. I can run." },
-        4: { banner: "我哋一齊拼出 run 呢個字！請逐粒撳吓下面三粒字母積木啦！", zh: "跑步呢個字係點樣拼㗎呢？請逐粒撳吓下面嘅字母積木啦！", en: "run" },
-        5: { banner: "到 Lingling 大顯身手啦！請大聲對住媽媽讀出 jump 同埋 run！", zh: "而家到你啦！請大聲對住媽媽讀出呢兩個英文字啦！", en: "I can jump. I can run." },
-        6: { banner: "最後溫習小遊戲！聽吓老師讀邊個字，就撳邊張圖卡啦！", zh: "最後一個小遊戲！邊一幅圖係跳躍呀？請揀出：", en: "jump" }
-    };
-
-    function speakCurrentInstruction() {
-        const info = stepInstructions[currentStep];
-        if (currentStep === 6) { speakQuizPrompt(); }
-        else if (info) { speakCantoneseAndEnglish(info.zh, info.en); }
+      container.innerHTML = `
+        <div class="dots-row">${ACT2_WORDS.map((_, i) => `<span class="dot ${i === subIndex ? 'active' : (i < subIndex ? 'completed' : '')}"></span>`).join('')}</div>
+        <div class="stage-badge">🧩 第二幕：字母積木拼讀 (${subIndex + 1} / ${ACT2_WORDS.length})</div>
+        <div style="width: 130px; height: 130px; margin: 4px auto;">${ILLUSTRATIONS[item.id]}</div>
+        <div class="word-zh" style="margin-bottom: 4px;">${item.zh}</div>
+        <p style="font-size: 16px; font-weight: 800; color: #64748B; margin: 4px 0 8px;">👆 逐粒點擊彩色積木，聽下每個字母發音！</p>
+        <div class="blocks-arena">
+          ${item.letters.map((ch, idx) => `
+            <div class="letter-block ${idx === 0 ? 'key-letter' : ''} ${litBlocks[idx] ? 'lit ' + (!item.isMWord ? 'alt-color' : '') : ''}" onclick="tapLetterBlock(${idx})">
+              ${idx === 0 && item.isMWord ? '<span class="star-tag">⭐</span>' : ''}${ch}
+            </div>
+          `).join('')}
+        </div>
+        <div class="btn-row"><button class="btn-3d btn-blue" onclick="blendCurrentWord()">🔊 串連讀出成個字 (${item.letters.join('')})</button></div>
+        <div class="btn-row" style="margin-top: 20px;">
+          ${subIndex > 0 ? `<button class="btn-3d btn-purple" onclick="prevAct2()">⬅️ 上一個字</button>` : ''}
+          <button class="btn-3d btn-green" onclick="nextAct2()">${subIndex < ACT2_WORDS.length - 1 ? '下一個字母積木 ➡️' : '進入第 3 幕：大聲讀 🎤'}</button>
+        </div>
+      `;
     }
+    else if (currentAct === 2) {
+      const item = ACT3_SPEAK[subIndex];
+      const isDone = speakingDone[subIndex];
+      if (shouldSpeak) setGuide(item.guideZh, item.guideEn, true);
 
-    function goToStep(stepNum) {
-        currentStep = stepNum;
-        document.querySelectorAll('.step-stage').forEach(el => el.classList.remove('active'));
-        document.getElementById('step' + stepNum).classList.add('active');
-        for (let i = 1; i <= 6; i++) {
-            const dot = document.getElementById('dot' + i);
-            dot.classList.remove('active', 'done');
-            if (i < stepNum) dot.classList.add('done');
-            if (i === stepNum) dot.classList.add('active');
-        }
-        document.getElementById('bannerText').textContent = stepInstructions[stepNum].banner;
-        speakCurrentInstruction();
+      container.innerHTML = `
+        <div class="dots-row">${ACT3_SPEAK.map((_, i) => `<span class="dot ${i === subIndex ? 'active' : (speakingDone[i] ? 'completed' : '')}"></span>`).join('')}</div>
+        <div class="stage-badge ${subIndex === 0 ? 'warmup' : ''}">${item.badge}</div>
+        <div class="flashcard-3d" onclick="speakQueue([{lang:'en-GB', text:'${item.en}. ${item.sentence}'}])">
+          <div class="illustration-wrap">${ILLUSTRATIONS[item.id]}</div>
+          <div class="word-en">${item.en}</div>
+          <div class="sentence-box">${item.sentence}</div>
+          <div class="word-zh" style="margin-top: 8px; font-size: 20px;">${item.zh}</div>
+        </div>
+        <div class="btn-row"><button class="btn-3d btn-blue" onclick="speakQueue([{lang:'en-GB', text:'${item.en}. ${item.sentence}'}])">🔊 聽老師示範發音</button></div>
+        <div class="btn-row" style="margin-top: 14px;">
+          <button class="btn-3d btn-green" onclick="celebrateSpeaking()">${isDone ? '🎉 再放一次煙花慶祝！' : '🌟 玲玲讀得超棒！按呢度過關放煙花'}</button>
+        </div>
+        ${isDone ? `<div class="speaking-status">✅ 太叻喇！呢一關已經順利過關！</div>` : ''}
+        <div class="btn-row" style="margin-top: 18px;">
+          ${subIndex > 0 ? `<button class="btn-3d btn-purple" onclick="prevAct3()">⬅️ 上一個</button>` : ''}
+          <button class="btn-3d btn-amber" onclick="nextAct3()">${subIndex < ACT3_SPEAK.length - 1 ? '下一個挑戰 ➡️' : '進入第 4 幕：輕鬆小遊戲 🎮'}</button>
+        </div>
+      `;
     }
+    else if (currentAct === 3) {
+      const q = ACT4_QUIZ[subIndex];
+      if (shouldSpeak) {
+        currentGuideCantonese = q.guideZh; currentGuideEnglish = q.guideEn;
+        document.getElementById('teacherMsg').textContent = q.questionZh;
+        speakQueue(q.promptSeq);
+      }
 
-    function learnJump() {
-        document.getElementById('btnNext1').classList.add('show');
-        speakCantoneseAndEnglish("跳躍嘅英文係：", "jump. I can jump.");
+      container.innerHTML = `
+        <div class="dots-row">${ACT4_QUIZ.map((_, i) => `<span class="dot ${i === subIndex ? 'active' : (i < subIndex ? 'completed' : '')}"></span>`).join('')}</div>
+        <div class="stage-badge">${q.badge}</div>
+        <h2 style="font-size: 24px; color: #1E3A8A; margin: 8px 0 12px;">${q.questionZh}</h2>
+        <button class="btn-3d btn-blue" onclick="playQuizPrompt()">🔊 再聽一次題目聲音</button>
+        <div class="choice-grid">
+          ${q.options.map(opt => {
+            let cls = 'choice-card' + (quizSolved && opt.id === q.correctId ? ' correct' : (!quizSolved && quizWrongPicked === opt.id ? ' gentle-try' : ''));
+            return `
+              <div class="${cls}" onclick="pickQuizOption('${opt.id}')">
+                <div style="width: 135px; height: 135px; margin: 0 auto 8px;">${ILLUSTRATIONS[opt.id]}</div>
+                <div style="font-size: 22px; font-weight: 900; color: #1E3A8A;">${opt.label}</div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+        ${quizSolved ? `<div class="gentle-hint-banner success">🎉 好叻呀玲玲！答啱咗喇！</div>` : (quizWrongPicked ? `<div class="gentle-hint-banner">💛 試吓隔離嗰張圖卡啦！</div>` : '')}
+        ${quizSolved ? `
+          <div class="btn-row" style="margin-top: 18px;">
+            <button class="btn-3d btn-green" onclick="nextAct4()">${subIndex < ACT4_QUIZ.length - 1 ? '下一題 ➡️' : '完成今日全部課堂！領取獎盃 🏆'}</button>
+          </div>
+        ` : ''}
+      `;
     }
+    else if (currentAct === 4) {
+      if (shouldSpeak) {
+        setGuide("恭喜玲玲完成今日全部四個任務！你真係好棒呀！快啲撳下面個掣複製進度暗號俾老師啦！", "Great job! I can do it!", true);
+        launchFireworks(); setTimeout(launchFireworks, 700);
+      }
+      container.innerHTML = `
+        <div style="font-size: 74px; margin-bottom: 6px;">🏆🎉</div>
+        <h1 style="font-size: 32px; color: #1E3A8A; margin: 4px 0 8px;">Unit 4 Day 4 大成功！</h1>
+        <p style="font-size: 19px; font-weight: 800; color: #475569; margin: 0 0 14px;">玲玲今日好專心，全部關卡都順利完成喇！</p>
+        <div class="summary-badges">
+          <span class="summary-chip">🔥 熱身重溫：draw (I can draw.)</span>
+          <span class="summary-chip">🔤 字母發音：m</span><span class="summary-chip">👄 mouth</span>
+          <span class="summary-chip">🍗 meat</span><span class="summary-chip">🥛 milk</span>
+        </div>
+        <div class="btn-row" style="margin-top: 18px;">
+          <button class="btn-3d btn-green" id="copySecretBtn" onclick="copyProgressSecret()">📋 一鍵複製進度暗號俾 Anna 老師</button>
+        </div>
+        <div class="secret-code-box" id="secretCodeText">【玲玲英文課堂進度暗號】單元：Unit 4 Day 4 (en-unit4-day4.html)｜完成狀態：✅ 全課四部曲順利完成｜重溫弱點：draw (I can draw.)｜新學內容：P.20 Phonics 字母 m (mouth, meat, milk vs hand)｜請 Anna 老師更新雲端英文總庫並解鎖 Day 5！</div>
+        <div class="btn-row" style="margin-top: 16px;">
+          <button class="btn-3d btn-blue" onclick="jumpToAct(0)">🔄 再玩多一次</button>
+          <a href="index.html" class="btn-3d btn-amber" style="text-decoration:none;">🏠 返回學習樂園大門</a>
+        </div>
+      `;
+    }
+  }
 
-    let jumpCount = 0;
-    function tapLetterJump(letter, el) {
-        if (!el.classList.contains('clicked')) { el.classList.add('clicked'); jumpCount++; }
-        if (jumpCount >= 4) {
-            document.getElementById('btnNext2').classList.add('show');
-            playSpeechQueue([{ text: letter, lang: 'en' }, { text: 'jump! I can jump!', lang: 'en' }]);
-        } else { speakEnglish(letter); }
-    }
+  // ==========================================
+  // 5. 各幕互動邏輯
+  // ==========================================
+  function playMeaningCard() {
+    const el = document.getElementById('meaningCard');
+    if (el) { el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); }
+    speakQueue([{ lang: 'zh-HK', text: ACT1_CARDS[subIndex].zhSpeak }, { lang: 'en-GB', text: ACT1_CARDS[subIndex].enSpeak }]);
+  }
+  function playMeaningZh() { speakQueue([{ lang: 'zh-HK', text: ACT1_CARDS[subIndex].zhSpeak }]); }
+  function playMeaningEn() { speakQueue([{ lang: 'en-GB', text: ACT1_CARDS[subIndex].enSpeak }]); }
+  function prevAct1() { if (subIndex > 0) { subIndex--; renderStage(true); } }
+  function nextAct1() { if (subIndex < ACT1_CARDS.length - 1) { subIndex++; renderStage(true); } else jumpToAct(1); }
 
-    function learnRun() {
-        document.getElementById('btnNext3').classList.add('show');
-        speakCantoneseAndEnglish("跑步嘅英文係：", "run. I can run.");
+  function tapLetterBlock(letterIdx) {
+    const item = ACT2_WORDS[subIndex]; litBlocks[letterIdx] = true; renderStage(false);
+    const ch = item.letters[letterIdx];
+    if (litBlocks.length === item.letters.length && litBlocks.every(Boolean)) {
+      launchFireworks();
+      speakQueue([{ lang: 'en-GB', text: ch }, { lang: 'zh-HK', text: '好叻呀！你已經拍晒全部字母積木喇！一齊聽下成個字點讀！' }, { lang: 'en-GB', text: item.letters.join('') }]);
+    } else {
+      speakQueue([{ lang: 'en-GB', text: ch }]);
     }
+  }
+  function blendCurrentWord() {
+    const item = ACT2_WORDS[subIndex]; litBlocks = item.letters.map(() => true); renderStage(false);
+    speakQueue([{ lang: 'en-GB', text: item.letters.join(', ') + '. ' + item.letters.join('') }]);
+  }
+  function prevAct2() { if (subIndex > 0) { subIndex--; litBlocks = []; renderStage(true); } }
+  function nextAct2() { if (subIndex < ACT2_WORDS.length - 1) { subIndex++; litBlocks = []; renderStage(true); } else jumpToAct(2); }
 
-    let runCount = 0;
-    function tapLetterRun(letter, el) {
-        if (!el.classList.contains('clicked')) { el.classList.add('clicked'); runCount++; }
-        if (runCount >= 3) {
-            document.getElementById('btnNext4').classList.add('show');
-            playSpeechQueue([{ text: letter, lang: 'en' }, { text: 'run! I can run!', lang: 'en' }]);
-        } else { speakEnglish(letter); }
-    }
+  function celebrateSpeaking() {
+    speakingDone[subIndex] = true; renderStage(false); launchFireworks();
+    speakQueue([{ lang: 'zh-HK', text: '嘩！玲玲讀得又大聲又標準，超叻女呀！' }, { lang: 'en-GB', text: ACT3_SPEAK[subIndex].en + '. ' + ACT3_SPEAK[subIndex].sentence }]);
+  }
+  function prevAct3() { if (subIndex > 0) { subIndex--; renderStage(true); } }
+  function nextAct3() { if (subIndex < ACT3_SPEAK.length - 1) { subIndex++; renderStage(true); } else jumpToAct(3); }
 
-    function momApprove() {
-        confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
-        speakCantoneseAndEnglish("嘩！Lingling 讀得超級好聽呀！", "Wonderful!");
-        setTimeout(() => goToStep(6), 1800);
+  function playQuizPrompt() { speakQueue(ACT4_QUIZ[subIndex].promptSeq); }
+  function pickQuizOption(pickedId) {
+    if (quizSolved) return;
+    const q = ACT4_QUIZ[subIndex];
+    if (pickedId === q.correctId) {
+      quizSolved = true; quizWrongPicked = null; renderStage(false); launchFireworks();
+      speakQueue([{ lang: 'zh-HK', text: '好叻呀玲玲！答啱咗喇！' }, { lang: 'en-GB', text: q.correctEn }]);
+    } else {
+      quizWrongPicked = pickedId; renderStage(false);
+      speakQueue([{ lang: 'zh-HK', text: '試吓隔離嗰張圖卡啦！' }]);
     }
+  }
+  function nextAct4() { if (subIndex < ACT4_QUIZ.length - 1) { subIndex++; quizSolved = false; quizWrongPicked = null; renderStage(true); } else jumpToAct(4); }
 
-    function speakQuizPrompt() {
-        if (quizTarget === 'jump') { speakCantoneseAndEnglish("請搵出跳躍：", "jump. I can jump."); }
-        else { speakCantoneseAndEnglish("請搵出跑步：", "run. I can run."); }
+  function copyProgressSecret() {
+    const text = document.getElementById('secretCodeText').innerText;
+    const btn = document.getElementById('copySecretBtn');
+    function onCopied() {
+      btn.textContent = '✅ 已複製暗號！快啲貼俾 Anna 老師啦！';
+      speakQueue([{ lang: 'zh-HK', text: '已複製暗號！請媽媽貼返去對話框俾老師更新進度啦！' }]);
     }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(onCopied).catch(() => fallbackCopy(text, onCopied));
+    } else { fallbackCopy(text, onCopied); }
+  }
+  function fallbackCopy(text, callback) {
+    const ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.focus(); ta.select();
+    try { document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta); callback();
+  }
 
-    function checkGentleMatch(word, el) {
-        if (word === quizTarget) {
-            el.classList.add('correct');
-            confetti({ particleCount: 90, spread: 60 });
-            if (quizTarget === 'jump') {
-                quizTarget = 'run';
-                document.getElementById('quizTargetWord').textContent = 'run';
-                document.getElementById('bannerText').textContent = "好叻呀！咁邊一幅圖係代表 run (跑步) 呢？";
-                speakCantoneseAndEnglish("答啱啦！咁邊幅圖係跑步呢？請搵出：", "run. I can run.");
-            } else {
-                document.getElementById('bannerText').textContent = "🎉 太棒啦！今日成功學識 jump 同埋 run 兩個新字！";
-                document.getElementById('btnFinish').classList.add('show');
-                speakCantoneseAndEnglish("太叻女啦！全部答啱晒！", "Good job Lingling!");
-            }
-        } else {
-            el.classList.add('gentle-try');
-            speakCantoneseAndEnglish("唔係呢張喎，試吓隔離嗰張圖卡啦！", quizTarget);
-            setTimeout(() => el.classList.remove('gentle-try'), 900);
-        }
-    }
+  // ==========================================
+  // 6. 煙花特效引擎
+  // ==========================================
+  const canvas = document.getElementById('fireworksCanvas');
+  const ctx = canvas.getContext('2d');
+  let particles = []; let animRunning = false;
+  function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  window.addEventListener('resize', resizeCanvas); resizeCanvas();
 
-    function goBack() {
-        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-        window.location.href = 'en-unit4.html';
+  function launchFireworks() {
+    const colors = ['#F43F5E', '#FACC15', '#34D399', '#38BDF8', '#A855F7', '#FB923C'];
+    for (let burst = 0; burst < 3; burst++) {
+      const cx = canvas.width * (0.25 + Math.random() * 0.5); const cy = canvas.height * (0.2 + Math.random() * 0.35);
+      for (let i = 0; i < 36; i++) {
+        const angle = (Math.PI * 2 * i) / 36; const speed = 2.5 + Math.random() * 5;
+        particles.push({ x: cx, y: cy, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed, alpha: 1, color: colors[Math.floor(Math.random() * colors.length)], size: 5 + Math.random() * 5 });
+      }
     }
+    if (!animRunning) { animRunning = true; requestAnimationFrame(animateParticles); }
+  }
+  function animateParticles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let i = particles.length - 1; i >= 0; i--) {
+      const p = particles[i]; p.x += p.vx; p.y += p.vy; p.vy += 0.12; p.alpha -= 0.018;
+      if (p.alpha <= 0) particles.splice(i, 1);
+      else { ctx.globalAlpha = p.alpha; ctx.fillStyle = p.color; ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill(); }
+    }
+    ctx.globalAlpha = 1;
+    if (particles.length > 0) requestAnimationFrame(animateParticles);
+    else animRunning = false;
+  }
+
+  renderStage(false);
 </script>
 </body>
 </html>
