@@ -1,234 +1,590 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-HK">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unit 4 Day 4 - Phonics m</title>
-    <!-- Tailwind CSS 框架 -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- 彈窗特效庫 -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <!-- FontAwesome 圖示 -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    
-    <style>
-        /* 玲玲學習樂園專屬 3D 積木樣式 */
-        body { 
-            background-color: #f0f9ff; 
-            font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif; 
-            user-select: none;
-        }
-        .btn-3d {
-            transition: all 0.1s;
-            border-bottom: 5px solid rgba(0,0,0,0.2);
-        }
-        .btn-3d:active {
-            transform: translateY(5px);
-            border-bottom: 0px solid rgba(0,0,0,0.2);
-            margin-top: 5px;
-        }
-        .card-3d {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 8px 0 #cbd5e1;
-            border: 2px solid #e2e8f0;
-            transition: all 0.2s;
-        }
-        .card-3d:active {
-            transform: translateY(8px);
-            box-shadow: 0 0 0 #cbd5e1;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Unit 4 Day 4 - I can do it! | 玲玲學習樂園</title>
+  <style>
+    /* iPad Safari 終極防護引擎：防雙擊放大鎖 & 強制區塊排版 */
+    * {
+      box-sizing: border-box;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      min-height: 100vh;
+      display: block !important;
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang HK", "Microsoft JhengHei", "Rounded Mplus 1c", sans-serif;
+      background: linear-gradient(180deg, #60A5FA 0%, #93C5FD 55%, #DBEAFE 100%);
+      color: #1E293B;
+      overflow-x: hidden;
+    }
+
+    /* 煙花畫布 */
+    #fireworksCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* 頂部深藍導航列 */
+    .top-nav {
+      background: linear-gradient(180deg, #1E3A8A 0%, #1D4ED8 100%);
+      color: #FFFFFF;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      box-shadow: 0 5px 0 #172554;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .btn-home {
+      background: #F59E0B;
+      color: #1E293B;
+      text-decoration: none;
+      font-weight: 900;
+      font-size: 16px;
+      padding: 8px 14px;
+      border-radius: 16px;
+      box-shadow: 0 4px 0 #B45309;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+      transition: transform 0.1s;
+    }
+
+    .btn-home:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 #B45309;
+    }
+
+    .nav-title {
+      font-size: 17px;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+      text-align: center;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.25);
+    }
+
+    /* 四幕進度地圖 */
+    .act-map {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .act-pill {
+      padding: 6px 10px;
+      border-radius: 14px;
+      font-size: 13px;
+      font-weight: 800;
+      background: rgba(255, 255, 255, 0.18);
+      color: #DBEAFE;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .act-pill.active {
+      background: #FACC15;
+      color: #1E3A8A;
+      border-color: #FEF08A;
+      box-shadow: 0 3px 0 #CA8A04;
+      transform: scale(1.05);
+    }
+
+    .act-pill.done {
+      background: #34D399;
+      color: #064E3B;
+    }
+
+    /* 主容器 */
+    .container {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 16px 16px 48px;
+    }
+
+    /* Anna 老師常駐黃色橫幅 */
+    .teacher-banner {
+      background: linear-gradient(135deg, #FEF08A 0%, #FDE047 100%);
+      border: 3px solid #EAB308;
+      border-radius: 24px;
+      padding: 14px 18px;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      box-shadow: 0 6px 0 #CA8A04;
+      cursor: pointer;
+      transition: transform 0.1s;
+    }
+
+    .teacher-banner:active {
+      transform: translateY(3px);
+      box-shadow: 0 3px 0 #CA8A04;
+    }
+
+    .teacher-avatar {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: #FFFBEB;
+      border: 3px solid #F59E0B;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 3px 0 #D97706;
+    }
+
+    .teacher-text-box {
+      flex: 1;
+    }
+
+    .teacher-name {
+      font-size: 13px;
+      font-weight: 900;
+      color: #92400E;
+      margin-bottom: 3px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .teacher-msg {
+      font-size: 17px;
+      font-weight: 800;
+      color: #451A03;
+      line-height: 1.4;
+    }
+
+    .replay-chip {
+      background: #F59E0B;
+      color: #FFFFFF;
+      font-size: 13px;
+      font-weight: 900;
+      padding: 7px 12px;
+      border-radius: 14px;
+      box-shadow: 0 3px 0 #B45309;
+      white-space: nowrap;
+    }
+
+    /* 3D 白色主舞台卡片 */
+    .stage-card {
+      background: #FFFFFF;
+      border-radius: 32px;
+      padding: 24px 20px;
+      box-shadow: 0 10px 0 #93C5FD, 0 14px 28px rgba(30, 58, 138, 0.18);
+      border: 4px solid #EFF6FF;
+      text-align: center;
+    }
+
+    .stage-badge {
+      display: inline-block;
+      background: #DBEAFE;
+      color: #1D4ED8;
+      font-size: 15px;
+      font-weight: 900;
+      padding: 6px 16px;
+      border-radius: 999px;
+      margin-bottom: 14px;
+    }
+
+    .stage-badge.warmup {
+      background: #FEF3C7;
+      color: #B45309;
+      border: 2px solid #F59E0B;
+    }
+
+    /* 超大 3D 單字圖卡 */
+    .flashcard-3d {
+      background: linear-gradient(180deg, #F8FAFC 0%, #EFF6FF 100%);
+      border: 4px solid #60A5FA;
+      border-radius: 28px;
+      padding: 22px 18px;
+      margin: 8px auto 18px;
+      max-width: 460px;
+      box-shadow: 0 8px 0 #3B82F6;
+      cursor: pointer;
+      transition: transform 0.12s ease;
+    }
+
+    .flashcard-3d:active, .flashcard-3d.pop {
+      transform: scale(1.03);
+    }
+
+    .illustration-wrap {
+      width: 170px;
+      height: 170px;
+      margin: 0 auto 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .word-en {
+      font-size: 48px;
+      font-weight: 900;
+      color: #1E3A8A;
+      letter-spacing: 1px;
+      margin: 4px 0;
+    }
+
+    .word-en .highlight-m {
+      color: #EA580C;
+      background: #FFEDD5;
+      padding: 0 8px;
+      border-radius: 12px;
+      border-bottom: 4px solid #F97316;
+    }
+
+    .word-zh {
+      font-size: 26px;
+      font-weight: 800;
+      color: #475569;
+      margin-bottom: 8px;
+    }
+
+    .sentence-box {
+      background: #DBEAFE;
+      color: #1E40AF;
+      font-size: 24px;
+      font-weight: 900;
+      padding: 10px 18px;
+      border-radius: 18px;
+      display: inline-block;
+      margin-top: 6px;
+    }
+
+    /* 3D 通用按鈕 */
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .btn-3d {
+      border: none;
+      border-radius: 20px;
+      padding: 14px 22px;
+      font-size: 19px;
+      font-weight: 900;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: transform 0.1s;
+    }
+
+    .btn-3d:active {
+      transform: translateY(4px);
+    }
+
+    .btn-blue {
+      background: #3B82F6;
+      color: #FFFFFF;
+      box-shadow: 0 5px 0 #1D4ED8;
+    }
+    .btn-blue:active { box-shadow: 0 1px 0 #1D4ED8; }
+
+    .btn-amber {
+      background: #F59E0B;
+      color: #FFFFFF;
+      box-shadow: 0 5px 0 #B45309;
+    }
+    .btn-amber:active { box-shadow: 0 1px 0 #B45309; }
+
+    .btn-green {
+      background: #10B981;
+      color: #FFFFFF;
+      box-shadow: 0 6px 0 #047857;
+      font-size: 21px;
+      padding: 16px 26px;
+    }
+    .btn-green:active { box-shadow: 0 2px 0 #047857; }
+
+    .btn-purple {
+      background: #8B5CF6;
+      color: #FFFFFF;
+      box-shadow: 0 5px 0 #6D28D9;
+    }
+    .btn-purple:active { box-shadow: 0 1px 0 #6D28D9; }
+
+    /* 第二幕：字母積木 */
+    .blocks-arena {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin: 22px 0;
+    }
+
+    .letter-block {
+      width: 68px;
+      height: 78px;
+      border-radius: 20px;
+      background: #F1F5F9;
+      border: 3px solid #CBD5E1;
+      box-shadow: 0 7px 0 #94A3B8;
+      font-size: 40px;
+      font-weight: 900;
+      color: #334155;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      transition: transform 0.12s, background-color 0.12s;
+    }
+
+    .letter-block.key-letter {
+      border-color: #F59E0B;
+      background: #FFFBEB;
+      color: #B45309;
+      box-shadow: 0 7px 0 #D97706;
+    }
+
+    .letter-block.lit {
+      background: linear-gradient(180deg, #F97316 0%, #EA580C 100%);
+      color: #FFFFFF;
+      border-color: #FDBA74;
+      box-shadow: 0 7px 0 #9A3412;
+      transform: translateY(-4px) scale(1.08);
+    }
+
+    .letter-block.lit.alt-color {
+      background: linear-gradient(180deg, #06B6D4 0%, #0284C7 100%);
+      border-color: #67E8F9;
+      box-shadow: 0 7px 0 #0369A1;
+    }
+
+    .star-tag {
+      position: absolute;
+      top: -10px;
+      right: -8px;
+      font-size: 18px;
+    }
+
+    /* 第三幕：開口讀狀態列 */
+    .speaking-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #ECFDF5;
+      color: #065F46;
+      border: 2px solid #34D399;
+      padding: 8px 18px;
+      border-radius: 16px;
+      font-size: 18px;
+      font-weight: 900;
+      margin-top: 12px;
+    }
+
+    /* 第四幕：輕鬆選圖卡二選一 */
+    .choice-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      max-width: 540px;
+      margin: 18px auto;
+    }
+
+    .choice-card {
+      background: #F8FAFC;
+      border: 4px solid #93C5FD;
+      border-radius: 26px;
+      padding: 18px 12px;
+      box-shadow: 0 7px 0 #60A5FA;
+      cursor: pointer;
+      transition: transform 0.12s, background-color 0.15s, border-color 0.15s;
+    }
+
+    .choice-card:active {
+      transform: translateY(4px);
+    }
+
+    .choice-card.correct {
+      background: #DCFCE7;
+      border-color: #22C55E;
+      box-shadow: 0 7px 0 #15803D;
+      transform: scale(1.04);
+    }
+
+    .choice-card.gentle-try {
+      background: #FEF3C7;
+      border-color: #F59E0B;
+      box-shadow: 0 7px 0 #D97706;
+      animation: gentleWiggle 0.4s ease;
+    }
+
+    @keyframes gentleWiggle {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(-3deg); }
+      75% { transform: rotate(3deg); }
+    }
+
+    .gentle-hint-banner {
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 900;
+      color: #B45309;
+      background: #FEF3C7;
+      border-radius: 16px;
+      padding: 8px 16px;
+      margin: 10px auto 0;
+      max-width: 460px;
+    }
+
+    .gentle-hint-banner.success {
+      color: #065F46;
+      background: #D1FAE5;
+    }
+
+    /* 分頁圓點 */
+    .dots-row {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #CBD5E1;
+      transition: all 0.2s;
+    }
+
+    .dot.active {
+      width: 30px;
+      border-radius: 8px;
+      background: #2563EB;
+    }
+
+    .dot.completed {
+      background: #10B981;
+    }
+
+    /* 結算畫面暗號區 */
+    .secret-code-box {
+      background: #F1F5F9;
+      border: 3px dashed #64748B;
+      border-radius: 20px;
+      padding: 16px;
+      margin: 18px auto;
+      max-width: 560px;
+      font-size: 15px;
+      font-weight: 700;
+      color: #334155;
+      line-height: 1.5;
+      text-align: left;
+      user-select: text;
+      -webkit-user-select: text;
+    }
+
+    .summary-badges {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin: 16px 0;
+    }
+
+    .summary-chip {
+      background: #EFF6FF;
+      border: 2px solid #60A5FA;
+      color: #1E3A8A;
+      font-size: 17px;
+      font-weight: 900;
+      padding: 8px 16px;
+      border-radius: 16px;
+    }
+
+    @media (max-width: 600px) {
+      .nav-title { font-size: 14px; }
+      .act-pill { padding: 5px 8px; font-size: 12px; }
+      .word-en { font-size: 40px; }
+      .letter-block { width: 56px; height: 66px; font-size: 34px; }
+      .illustration-wrap { width: 140px; height: 140px; }
+    }
+  </style>
 </head>
-<body class="pb-20">
+<body>
 
-    <!-- 頂部導航列 -->
-    <nav class="bg-blue-500 text-white p-4 shadow-lg flex justify-between items-center sticky top-0 z-50">
-        <a href="en-unit4.html?v=4" class="bg-yellow-400 text-yellow-900 px-5 py-2 rounded-full font-bold btn-3d flex items-center">
-            <i class="fas fa-arrow-left mr-2"></i> 返回 Unit 4
-        </a>
-        <h1 class="text-xl font-bold">Day 4: Phonics m</h1>
-        <div class="w-24"></div>
-    </nav>
+<canvas id="fireworksCanvas"></canvas>
 
-    <!-- Anna 老師語音引導區 -->
-    <div class="max-w-4xl mx-auto mt-6 px-4">
-        <div class="bg-yellow-100 border-4 border-yellow-400 rounded-2xl p-4 flex items-center shadow-lg cursor-pointer btn-3d" 
-             onclick="playVoice('Hello Lingling! Today we learn the sound of letter m. m, m, m. Let\'s learn mouth, meat, and milk!')">
-            <div class="text-6xl mr-4">👩🏼‍🏫</div>
-            <div>
-                <h2 class="font-bold text-yellow-800 text-xl mb-1">Anna 老師語音導讀：</h2>
-                <p class="text-yellow-700 text-lg">「Hello Lingling! 今日我哋學字母 m 嘅發音。<br>撳我聽下點讀啦！」</p>
-            </div>
-            <div class="ml-auto text-4xl text-yellow-500">
-                <i class="fas fa-volume-up pulse-animation"></i>
-            </div>
-        </div>
+<!-- 頂部深藍導航列 -->
+<nav class="top-nav">
+  <a href="en-unit4.html" class="btn-home">🏠 返回</a>
+  <div class="nav-title">Unit 4 · Day 4</div>
+  <div class="act-map" id="actMap">
+    <button class="act-pill active" onclick="jumpToAct(0)">1. 學新詞</button>
+    <button class="act-pill" onclick="jumpToAct(1)">2. 拼積木</button>
+    <button class="act-pill" onclick="jumpToAct(2)">3. 大聲讀</button>
+    <button class="act-pill" onclick="jumpToAct(3)">4. 小遊戲</button>
+  </div>
+</nav>
+
+<div class="container">
+  <!-- Anna 老師常駐黃色橫幅 -->
+  <div class="teacher-banner" onclick="replayGuide()">
+    <div class="teacher-avatar" aria-hidden="true">
+      <!-- 可愛卡通 Anna 老師頭像 SVG -->
+      <svg viewBox="0 0 80 80" width="48" height="48">
+        <circle cx="40" cy="40" r="36" fill="#FDE68A"/>
+        <path d="M18 38 C18 18, 62 18, 62 38 L64 56 C64 60, 56 60, 56 54 L56 42 L24 42 L24 54 C24 60, 16 60, 16 56 Z" fill="#78350F"/>
+        <circle cx="40" cy="42" r="18" fill="#FED7AA"/>
+        <path d="M22 36 Q40 22 58 36" fill="#78350F"/>
+        <circle cx="34" cy="41" r="2.5" fill="#1E293B"/>
+        <circle cx="46" cy="41" r="2.5" fill="#1E293B"/>
+        <circle cx="29" cy="46" r="3" fill="#FCA5A5" opacity="0.7"/>
+        <circle cx="51" cy="46" r="3" fill="#FCA5A5" opacity="0.7"/>
+        <path d="M35 48 Q40 53 45 48" stroke="#DC2626" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      </svg>
     </div>
-
-    <!-- 核心單字學習區 -->
-    <div class="max-w-4xl mx-auto mt-10 px-4">
-        <h2 class="text-2xl font-bold text-blue-800 mb-6 text-center">
-            <i class="fas fa-hand-pointer mr-2"></i> 撳圖案聽發音
-        </h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            
-            <!-- 單字 1: mouth -->
-            <div class="card-3d p-8 text-center cursor-pointer" onclick="playVoice('m, m, mouth')">
-                <div class="text-8xl mb-4">👄</div>
-                <div class="text-4xl font-bold text-blue-600 mb-2">mouth</div>
-                <div class="text-2xl text-gray-500">嘴巴</div>
-            </div>
-            
-            <!-- 單字 2: meat -->
-            <div class="card-3d p-8 text-center cursor-pointer" onclick="playVoice('m, m, meat')">
-                <div class="text-8xl mb-4">🥩</div>
-                <div class="text-4xl font-bold text-blue-600 mb-2">meat</div>
-                <div class="text-2xl text-gray-500">肉</div>
-            </div>
-            
-            <!-- 單字 3: milk -->
-            <div class="card-3d p-8 text-center cursor-pointer" onclick="playVoice('m, m, milk')">
-                <div class="text-8xl mb-4">🥛</div>
-                <div class="text-4xl font-bold text-blue-600 mb-2">milk</div>
-                <div class="text-2xl text-gray-500">牛奶</div>
-            </div>
-
-        </div>
+    <div class="teacher-text-box">
+      <div class="teacher-name">🌟 Anna 老師語音指引</div>
+      <div class="teacher-msg" id="teacherMsg">歡迎返到英文大本營！今日我哋先熱身重溫畫畫，再認識新嘅英文字母發音！</div>
     </div>
+    <div class="replay-chip">🔊 重聽</div>
+  </div>
 
-    <!-- 課後小測驗區 -->
-    <div class="max-w-4xl mx-auto mt-12 px-4 mb-12">
-        <div class="bg-white rounded-3xl p-8 shadow-xl border-4 border-blue-200">
-            <h2 class="text-3xl font-bold text-center text-blue-800 mb-8">🎯 小測驗：聽英文，揀啱嘅圖案</h2>
-            <div class="flex justify-center mb-8">
-                <button onclick="playTargetWord()" class="bg-blue-500 text-white px-8 py-4 rounded-full text-2xl font-bold btn-3d flex items-center shadow-lg">
-                    <i class="fas fa-play-circle mr-3"></i> 撳我聽題目
-                </button>
-            </div>
-            <div class="grid grid-cols-3 gap-6" id="game-options">
-                <!-- 選項會由 JavaScript 自動生成 -->
-            </div>
-        </div>
-    </div>
+  <!-- 主互動舞台 -->
+  <main class="stage-card" id="stageContainer"></main>
+</div>
 
-    <!-- ⚙️ JavaScript 邏輯與語音引擎 (絕不斷尾) -->
-    <script>
-        // 1. 防吞聲引擎 (Anti-Swallow Voice Engine)
-        function playVoice(text, callback) {
-            // 清除之前的語音排隊，防止卡死
-            window.speechSynthesis.cancel(); 
-            
-            let utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = 'en-US';
-            utterance.rate = 0.85; // 減慢語速適合 K2
-            utterance.pitch = 1.1;
-
-            // iOS 靜音喚醒機制 (播放一段無聲音訊強制喚醒引擎)
-            let dummy = new SpeechSynthesisUtterance('');
-            dummy.volume = 0;
-            window.speechSynthesis.speak(dummy);
-
-            // 如果有完成後的回調函數 (例如答對後的彈窗)
-            if (callback) {
-                utterance.onend = callback;
-            }
-
-            // 稍微延遲播放，確保引擎已準備好
-            setTimeout(() => {
-                window.speechSynthesis.speak(utterance);
-            }, 50);
-        }
-
-        // 2. 小測驗遊戲邏輯
-        const words = [
-            { word: 'mouth', emoji: '👄' },
-            { word: 'meat', emoji: '🥩' },
-            { word: 'milk', emoji: '🥛' }
-        ];
-        let currentTarget = null;
-
-        function initGame() {
-            // 隨機抽選一個目標單字
-            currentTarget = words[Math.floor(Math.random() * words.length)];
-            const container = document.getElementById('game-options');
-            container.innerHTML = '';
-            
-            // 洗牌選項順序
-            let options = [...words].sort(() => Math.random() - 0.5);
-            
-            options.forEach(opt => {
-                const div = document.createElement('div');
-                div.className = 'card-3d p-6 text-center cursor-pointer bg-gray-50 hover:bg-blue-50';
-                div.innerHTML = `<div class="text-7xl">${opt.emoji}</div>`;
-                div.onclick = () => checkAnswer(opt.word);
-                container.appendChild(div);
-            });
-        }
-
-        function playTargetWord() {
-            if(!currentTarget) initGame();
-            playVoice(`Where is the ${currentTarget.word}?`);
-        }
-
-        function checkAnswer(selected) {
-            if(!currentTarget) return;
-            
-            if (selected === currentTarget.word) {
-                // 答對邏輯
-                playVoice('Excellent! You got it!', () => {
-                    Swal.fire({
-                        title: '太叻啦！',
-                        text: '你搵啱咗 ' + currentTarget.word + '！',
-                        icon: 'success',
-                        confirmButtonText: '🌟 完成 Day 4 🌟',
-                        confirmButtonColor: '#3b82f6',
-                        allowOutsideClick: false
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            // 跳轉回 Unit 4 導覽頁，並加上 ?v=4 防緩存
-                            window.location.href = 'en-unit4.html?v=4';
-                        }
-                    });
-                });
-            } else {
-                // 答錯邏輯
-                playVoice('Oops, try again! Listen carefully.');
-                Swal.fire({
-                    title: '唔啱喎',
-                    text: '再試下聽清楚！',
-                    icon: 'error',
-                    timer: 2000,
-                    showConfirmButton: false
-                });
-            }
-        }
-
-        // 頁面載入時初始化遊戲
-        window.onload = () => {
-            initGame();
-        };
-    <script>
+<script>
   // ==========================================
-  // 1. iPad Safari 終極語音修復引擎 (中英徹底分流 + 觸控喚醒 + 防卡死)
+  // 1. iPad Safari 終極語音防吞聲、防撞聲 & 中英徹底分流引擎
   // ==========================================
   window.utterancePool = [];
   let cachedVoices = [];
-  let ttsInitialized = false;
+  let currentSpeechId = 0; // 防連按撞聲計數鎖
   let currentGuideCantonese = "歡迎返到英文大本營！今日我哋先熱身重溫畫畫，再認識新嘅英文字母發音！";
   let currentGuideEnglish = "";
-
-  // 【修復 1】觸控喚醒機制：解決 iPad Safari 第一次發音變成奇怪中文聲的問題
-  function initTTS() {
-    if (ttsInitialized || !('speechSynthesis' in window)) return;
-    let u = new SpeechSynthesisUtterance('');
-    u.volume = 0;
-    window.speechSynthesis.speak(u);
-    ttsInitialized = true;
-    setTimeout(() => { cachedVoices = window.speechSynthesis.getVoices(); }, 100);
-  }
-  document.addEventListener('touchstart', initTTS, { once: true });
-  document.addEventListener('click', initTTS, { once: true });
 
   function loadVoices() {
     if ('speechSynthesis' in window) {
@@ -245,71 +601,64 @@
     if (langType === 'zh-HK') {
       return cachedVoices.find(v => v.lang === 'zh-HK' && (v.name.includes('Sin') || v.name.includes('Female')))
           || cachedVoices.find(v => v.lang === 'zh-HK')
-          || cachedVoices.find(v => v.lang.includes('zh'));
+          || cachedVoices.find(v => v.lang.toLowerCase().includes('hk'))
+          || cachedVoices.find(v => v.lang.toLowerCase().includes('zh-tw'));
     } else {
-      // 擴大女聲搜索範圍，保證抓到純正英文聲
-      const femaleHints = ['Kate', 'Serena', 'Martha', 'Stephanie', 'Samantha', 'Karen', 'Tessa', 'Female'];
-      return cachedVoices.find(v => (v.lang === 'en-GB' || v.lang === 'en-US' || v.lang === 'en-AU') && femaleHints.some(h => v.name.includes(h)))
-          || cachedVoices.find(v => v.lang.startsWith('en') && !v.name.includes('Daniel') && !v.name.includes('Oliver') && !v.name.includes('Arthur'))
+      // 鎖定英國女聲
+      const femaleHints = ['Kate', 'Serena', 'Martha', 'Stephanie', 'Libby', 'Sonia', 'Fiona', 'Female'];
+      return cachedVoices.find(v => v.lang === 'en-GB' && femaleHints.some(h => v.name.includes(h)))
+          || cachedVoices.find(v => v.lang === 'en-GB' && !v.name.includes('Daniel') && !v.name.includes('Oliver') && !v.name.includes('Arthur'))
+          || cachedVoices.find(v => v.lang === 'en-GB')
           || cachedVoices.find(v => v.lang.startsWith('en'));
     }
   }
 
+  // 排隊播放：嚴格中英分流，絕不混雜，並具備防撞聲保護
   function speakQueue(segments) {
+    const mySpeechId = ++currentSpeechId;
     if (!('speechSynthesis' in window)) return;
     window.speechSynthesis.cancel();
     window.utterancePool = [];
 
     if (!segments || segments.length === 0) return;
-    if (!ttsInitialized) initTTS(); // 確保已喚醒
 
     let idx = 0;
     function playNext() {
-      if (idx >= segments.length) return;
+      if (mySpeechId !== currentSpeechId || idx >= segments.length) return;
       const seg = segments[idx];
       idx++;
 
-      // 【修復 2】Phonics 發音修正：把單獨的 m 替換成 mmm，強迫發出自然拼讀的鼻音，而非讀字母 "em"
-      let textToSpeak = seg.text;
-      if (seg.lang === 'en-GB') {
-        textToSpeak = textToSpeak.replace(/\bm\b/g, "mmm");
-      }
-
-      const u = new SpeechSynthesisUtterance(textToSpeak);
-      window.utterancePool.push(u); // 防回收
+      const u = new SpeechSynthesisUtterance(seg.text);
+      window.utterancePool.push(u); // Anti-GC 防回收
 
       const voice = pickVoice(seg.lang);
-      if (voice) {
-        u.voice = voice;
-      } else {
-        u.lang = seg.lang === 'zh-HK' ? 'zh-HK' : 'en-US'; // 終極防中文聲亂入 fallback
-      }
+      if (voice) u.voice = voice;
 
       if (seg.lang === 'zh-HK') {
         u.lang = 'zh-HK';
         u.pitch = 1.05;
         u.rate = 0.9;
       } else {
-        u.lang = u.voice ? u.voice.lang : 'en-US';
+        u.lang = 'en-GB';
         u.pitch = 1.08;
-        u.rate = 0.85; // 稍微調快至 0.85，解決 0.78 可能導致的拖音變形
+        u.rate = 0.78;
       }
 
       let advanced = false;
       const done = () => {
-        if (advanced) return;
+        if (advanced || mySpeechId !== currentSpeechId) return;
         advanced = true;
-        setTimeout(playNext, 140);
+        setTimeout(() => {
+          if (mySpeechId === currentSpeechId) playNext();
+        }, 140);
       };
 
       u.onend = done;
       u.onerror = done;
 
-      // 【修復 3】4秒強制解鎖防呆：防止 iOS 隨機吃掉 onend 信號導致全網頁卡死
-      setTimeout(() => { if (!advanced) done(); }, 4000);
-
       window.speechSynthesis.speak(u);
     }
+
     playNext();
   }
 
@@ -317,62 +666,337 @@
     currentGuideCantonese = zhText;
     currentGuideEnglish = enText;
     document.getElementById('teacherMsg').textContent = zhText;
-    if (autoSpeak) replayGuide();
+    if (autoSpeak) {
+      replayGuide();
+    }
   }
 
   function replayGuide() {
     const seq = [{ lang: 'zh-HK', text: currentGuideCantonese }];
-    if (currentGuideEnglish) seq.push({ lang: 'en-GB', text: currentGuideEnglish });
+    if (currentGuideEnglish) {
+      seq.push({ lang: 'en-GB', text: currentGuideEnglish });
+    }
     speakQueue(seq);
   }
 
   // ==========================================
-  // 2. 可愛童趣 SVG 圖庫
+  // 2. 可愛童趣 3D 卡通 SVG 圖庫 (絕無寫實器官)
   // ==========================================
   const ILLUSTRATIONS = {
-    draw: `<svg viewBox="0 0 180 180" width="165" height="165"><rect x="24" y="26" width="118" height="106" rx="18" fill="#FEF3C7" stroke="#F59E0B" stroke-width="6"/><rect x="34" y="36" width="98" height="86" rx="12" fill="#FFFFFF"/><path d="M46 104 A36 36 0 0 1 118 104" fill="none" stroke="#F43F5E" stroke-width="7" stroke-linecap="round"/><path d="M54 104 A28 28 0 0 1 110 104" fill="none" stroke="#FACC15" stroke-width="7" stroke-linecap="round"/><path d="M62 104 A20 20 0 0 1 102 104" fill="none" stroke="#38BDF8" stroke-width="7" stroke-linecap="round"/><circle cx="62" cy="58" r="11" fill="#FBBF24"/><g transform="rotate(-32 132 122)"><rect x="122" y="76" width="18" height="72" rx="9" fill="#3B82F6" stroke="#1D4ED8" stroke-width="4"/><rect x="122" y="66" width="18" height="14" rx="3" fill="#CBD5E1"/><path d="M121 66 Q131 38 141 66 Z" fill="#EC4899"/></g></svg>`,
-    mouth: `<svg viewBox="0 0 180 180" width="165" height="165"><circle cx="44" cy="46" r="22" fill="#FBBF24" stroke="#D97706" stroke-width="5"/><circle cx="136" cy="46" r="22" fill="#FBBF24" stroke="#D97706" stroke-width="5"/><circle cx="90" cy="94" r="64" fill="#FDE68A" stroke="#F59E0B" stroke-width="6"/><path d="M60 72 Q68 62 76 72" stroke="#78350F" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M104 72 Q112 62 120 72" stroke="#78350F" stroke-width="5" fill="none" stroke-linecap="round"/><ellipse cx="52" cy="92" rx="11" ry="7" fill="#FDA4AF" opacity="0.8"/><ellipse cx="128" cy="92" rx="11" ry="7" fill="#FDA4AF" opacity="0.8"/><ellipse cx="90" cy="84" rx="8" ry="6" fill="#78350F"/><path d="M64 102 Q90 144 116 102 Z" fill="#FB7185" stroke="#E11D48" stroke-width="5" stroke-linejoin="round"/><path d="M74 118 Q90 132 106 118" fill="#FDA4AF"/><text x="134" y="132" font-size="26">✨</text></svg>`,
-    meat: `<svg viewBox="0 0 180 180" width="165" height="165"><g transform="rotate(-25 90 90)"><rect x="96" y="78" width="52" height="24" rx="10" fill="#FFFBEB" stroke="#D97706" stroke-width="5"/><circle cx="148" cy="78" r="13" fill="#FFFBEB" stroke="#D97706" stroke-width="5"/><circle cx="148" cy="102" r="13" fill="#FFFBEB" stroke="#D97706" stroke-width="5"/><rect x="132" y="76" width="16" height="28" fill="#FFFBEB"/><ellipse cx="76" cy="90" rx="52" ry="38" fill="#F97316" stroke="#C2410C" stroke-width="6"/><ellipse cx="70" cy="82" rx="34" ry="20" fill="#FB923C"/><circle cx="62" cy="88" r="4" fill="#431407"/><circle cx="86" cy="88" r="4" fill="#431407"/><path d="M68 96 Q74 103 80 96" stroke="#431407" stroke-width="3.5" fill="none" stroke-linecap="round"/></g><text x="26" y="46" font-size="24">✨</text></svg>`,
-    milk: `<svg viewBox="0 0 180 180" width="165" height="165"><polygon points="56,52 90,28 124,52" fill="#60A5FA" stroke="#1D4ED8" stroke-width="5" stroke-linejoin="round"/><rect x="56" y="52" width="68" height="98" rx="14" fill="#FFFFFF" stroke="#2563EB" stroke-width="5"/><rect x="56" y="88" width="68" height="36" fill="#93C5FD"/><circle cx="78" cy="74" r="4.5" fill="#1E3A8A"/><circle cx="102" cy="74" r="4.5" fill="#1E3A8A"/><path d="M84 80 Q90 87 96 80" stroke="#1E3A8A" stroke-width="3.5" fill="none" stroke-linecap="round"/><circle cx="70" cy="79" r="5" fill="#FDA4AF" opacity="0.8"/><circle cx="110" cy="79" r="5" fill="#FDA4AF" opacity="0.8"/><path d="M90 95 C90 95 100 107 100 113 A10 10 0 0 1 80 113 C80 107 90 95 90 95 Z" fill="#FFFFFF"/></svg>`,
-    hand: `<svg viewBox="0 0 180 180" width="165" height="165"><g transform="rotate(-10 90 95)"><rect x="54" y="64" width="72" height="74" rx="34" fill="#FBBF24" stroke="#B45309" stroke-width="6"/><rect x="34" y="84" width="32" height="24" rx="12" transform="rotate(-25 50 96)" fill="#FBBF24" stroke="#B45309" stroke-width="6"/><ellipse cx="90" cy="106" rx="20" ry="16" fill="#FEF3C7"/><circle cx="74" cy="82" r="7" fill="#FEF3C7"/><circle cx="90" cy="78" r="7" fill="#FEF3C7"/><circle cx="106" cy="82" r="7" fill="#FEF3C7"/><circle cx="83" cy="104" r="3" fill="#78350F"/><circle cx="97" cy="104" r="3" fill="#78350F"/><path d="M86 110 Q90 115 94 110" stroke="#78350F" stroke-width="3" fill="none" stroke-linecap="round"/></g><path d="M132 48 Q144 58 140 72" stroke="#3B82F6" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M144 42 Q158 55 152 72" stroke="#60A5FA" stroke-width="5" fill="none" stroke-linecap="round"/></svg>`
+    draw: `
+      <svg viewBox="0 0 180 180" width="165" height="165">
+        <!-- 畫板 -->
+        <rect x="24" y="26" width="118" height="106" rx="18" fill="#FEF3C7" stroke="#F59E0B" stroke-width="6"/>
+        <rect x="34" y="36" width="98" height="86" rx="12" fill="#FFFFFF"/>
+        <!-- 畫板上可愛彩虹與太陽 -->
+        <path d="M46 104 A36 36 0 0 1 118 104" fill="none" stroke="#F43F5E" stroke-width="7" stroke-linecap="round"/>
+        <path d="M54 104 A28 28 0 0 1 110 104" fill="none" stroke="#FACC15" stroke-width="7" stroke-linecap="round"/>
+        <path d="M62 104 A20 20 0 0 1 102 104" fill="none" stroke="#38BDF8" stroke-width="7" stroke-linecap="round"/>
+        <circle cx="62" cy="58" r="11" fill="#FBBF24"/>
+        <!-- 魔法彩色畫筆 -->
+        <g transform="rotate(-32 132 122)">
+          <rect x="122" y="76" width="18" height="72" rx="9" fill="#3B82F6" stroke="#1D4ED8" stroke-width="4"/>
+          <rect x="122" y="66" width="18" height="14" rx="3" fill="#CBD5E1"/>
+          <path d="M121 66 Q131 38 141 66 Z" fill="#EC4899"/>
+        </g>
+      </svg>
+    `,
+    mouth: `
+      <svg viewBox="0 0 180 180" width="165" height="165">
+        <!-- 可愛小熊笑臉聚焦微笑嘴巴 (童趣卡通風) -->
+        <circle cx="44" cy="46" r="22" fill="#FBBF24" stroke="#D97706" stroke-width="5"/>
+        <circle cx="136" cy="46" r="22" fill="#FBBF24" stroke="#D97706" stroke-width="5"/>
+        <circle cx="90" cy="94" r="64" fill="#FDE68A" stroke="#F59E0B" stroke-width="6"/>
+        <!-- 瞇瞇笑眼 -->
+        <path d="M60 72 Q68 62 76 72" stroke="#78350F" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <path d="M104 72 Q112 62 120 72" stroke="#78350F" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <!-- 粉紅腮紅 -->
+        <ellipse cx="52" cy="92" rx="11" ry="7" fill="#FDA4AF" opacity="0.8"/>
+        <ellipse cx="128" cy="92" rx="11" ry="7" fill="#FDA4AF" opacity="0.8"/>
+        <!-- 可愛張開笑嘴巴 -->
+        <ellipse cx="90" cy="84" rx="8" ry="6" fill="#78350F"/>
+        <path d="M64 102 Q90 144 116 102 Z" fill="#FB7185" stroke="#E11D48" stroke-width="5" stroke-linejoin="round"/>
+        <path d="M74 118 Q90 132 106 118" fill="#FDA4AF"/>
+        <!-- 閃亮星星提示 -->
+        <text x="134" y="132" font-size="26">✨</text>
+      </svg>
+    `,
+    meat: `
+      <svg viewBox="0 0 180 180" width="165" height="165">
+        <!-- 可愛卡通美味雞腿/肉排 -->
+        <g transform="rotate(-25 90 90)">
+          <!-- 骨頭兩端 -->
+          <rect x="96" y="78" width="52" height="24" rx="10" fill="#FFFBEB" stroke="#D97706" stroke-width="5"/>
+          <circle cx="148" cy="78" r="13" fill="#FFFBEB" stroke="#D97706" stroke-width="5"/>
+          <circle cx="148" cy="102" r="13" fill="#FFFBEB" stroke="#D97706" stroke-width="5"/>
+          <rect x="132" y="76" width="16" height="28" fill="#FFFBEB"/>
+          <!-- 香噴噴肉塊 -->
+          <ellipse cx="76" cy="90" rx="52" ry="38" fill="#F97316" stroke="#C2410C" stroke-width="6"/>
+          <ellipse cx="70" cy="82" rx="34" ry="20" fill="#FB923C"/>
+          <!-- 可愛笑臉 -->
+          <circle cx="62" cy="88" r="4" fill="#431407"/>
+          <circle cx="86" cy="88" r="4" fill="#431407"/>
+          <path d="M68 96 Q74 103 80 96" stroke="#431407" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+        </g>
+        <text x="26" y="46" font-size="24">✨</text>
+      </svg>
+    `,
+    milk: `
+      <svg viewBox="0 0 180 180" width="165" height="165">
+        <!-- 可愛微笑牛奶盒 -->
+        <polygon points="56,52 90,28 124,52" fill="#60A5FA" stroke="#1D4ED8" stroke-width="5" stroke-linejoin="round"/>
+        <rect x="56" y="52" width="68" height="98" rx="14" fill="#FFFFFF" stroke="#2563EB" stroke-width="5"/>
+        <rect x="56" y="88" width="68" height="36" fill="#93C5FD"/>
+        <!-- 牛奶盒可愛笑臉 -->
+        <circle cx="78" cy="74" r="4.5" fill="#1E3A8A"/>
+        <circle cx="102" cy="74" r="4.5" fill="#1E3A8A"/>
+        <path d="M84 80 Q90 87 96 80" stroke="#1E3A8A" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+        <circle cx="70" cy="79" r="5" fill="#FDA4AF" opacity="0.8"/>
+        <circle cx="110" cy="79" r="5" fill="#FDA4AF" opacity="0.8"/>
+        <!-- 牛奶水滴圖案 -->
+        <path d="M90 95 C90 95 100 107 100 113 A10 10 0 0 1 80 113 C80 107 90 95 90 95 Z" fill="#FFFFFF"/>
+      </svg>
+    `,
+    hand: `
+      <svg viewBox="0 0 180 180" width="165" height="165">
+        <!-- 可愛卡通小熊毛茸茸揮手手套 (童趣非寫實) -->
+        <g transform="rotate(-10 90 95)">
+          <rect x="54" y="64" width="72" height="74" rx="34" fill="#FBBF24" stroke="#B45309" stroke-width="6"/>
+          <!-- 拇指 -->
+          <rect x="34" y="84" width="32" height="24" rx="12" transform="rotate(-25 50 96)" fill="#FBBF24" stroke="#B45309" stroke-width="6"/>
+          <!-- 可愛肉球愛心 -->
+          <ellipse cx="90" cy="106" rx="20" ry="16" fill="#FEF3C7"/>
+          <circle cx="74" cy="82" r="7" fill="#FEF3C7"/>
+          <circle cx="90" cy="78" r="7" fill="#FEF3C7"/>
+          <circle cx="106" cy="82" r="7" fill="#FEF3C7"/>
+          <!-- 可愛笑臉 -->
+          <circle cx="83" cy="104" r="3" fill="#78350F"/>
+          <circle cx="97" cy="104" r="3" fill="#78350F"/>
+          <path d="M86 110 Q90 115 94 110" stroke="#78350F" stroke-width="3" fill="none" stroke-linecap="round"/>
+        </g>
+        <!-- 揮手動態線 -->
+        <path d="M132 48 Q144 58 140 72" stroke="#3B82F6" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <path d="M144 42 Q158 55 152 72" stroke="#60A5FA" stroke-width="5" fill="none" stroke-linecap="round"/>
+      </svg>
+    `
   };
 
   // ==========================================
-  // 3. 課程資料定義
+  // 3. 課程資料定義 (對齊 Unit 4 Day 4 微調方案)
   // ==========================================
   const ACT1_CARDS = [
-    { id: 'draw', isWarmup: true, badge: '🔥 熱身重溫弱點詞', en: 'draw', zh: '畫畫', sentence: 'I can draw.', guideZh: '歡迎返到英文大本營！我哋先嚟熱身，重溫一個好重要嘅動作詞語，畫畫！跟我一齊讀啦！', guideEn: 'draw. I can draw.', zhSpeak: '畫畫，我可以畫畫！', enSpeak: 'draw. I can draw.' },
-    { id: 'mouth', isWarmup: false, badge: '🌟 新學發音單字 1', en: 'mouth', highlightFirst: true, zh: '嘴巴', sentence: '', guideZh: '好棒呀！今日我哋要認識新嘅英文字母發音！第一個字係，嘴巴！點擊圖卡聽下點讀啦！', guideEn: 'm, mouth.', zhSpeak: '嘴巴！', enSpeak: 'm, mouth.' },
-    { id: 'meat', isWarmup: false, badge: '🌟 新學發音單字 2', en: 'meat', highlightFirst: true, zh: '肉', sentence: '', guideZh: '第二個同一個開頭發音嘅字係，肉！美味嘅肉肉！點擊圖卡一齊讀啦！', guideEn: 'm, meat.', zhSpeak: '肉！', enSpeak: 'm, meat.' },
-    { id: 'milk', isWarmup: false, badge: '🌟 新學發音單字 3', en: 'milk', highlightFirst: true, zh: '牛奶', sentence: '', guideZh: '第三個字係香噴噴嘅，牛奶！佢都係同一個開頭發音㗎！點擊聽下啦！', guideEn: 'm, milk.', zhSpeak: '牛奶！', enSpeak: 'm, milk.' },
-    { id: 'hand', isWarmup: false, badge: '🔍 聲音小對比', en: 'hand', highlightFirst: false, zh: '手', sentence: '', guideZh: '咦，呢個係小手手！聽下佢嘅開頭發音，同頭先嗰三個字一唔一樣呢？', guideEn: 'h, hand.', zhSpeak: '手！', enSpeak: 'h, hand.' }
+    {
+      id: 'draw',
+      isWarmup: true,
+      badge: '🔥 熱身重溫弱點詞',
+      en: 'draw',
+      zh: '畫畫',
+      sentence: 'I can draw.',
+      guideZh: '歡迎返到英文大本營！我哋先嚟熱身，重溫一個好重要嘅動作詞語，畫畫！跟我一齊讀啦！',
+      guideEn: 'draw. I can draw.',
+      zhSpeak: '畫畫，我可以畫畫！',
+      enSpeak: 'draw. I can draw.'
+    },
+    {
+      id: 'mouth',
+      isWarmup: false,
+      badge: '🌟 新學發音單字 1',
+      en: 'mouth',
+      highlightFirst: true,
+      zh: '嘴巴',
+      sentence: '',
+      guideZh: '好棒呀！今日我哋要認識新嘅英文字母發音！第一個字係，嘴巴！點擊圖卡聽下點讀啦！',
+      guideEn: 'm, mouth.',
+      zhSpeak: '嘴巴！',
+      enSpeak: 'm, mouth.'
+    },
+    {
+      id: 'meat',
+      isWarmup: false,
+      badge: '🌟 新學發音單字 2',
+      en: 'meat',
+      highlightFirst: true,
+      zh: '肉',
+      sentence: '',
+      guideZh: '第二個同一個開頭發音嘅字係，肉！美味嘅肉肉！點擊圖卡一齊讀啦！',
+      guideEn: 'm, meat.',
+      zhSpeak: '肉！',
+      enSpeak: 'm, meat.'
+    },
+    {
+      id: 'milk',
+      isWarmup: false,
+      badge: '🌟 新學發音單字 3',
+      en: 'milk',
+      highlightFirst: true,
+      zh: '牛奶',
+      sentence: '',
+      guideZh: '第三個字係香噴噴嘅，牛奶！佢都係同一個開頭發音㗎！點擊聽下啦！',
+      guideEn: 'm, milk.',
+      zhSpeak: '牛奶！',
+      enSpeak: 'm, milk.'
+    },
+    {
+      id: 'hand',
+      isWarmup: false,
+      badge: '🔍 聲音小對比',
+      en: 'hand',
+      highlightFirst: false,
+      zh: '手',
+      sentence: '',
+      guideZh: '咦，呢個係小手手！聽下佢嘅開頭發音，同頭先嗰三個字一唔一樣呢？',
+      guideEn: 'h, hand.',
+      zhSpeak: '手！',
+      enSpeak: 'h, hand.'
+    }
   ];
 
   const ACT2_WORDS = [
-    { id: 'mouth', zh: '嘴巴', letters: ['m', 'o', 'u', 't', 'h'], isMWord: true, guideZh: '嚟到第二幕字母積木！逐粒點擊下面嘅彩色積木，聽下每個字母嘅發音啦！', guideEn: 'm, o, u, t, h. mouth!' },
-    { id: 'meat', zh: '肉', letters: ['m', 'e', 'a', 't'], isMWord: true, guideZh: '再嚟拼下美味嘅肉肉！逐粒拍打積木，聽下第一個字母嘅發音！', guideEn: 'm, e, a, t. meat!' },
-    { id: 'milk', zh: '牛奶', letters: ['m', 'i', 'l', 'k'], isMWord: true, guideZh: '跟住拼下香噴噴嘅牛奶！逐粒點擊積木拼出成個字啦！', guideEn: 'm, i, l, k. milk!' },
-    { id: 'hand', zh: '手', letters: ['h', 'a', 'n', 'd'], isMWord: false, guideZh: '最後睇下小手手！佢嘅第一個字母係唔同嘅，點擊聽下有咩分別啦！', guideEn: 'h, a, n, d. hand!' }
+    {
+      id: 'mouth',
+      zh: '嘴巴',
+      letters: ['m', 'o', 'u', 't', 'h'],
+      isMWord: true,
+      guideZh: '嚟到第二幕字母積木！逐粒點擊下面嘅彩色積木，聽下每個字母嘅發音啦！',
+      guideEn: 'm, o, u, t, h. mouth!'
+    },
+    {
+      id: 'meat',
+      zh: '肉',
+      letters: ['m', 'e', 'a', 't'],
+      isMWord: true,
+      guideZh: '再嚟拼下美味嘅肉肉！逐粒拍打積木，聽下第一個字母嘅發音！',
+      guideEn: 'm, e, a, t. meat!'
+    },
+    {
+      id: 'milk',
+      zh: '牛奶',
+      letters: ['m', 'i', 'l', 'k'],
+      isMWord: true,
+      guideZh: '跟住拼下香噴噴嘅牛奶！逐粒點擊積木拼出成個字啦！',
+      guideEn: 'm, i, l, k. milk!'
+    },
+    {
+      id: 'hand',
+      zh: '手',
+      letters: ['h', 'a', 'n', 'd'],
+      isMWord: false,
+      guideZh: '最後睇下小手手！佢嘅第一個字母係唔同嘅，點擊聽下有咩分別啦！',
+      guideEn: 'h, a, n, d. hand!'
+    }
   ];
 
   const ACT3_SPEAK = [
-    { id: 'draw', badge: '🔥 熱身挑戰：弱點重溫', en: 'draw', sentence: 'I can draw.', zh: '畫畫 · 我可以畫畫', guideZh: '嚟到第三幕開口大聲讀！請玲玲大聲讀出畫畫同埋句式，讀完就請媽媽按綠色掣放煙花啦！', guideEn: 'draw. I can draw.' },
-    { id: 'mouth', badge: '🎤 大聲讀挑戰 2', en: 'mouth', sentence: 'm · mouth', zh: '嘴巴', guideZh: '請玲玲大聲讀出，嘴巴！記得讀出開頭發音呀！', guideEn: 'm, mouth.' },
-    { id: 'meat', badge: '🎤 大聲讀挑戰 3', en: 'meat', sentence: 'm · meat', zh: '肉', guideZh: '好棒呀！跟住請玲玲大聲讀出，肉！', guideEn: 'm, meat.' },
-    { id: 'milk', badge: '🎤 大聲讀挑戰 4', en: 'milk', sentence: 'm · milk', zh: '牛奶', guideZh: '最後一個大聲讀挑戰！請玲玲大聲讀出，牛奶！', guideEn: 'm, milk.' }
+    {
+      id: 'draw',
+      badge: '🔥 熱身挑戰：弱點重溫',
+      en: 'draw',
+      sentence: 'I can draw.',
+      zh: '畫畫 · 我可以畫畫',
+      guideZh: '嚟到第三幕開口大聲讀！請玲玲大聲讀出畫畫同埋句式，讀完就請媽媽按綠色掣放煙花啦！',
+      guideEn: 'draw. I can draw.'
+    },
+    {
+      id: 'mouth',
+      badge: '🎤 大聲讀挑戰 2',
+      en: 'mouth',
+      sentence: 'm · mouth',
+      zh: '嘴巴',
+      guideZh: '請玲玲大聲讀出，嘴巴！記得讀出開頭發音呀！',
+      guideEn: 'm, mouth.'
+    },
+    {
+      id: 'meat',
+      badge: '🎤 大聲讀挑戰 3',
+      en: 'meat',
+      sentence: 'm · meat',
+      zh: '肉',
+      guideZh: '好棒呀！跟住請玲玲大聲讀出，肉！',
+      guideEn: 'm, meat.'
+    },
+    {
+      id: 'milk',
+      badge: '🎤 大聲讀挑戰 4',
+      en: 'milk',
+      sentence: 'm · milk',
+      zh: '牛奶',
+      guideZh: '最後一個大聲讀挑戰！請玲玲大聲讀出，牛奶！',
+      guideEn: 'm, milk.'
+    }
   ];
 
   const ACT4_QUIZ = [
-    { badge: '🎮 輕鬆小遊戲 1 · 熱身重溫', questionZh: '聽下邊一張圖卡係「畫畫」呢？', promptSeq: [{ lang: 'zh-HK', text: '細心聽下，請找出，畫畫，我可以畫畫！' }, { lang: 'en-GB', text: 'draw. I can draw.' }], guideZh: '嚟到最後一幕輕鬆小遊戲！細心聽下聲音，揀出啱嘅圖卡啦！', guideEn: 'draw. I can draw.', correctId: 'draw', correctEn: 'draw. I can draw.', options: [{ id: 'draw', label: 'draw (畫畫)' }, { id: 'milk', label: 'milk (牛奶)' }] },
-    { badge: '🎮 輕鬆小遊戲 2 · 聽音選圖', questionZh: '聽下邊一張圖卡係「嘴巴」呢？', promptSeq: [{ lang: 'zh-HK', text: '請找出，嘴巴！' }, { lang: 'en-GB', text: 'm, mouth.' }], guideZh: '第二題！聽下邊一張圖卡係嘴巴呢？', guideEn: 'm, mouth.', correctId: 'mouth', correctEn: 'mouth.', options: [{ id: 'mouth', label: 'mouth (嘴巴)' }, { id: 'hand', label: 'hand (手)' }] },
-    { badge: '🎮 輕鬆小遊戲 3 · 聽音選圖', questionZh: '聽下邊一張圖卡係「肉」呢？', promptSeq: [{ lang: 'zh-HK', text: '請找出，肉！' }, { lang: 'en-GB', text: 'm, meat.' }], guideZh: '第三題！聽下邊一張圖卡係美味嘅肉呢？', guideEn: 'm, meat.', correctId: 'meat', correctEn: 'meat.', options: [{ id: 'draw', label: 'draw (畫畫)' }, { id: 'meat', label: 'meat (肉)' }] },
-    { badge: '⭐ 課本貼紙辨音小挑戰', questionZh: '邊一張圖卡嘅開頭發音同「嘴巴、肉」一樣呢？', promptSeq: [{ lang: 'zh-HK', text: '課本貼紙大挑戰！邊一張圖卡嘅開頭發音係' }, { lang: 'en-GB', text: 'm' }, { lang: 'zh-HK', text: '呢？' }], guideZh: '最後一題課本貼紙大挑戰！邊一張圖卡嘅開頭發音同嘴巴、肉一樣呢？', guideEn: 'm, m, milk.', correctId: 'milk', correctEn: 'm, milk!', options: [{ id: 'milk', label: 'milk (牛奶)' }, { id: 'hand', label: 'hand (手)' }] }
+    {
+      badge: '🎮 輕鬆小遊戲 1 · 熱身重溫',
+      questionZh: '聽下邊一張圖卡係「畫畫」呢？',
+      promptSeq: [
+        { lang: 'zh-HK', text: '細心聽下，請找出，畫畫，我可以畫畫！' },
+        { lang: 'en-GB', text: 'draw. I can draw.' }
+      ],
+      guideZh: '嚟到最後一幕輕鬆小遊戲！細心聽下聲音，揀出啱嘅圖卡啦！',
+      guideEn: 'draw. I can draw.',
+      correctId: 'draw',
+      correctEn: 'draw. I can draw.',
+      options: [
+        { id: 'draw', label: 'draw (畫畫)' },
+        { id: 'milk', label: 'milk (牛奶)' }
+      ]
+    },
+    {
+      badge: '🎮 輕鬆小遊戲 2 · 聽音選圖',
+      questionZh: '聽下邊一張圖卡係「嘴巴」呢？',
+      promptSeq: [
+        { lang: 'zh-HK', text: '請找出，嘴巴！' },
+        { lang: 'en-GB', text: 'm, mouth.' }
+      ],
+      guideZh: '第二題！聽下邊一張圖卡係嘴巴呢？',
+      guideEn: 'm, mouth.',
+      correctId: 'mouth',
+      correctEn: 'mouth.',
+      options: [
+        { id: 'mouth', label: 'mouth (嘴巴)' },
+        { id: 'hand', label: 'hand (手)' }
+      ]
+    },
+    {
+      badge: '🎮 輕鬆小遊戲 3 · 聽音選圖',
+      questionZh: '聽下邊一張圖卡係「肉」呢？',
+      promptSeq: [
+        { lang: 'zh-HK', text: '請找出，肉！' },
+        { lang: 'en-GB', text: 'm, meat.' }
+      ],
+      guideZh: '第三題！聽下邊一張圖卡係美味嘅肉呢？',
+      guideEn: 'm, meat.',
+      correctId: 'meat',
+      correctEn: 'meat.',
+      options: [
+        { id: 'draw', label: 'draw (畫畫)' },
+        { id: 'meat', label: 'meat (肉)' }
+      ]
+    },
+    {
+      badge: '⭐ 課本貼紙辨音小挑戰',
+      questionZh: '邊一張圖卡嘅開頭發音同「嘴巴、肉」一樣呢？',
+      promptSeq: [
+        { lang: 'zh-HK', text: '課本貼紙大挑戰！邊一張圖卡嘅開頭發音係' },
+        { lang: 'en-GB', text: 'm' },
+        { lang: 'zh-HK', text: '呢？' }
+      ],
+      guideZh: '最後一題課本貼紙大挑戰！邊一張圖卡嘅開頭發音同嘴巴、肉一樣呢？',
+      guideEn: 'm, m, milk.',
+      correctId: 'milk',
+      correctEn: 'm, milk!',
+      options: [
+        { id: 'milk', label: 'milk (牛奶)' },
+        { id: 'hand', label: 'hand (手)' }
+      ]
+    }
   ];
 
   // ==========================================
-  // 4. 狀態管理與渲染
+  // 4. 狀態管理與四部曲渲染引擎
   // ==========================================
-  let currentAct = 0;
+  let currentAct = 0; // 0: Meaning, 1: Phonics, 2: Speaking, 3: Review, 4: Complete
   let subIndex = 0;
   let litBlocks = [];
   let speakingDone = [false, false, false, false];
@@ -383,27 +1007,41 @@
     const pills = document.querySelectorAll('.act-pill');
     pills.forEach((p, idx) => {
       p.classList.remove('active', 'done');
-      if (currentAct === 4 || idx < currentAct) p.classList.add('done');
-      else if (idx === currentAct) p.classList.add('active');
+      if (currentAct === 4 || idx < currentAct) {
+        p.classList.add('done');
+      } else if (idx === currentAct) {
+        p.classList.add('active');
+      }
     });
   }
 
   function jumpToAct(actIdx) {
-    currentAct = actIdx; subIndex = 0; litBlocks = []; quizSolved = false; quizWrongPicked = null;
-    updateActNav(); renderStage(true);
+    currentAct = actIdx;
+    subIndex = 0;
+    litBlocks = [];
+    quizSolved = false;
+    quizWrongPicked = null;
+    updateActNav();
+    renderStage(true);
   }
 
   function renderStage(shouldSpeak = true) {
     const container = document.getElementById('stageContainer');
     updateActNav();
 
+    // ---------- 第一幕：Meaning ----------
     if (currentAct === 0) {
       const card = ACT1_CARDS[subIndex];
-      if (shouldSpeak) setGuide(card.guideZh, card.guideEn, true);
-      const wordHtml = card.highlightFirst ? `<span class="highlight-m">${card.en[0]}</span>${card.en.slice(1)}` : card.en;
+      setGuide(card.guideZh, card.guideEn, shouldSpeak);
+
+      const wordHtml = card.highlightFirst
+        ? `<span class="highlight-m">${card.en[0]}</span>${card.en.slice(1)}`
+        : card.en;
 
       container.innerHTML = `
-        <div class="dots-row">${ACT1_CARDS.map((_, i) => `<span class="dot ${i === subIndex ? 'active' : (i < subIndex ? 'completed' : '')}"></span>`).join('')}</div>
+        <div class="dots-row">
+          ${ACT1_CARDS.map((_, i) => `<span class="dot ${i === subIndex ? 'active' : (i < subIndex ? 'completed' : '')}"></span>`).join('')}
+        </div>
         <div class="stage-badge ${card.isWarmup ? 'warmup' : ''}">${card.badge}</div>
         <div class="flashcard-3d" id="meaningCard" onclick="playMeaningCard()">
           <div class="illustration-wrap">${ILLUSTRATIONS[card.id]}</div>
@@ -417,75 +1055,109 @@
         </div>
         <div class="btn-row" style="margin-top: 20px;">
           ${subIndex > 0 ? `<button class="btn-3d btn-purple" onclick="prevAct1()">⬅️ 上一張</button>` : ''}
-          <button class="btn-3d btn-green" onclick="nextAct1()">${subIndex < ACT1_CARDS.length - 1 ? '下一張圖卡 ➡️' : '進入第 2 幕：字母積木 🧩'}</button>
+          <button class="btn-3d btn-green" onclick="nextAct1()">
+            ${subIndex < ACT1_CARDS.length - 1 ? '下一張圖卡 ➡️' : '進入第 2 幕：字母積木 🧩'}
+          </button>
         </div>
       `;
     }
+
+    // ---------- 第二幕：Phonics 字母積木 ----------
     else if (currentAct === 1) {
       const item = ACT2_WORDS[subIndex];
-      if (shouldSpeak) setGuide(item.guideZh, item.guideEn, true);
+      setGuide(item.guideZh, item.guideEn, shouldSpeak);
 
       container.innerHTML = `
-        <div class="dots-row">${ACT2_WORDS.map((_, i) => `<span class="dot ${i === subIndex ? 'active' : (i < subIndex ? 'completed' : '')}"></span>`).join('')}</div>
+        <div class="dots-row">
+          ${ACT2_WORDS.map((_, i) => `<span class="dot ${i === subIndex ? 'active' : (i < subIndex ? 'completed' : '')}"></span>`).join('')}
+        </div>
         <div class="stage-badge">🧩 第二幕：字母積木拼讀 (${subIndex + 1} / ${ACT2_WORDS.length})</div>
         <div style="width: 130px; height: 130px; margin: 4px auto;">${ILLUSTRATIONS[item.id]}</div>
         <div class="word-zh" style="margin-bottom: 4px;">${item.zh}</div>
         <p style="font-size: 16px; font-weight: 800; color: #64748B; margin: 4px 0 8px;">👆 逐粒點擊彩色積木，聽下每個字母發音！</p>
         <div class="blocks-arena">
-          ${item.letters.map((ch, idx) => `
-            <div class="letter-block ${idx === 0 ? 'key-letter' : ''} ${litBlocks[idx] ? 'lit ' + (!item.isMWord ? 'alt-color' : '') : ''}" onclick="tapLetterBlock(${idx})">
-              ${idx === 0 && item.isMWord ? '<span class="star-tag">⭐</span>' : ''}${ch}
-            </div>
-          `).join('')}
+          ${item.letters.map((ch, idx) => {
+            const isFirst = idx === 0;
+            const isLit = Boolean(litBlocks[idx]);
+            const altClass = !item.isMWord ? 'alt-color' : '';
+            return `
+              <div class="letter-block ${isFirst ? 'key-letter' : ''} ${isLit ? 'lit ' + altClass : ''}" onclick="tapLetterBlock(${idx})">
+                ${isFirst && item.isMWord ? '<span class="star-tag">⭐</span>' : ''}
+                ${ch}
+              </div>
+            `;
+          }).join('')}
         </div>
-        <div class="btn-row"><button class="btn-3d btn-blue" onclick="blendCurrentWord()">🔊 串連讀出成個字 (${item.letters.join('')})</button></div>
+        <div class="btn-row">
+          <button class="btn-3d btn-blue" onclick="blendCurrentWord()">🔊 串連讀出成個字 (${item.letters.join('')})</button>
+        </div>
         <div class="btn-row" style="margin-top: 20px;">
           ${subIndex > 0 ? `<button class="btn-3d btn-purple" onclick="prevAct2()">⬅️ 上一個字</button>` : ''}
-          <button class="btn-3d btn-green" onclick="nextAct2()">${subIndex < ACT2_WORDS.length - 1 ? '下一個字母積木 ➡️' : '進入第 3 幕：大聲讀 🎤'}</button>
+          <button class="btn-3d btn-green" onclick="nextAct2()">
+            ${subIndex < ACT2_WORDS.length - 1 ? '下一個字母積木 ➡️' : '進入第 3 幕：大聲讀 🎤'}
+          </button>
         </div>
       `;
     }
+
+    // ---------- 第三幕：Speaking 開口大聲讀 ----------
     else if (currentAct === 2) {
       const item = ACT3_SPEAK[subIndex];
       const isDone = speakingDone[subIndex];
-      if (shouldSpeak) setGuide(item.guideZh, item.guideEn, true);
+      setGuide(item.guideZh, item.guideEn, shouldSpeak);
 
       container.innerHTML = `
-        <div class="dots-row">${ACT3_SPEAK.map((_, i) => `<span class="dot ${i === subIndex ? 'active' : (speakingDone[i] ? 'completed' : '')}"></span>`).join('')}</div>
+        <div class="dots-row">
+          ${ACT3_SPEAK.map((_, i) => `<span class="dot ${i === subIndex ? 'active' : (speakingDone[i] ? 'completed' : '')}"></span>`).join('')}
+        </div>
         <div class="stage-badge ${subIndex === 0 ? 'warmup' : ''}">${item.badge}</div>
-        <div class="flashcard-3d" onclick="speakQueue([{lang:'en-GB', text:'${item.en}. ${item.sentence}'}])">
+        <div class="flashcard-3d" onclick="speakAct3Current()">
           <div class="illustration-wrap">${ILLUSTRATIONS[item.id]}</div>
           <div class="word-en">${item.en}</div>
           <div class="sentence-box">${item.sentence}</div>
           <div class="word-zh" style="margin-top: 8px; font-size: 20px;">${item.zh}</div>
         </div>
-        <div class="btn-row"><button class="btn-3d btn-blue" onclick="speakQueue([{lang:'en-GB', text:'${item.en}. ${item.sentence}'}])">🔊 聽老師示範發音</button></div>
+        <div class="btn-row">
+          <button class="btn-3d btn-blue" onclick="speakAct3Current()">🔊 聽老師示範發音</button>
+        </div>
         <div class="btn-row" style="margin-top: 14px;">
-          <button class="btn-3d btn-green" onclick="celebrateSpeaking()">${isDone ? '🎉 再放一次煙花慶祝！' : '🌟 玲玲讀得超棒！按呢度過關放煙花'}</button>
+          <button class="btn-3d btn-green" onclick="celebrateSpeaking()">
+            ${isDone ? '🎉 再放一次煙花慶祝！' : '🌟 玲玲讀得超棒！按呢度過關放煙花'}
+          </button>
         </div>
         ${isDone ? `<div class="speaking-status">✅ 太叻喇！呢一關已經順利過關！</div>` : ''}
         <div class="btn-row" style="margin-top: 18px;">
           ${subIndex > 0 ? `<button class="btn-3d btn-purple" onclick="prevAct3()">⬅️ 上一個</button>` : ''}
-          <button class="btn-3d btn-amber" onclick="nextAct3()">${subIndex < ACT3_SPEAK.length - 1 ? '下一個挑戰 ➡️' : '進入第 4 幕：輕鬆小遊戲 🎮'}</button>
+          <button class="btn-3d btn-amber" onclick="nextAct3()">
+            ${subIndex < ACT3_SPEAK.length - 1 ? '下一個挑戰 ➡️' : '進入第 4 幕：輕鬆小遊戲 🎮'}
+          </button>
         </div>
       `;
     }
+
+    // ---------- 第四幕：Gentle Review 輕鬆小遊戲 ----------
     else if (currentAct === 3) {
       const q = ACT4_QUIZ[subIndex];
+      currentGuideCantonese = q.guideZh;
+      currentGuideEnglish = q.guideEn;
+      document.getElementById('teacherMsg').textContent = q.questionZh;
       if (shouldSpeak) {
-        currentGuideCantonese = q.guideZh; currentGuideEnglish = q.guideEn;
-        document.getElementById('teacherMsg').textContent = q.questionZh;
         speakQueue(q.promptSeq);
       }
 
       container.innerHTML = `
-        <div class="dots-row">${ACT4_QUIZ.map((_, i) => `<span class="dot ${i === subIndex ? 'active' : (i < subIndex ? 'completed' : '')}"></span>`).join('')}</div>
+        <div class="dots-row">
+          ${ACT4_QUIZ.map((_, i) => `<span class="dot ${i === subIndex ? 'active' : (i < subIndex ? 'completed' : '')}"></span>`).join('')}
+        </div>
         <div class="stage-badge">${q.badge}</div>
         <h2 style="font-size: 24px; color: #1E3A8A; margin: 8px 0 12px;">${q.questionZh}</h2>
         <button class="btn-3d btn-blue" onclick="playQuizPrompt()">🔊 再聽一次題目聲音</button>
+
         <div class="choice-grid">
           ${q.options.map(opt => {
-            let cls = 'choice-card' + (quizSolved && opt.id === q.correctId ? ' correct' : (!quizSolved && quizWrongPicked === opt.id ? ' gentle-try' : ''));
+            let cls = 'choice-card';
+            if (quizSolved && opt.id === q.correctId) cls += ' correct';
+            if (!quizSolved && quizWrongPicked === opt.id) cls += ' gentle-try';
             return `
               <div class="${cls}" onclick="pickQuizOption('${opt.id}')">
                 <div style="width: 135px; height: 135px; margin: 0 auto 8px;">${ILLUSTRATIONS[opt.id]}</div>
@@ -494,143 +1166,331 @@
             `;
           }).join('')}
         </div>
-        ${quizSolved ? `<div class="gentle-hint-banner success">🎉 好叻呀玲玲！答啱咗喇！</div>` : (quizWrongPicked ? `<div class="gentle-hint-banner">💛 試吓隔離嗰張圖卡啦！</div>` : '')}
+
+        ${quizSolved
+          ? `<div class="gentle-hint-banner success">🎉 好叻呀玲玲！答啱咗喇！</div>`
+          : (quizWrongPicked ? `<div class="gentle-hint-banner">💛 試吓隔離嗰張圖卡啦！</div>` : '')
+        }
+
         ${quizSolved ? `
           <div class="btn-row" style="margin-top: 18px;">
-            <button class="btn-3d btn-green" onclick="nextAct4()">${subIndex < ACT4_QUIZ.length - 1 ? '下一題 ➡️' : '完成今日全部課堂！領取獎盃 🏆'}</button>
+            <button class="btn-3d btn-green" onclick="nextAct4()">
+              ${subIndex < ACT4_QUIZ.length - 1 ? '下一題 ➡️' : '完成今日全部課堂！領取獎盃 🏆'}
+            </button>
           </div>
         ` : ''}
       `;
     }
+
+    // ---------- 結算畫面 ----------
     else if (currentAct === 4) {
+      const completionMsg = "恭喜玲玲完成今日全部四個任務！你真係好棒呀！快啲撳下面個掣複製進度暗號俾老師啦！";
+      setGuide(completionMsg, "Great job! I can do it!", shouldSpeak);
       if (shouldSpeak) {
-        setGuide("恭喜玲玲完成今日全部四個任務！你真係好棒呀！快啲撳下面個掣複製進度暗號俾老師啦！", "Great job! I can do it!", true);
-        launchFireworks(); setTimeout(launchFireworks, 700);
+        launchFireworks();
+        setTimeout(launchFireworks, 700);
       }
+
+      const secretCode = `【玲玲英文課堂進度暗號】單元：Unit 4 Day 4 (en-unit4-day4.html)｜完成狀態：✅ 全課四部曲順利完成｜重溫弱點：draw (I can draw.)｜新學內容：P.20 Phonics 字母 m (mouth, meat, milk vs hand)｜請 Anna 老師更新雲端英文總庫並解鎖 Day 5！`;
+
       container.innerHTML = `
         <div style="font-size: 74px; margin-bottom: 6px;">🏆🎉</div>
         <h1 style="font-size: 32px; color: #1E3A8A; margin: 4px 0 8px;">Unit 4 Day 4 大成功！</h1>
         <p style="font-size: 19px; font-weight: 800; color: #475569; margin: 0 0 14px;">玲玲今日好專心，全部關卡都順利完成喇！</p>
+
         <div class="summary-badges">
           <span class="summary-chip">🔥 熱身重溫：draw (I can draw.)</span>
-          <span class="summary-chip">🔤 字母發音：m</span><span class="summary-chip">👄 mouth</span>
-          <span class="summary-chip">🍗 meat</span><span class="summary-chip">🥛 milk</span>
+          <span class="summary-chip">🔤 字母發音：m</span>
+          <span class="summary-chip">👄 mouth</span>
+          <span class="summary-chip">🍗 meat</span>
+          <span class="summary-chip">🥛 milk</span>
         </div>
+
         <div class="btn-row" style="margin-top: 18px;">
-          <button class="btn-3d btn-green" id="copySecretBtn" onclick="copyProgressSecret()">📋 一鍵複製進度暗號俾 Anna 老師</button>
+          <button class="btn-3d btn-green" id="copySecretBtn" onclick="copyProgressSecret()">
+            📋 一鍵複製進度暗號俾 Anna 老師
+          </button>
         </div>
-        <div class="secret-code-box" id="secretCodeText">【玲玲英文課堂進度暗號】單元：Unit 4 Day 4 (en-unit4-day4.html)｜完成狀態：✅ 全課四部曲順利完成｜重溫弱點：draw (I can draw.)｜新學內容：P.20 Phonics 字母 m (mouth, meat, milk vs hand)｜請 Anna 老師更新雲端英文總庫並解鎖 Day 5！</div>
+
+        <div class="secret-code-box" id="secretCodeText">${secretCode}</div>
+
         <div class="btn-row" style="margin-top: 16px;">
           <button class="btn-3d btn-blue" onclick="jumpToAct(0)">🔄 再玩多一次</button>
-          <a href="index.html" class="btn-3d btn-amber" style="text-decoration:none;">🏠 返回學習樂園大門</a>
+          <a href="en-unit4.html" class="btn-3d btn-amber" style="text-decoration:none;">🏠 返回 Unit 4 單元目錄</a>
         </div>
       `;
     }
   }
 
   // ==========================================
-  // 5. 各幕互動邏輯
+  // 5. 各幕互動邏輯 (全數同步執行 UI 更新，零死鎖)
   // ==========================================
+  // --- 第一幕互動 ---
   function playMeaningCard() {
     const el = document.getElementById('meaningCard');
-    if (el) { el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); }
-    speakQueue([{ lang: 'zh-HK', text: ACT1_CARDS[subIndex].zhSpeak }, { lang: 'en-GB', text: ACT1_CARDS[subIndex].enSpeak }]);
+    if (el) {
+      el.classList.remove('pop');
+      void el.offsetWidth;
+      el.classList.add('pop');
+    }
+    const card = ACT1_CARDS[subIndex];
+    speakQueue([
+      { lang: 'zh-HK', text: card.zhSpeak },
+      { lang: 'en-GB', text: card.enSpeak }
+    ]);
   }
-  function playMeaningZh() { speakQueue([{ lang: 'zh-HK', text: ACT1_CARDS[subIndex].zhSpeak }]); }
-  function playMeaningEn() { speakQueue([{ lang: 'en-GB', text: ACT1_CARDS[subIndex].enSpeak }]); }
-  function prevAct1() { if (subIndex > 0) { subIndex--; renderStage(true); } }
-  function nextAct1() { if (subIndex < ACT1_CARDS.length - 1) { subIndex++; renderStage(true); } else jumpToAct(1); }
 
+  function playMeaningZh() {
+    const card = ACT1_CARDS[subIndex];
+    speakQueue([{ lang: 'zh-HK', text: card.zhSpeak }]);
+  }
+
+  function playMeaningEn() {
+    const card = ACT1_CARDS[subIndex];
+    speakQueue([{ lang: 'en-GB', text: card.enSpeak }]);
+  }
+
+  function prevAct1() {
+    if (subIndex > 0) {
+      subIndex--;
+      renderStage(true);
+    }
+  }
+
+  function nextAct1() {
+    if (subIndex < ACT1_CARDS.length - 1) {
+      subIndex++;
+      renderStage(true);
+    } else {
+      jumpToAct(1);
+    }
+  }
+
+  // --- 第二幕互動 ---
   function tapLetterBlock(letterIdx) {
-    const item = ACT2_WORDS[subIndex]; litBlocks[letterIdx] = true; renderStage(false);
+    const item = ACT2_WORDS[subIndex];
+    litBlocks[letterIdx] = true; // 同步變色
+    renderStage(false);
+
     const ch = item.letters[letterIdx];
-    if (litBlocks.length === item.letters.length && litBlocks.every(Boolean)) {
+    // 嚴格逐格檢查，避免稀疏陣列 (Sparse Array) 誤判過關
+    const allLit = item.letters.every((_, idx) => Boolean(litBlocks[idx]));
+
+    if (allLit) {
       launchFireworks();
-      speakQueue([{ lang: 'en-GB', text: ch }, { lang: 'zh-HK', text: '好叻呀！你已經拍晒全部字母積木喇！一齊聽下成個字點讀！' }, { lang: 'en-GB', text: item.letters.join('') }]);
+      speakQueue([
+        { lang: 'en-GB', text: ch },
+        { lang: 'zh-HK', text: '好叻呀！你已經拍晒全部字母積木喇！一齊聽下成個字點讀！' },
+        { lang: 'en-GB', text: item.letters.join('') }
+      ]);
     } else {
       speakQueue([{ lang: 'en-GB', text: ch }]);
     }
   }
+
   function blendCurrentWord() {
-    const item = ACT2_WORDS[subIndex]; litBlocks = item.letters.map(() => true); renderStage(false);
-    speakQueue([{ lang: 'en-GB', text: item.letters.join(', ') + '. ' + item.letters.join('') }]);
+    const item = ACT2_WORDS[subIndex];
+    litBlocks = item.letters.map(() => true);
+    renderStage(false);
+    speakQueue([
+      { lang: 'en-GB', text: item.letters.join(', ') + '. ' + item.letters.join('') }
+    ]);
   }
-  function prevAct2() { if (subIndex > 0) { subIndex--; litBlocks = []; renderStage(true); } }
-  function nextAct2() { if (subIndex < ACT2_WORDS.length - 1) { subIndex++; litBlocks = []; renderStage(true); } else jumpToAct(2); }
+
+  function prevAct2() {
+    if (subIndex > 0) {
+      subIndex--;
+      litBlocks = [];
+      renderStage(true);
+    }
+  }
+
+  function nextAct2() {
+    if (subIndex < ACT2_WORDS.length - 1) {
+      subIndex++;
+      litBlocks = [];
+      renderStage(true);
+    } else {
+      jumpToAct(2);
+    }
+  }
+
+  // --- 第三幕互動 ---
+  function speakAct3Current() {
+    const item = ACT3_SPEAK[subIndex];
+    speakQueue([
+      { lang: 'en-GB', text: item.guideEn }
+    ]);
+  }
 
   function celebrateSpeaking() {
-    speakingDone[subIndex] = true; renderStage(false); launchFireworks();
-    speakQueue([{ lang: 'zh-HK', text: '嘩！玲玲讀得又大聲又標準，超叻女呀！' }, { lang: 'en-GB', text: ACT3_SPEAK[subIndex].en + '. ' + ACT3_SPEAK[subIndex].sentence }]);
+    speakingDone[subIndex] = true; // 同步過關
+    renderStage(false);
+    launchFireworks();
+    const item = ACT3_SPEAK[subIndex];
+    speakQueue([
+      { lang: 'zh-HK', text: '嘩！玲玲讀得又大聲又標準，超叻女呀！' },
+      { lang: 'en-GB', text: item.guideEn }
+    ]);
   }
-  function prevAct3() { if (subIndex > 0) { subIndex--; renderStage(true); } }
-  function nextAct3() { if (subIndex < ACT3_SPEAK.length - 1) { subIndex++; renderStage(true); } else jumpToAct(3); }
 
-  function playQuizPrompt() { speakQueue(ACT4_QUIZ[subIndex].promptSeq); }
+  function prevAct3() {
+    if (subIndex > 0) {
+      subIndex--;
+      renderStage(true);
+    }
+  }
+
+  function nextAct3() {
+    if (subIndex < ACT3_SPEAK.length - 1) {
+      subIndex++;
+      renderStage(true);
+    } else {
+      jumpToAct(3);
+    }
+  }
+
+  // --- 第四幕互動 ---
+  function playQuizPrompt() {
+    const q = ACT4_QUIZ[subIndex];
+    speakQueue(q.promptSeq);
+  }
+
   function pickQuizOption(pickedId) {
     if (quizSolved) return;
     const q = ACT4_QUIZ[subIndex];
+
     if (pickedId === q.correctId) {
-      quizSolved = true; quizWrongPicked = null; renderStage(false); launchFireworks();
-      speakQueue([{ lang: 'zh-HK', text: '好叻呀玲玲！答啱咗喇！' }, { lang: 'en-GB', text: q.correctEn }]);
+      quizSolved = true; // 同步變綠並解鎖下一題
+      quizWrongPicked = null;
+      renderStage(false);
+      launchFireworks();
+      speakQueue([
+        { lang: 'zh-HK', text: '好叻呀玲玲！答啱咗喇！' },
+        { lang: 'en-GB', text: q.correctEn }
+      ]);
     } else {
-      quizWrongPicked = pickedId; renderStage(false);
-      speakQueue([{ lang: 'zh-HK', text: '試吓隔離嗰張圖卡啦！' }]);
+      quizWrongPicked = pickedId; // 同步溫柔搖晃提示，絕不出現叉號
+      renderStage(false);
+      speakQueue([
+        { lang: 'zh-HK', text: '試吓隔離嗰張圖卡啦！' }
+      ]);
     }
   }
-  function nextAct4() { if (subIndex < ACT4_QUIZ.length - 1) { subIndex++; quizSolved = false; quizWrongPicked = null; renderStage(true); } else jumpToAct(4); }
 
+  function nextAct4() {
+    if (subIndex < ACT4_QUIZ.length - 1) {
+      subIndex++;
+      quizSolved = false;
+      quizWrongPicked = null;
+      renderStage(true);
+    } else {
+      jumpToAct(4);
+    }
+  }
+
+  // --- 一鍵複製暗號 (相容 iPad Safari) ---
   function copyProgressSecret() {
     const text = document.getElementById('secretCodeText').innerText;
     const btn = document.getElementById('copySecretBtn');
+
     function onCopied() {
       btn.textContent = '✅ 已複製暗號！快啲貼俾 Anna 老師啦！';
-      speakQueue([{ lang: 'zh-HK', text: '已複製暗號！請媽媽貼返去對話框俾老師更新進度啦！' }]);
+      speakQueue([
+        { lang: 'zh-HK', text: '已複製暗號！請媽媽貼返去對話框俾老師更新進度啦！' }
+      ]);
     }
+
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(text).then(onCopied).catch(() => fallbackCopy(text, onCopied));
-    } else { fallbackCopy(text, onCopied); }
+    } else {
+      fallbackCopy(text, onCopied);
+    }
   }
+
   function fallbackCopy(text, callback) {
-    const ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
-    document.body.appendChild(ta); ta.focus(); ta.select();
-    try { document.execCommand('copy'); } catch (e) {}
-    document.body.removeChild(ta); callback();
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    try {
+      document.execCommand('copy');
+    } catch (e) {}
+    document.body.removeChild(ta);
+    callback();
   }
 
   // ==========================================
-  // 6. 煙花特效引擎
+  // 6. 輕量級煙花慶祝特效引擎
   // ==========================================
   const canvas = document.getElementById('fireworksCanvas');
   const ctx = canvas.getContext('2d');
-  let particles = []; let animRunning = false;
-  function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-  window.addEventListener('resize', resizeCanvas); resizeCanvas();
+  let particles = [];
+  let animRunning = false;
+
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
 
   function launchFireworks() {
     const colors = ['#F43F5E', '#FACC15', '#34D399', '#38BDF8', '#A855F7', '#FB923C'];
     for (let burst = 0; burst < 3; burst++) {
-      const cx = canvas.width * (0.25 + Math.random() * 0.5); const cy = canvas.height * (0.2 + Math.random() * 0.35);
+      const cx = canvas.width * (0.25 + Math.random() * 0.5);
+      const cy = canvas.height * (0.2 + Math.random() * 0.35);
       for (let i = 0; i < 36; i++) {
-        const angle = (Math.PI * 2 * i) / 36; const speed = 2.5 + Math.random() * 5;
-        particles.push({ x: cx, y: cy, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed, alpha: 1, color: colors[Math.floor(Math.random() * colors.length)], size: 5 + Math.random() * 5 });
+        const angle = (Math.PI * 2 * i) / 36;
+        const speed = 2.5 + Math.random() * 5;
+        particles.push({
+          x: cx,
+          y: cy,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          alpha: 1,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          size: 5 + Math.random() * 5
+        });
       }
     }
-    if (!animRunning) { animRunning = true; requestAnimationFrame(animateParticles); }
+    if (!animRunning) {
+      animRunning = true;
+      requestAnimationFrame(animateParticles);
+    }
   }
+
   function animateParticles() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     for (let i = particles.length - 1; i >= 0; i--) {
-      const p = particles[i]; p.x += p.vx; p.y += p.vy; p.vy += 0.12; p.alpha -= 0.018;
-      if (p.alpha <= 0) particles.splice(i, 1);
-      else { ctx.globalAlpha = p.alpha; ctx.fillStyle = p.color; ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill(); }
+      const p = particles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vy += 0.12;
+      p.alpha -= 0.018;
+      if (p.alpha <= 0) {
+        particles.splice(i, 1);
+      } else {
+        ctx.globalAlpha = p.alpha;
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
     }
     ctx.globalAlpha = 1;
-    if (particles.length > 0) requestAnimationFrame(animateParticles);
-    else animRunning = false;
+    if (particles.length > 0) {
+      requestAnimationFrame(animateParticles);
+    } else {
+      animRunning = false;
+    }
   }
 
+  // 初始化第一幕（已預載雙語指引文字，點擊橫幅或任意按鈕即發聲）
   renderStage(false);
 </script>
 </body>
 </html>
-
