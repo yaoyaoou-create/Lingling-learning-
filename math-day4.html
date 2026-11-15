@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>數學探索島 Day 4 - 🧁 魔法烘焙坊</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Noto+Sans+TC:wght@500;700;900&display=swap" rel="stylesheet">
+  <style>
+    /* iPad Safari 終極防護鎖：防雙擊放大、防誤選文字 */
+    * {
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Noto Sans TC', 'Fredoka', sans-serif;
+      background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 45%, #fef3c7 100%);
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+      color: #4c1d95;
+      overflow-x: hidden;
+    }
+
+    /* 背景浮動甜點裝飾 */
+    .floating-bg {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .float-item {
+      position: absolute;
+      font-size: 2.2rem;
+      opacity: 0.22;
+      animation: floatBob 6s ease-in-out infinite;
+    }
+    @keyframes floatBob {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-14px) rotate(6deg); }
+    }
+
+    /* 主舞台 3D 積木卡片 */
+    .stage-card {
+      background: linear-gradient(180deg, #ffffff 0%, #fffbeb 100%);
+      border: 4px solid #fcd34d;
+      border-bottom-width: 12px;
+      border-radius: 30px;
+      box-shadow: 0 14px 30px rgba(244, 63, 94, 0.14);
+    }
+
+    /* 3D 實體積木按鈕 */
+    .btn-3d {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 20px;
+      border-bottom-width: 8px;
+      font-weight: 900;
+      transition: transform 0.08s ease, border-bottom-width 0.08s ease;
+      cursor: pointer;
+    }
+    .btn-3d:active {
+      transform: translateY(4px);
+      border-bottom-width: 4px;
+    }
+
+    .btn-pink {
+      background: #fb7185;
+      border-color: #e11d48;
+      color: #ffffff;
+    }
+    .btn-amber {
+      background: #fbbf24;
+      border-color: #d97706;
+      color: #78350f;
+    }
+    .btn-sky {
+      background: #38bdf8;
+      border-color: #0284c7;
+      color: #ffffff;
+    }
+    .btn-emerald {
+      background: #34d399;
+      border-color: #059669;
+      color: #ffffff;
+    }
+    .btn-cream {
+      background: #fff7ed;
+      border: 3px solid #fdba74;
+      border-bottom-width: 8px;
+      color: #7c2d12;
+    }
+    .btn-cream:hover {
+      background: #ffedd5;
+    }
+
+    /* 答對綠光與彈跳 */
+    .btn-correct {
+      background: #22c55e !important;
+      border-color: #15803d !important;
+      color: #ffffff !important;
+      animation: popBounce 0.45s ease;
+    }
+    @keyframes popBounce {
+      0% { transform: scale(1); }
+      45% { transform: scale(1.08); }
+      100% { transform: scale(1); }
+    }
+
+    /* 溫和防呆搖晃（嚴禁 ❌ 符號） */
+    .wrong-shake {
+      animation: gentleShake 0.45s ease;
+      background: #fef3c7 !important;
+      border-color: #f59e0b !important;
+    }
+    @keyframes gentleShake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-8px); }
+      50% { transform: translateX(8px); }
+      75% { transform: translateX(-5px); }
+    }
+
+    /* 溫柔提示框 */
+    .gentle-hint-box {
+      background: linear-gradient(135deg, #fef9c3 0%, #ffedd5 100%);
+      border: 3px solid #f59e0b;
+      border-bottom-width: 6px;
+      border-radius: 20px;
+      animation: fadeSlideIn 0.25s ease-out;
+    }
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* 進度圓點 */
+    .step-dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 9999px;
+      font-size: 13px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #fbcfe8;
+      background: #ffffff;
+      color: #be185d;
+      transition: all 0.2s;
+    }
+    .step-dot.active {
+      background: #f43f5e;
+      border-color: #be185d;
+      color: #ffffff;
+      transform: scale(1.16);
+      box-shadow: 0 3px 8px rgba(244, 63, 94, 0.35);
+    }
+    .step-dot.done {
+      background: #22c55e;
+      border-color: #15803d;
+      color: #ffffff;
+    }
+
+    /* Q5 可點擊報數曲奇 */
+    .tap-cookie {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 58px;
+      height: 58px;
+      border-radius: 18px;
+      background: #fffbeb;
+      border: 3px solid #f59e0b;
+      border-bottom-width: 6px;
+      font-size: 2.2rem;
+      cursor: pointer;
+      transition: transform 0.12s;
+    }
+    .tap-cookie:active, .tap-cookie.counted {
+      transform: scale(1.12);
+      background: #fef08a;
+      border-color: #d97706;
+    }
+
+    /* Q8 動態減法飛走動畫 */
+    .cookie-fly-out {
+      transition: all 0.9s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .cookie-moved {
+      opacity: 0.28;
+      transform: scale(0.86);
+      border: 3px dashed #f43f5e !important;
+      background: #ffe4e6 !important;
+    }
+
+    /* 星星煙花粒子 */
+    .star-particle {
+      position: fixed;
+      pointer-events: none;
+      font-size: 1.8rem;
+      z-index: 9999;
+      animation: starFly 0.9s ease-out forwards;
+    }
+    @keyframes starFly {
+      0% { opacity: 1; transform: translate(0, 0) scale(0.6); }
+      100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(1.35) rotate(180deg); }
+    }
+
+    /* 允許報告區反白複製（備用） */
+    .selectable-text {
+      user-select: text !important;
+      -webkit-user-select: text !important;
+    }
+  </style>
+</head>
+<body class="pb-10">
+
+  <!-- 背景浮動烘焙元素 -->
+  <div class="floating-bg" aria-hidden="true">
+    <div class="float-item" style="top:8%; left:6%;">🧁</div>
+    <div class="float-item" style="top:16%; right:8%; animation-delay:1s;">🍩</div>
+    <div class="float-item" style="top:52%; left:4%; animation-delay:2s;">🍪</div>
+    <div class="float-item" style="top:68%; right:6%; animation-delay:1.5s;">🍓</div>
+    <div class="float-item" style="bottom:10%; left:14%; animation-delay:2.5s;">🥐</div>
+  </div>
+
+  <!-- 頂部導航列 -->
+  <header class="relative z-10 max-w-4xl mx-auto px-3 pt-3 pb-2 flex flex-wrap items-center justify-between gap-2">
+    <button onclick="goHome()" class="btn-3d btn-cream px-4 py-2 text-base sm:text-lg shadow-sm">
+      🏠 返回學習大門
+    </button>
+
+    <!-- 8 關進度圓點 -->
+    <div id="step-dots" class="flex items-center gap-1.5 bg-white/90 px-3 py-1.5 rounded-full border-2 border-pink-200 shadow-sm"></div>
+
+    <div class="bg-amber-100 border-2 border-amber-300 px-3 py-1.5 rounded-full font-black text-amber-800 text-sm sm:text-base">
+      🧁 Maths Day 4
+    </div>
+  </header>
+
+  <!-- 主內容區 -->
+  <main class="relative z-10 max-w-4xl mx-auto px-3 mt-2">
+
+    <!-- 歡迎 / 預熱頁 (Step -1) -->
+    <section id="intro-screen" class="stage-card p-6 sm:p-8 text-center">
+      <div class="inline-block bg-rose-100 text-rose-700 font-black px-4 py-1.5 rounded-full text-sm sm:text-base mb-3 border-2 border-rose-200">
+        ✨ 數學探索島 · Day 4 專屬挑戰 ✨
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-black text-rose-600 mb-3 tracking-wide">
+        🧁 魔法烘焙坊大冒險
+      </h1>
+      <p class="text-lg sm:text-xl font-bold text-amber-900 mb-5 leading-relaxed">
+        小廚師玲玲你好呀！今日我哋一齊入去魔法烘焙坊，<br class="hidden sm:inline" />
+        幫 Anna 老師排好香噴噴嘅蛋糕、數下曲奇同甜甜圈啦！
+      </p>
+
+      <!-- Anna 老師歡迎語音橫幅 -->
+      <div class="max-w-xl mx-auto bg-pink-50 border-3 border-pink-200 rounded-2xl p-4 mb-6 flex items-center justify-between gap-3">
+        <div class="flex items-center gap-3 text-left">
+          <div class="w-14 h-14 rounded-2xl bg-rose-400 text-white flex items-center justify-center text-3xl shadow-md shrink-0">
+            👩‍🏫
+          </div>
+          <div>
+            <div class="font-black text-rose-700 text-base sm:text-lg">Anna 老師廣東話伴讀</div>
+            <div class="text-sm text-rose-600 font-bold">全程清晰廣東話發音，共 8 關烘焙挑戰！</div>
+          </div>
+        </div>
+        <button onclick="speakCantonese('小廚師玲玲你好呀！歡迎嚟到魔法烘焙坊！準備好未呀？撳下面個粉紅色大掣，我哋即刻開始啦！', 0.72)" class="btn-3d btn-sky px-3.5 py-2 text-sm shrink-0">
+          🔊 聽歡迎詞
+        </button>
+      </div>
+
+      <button onclick="startQuiz()" class="btn-3d btn-pink px-8 py-4 text-xl sm:text-2xl shadow-lg">
+        🚀 開始烘焙大挑戰！
+      </button>
+    </section>
+
+    <!-- 答題主舞台 (Step 0 ~ 7) -->
+    <section id="quiz-screen" class="hidden stage-card p-4 sm:p-7">
+      <!-- Anna 老師題目語音橫幅 -->
+      <div class="bg-gradient-to-r from-rose-50 to-amber-50 border-2 border-rose-200 rounded-2xl p-3 sm:p-4 mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div class="flex items-start sm:items-center gap-3">
+          <div class="w-12 h-12 rounded-2xl bg-rose-500 text-white flex items-center justify-center text-2xl shrink-0 shadow">
+            👩‍🏫
+          </div>
+          <div>
+            <div class="flex items-center gap-2 mb-0.5">
+              <span id="q-badge" class="bg-rose-500 text-white text-xs font-black px-2.5 py-0.5 rounded-full">第 1 題</span>
+              <span id="q-tag" class="bg-amber-200 text-amber-900 text-xs font-black px-2.5 py-0.5 rounded-full">邏輯規律 (AABB)</span>
+            </div>
+            <h2 id="q-text" class="text-lg sm:text-xl font-black text-gray-800 leading-snug"></h2>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 shrink-0 self-end sm:self-center">
+          <button onclick="replayQuestion(0.72)" class="btn-3d btn-sky px-3.5 py-2 text-sm sm:text-base">
+            🔊 再聽一次
+          </button>
+          <button onclick="replayQuestion(0.54)" class="btn-3d btn-amber px-3 py-2 text-sm sm:text-base">
+            🐢 慢速
+          </button>
+        </div>
+      </div>
+
+      <!-- 溫柔防呆提示區（答錯時顯示，絕無 ❌ 符號） -->
+      <div id="hint-box" class="hidden gentle-hint-box p-3.5 mb-4 flex items-center gap-3">
+        <span class="text-2xl shrink-0">💡</span>
+        <div id="hint-text" class="font-bold text-amber-950 text-base sm:text-lg leading-snug"></div>
+      </div>
+
+      <!-- 視覺化題目展示舞台 -->
+      <div id="visual-stage" class="bg-white border-3 border-amber-200 rounded-3xl p-4 sm:p-6 mb-5 text-center shadow-inner"></div>
+
+      <!-- 三選一超大 3D 積木選項 -->
+      <div id="options-grid" class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-4"></div>
+    </section>
+
+    <!-- 結算與媽媽進階診斷報告 (Step 8) -->
+    <section id="report-screen" class="hidden stage-card p-5 sm:p-8">
+      <div class="text-center mb-5">
+        <div class="text-5xl sm:text-6xl mb-2">🏆🧁🎉</div>
+        <h2 class="text-2xl sm:text-3xl font-black text-rose-600 mb-1">
+          太叻啦！玲玲完成《魔法烘焙坊》大挑戰！
+        </h2>
+        <p class="text-base sm:text-lg font-bold text-amber-800">
+          Anna 老師根據玲玲今日嘅答題速度與準確度生成診斷報告：
+        </p>
+      </div>
+
+      <!-- 總覽數據膠囊 -->
+      <div class="grid grid-cols-3 gap-3 max-w-xl mx-auto mb-6 text-center">
+        <div class="bg-amber-50 border-2 border-amber-300 rounded-2xl p-3">
+          <div class="text-xs font-bold text-amber-700">通關題數</div>
+          <div class="text-2xl font-black text-amber-900">8 / 8 題</div>
+        </div>
+        <div class="bg-emerald-50 border-2 border-emerald-300 rounded-2xl p-3">
+          <div class="text-xs font-bold text-emerald-700">一次答對</div>
+          <div id="stat-first-try" class="text-2xl font-black text-emerald-700">8 題</div>
+        </div>
+        <div class="bg-sky-50 border-2 border-sky-300 rounded-2xl p-3">
+          <div class="text-xs font-bold text-sky-700">總思考時間</div>
+          <div id="stat-total-time" class="text-2xl font-black text-sky-700">0 秒</div>
+        </div>
+      </div>
+
+      <!-- 逐題診斷報告表格 -->
+      <div class="overflow-x-auto rounded-2xl border-2 border-rose-200 mb-6 bg-white">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-rose-100 text-rose-900 text-sm sm:text-base">
+              <th class="p-3 font-black">關卡目標</th>
+              <th class="p-3 font-black text-center">結果</th>
+              <th class="p-3 font-black text-center">耗時</th>
+              <th class="p-3 font-black">Anna 診斷</th>
+            </tr>
+          </thead>
+          <tbody id="report-tbody" class="divide-y divide-rose-100 text-sm sm:text-base font-bold text-gray-800"></tbody>
+        </table>
+      </div>
+
+      <!-- 一鍵複製進度暗號區塊 -->
+      <div class="bg-amber-50 border-3 border-amber-300 rounded-2xl p-4 sm:p-5 text-center mb-5">
+        <div class="font-black text-amber-900 text-base sm:text-lg mb-2">
+          📲 貼給 Anna 老師自動更新雲端總庫 &amp; 解鎖 Day 5：
+        </div>
+        <button id="copy-cipher-btn" onclick="copyCipher()" class="btn-3d btn-emerald w-full sm:w-auto px-6 py-3.5 text-lg shadow-md mb-3">
+          📋 一鍵複製進度暗號俾 Anna 老師
+        </button>
+        <div id="copy-status" class="hidden text-emerald-700 font-black text-sm mb-2">
+          ✅ 已成功複製！快啲貼返去對話框交俾 Anna 老師啦！
+        </div>
+        <textarea id="cipher-output" readonly rows="2" class="selectable-text w-full bg-white border-2 border-amber-200 rounded-xl p-2.5 text-xs sm:text-sm font-mono text-gray-700 focus:outline-none"></textarea>
+      </div>
+
+      <div class="flex flex-wrap justify-center gap-3">
+        <button onclick="goHome()" class="btn-3d btn-pink px-6 py-3 text-lg">
+          🏠 返回學習大門
+        </button>
+        <button onclick="location.reload()" class="btn-3d btn-cream px-6 py-3 text-lg">
+          🔄 再玩一次烘焙坊
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // ==========================================
+    // 1. iPad Safari 安全廣東話語音引擎 (Anti-GC)
+    // ==========================================
+    window.utterancePool = [];
+    let selectedCantoneseVoice = null;
+
+    function loadCantoneseVoice() {
+      if (!('speechSynthesis' in window)) return;
+      const voices = window.speechSynthesis.getVoices();
+      if (!voices || voices.length === 0) return;
+
+      // 優先挑選香港廣東話女聲 (Sin-Ji / Tracy / zh-HK)
+      selectedCantoneseVoice =
+        voices.find(v => v.lang === 'zh-HK' && /sin-?ji|tracy|female/i.test(v.name)) ||
+        voices.find(v => v.lang === 'zh-HK') ||
+        voices.find(v => v.lang.toLowerCase().includes('hk')) ||
+        voices.find(v => v.lang.toLowerCase().includes('yue'));
+    }
+
+    if ('speechSynthesis' in window) {
+      loadCantoneseVoice();
+      window.speechSynthesis.onvoiceschanged = loadCantoneseVoice;
+    }
+
+    function speakCantonese(text, rate = 0.72) {
+      if (!('speechSynthesis' in window)) return;
+      try {
+        window.speechSynthesis.cancel();
+      } catch (e) {}
+
+      setTimeout(() => {
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = 'zh-HK';
+        u.rate = rate;
+        u.pitch = 1.06;
+        if (selectedCantoneseVoice) {
+          u.voice = selectedCantoneseVoice;
+        }
+        window.utterancePool.push(u);
+        u.onend = () => {
+          const idx = window.utterancePool.indexOf(u);
+          if (idx > -1) window.utterancePool.splice(idx, 1);
+        };
+        u.onerror = () => {
+          const idx = window.utterancePool.indexOf(u);
+          if (idx > -1) window.utterancePool.splice(idx, 1);
+        };
+        window.speechSynthesis.speak(u);
+      }, 40);
+    }
+
+    // ==========================================
+    // 2. Web Audio API 合成歡樂/溫和音效 (零外部依賴)
+    // ==========================================
+    let audioCtx = null;
+    function playTone(type) {
+      try {
+        if (!audioCtx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          audioCtx = new AudioContext();
+        }
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+
+        const now = audioCtx.currentTime;
+        if (type === 'correct') {
+          [523.25, 659.25, 783.99, 1046.5].forEach((freq, i) => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(freq, now + i * 0.08);
+            gain.gain.setValueAtTime(0.18, now + i * 0.08);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.08 + 0.35);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(now + i * 0.08);
+            osc.stop(now + i * 0.08 + 0.36);
+          });
+        } else if (type === 'tap') {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(660, now);
+          gain.gain.setValueAtTime(0.12, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now);
+          osc.stop(now + 0.16);
+        } else {
+          // 溫和提示音
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(320, now);
+          osc.frequency.linearRampToValueAtTime(260, now + 0.25);
+          gain.gain.setValueAtTime(0.14, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now);
+          osc.stop(now + 0.3);
+        }
+      } catch (e) {}
+    }
+
+    function spawnStars(x, y) {
+      const emojis = ['⭐', '✨', '🧁', '💖', '🌟'];
+      for (let i = 0; i < 12; i++) {
+        const el = document.createElement('div');
+        el.className = 'star-particle';
+        el.textContent = emojis[i % emojis.length];
+        el.style.left = (x || window.innerWidth / 2) + 'px';
+        el.style.top = (y || window.innerHeight / 2) + 'px';
+        const angle = (Math.PI * 2 * i) / 12;
+        const dist = 70 + Math.random() * 80;
+        el.style.setProperty('--dx', Math.cos(angle) * dist + 'px');
+        el.style.setProperty('--dy', Math.sin(angle) * dist + 'px');
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 950);
+      }
+    }
+
+    // ==========================================
+    // 3. Day 4 滾動微調題庫 (Q1 ~ Q8)
+    // ==========================================
+    const quizData = [
+      {
+        id: 1,
+        shortName: '邏輯規律 (AABB)',
+        tag: '邏輯規律 (AABB)',
+        question: '魔法烤箱排排企！睇下規律：杯子蛋糕、杯子蛋糕、甜甜圈、甜甜圈、杯子蛋糕、杯子蛋糕……下一個應該係邊個呢？',
+        speech: '魔法烤箱排排企！睇下規律：杯子蛋糕、杯子蛋糕、甜甜圈、甜甜圈、杯子蛋糕、杯子蛋糕，下一個應該係邊個呢？',
+        hint: '我哋一齊跟住節奏讀一次：蛋糕、蛋糕、圈圈、圈圈、蛋糕、蛋糕……下一個輪到甜甜圈定杯子蛋糕呀？',
+        renderVisual: () => `
+          <div class="text-sm font-black text-rose-500 mb-3">✨ 搵出下一個排隊嘅甜點 ✨</div>
+          <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-3xl sm:text-5xl">
+            <span class="bg-pink-50 border-2 border-pink-200 rounded-2xl p-2.5">🧁</span>
+            <span class="bg-pink-50 border-2 border-pink-200 rounded-2xl p-2.5">🧁</span>
+            <span class="bg-amber-50 border-2 border-amber-200 rounded-2xl p-2.5">🍩</span>
+            <span class="bg-amber-50 border-2 border-amber-200 rounded-2xl p-2.5">🍩</span>
+            <span class="bg-pink-50 border-2 border-pink-200 rounded-2xl p-2.5">🧁</span>
+            <span class="bg-pink-50 border-2 border-pink-200 rounded-2xl p-2.5">🧁</span>
+            <span class="bg-rose-100 border-3 border-dashed border-rose-400 rounded-2xl px-4 py-2.5 text-rose-600 font-black">❓</span>
+          </div>
+        `,
+        options: [
+          { label: '🍩', sub: '甜甜圈', isCorrect: true },
+          { label: '🧁', sub: '杯子蛋糕', isCorrect: false },
+          { label: '🍪', sub: '曲奇餅', isCorrect: false }
+        ]
+      },
+      {
+        id: 2,
+        shortName: '邏輯規律 (ABC)',
+        tag: '邏輯規律 (ABC)',
+        question: '甜點拼盤排隊啦！曲奇餅、士多啤梨、牛角包、曲奇餅、士多啤梨……跟住落嚟應該放邊款甜點呀？',
+        speech: '甜點拼盤排隊啦！曲奇餅、士多啤梨、牛角包、曲奇餅、士多啤梨，跟住落嚟應該放邊款甜點呀？',
+        hint: '三個一組循環㗎！曲奇、士多啤梨、牛角包；曲奇、士多啤梨……後面跟住邊個呢？',
+        renderVisual: () => `
+          <div class="text-sm font-black text-amber-600 mb-3">✨ 三個一組排排坐 ✨</div>
+          <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-3xl sm:text-5xl">
+            <span class="bg-amber-50 border-2 border-amber-200 rounded-2xl p-2.5">🍪</span>
+            <span class="bg-rose-50 border-2 border-rose-200 rounded-2xl p-2.5">🍓</span>
+            <span class="bg-orange-50 border-2 border-orange-200 rounded-2xl p-2.5">🥐</span>
+            <span class="bg-amber-50 border-2 border-amber-200 rounded-2xl p-2.5">🍪</span>
+            <span class="bg-rose-50 border-2 border-rose-200 rounded-2xl p-2.5">🍓</span>
+            <span class="bg-orange-100 border-3 border-dashed border-orange-400 rounded-2xl px-4 py-2.5 text-orange-600 font-black">❓</span>
+          </div>
+        `,
+        options: [
+          { label: '🥐', sub: '牛角包', isCorrect: true },
+          { label: '🍪', sub: '曲奇餅', isCorrect: false },
+          { label: '🍓', sub: '士多啤梨', isCorrect: false }
+        ]
+      },
+      {
+        id: 3,
+        shortName: '基礎加法 (1+2)',
+        tag: '基礎加法 (1+2)',
+        question: '烤盤上面原本有 1 個牛角包，Anna 老師再放多 2 個落去，依家一共有幾多個牛角包呀？',
+        speech: '烤盤上面原本有 1 個牛角包，Anna 老師再放多 2 個落去，依家一共有幾多個牛角包呀？',
+        hint: '用手指仔點住數一數！左邊有 1 個，加埋右邊 2 個：1、2、3，一共有幾多個呢？',
+        renderVisual: () => `
+          <div class="flex flex-wrap items-center justify-center gap-3 sm:gap-5">
+            <div class="bg-orange-50 border-3 border-orange-300 rounded-2xl p-3 sm:p-4">
+              <div class="text-4xl sm:text-5xl mb-1">🥐</div>
+              <div class="text-xl font-black text-orange-800">1 個</div>
+            </div>
+            <div class="text-3xl sm:text-4xl font-black text-rose-500">➕</div>
+            <div class="bg-orange-50 border-3 border-orange-300 rounded-2xl p-3 sm:p-4">
+              <div class="text-4xl sm:text-5xl mb-1">🥐 🥐</div>
+              <div class="text-xl font-black text-orange-800">2 個</div>
+            </div>
+            <div class="text-3xl sm:text-4xl font-black text-rose-500">＝ ❓</div>
+          </div>
+        `,
+        options: [
+          { label: '3', sub: '🥐🥐🥐', isCorrect: true },
+          { label: '2', sub: '🥐🥐', isCorrect: false },
+          { label: '4', sub: '🥐🥐🥐🥐', isCorrect: false }
+        ]
+      },
+      {
+        id: 4,
+        shortName: '點數群組 (2+1)',
+        tag: '點數群組 (2+1)',
+        question: '左邊碟子有 2 粒香甜士多啤梨，右邊碟子有 1 粒，兩碟合埋一齊一共有幾多粒呀？',
+        speech: '左邊碟子有 2 粒香甜士多啤梨，右邊碟子有 1 粒，兩碟合埋一齊一共有幾多粒呀？',
+        hint: '左邊有 2 粒，再數多 1 粒：2 之後係幾多呀？一齊數：1、2、3！',
+        renderVisual: () => `
+          <div class="flex flex-wrap items-center justify-center gap-3 sm:gap-5">
+            <div class="bg-rose-50 border-3 border-rose-300 rounded-full px-5 py-3 shadow-sm">
+              <div class="text-4xl sm:text-5xl mb-1">🍓 🍓</div>
+              <div class="text-lg font-black text-rose-700">2 粒</div>
+            </div>
+            <div class="text-3xl sm:text-4xl font-black text-rose-500">➕</div>
+            <div class="bg-rose-50 border-3 border-rose-300 rounded-full px-5 py-3 shadow-sm">
+              <div class="text-4xl sm:text-5xl mb-1">🍓</div>
+              <div class="text-lg font-black text-rose-700">1 粒</div>
+            </div>
+            <div class="text-3xl sm:text-4xl font-black text-rose-500">＝ ❓</div>
+          </div>
+        `,
+        options: [
+          { label: '3', sub: '🍓🍓🍓', isCorrect: true },
+          { label: '4', sub: '🍓🍓🍓🍓', isCorrect: false },
+          { label: '2', sub: '🍓🍓', isCorrect: false }
+        ]
+      },
+      {
+        id: 5,
+        shortName: '雙軌視覺加法 (2+2)',
+        tag: '數字與實物 (2+2)',
+        question: '2 加 2 等於幾多呢？試下用手指逐粒篤一篤下面嘅曲奇餅幫手數數！',
+        speech: '2 加 2 等於幾多呢？試下用手指逐粒篤一篤下面嘅曲奇餅幫手數數！',
+        hint: '用手指篤下畫面上面嘅曲奇餅！左邊 2 塊，右邊 2 塊，一齊數：1、2、3、4！',
+        renderVisual: () => `
+          <div class="text-3xl sm:text-5xl font-black text-rose-600 mb-3 tracking-wider">
+            2 ➕ 2 ＝ ❓
+          </div>
+          <div class="text-xs sm:text-sm font-black text-amber-700 mb-3 bg-amber-100 inline-block px-3 py-1 rounded-full">
+            👆 小貼士：用手指篤下曲奇餅，Anna 老師會幫你報數㗎！
+          </div>
+          <div class="flex flex-wrap items-center justify-center gap-3 sm:gap-5">
+            <div class="bg-amber-50 border-3 border-amber-300 rounded-2xl p-3">
+              <div class="flex gap-2 mb-1">
+                <button type="button" onclick="tapCountCookie(this, 1)" class="tap-cookie">🍪</button>
+                <button type="button" onclick="tapCountCookie(this, 2)" class="tap-cookie">🍪</button>
+              </div>
+              <div class="text-xl font-black text-amber-800">數字 2</div>
+            </div>
+            <div class="text-3xl font-black text-amber-600">➕</div>
+            <div class="bg-amber-50 border-3 border-amber-300 rounded-2xl p-3">
+              <div class="flex gap-2 mb-1">
+                <button type="button" onclick="tapCountCookie(this, 3)" class="tap-cookie">🍪</button>
+                <button type="button" onclick="tapCountCookie(this, 4)" class="tap-cookie">🍪</button>
+              </div>
+              <div class="text-xl font-black text-amber-800">數字 2</div>
+            </div>
+          </div>
+        `,
+        options: [
+          { label: '4', sub: '🍪🍪🍪🍪', isCorrect: true },
+          { label: '3', sub: '🍪🍪🍪', isCorrect: false },
+          { label: '5', sub: '🍪🍪🍪🍪🍪', isCorrect: false }
+        ]
+      },
+      {
+        id: 6,
+        shortName: '魔法提示加法 (3+1)',
+        tag: '進階加法 (3+1)',
+        question: '魔法盒子入面有 3 個杯子蛋糕，再放多 1 個入去。3 加 1 等於幾多呢？',
+        speech: '魔法盒子入面有 3 個杯子蛋糕，再放多 1 個入去。3 加 1 等於幾多呢？',
+        hint: '望下算式下面嘅半透明魔法框！原本有 3 個，多 1 個即係 3 嘅下一個數字，一齊數：1、2、3、4！',
+        renderVisual: () => `
+          <div class="text-3xl sm:text-5xl font-black text-purple-700 mb-3 tracking-wider">
+            3 ➕ 1 ＝ ❓
+          </div>
+          <div class="max-w-md mx-auto bg-purple-50/70 border-2 border-dashed border-purple-300 rounded-2xl p-3">
+            <div class="text-xs font-black text-purple-600 mb-2">✨ 半透明魔法提示框 ✨</div>
+            <div class="flex items-center justify-center gap-3 text-3xl sm:text-4xl">
+              <div class="bg-white/80 px-3 py-1.5 rounded-xl border border-purple-200 opacity-85">🧁 🧁 🧁</div>
+              <span class="text-purple-500 font-black text-2xl">+</span>
+              <div class="bg-white/80 px-3 py-1.5 rounded-xl border-2 border-dashed border-purple-400 opacity-85">🧁</div>
+            </div>
+          </div>
+        `,
+        options: [
+          { label: '4', sub: '🧁🧁🧁🧁', isCorrect: true },
+          { label: '3', sub: '🧁🧁🧁', isCorrect: false },
+          { label: '5', sub: '🧁🧁🧁🧁🧁', isCorrect: false }
+        ]
+      },
+      {
+        id: 7,
+        shortName: '視覺消除減法 (3-1)',
+        tag: '視覺減法 (3-1)',
+        question: '碟上面本來有 3 個甜甜圈，小貓 Tickles 偷食咗 1 個，碟上面仲剩返幾多個甜甜圈呀？',
+        speech: '碟上面本來有 3 個甜甜圈，小貓 Tickles 偷食咗 1 個，碟上面仲剩返幾多個甜甜圈呀？',
+        hint: '原本有 3 個，減走劃掉咗嗰 1 個，數下無被偷食嘅仲有幾多個：1、2！',
+        renderVisual: () => `
+          <div class="text-3xl sm:text-4xl font-black text-rose-600 mb-3">
+            3 ➖ 1 ＝ ❓
+          </div>
+          <div class="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+            <div class="bg-amber-50 border-3 border-amber-300 rounded-2xl p-3 text-4xl sm:text-5xl">🍩</div>
+            <div class="bg-amber-50 border-3 border-amber-300 rounded-2xl p-3 text-4xl sm:text-5xl">🍩</div>
+            <div class="relative bg-gray-100 border-3 border-dashed border-gray-400 rounded-2xl p-3 text-4xl sm:text-5xl opacity-45">
+              🍩
+              <span class="block text-xs font-black text-rose-600 mt-1">🐱 偷食咗</span>
+            </div>
+          </div>
+        `,
+        options: [
+          { label: '2', sub: '🍩🍩', isCorrect: true },
+          { label: '1', sub: '🍩', isCorrect: false },
+          { label: '3', sub: '🍩🍩🍩', isCorrect: false }
+        ]
+      },
+      {
+        id: 8,
+        shortName: '動態拆解減法 (4-2)',
+        tag: '動態減法 (4-2)',
+        question: '烤盤上面原本有 4 塊曲奇餅，我哋拎走咗 2 塊放入魔法禮盒度，烤盤上面仲剩返幾多塊曲奇餅呢？',
+        speech: '烤盤上面原本有 4 塊曲奇餅，我哋拎走咗 2 塊放入魔法禮盒度，烤盤上面仲剩返幾多塊曲奇餅呢？',
+        hint: '望下烤盤上面，虛線框係拎走咗放入禮盒嘅 2 塊曲奇，數下仲留喺烤盤上面亮晶晶嘅曲奇有幾多塊：1、2！',
+        onEnter: () => {
+          setTimeout(() => runTakeAwayDemo(), 550);
+        },
+        renderVisual: () => `
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <span class="text-2xl sm:text-3xl font-black text-rose-600">4 ➖ 2 ＝ ❓</span>
+            <button type="button" onclick="runTakeAwayDemo()" class="btn-3d btn-amber px-3 py-1.5 text-xs sm:text-sm">
+              🎬 再睇一次拿走動畫
+            </button>
+          </div>
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <!-- 烤盤 4 塊曲奇 -->
+            <div class="bg-amber-50 border-3 border-amber-300 rounded-2xl p-3.5">
+              <div class="text-xs font-black text-amber-800 mb-2">🍳 魔法烤盤（原本 4 塊）</div>
+              <div class="flex items-center justify-center gap-2.5 text-3xl sm:text-4xl">
+                <span class="bg-white border-2 border-amber-400 rounded-xl p-2 shadow-sm">🍪</span>
+                <span class="bg-white border-2 border-amber-400 rounded-xl p-2 shadow-sm">🍪</span>
+                <span id="q8-c3" class="cookie-fly-out bg-white border-2 border-amber-400 rounded-xl p-2 shadow-sm">🍪</span>
+                <span id="q8-c4" class="cookie-fly-out bg-white border-2 border-amber-400 rounded-xl p-2 shadow-sm">🍪</span>
+              </div>
+            </div>
+
+            <div class="text-2xl font-black text-rose-500">➡️ 拎走 2 塊</div>
+
+            <!-- 魔法禮盒 -->
+            <div class="bg-rose-50 border-3 border-rose-300 rounded-2xl p-3.5 min-w-[140px]">
+              <div class="text-xs font-black text-rose-700 mb-2">🎁 魔法禮盒</div>
+              <div id="q8-box-cookies" class="flex items-center justify-center gap-2 text-3xl sm:text-4xl opacity-25 transition-opacity duration-700">
+                <span>🍪</span><span>🍪</span>
+              </div>
+            </div>
+          </div>
+        `,
+        options: [
+          { label: '2', sub: '🍪🍪', isCorrect: true },
+          { label: '3', sub: '🍪🍪🍪', isCorrect: false },
+          { label: '1', sub: '🍪', isCorrect: false }
+        ]
+      }
+    ];
+
+    // ==========================================
+    // 4. 測驗狀態與同步過關控制
+    // ==========================================
+    let currentIdx = 0;
+    let questionStartTime = 0;
+    let isLocked = false;
+    const results = quizData.map(q => ({
+      id: q.id,
+      shortName: q.shortName,
+      attempts: 0,
+      seconds: 0,
+      solved: false
+    }));
+
+    function renderStepDots() {
+      const container = document.getElementById('step-dots');
+      container.innerHTML = quizData.map((q, idx) => {
+        let cls = 'step-dot';
+        if (results[idx].solved) cls += ' done';
+        else if (idx === currentIdx && !document.getElementById('quiz-screen').classList.contains('hidden')) cls += ' active';
+        return `<div class="${cls}">${q.id}</div>`;
+      }).join('');
+    }
+
+    function goHome() {
+      if ('speechSynthesis' in window) {
+        try { window.speechSynthesis.cancel(); } catch (e) {}
+      }
+      try {
+        sessionStorage.setItem('lingling_last_tab', 'math');
+      } catch (e) {}
+      window.location.href = 'index.html';
+    }
+
+    function startQuiz() {
+      playTone('tap');
+      document.getElementById('intro-screen').classList.add('hidden');
+      document.getElementById('quiz-screen').classList.remove('hidden');
+      currentIdx = 0;
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      isLocked = false;
+      const q = quizData[currentIdx];
+      renderStepDots();
+
+      document.getElementById('q-badge').textContent = `第 ${q.id} / ${quizData.length} 題`;
+      document.getElementById('q-tag').textContent = q.tag;
+      document.getElementById('q-text').textContent = q.question;
+      document.getElementById('hint-box').classList.add('hidden');
+      document.getElementById('visual-stage').innerHTML = q.renderVisual();
+
+      const grid = document.getElementById('options-grid');
+      grid.innerHTML = q.options.map((opt, idx) => `
+        <button
+          type="button"
+          id="opt-btn-${idx}"
+          onclick="handleAnswer(${idx}, event)"
+          class="btn-3d btn-cream py-4 px-4 flex flex-col items-center justify-center gap-1 shadow-sm"
+        >
+          <span class="text-4xl sm:text-5xl font-black">${opt.label}</span>
+          <span class="text-base sm:text-lg font-bold opacity-85">${opt.sub}</span>
+        </button>
+      `).join('');
+
+      questionStartTime = Date.now();
+      speakCantonese(q.speech, 0.72);
+      if (typeof q.onEnter === 'function') q.onEnter();
+    }
+
+    function replayQuestion(rate) {
+      const q = quizData[currentIdx];
+      speakCantonese(q.speech, rate);
+    }
+
+    // Q5 互動點數曲奇報數
+    function tapCountCookie(btn, num) {
+      playTone('tap');
+      btn.classList.add('counted');
+      const cantoneseNums = ['', '一', '二', '三', '四'];
+      speakCantonese(cantoneseNums[num] || String(num), 0.75);
+    }
+
+    // Q8 動態減法拿走動畫
+    function runTakeAwayDemo() {
+      const c3 = document.getElementById('q8-c3');
+      const c4 = document.getElementById('q8-c4');
+      const box = document.getElementById('q8-box-cookies');
+      if (!c3 || !c4 || !box) return;
+
+      c3.classList.remove('cookie-moved');
+      c4.classList.remove('cookie-moved');
+      box.style.opacity = '0.25';
+
+      setTimeout(() => {
+        playTone('tap');
+        c3.classList.add('cookie-moved');
+        c4.classList.add('cookie-moved');
+        box.style.opacity = '1';
+      }, 350);
+    }
+
+    // 同步答題判定（零死鎖）
+    function handleAnswer(optIdx, ev) {
+      if (isLocked) return;
+      const q = quizData[currentIdx];
+      const opt = q.options[optIdx];
+      const btn = document.getElementById(`opt-btn-${optIdx}`);
+      const rec = results[currentIdx];
+
+      if (opt.isCorrect) {
+        isLocked = true;
+        rec.solved = true;
+        rec.seconds = Math.max(1, Math.round((Date.now() - questionStartTime) / 1000));
+
+        btn.classList.add('btn-correct');
+        playTone('correct');
+        spawnStars(ev ? ev.clientX : null, ev ? ev.clientY : null);
+        renderStepDots();
+
+        const praises = [
+          '好叻呀玲玲！一答就啱！',
+          '好犀利呀！小廚師完全答對！',
+          '好棒呀！繼續加油！'
+        ];
+        speakCantonese(praises[currentIdx % praises.length], 0.76);
+
+        setTimeout(() => {
+          if (currentIdx < quizData.length - 1) {
+            currentIdx++;
+            renderQuestion();
+          } else {
+            showReport();
+          }
+        }, 1150);
+      } else {
+        rec.attempts++;
+        playTone('wrong');
+        btn.classList.remove('wrong-shake');
+        void btn.offsetWidth;
+        btn.classList.add('wrong-shake');
+
+        const hintBox = document.getElementById('hint-box');
+        const hintText = document.getElementById('hint-text');
+        hintText.textContent = `Anna 老師溫柔提示：${q.hint}`;
+        hintBox.classList.remove('hidden');
+
+        speakCantonese(q.hint, 0.70);
+      }
+    }
+
+    // ==========================================
+    // 5. 結算診斷報告與一鍵複製進度暗號
+    // ==========================================
+    function showReport() {
+      document.getElementById('quiz-screen').classList.add('hidden');
+      document.getElementById('report-screen').classList.remove('hidden');
+      renderStepDots();
+
+      const firstTryCount = results.filter(r => r.attempts === 0).length;
+      const totalSeconds = results.reduce((sum, r) => sum + r.seconds, 0);
+
+      document.getElementById('stat-first-try').textContent = `${firstTryCount} / 8 題`;
+      document.getElementById('stat-total-time').textContent = `${totalSeconds} 秒`;
+
+      const tbody = document.getElementById('report-tbody');
+      tbody.innerHTML = results.map(r => {
+        const statusBadge = r.attempts === 0
+          ? `<span class="text-emerald-600">✅ 1次答對</span>`
+          : `<span class="text-amber-600">💡 需提示(${r.attempts}次)</span>`;
+
+        let diagnosis = '概念穩固';
+        if (r.attempts > 0) diagnosis = '概念需強化';
+        else if (r.seconds <= 5) diagnosis = '秒答極熟練';
+        else if (r.seconds > 15) diagnosis = '謹慎思考運算';
+
+        return `
+          <tr>
+            <td class="p-3">【第 ${r.id} 題：${r.shortName}】</td>
+            <td class="p-3 text-center">${statusBadge}</td>
+            <td class="p-3 text-center">${r.seconds} 秒</td>
+            <td class="p-3 text-rose-700">${diagnosis}</td>
+          </tr>
+        `;
+      }).join('');
+
+      const cipherParts = results.map(r => {
+        const statusStr = r.attempts === 0 ? '1次答對' : `需提示${r.attempts}次`;
+        return `Q${r.id}(${r.shortName}): ${r.seconds}s(${statusStr})`;
+      });
+      const cipherText = `【數學測驗回報】Day 4 (魔法烘焙坊) | ${cipherParts.join(' | ')}`;
+      document.getElementById('cipher-output').value = cipherText;
+
+      speakCantonese('太叻啦！玲玲完成今日魔法烘焙坊全部八關挑戰！快啲叫媽媽複製下面嘅進度暗號俾 Anna 老師啦！', 0.74);
+    }
+
+    function copyCipher() {
+      const textarea = document.getElementById('cipher-output');
+      const text = textarea.value;
+      playTone('tap');
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          document.getElementById('copy-status').classList.remove('hidden');
+        }).catch(() => {
+          fallbackCopy(textarea);
+        });
+      } else {
+        fallbackCopy(textarea);
+      }
+    }
+
+    function fallbackCopy(textarea) {
+      textarea.focus();
+      textarea.select();
+      try {
+        document.execCommand('copy');
+        document.getElementById('copy-status').classList.remove('hidden');
+      } catch (e) {}
+    }
+
+    // 初始化進度點
+    renderStepDots();
+  </script>
+</body>
+</html>
