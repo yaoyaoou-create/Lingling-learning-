@@ -26,7 +26,6 @@
       overflow-x: hidden;
     }
 
-    /* 煙花畫布 */
     #fireworksCanvas {
       position: fixed;
       top: 0;
@@ -81,7 +80,6 @@
       text-shadow: 0 2px 4px rgba(0,0,0,0.25);
     }
 
-    /* 四幕進度地圖 */
     .act-map {
       display: flex;
       align-items: center;
@@ -113,7 +111,6 @@
       color: #064E3B;
     }
 
-    /* 主容器 */
     .container {
       max-width: 820px;
       margin: 0 auto;
@@ -217,7 +214,7 @@
       background: linear-gradient(180deg, #F8FAFC 0%, #EFF6FF 100%);
       border: 4px solid #60A5FA;
       border-radius: 28px;
-      padding: 22px 18px;
+      padding: 20px 18px;
       margin: 8px auto 18px;
       max-width: 460px;
       box-shadow: 0 8px 0 #3B82F6;
@@ -230,9 +227,9 @@
     }
 
     .illustration-wrap {
-      width: 170px;
-      height: 170px;
-      margin: 0 auto 12px;
+      width: 165px;
+      height: 165px;
+      margin: 0 auto 10px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -249,16 +246,24 @@
     .word-en .highlight-m {
       color: #EA580C;
       background: #FFEDD5;
-      padding: 0 8px;
+      padding: 0 10px;
       border-radius: 12px;
       border-bottom: 4px solid #F97316;
+    }
+
+    .word-en .highlight-h {
+      color: #0284C7;
+      background: #E0F2FE;
+      padding: 0 10px;
+      border-radius: 12px;
+      border-bottom: 4px solid #38BDF8;
     }
 
     .word-zh {
       font-size: 26px;
       font-weight: 800;
       color: #475569;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
     .sentence-box {
@@ -329,59 +334,99 @@
     }
     .btn-purple:active { box-shadow: 0 1px 0 #6D28D9; }
 
-    /* 第二幕：字母積木 */
-    .blocks-arena {
+    /* ==========================================
+       第二幕：全新 K2 Phonics 首音火車頭碰撞舞台
+       ========================================== */
+    .phonics-train-stage {
       display: flex;
-      flex-wrap: wrap;
+      align-items: center;
       justify-content: center;
-      gap: 12px;
-      margin: 22px 0;
+      gap: 16px;
+      margin: 18px auto;
+      flex-wrap: wrap;
     }
 
-    .letter-block {
-      width: 68px;
-      height: 78px;
-      border-radius: 20px;
-      background: #F1F5F9;
-      border: 3px solid #CBD5E1;
-      box-shadow: 0 7px 0 #94A3B8;
-      font-size: 40px;
-      font-weight: 900;
-      color: #334155;
+    .onset-card {
+      width: 145px;
+      height: 175px;
+      border-radius: 28px;
+      background: #FFFBEB;
+      border: 4px solid #F59E0B;
+      box-shadow: 0 8px 0 #D97706;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       position: relative;
-      transition: transform 0.12s, background-color 0.12s;
+      transition: all 0.15s;
     }
 
-    .letter-block.key-letter {
-      border-color: #F59E0B;
-      background: #FFFBEB;
-      color: #B45309;
-      box-shadow: 0 7px 0 #D97706;
+    .onset-card.h-style {
+      background: #F0F9FF;
+      border-color: #0EA5E9;
+      box-shadow: 0 8px 0 #0284C7;
     }
 
-    .letter-block.lit {
+    .onset-card.lit {
       background: linear-gradient(180deg, #F97316 0%, #EA580C 100%);
-      color: #FFFFFF;
       border-color: #FDBA74;
-      box-shadow: 0 7px 0 #9A3412;
-      transform: translateY(-4px) scale(1.08);
+      color: #FFFFFF;
+      box-shadow: 0 8px 0 #9A3412;
+      transform: translateY(-4px) scale(1.05);
     }
 
-    .letter-block.lit.alt-color {
+    .onset-card.h-style.lit {
       background: linear-gradient(180deg, #06B6D4 0%, #0284C7 100%);
       border-color: #67E8F9;
-      box-shadow: 0 7px 0 #0369A1;
+      color: #FFFFFF;
+      box-shadow: 0 8px 0 #0369A1;
     }
 
-    .star-tag {
-      position: absolute;
-      top: -10px;
-      right: -8px;
-      font-size: 18px;
+    .onset-big-letter {
+      font-size: 74px;
+      font-weight: 900;
+      line-height: 1;
+      color: inherit;
+    }
+
+    .onset-step-tag {
+      margin-top: 8px;
+      font-size: 14px;
+      font-weight: 900;
+      padding: 4px 10px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.85);
+      color: #9A3412;
+    }
+
+    .plus-connector {
+      font-size: 40px;
+      font-weight: 900;
+      color: #3B82F6;
+    }
+
+    .word-target-card {
+      width: 225px;
+      min-height: 175px;
+      border-radius: 28px;
+      background: #F8FAFC;
+      border: 4px solid #60A5FA;
+      box-shadow: 0 8px 0 #2563EB;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .word-target-card.lit {
+      background: #ECFDF5;
+      border-color: #10B981;
+      box-shadow: 0 8px 0 #047857;
+      transform: translateY(-4px) scale(1.04);
     }
 
     /* 第三幕：開口讀狀態列 */
@@ -399,11 +444,11 @@
       margin-top: 12px;
     }
 
-    /* 第四幕：輕鬆選圖卡二選一 */
+    /* 第四幕：真·聽音選圖二選一 */
     .choice-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
+      gap: 18px;
       max-width: 540px;
       margin: 18px auto;
     }
@@ -454,7 +499,7 @@
       border-radius: 16px;
       padding: 8px 16px;
       margin: 10px auto 0;
-      max-width: 460px;
+      max-width: 480px;
     }
 
     .gentle-hint-banner.success {
@@ -488,7 +533,6 @@
       background: #10B981;
     }
 
-    /* 結算畫面暗號區 */
     .secret-code-box {
       background: #F1F5F9;
       border: 3px dashed #64748B;
@@ -527,7 +571,6 @@
       .nav-title { font-size: 14px; }
       .act-pill { padding: 5px 8px; font-size: 12px; }
       .word-en { font-size: 40px; }
-      .letter-block { width: 56px; height: 66px; font-size: 34px; }
       .illustration-wrap { width: 140px; height: 140px; }
     }
   </style>
@@ -542,9 +585,9 @@
   <div class="nav-title">Unit 4 · Day 4</div>
   <div class="act-map" id="actMap">
     <button class="act-pill active" onclick="jumpToAct(0)">1. 學新詞</button>
-    <button class="act-pill" onclick="jumpToAct(1)">2. 拼積木</button>
+    <button class="act-pill" onclick="jumpToAct(1)">2. 認首音</button>
     <button class="act-pill" onclick="jumpToAct(2)">3. 大聲讀</button>
-    <button class="act-pill" onclick="jumpToAct(3)">4. 小遊戲</button>
+    <button class="act-pill" onclick="jumpToAct(3)">4. 辨音王</button>
   </div>
 </nav>
 
@@ -566,7 +609,7 @@
     </div>
     <div class="teacher-text-box">
       <div class="teacher-name">🌟 Anna 老師語音指引</div>
-      <div class="teacher-msg" id="teacherMsg">歡迎返到英文大本營！今日我哋先熱身重溫畫畫，再認識新嘅英文字母發音！</div>
+      <div class="teacher-msg" id="teacherMsg">歡迎返到英文大本營！點擊呢度或者下面嘅掣開始聽老師講解啦！</div>
     </div>
     <div class="replay-chip">🔊 重聽</div>
   </div>
@@ -576,47 +619,185 @@
 </div>
 
 <script>
-  // ==========================================
-  // 1. 全新「中英雙軌 (Hybrid Voice) 引擎」
-  // ==========================================
-  
-  // A. 中文 TTS 播放 (專門負責 Anna 老師廣東話導航)
-  let currentSpeechId = 0; 
-  function playChineseTTS(text) {
-    if (!('speechSynthesis' in window) || !text) return;
-    const mySpeechId = ++currentSpeechId;
-    window.speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = 'zh-HK';
-    u.pitch = 1.05;
-    u.rate = 0.9;
-    
-    // 預防 iOS TTS 引擎卡死
-    u.onend = () => { if(mySpeechId === currentSpeechId) currentSpeechId = 0; };
-    u.onerror = () => { if(mySpeechId === currentSpeechId) currentSpeechId = 0; };
-    
-    setTimeout(() => { if (mySpeechId === currentSpeechId) window.speechSynthesis.speak(u); }, 60);
-  }
+  // =========================================================================
+  // 1. 終極「中英雙軌排隊 + Web Audio MP3 音量放大器」引擎
+  //    - 徹底解決中文未講完英文插嘴撞聲 Bug (100% 排隊等候 onend)
+  //    - 壓低中文 TTS 音量 (0.68)，並將 ElevenLabs MP3 音量放大 2.2 倍，音量完全一致！
+  //    - 自動修正 en-hand.mp3 開頭誤錄的 "M" 音 (自動由 0.78 秒切入 "hand" 或先播 en-h.mp3)
+  // =========================================================================
+  window.utterancePool = [];
+  let audioQueueId = 0;
+  let activeAudioElement = null;
+  let audioCtx = null;
 
-  // B. 英文 MP3 播放 (專門負責 ElevenLabs 高質音檔，絕對零報錯、不變男聲)
-  let currentAudio = null;
-  function playEnglishAudio(mp3FileName) {
-    if(currentAudio) {
-      currentAudio.pause();
-      currentAudio.currentTime = 0;
+  function ensureAudioContext() {
+    if (!audioCtx) {
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (AudioContextClass) {
+        audioCtx = new AudioContextClass();
+      }
     }
-    // 指向 GitHub 上你建立的 audio 資料夾
-    currentAudio = new Audio('audio/' + mp3FileName);
-    currentAudio.play().catch(e => console.log('Audio play hindered by browser policy until interaction.'));
+    if (audioCtx && audioCtx.state === 'suspended') {
+      audioCtx.resume().catch(() => {});
+    }
   }
 
-  // 老師導航狀態
-  let currentGuideCantonese = "歡迎返到英文大本營！今日我哋先熱身重溫畫畫，再認識新嘅英文字母發音！";
-  let currentGuideEnglishAudio = "";
+  function stopAllAudio() {
+    audioQueueId++;
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
+    if (activeAudioElement) {
+      try {
+        activeAudioElement.onended = null;
+        activeAudioElement.onerror = null;
+        activeAudioElement.pause();
+        activeAudioElement.currentTime = 0;
+      } catch (e) {}
+      activeAudioElement = null;
+    }
+  }
 
-  function setGuide(zhText, enAudioFile = "", autoSpeak = true) {
+  // 播放單個 MP3 並透過 Web Audio GainNode 放大音量 (解決 MP3 細聲問題)
+  function playSingleMp3(file, startTime = 0, boostGain = 2.2, onDone) {
+    ensureAudioContext();
+    const audio = new Audio('audio/' + file);
+    audio.crossOrigin = 'anonymous';
+    activeAudioElement = audio;
+
+    // 使用 Web Audio API 放大 MP3 音量，與廣東話 TTS 音量完全平衡
+    if (audioCtx) {
+      try {
+        const source = audioCtx.createMediaElementSource(audio);
+        const gainNode = audioCtx.createGain();
+        gainNode.gain.value = boostGain; // 放大 2.2 倍
+        source.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+      } catch (e) {
+        audio.volume = 1.0;
+      }
+    } else {
+      audio.volume = 1.0;
+    }
+
+    let finished = false;
+    const finish = () => {
+      if (finished) return;
+      finished = true;
+      if (onDone) onDone();
+    };
+
+    audio.onended = finish;
+    audio.onerror = finish;
+
+    const startPlayback = () => {
+      if (startTime > 0) {
+        try { audio.currentTime = startTime; } catch (e) {}
+      }
+      audio.play().catch(finish);
+    };
+
+    if (startTime > 0) {
+      audio.addEventListener('loadedmetadata', startPlayback, { once: true });
+      audio.load();
+    } else {
+      startPlayback();
+    }
+  }
+
+  // 核心排隊播放器：支援 [{type:'zh', text:'...'}, {type:'mp3', file:'...'}, {type:'hand_fixed'}]
+  // 保證上一句 100% 講完，先會播下一句，絕不撞聲！
+  function playHybridQueue(steps) {
+    stopAllAudio();
+    if (!steps || !steps.length) return;
+    const myQueueId = audioQueueId;
+    let idx = 0;
+
+    function nextStep() {
+      if (myQueueId !== audioQueueId || idx >= steps.length) return;
+      const step = steps[idx++];
+
+      // A. 廣東話 TTS (調低音量至 0.68 配合 MP3)
+      if (step.type === 'zh') {
+        if (!('speechSynthesis' in window) || !step.text) {
+          nextStep();
+          return;
+        }
+        const u = new SpeechSynthesisUtterance(step.text);
+        window.utterancePool.push(u);
+        u.lang = 'zh-HK';
+        u.pitch = 1.05;
+        u.rate = 0.92;
+        u.volume = 0.68; // 壓低廣東話音量，防止爆音嚇親小朋友
+
+        let advanced = false;
+        const done = () => {
+          if (advanced || myQueueId !== audioQueueId) return;
+          advanced = true;
+          setTimeout(() => {
+            if (myQueueId === audioQueueId) nextStep();
+          }, 180);
+        };
+        u.onend = done;
+        u.onerror = done;
+
+        setTimeout(() => {
+          if (myQueueId === audioQueueId) window.speechSynthesis.speak(u);
+        }, 50);
+      }
+
+      // B. 標準英文 MP3
+      else if (step.type === 'mp3') {
+        playSingleMp3(step.file, step.startTime || 0, step.boost || 2.2, () => {
+          if (myQueueId !== audioQueueId) return;
+          setTimeout(() => {
+            if (myQueueId === audioQueueId) nextStep();
+          }, 160);
+        });
+      }
+
+      // C. 針對 en-hand.mp3 開頭誤錄咗 "M" 嘅自動修復播放：先播 en-h.mp3 ("H")，再跳去 en-hand.mp3 嘅 0.78 秒讀 "hand"！
+      else if (step.type === 'hand_fixed') {
+        playSingleMp3('en-h.mp3', 0, 2.2, () => {
+          if (myQueueId !== audioQueueId) return;
+          setTimeout(() => {
+            if (myQueueId !== audioQueueId) return;
+            playSingleMp3('en-hand.mp3', 0.78, 2.4, () => {
+              if (myQueueId !== audioQueueId) return;
+              setTimeout(() => {
+                if (myQueueId === audioQueueId) nextStep();
+              }, 160);
+            });
+          }, 120);
+        });
+      }
+    }
+
+    nextStep();
+  }
+
+  // 統一產生單字標準英文音軌步驟
+  function getWordAudioStep(wordId) {
+    if (wordId === 'hand') {
+      return { type: 'hand_fixed' };
+    }
+    const map = {
+      draw: 'en-draw.mp3',
+      mouth: 'en-mouth.mp3',
+      meat: 'en-meat.mp3',
+      milk: 'en-milk.mp3'
+    };
+    // meat, milk 錄音偏細聲，給予 2.5 倍增益
+    const boost = (wordId === 'meat' || wordId === 'milk') ? 2.5 : 2.1;
+    return { type: 'mp3', file: map[wordId], boost };
+  }
+
+  let currentGuideCantonese = "";
+  let currentGuideWordId = "";
+
+  function setGuide(zhText, wordId = "", autoSpeak = true) {
     currentGuideCantonese = zhText;
-    currentGuideEnglishAudio = enAudioFile;
+    currentGuideWordId = wordId;
     document.getElementById('teacherMsg').textContent = zhText;
     if (autoSpeak) {
       replayGuide();
@@ -624,12 +805,11 @@
   }
 
   function replayGuide() {
-    playChineseTTS(currentGuideCantonese);
-    // 雙軌並行：如果需要中英夾雜，可以透過 setTimeout 延遲播放英文 (這裡預設先播中文)
-    if (currentGuideEnglishAudio) {
-      // 假設中文導航平均需要 3.5 秒，這裡延遲 3.5 秒後自動播放英文 MP3
-      setTimeout(() => { playEnglishAudio(currentGuideEnglishAudio); }, 3500);
+    const seq = [{ type: 'zh', text: currentGuideCantonese }];
+    if (currentGuideWordId) {
+      seq.push(getWordAudioStep(currentGuideWordId));
     }
+    playHybridQueue(seq);
   }
 
   // ==========================================
@@ -637,7 +817,7 @@
   // ==========================================
   const ILLUSTRATIONS = {
     draw: `
-      <svg viewBox="0 0 180 180" width="165" height="165">
+      <svg viewBox="0 0 180 180" width="160" height="160">
         <rect x="24" y="26" width="118" height="106" rx="18" fill="#FEF3C7" stroke="#F59E0B" stroke-width="6"/>
         <rect x="34" y="36" width="98" height="86" rx="12" fill="#FFFFFF"/>
         <path d="M46 104 A36 36 0 0 1 118 104" fill="none" stroke="#F43F5E" stroke-width="7" stroke-linecap="round"/>
@@ -652,7 +832,7 @@
       </svg>
     `,
     mouth: `
-      <svg viewBox="0 0 180 180" width="165" height="165">
+      <svg viewBox="0 0 180 180" width="160" height="160">
         <circle cx="44" cy="46" r="22" fill="#FBBF24" stroke="#D97706" stroke-width="5"/>
         <circle cx="136" cy="46" r="22" fill="#FBBF24" stroke="#D97706" stroke-width="5"/>
         <circle cx="90" cy="94" r="64" fill="#FDE68A" stroke="#F59E0B" stroke-width="6"/>
@@ -667,7 +847,7 @@
       </svg>
     `,
     meat: `
-      <svg viewBox="0 0 180 180" width="165" height="165">
+      <svg viewBox="0 0 180 180" width="160" height="160">
         <g transform="rotate(-25 90 90)">
           <rect x="96" y="78" width="52" height="24" rx="10" fill="#FFFBEB" stroke="#D97706" stroke-width="5"/>
           <circle cx="148" cy="78" r="13" fill="#FFFBEB" stroke="#D97706" stroke-width="5"/>
@@ -683,7 +863,7 @@
       </svg>
     `,
     milk: `
-      <svg viewBox="0 0 180 180" width="165" height="165">
+      <svg viewBox="0 0 180 180" width="160" height="160">
         <polygon points="56,52 90,28 124,52" fill="#60A5FA" stroke="#1D4ED8" stroke-width="5" stroke-linejoin="round"/>
         <rect x="56" y="52" width="68" height="98" rx="14" fill="#FFFFFF" stroke="#2563EB" stroke-width="5"/>
         <rect x="56" y="88" width="68" height="36" fill="#93C5FD"/>
@@ -696,7 +876,7 @@
       </svg>
     `,
     hand: `
-      <svg viewBox="0 0 180 180" width="165" height="165">
+      <svg viewBox="0 0 180 180" width="160" height="160">
         <g transform="rotate(-10 90 95)">
           <rect x="54" y="64" width="72" height="74" rx="34" fill="#FBBF24" stroke="#B45309" stroke-width="6"/>
           <rect x="34" y="84" width="32" height="24" rx="12" transform="rotate(-25 50 96)" fill="#FBBF24" stroke="#B45309" stroke-width="6"/>
@@ -715,7 +895,7 @@
   };
 
   // ==========================================
-  // 3. 課程資料定義 (綁定 ElevenLabs MP3 檔名)
+  // 3. 四部曲課程資料 (專注 K2 首音 Phonics 教學)
   // ==========================================
   const ACT1_CARDS = [
     {
@@ -723,89 +903,86 @@
       isWarmup: true,
       badge: '🔥 熱身重溫弱點詞',
       en: 'draw',
+      firstType: 'none',
       zh: '畫畫',
       sentence: 'I can draw.',
-      guideZh: '歡迎返到英文大本營！我哋先嚟熱身，重溫一個好重要嘅動作詞語，畫畫！',
-      audioFile: 'en-draw.mp3'
+      guideZh: '歡迎返到英文大本營！我哋先嚟熱身，重溫動作詞語，畫畫！聽下英文點讀啦！'
     },
     {
       id: 'mouth',
       isWarmup: false,
-      badge: '🌟 新學發音單字 1',
+      badge: '🌟 認識字母 m 開頭單字 1',
       en: 'mouth',
-      highlightFirst: true,
+      firstType: 'm',
       zh: '嘴巴',
-      sentence: '',
-      guideZh: '好棒呀！今日我哋要認識新嘅英文字母發音！第一個字係，嘴巴！',
-      audioFile: 'en-mouth.mp3'
+      sentence: 'm · mouth',
+      guideZh: '今日我哋認識英文字母 m 嘅開頭發音！第一個字係，嘴巴！留心聽下開頭個 m 音啦！'
     },
     {
       id: 'meat',
       isWarmup: false,
-      badge: '🌟 新學發音單字 2',
+      badge: '🌟 認識字母 m 開頭單字 2',
       en: 'meat',
-      highlightFirst: true,
+      firstType: 'm',
       zh: '肉',
-      sentence: '',
-      guideZh: '第二個同一個開頭發音嘅字係，肉！美味嘅肉肉！',
-      audioFile: 'en-meat.mp3'
+      sentence: 'm · meat',
+      guideZh: '第二個都係 m 開頭嘅字，係美味嘅肉肉！一齊聽下啦！'
     },
     {
       id: 'milk',
       isWarmup: false,
-      badge: '🌟 新學發音單字 3',
+      badge: '🌟 認識字母 m 開頭單字 3',
       en: 'milk',
-      highlightFirst: true,
+      firstType: 'm',
       zh: '牛奶',
-      sentence: '',
-      guideZh: '第三個字係香噴噴嘅，牛奶！佢都係同一個開頭發音㗎！',
-      audioFile: 'en-milk.mp3'
+      sentence: 'm · milk',
+      guideZh: '第三個 m 開頭嘅字，係香噴噴嘅牛奶！一齊聽下佢嘅發音啦！'
     },
     {
       id: 'hand',
       isWarmup: false,
-      badge: '🔍 聲音小對比',
+      badge: '🔍 開頭聲音大對比 (h 開頭)',
       en: 'hand',
-      highlightFirst: false,
+      firstType: 'h',
       zh: '手',
-      sentence: '',
-      guideZh: '咦，呢個係小手手！聽下佢嘅開頭發音，同頭先嗰三個字一唔一樣呢？',
-      audioFile: 'en-hand.mp3'
+      sentence: 'h · hand',
+      guideZh: '咦！呢個係小手手，佢係字母 h 開頭㗎，同頭先嘅 m 開頭唔一樣㗎！聽下有咩分別！'
     }
   ];
 
-  const ACT2_WORDS = [
+  // 第二幕：K2 首音火車頭配對 (Onset + Word，不再死背 o-u-t-h 串字！)
+  const ACT2_PHONICS = [
     {
       id: 'mouth',
       zh: '嘴巴',
-      letters: ['m', 'o', 'u', 't', 'h'], // 點擊時自動調用 en-m.mp3, en-o.mp3 等
+      onset: 'm',
+      rest: 'outh',
       isMWord: true,
-      guideZh: '嚟到第二幕字母積木！逐粒點擊下面嘅彩色積木，聽下每個字母嘅發音啦！',
-      fullAudio: 'en-mouth.mp3'
+      guideZh: '嚟到第二幕認首音！先撳左邊橙色嘅字母 m 聽開頭音，再撳右邊嘅嘴巴圖卡連埋一齊讀啦！'
     },
     {
       id: 'meat',
       zh: '肉',
-      letters: ['m', 'e', 'a', 't'],
+      onset: 'm',
+      rest: 'eat',
       isMWord: true,
-      guideZh: '再嚟拼下美味嘅肉肉！逐粒拍打積木，聽下第一個字母嘅發音！',
-      fullAudio: 'en-meat.mp3'
+      guideZh: '第二個字係肉肉！先拍響左邊嘅開頭字母 m，再拍響右邊嘅肉肉圖卡啦！'
     },
     {
       id: 'milk',
       zh: '牛奶',
-      letters: ['m', 'i', 'l', 'k'],
+      onset: 'm',
+      rest: 'ilk',
       isMWord: true,
-      guideZh: '跟住拼下香噴噴嘅牛奶！逐粒點擊積木拼出成個字啦！',
-      fullAudio: 'en-milk.mp3'
+      guideZh: '第三個字係牛奶！佢都係 m 開頭㗎！先撳左邊嘅 m，再撳右邊嘅牛奶圖卡啦！'
     },
     {
       id: 'hand',
-      zh: '手',
-      letters: ['h', 'a', 'n', 'd'],
+      zh: '手 (對比挑戰)',
+      onset: 'h',
+      rest: 'and',
       isMWord: false,
-      guideZh: '最後睇下小手手！佢嘅第一個字母係唔同嘅，點擊聽下有咩分別啦！',
-      fullAudio: 'en-hand.mp3'
+      guideZh: '特別對比挑戰！小手手係藍色嘅 h 開頭㗎！先撳左邊嘅字母 h，再撳右邊嘅小手手啦！'
     }
   ];
 
@@ -816,8 +993,7 @@
       en: 'draw',
       sentence: 'I can draw.',
       zh: '畫畫 · 我可以畫畫',
-      guideZh: '嚟到第三幕開口大聲讀！請玲玲大聲讀出畫畫同埋句式，讀完就請媽媽按綠色掣放煙花啦！',
-      audioFile: 'en-draw.mp3'
+      guideZh: '嚟到第三幕開口大聲讀！聽完示範之後，請玲玲大聲讀出畫畫同埋句式，讀完就請媽媽按綠色掣放煙花啦！'
     },
     {
       id: 'mouth',
@@ -825,8 +1001,7 @@
       en: 'mouth',
       sentence: 'm · mouth',
       zh: '嘴巴',
-      guideZh: '請玲玲大聲讀出，嘴巴！記得讀出開頭發音呀！',
-      audioFile: 'en-mouth.mp3'
+      guideZh: '請玲玲跟住示範，大聲讀出開頭音 m 同埋嘴巴！'
     },
     {
       id: 'meat',
@@ -834,8 +1009,7 @@
       en: 'meat',
       sentence: 'm · meat',
       zh: '肉',
-      guideZh: '好棒呀！跟住請玲玲大聲讀出，肉！',
-      audioFile: 'en-meat.mp3'
+      guideZh: '好棒呀！跟住請玲玲大聲讀出開頭音 m 同埋肉肉！'
     },
     {
       id: 'milk',
@@ -843,54 +1017,78 @@
       en: 'milk',
       sentence: 'm · milk',
       zh: '牛奶',
-      guideZh: '最後一個大聲讀挑戰！請玲玲大聲讀出，牛奶！',
-      audioFile: 'en-milk.mp3'
+      guideZh: '最後一個大聲讀挑戰！請玲玲大聲讀出開頭音 m 同埋牛奶！'
     }
   ];
 
+  // 第四幕：真正針對 Phonics 首音分辨 & 純聽英文選圖（答對前不劇透中文！）
   const ACT4_QUIZ = [
     {
-      badge: '🎮 輕鬆小遊戲 1 · 熱身重溫',
-      questionZh: '聽下邊一張圖卡係「畫畫」呢？',
-      guideZh: '嚟到最後一幕輕鬆小遊戲！細心聽下聲音，揀出啱嘅圖卡啦！',
-      promptAudio: 'en-draw.mp3',
-      correctId: 'draw',
-      options: [
-        { id: 'draw', label: 'draw (畫畫)' },
-        { id: 'milk', label: 'milk (牛奶)' }
-      ]
-    },
-    {
-      badge: '🎮 輕鬆小遊戲 2 · 聽音選圖',
-      questionZh: '聽下邊一張圖卡係「嘴巴」呢？',
-      guideZh: '第二題！聽下邊一張圖卡係嘴巴呢？',
-      promptAudio: 'en-mouth.mp3',
+      badge: '⭐ 辨音挑戰 1 · 課本 P.20 貼紙題',
+      questionZh: '聽下邊一張圖卡係「m」開頭發音呢？',
+      guideZh: '嚟到第四幕辨音王！第一題，細心聽下，邊一張圖卡係 m 開頭發音呢？',
+      promptSteps: [
+        { type: 'mp3', file: 'en-m.mp3', boost: 2.2 },
+        { type: 'mp3', file: 'en-mouth.mp3', boost: 2.2 }
+      ],
       correctId: 'mouth',
       options: [
-        { id: 'mouth', label: 'mouth (嘴巴)' },
-        { id: 'hand', label: 'hand (手)' }
+        { id: 'mouth', hint: '👄 ?', reveal: 'm · mouth (嘴巴)' },
+        { id: 'hand',  hint: '🖐️ ?', reveal: 'h · hand (手)' }
       ]
     },
     {
-      badge: '🎮 輕鬆小遊戲 3 · 聽音選圖',
-      questionZh: '聽下邊一張圖卡係「肉」呢？',
-      guideZh: '第三題！聽下邊一張圖卡係美味嘅肉呢？',
-      promptAudio: 'en-meat.mp3',
+      badge: '⭐ 辨音挑戰 2 · 課本 P.20 貼紙題',
+      questionZh: '再聽下！邊一張圖卡都係「m」開頭發音呢？',
+      guideZh: '第二題！再聽下，邊一張圖卡都係 m 開頭發音呢？',
+      promptSteps: [
+        { type: 'mp3', file: 'en-m.mp3', boost: 2.2 },
+        { type: 'mp3', file: 'en-meat.mp3', boost: 2.5 }
+      ],
       correctId: 'meat',
       options: [
-        { id: 'draw', label: 'draw (畫畫)' },
-        { id: 'meat', label: 'meat (肉)' }
+        { id: 'hand', hint: '🖐️ ?', reveal: 'h · hand (手)' },
+        { id: 'meat', hint: '🍗 ?', reveal: 'm · meat (肉)' }
       ]
     },
     {
-      badge: '⭐ 課本貼紙辨音小挑戰',
-      questionZh: '邊一張圖卡嘅開頭發音同「嘴巴、肉」一樣呢？',
-      guideZh: '最後一題課本貼紙大挑戰！邊一張圖卡嘅開頭發音同嘴巴、肉一樣呢？',
-      promptAudio: 'en-milk.mp3',
+      badge: '⭐ 辨音挑戰 3 · 課本 P.20 貼紙題',
+      questionZh: '第三個「m」開頭發音嘅圖卡係邊張呢？',
+      guideZh: '第三題！搵出第三個 m 開頭發音嘅圖卡啦！',
+      promptSteps: [
+        { type: 'mp3', file: 'en-m.mp3', boost: 2.2 },
+        { type: 'mp3', file: 'en-milk.mp3', boost: 2.5 }
+      ],
       correctId: 'milk',
       options: [
-        { id: 'milk', label: 'milk (牛奶)' },
-        { id: 'hand', label: 'hand (手)' }
+        { id: 'milk', hint: '🥛 ?', reveal: 'm · milk (牛奶)' },
+        { id: 'hand', hint: '🖐️ ?', reveal: 'h · hand (手)' }
+      ]
+    },
+    {
+      badge: '🎧 聽音選圖 4 · 單字大考驗',
+      questionZh: '細心聽英文發音，揀出啱嘅圖卡啦！（唔睇中文提示）',
+      guideZh: '第四題！今次唔講中文提示喇，細心聽下老師讀邊個英文字，揀出啱嘅圖卡啦！',
+      promptSteps: [
+        { type: 'mp3', file: 'en-mouth.mp3', boost: 2.2 }
+      ],
+      correctId: 'mouth',
+      options: [
+        { id: 'milk',  hint: '🔊 聽音揀圖', reveal: 'milk (牛奶)' },
+        { id: 'mouth', hint: '🔊 聽音揀圖', reveal: 'mouth (嘴巴)' }
+      ]
+    },
+    {
+      badge: '🔥 聽音選圖 5 · 弱點句式大考驗',
+      questionZh: '最後一題！細心聽英文句子，揀出啱嘅圖卡啦！',
+      guideZh: '最後一題！細心聽下呢句英文講緊邊個動作，揀出啱嘅圖卡啦！',
+      promptSteps: [
+        { type: 'mp3', file: 'en-draw.mp3', boost: 2.1 }
+      ],
+      correctId: 'draw',
+      options: [
+        { id: 'draw', hint: '🔊 聽音揀圖', reveal: 'I can draw. (畫畫)' },
+        { id: 'meat', hint: '🔊 聽音揀圖', reveal: 'meat (肉)' }
       ]
     }
   ];
@@ -900,7 +1098,8 @@
   // ==========================================
   let currentAct = 0; 
   let subIndex = 0;
-  let litBlocks = [];
+  let onsetTapped = false;
+  let wordTapped = false;
   let speakingDone = [false, false, false, false];
   let quizSolved = false;
   let quizWrongPicked = null;
@@ -920,7 +1119,8 @@
   function jumpToAct(actIdx) {
     currentAct = actIdx;
     subIndex = 0;
-    litBlocks = [];
+    onsetTapped = false;
+    wordTapped = false;
     quizSolved = false;
     quizWrongPicked = null;
     updateActNav();
@@ -934,11 +1134,14 @@
     // ---------- 第一幕：Meaning ----------
     if (currentAct === 0) {
       const card = ACT1_CARDS[subIndex];
-      setGuide(card.guideZh, card.audioFile, shouldSpeak);
+      setGuide(card.guideZh, card.id, shouldSpeak);
 
-      const wordHtml = card.highlightFirst
-        ? `<span class="highlight-m">${card.en[0]}</span>${card.en.slice(1)}`
-        : card.en;
+      let wordHtml = card.en;
+      if (card.firstType === 'm') {
+        wordHtml = `<span class="highlight-m">${card.en[0]}</span>${card.en.slice(1)}`;
+      } else if (card.firstType === 'h') {
+        wordHtml = `<span class="highlight-h">${card.en[0]}</span>${card.en.slice(1)}`;
+      }
 
       container.innerHTML = `
         <div class="dots-row">
@@ -953,50 +1156,60 @@
         </div>
         <div class="btn-row">
           <button class="btn-3d btn-amber" onclick="playMeaningZh()">🇭🇰 聽中文意思</button>
-          <button class="btn-3d btn-blue" onclick="playMeaningEn()">🇬🇧 聽英文發音</button>
+          <button class="btn-3d btn-blue" onclick="playMeaningEn()">🇬🇧 聽標準英文</button>
         </div>
         <div class="btn-row" style="margin-top: 20px;">
           ${subIndex > 0 ? `<button class="btn-3d btn-purple" onclick="prevAct1()">⬅️ 上一張</button>` : ''}
           <button class="btn-3d btn-green" onclick="nextAct1()">
-            ${subIndex < ACT1_CARDS.length - 1 ? '下一張圖卡 ➡️' : '進入第 2 幕：字母積木 🧩'}
+            ${subIndex < ACT1_CARDS.length - 1 ? '下一張圖卡 ➡️' : '進入第 2 幕：認首音 🧩'}
           </button>
         </div>
       `;
     }
 
-    // ---------- 第二幕：Phonics 字母積木 ----------
+    // ---------- 第二幕：K2 首音火車頭配對 (Onset + Word) ----------
     else if (currentAct === 1) {
-      const item = ACT2_WORDS[subIndex];
-      setGuide(item.guideZh, "", shouldSpeak); // 這一幕不自動播全字，讓小朋友自己點積木
+      const item = ACT2_PHONICS[subIndex];
+      setGuide(item.guideZh, "", shouldSpeak);
+
+      const wordDisplay = item.isMWord
+        ? `<span class="highlight-m">${item.onset}</span>${item.rest}`
+        : `<span class="highlight-h">${item.onset}</span>${item.rest}`;
 
       container.innerHTML = `
         <div class="dots-row">
-          ${ACT2_WORDS.map((_, i) => `<span class="dot ${i === subIndex ? 'active' : (i < subIndex ? 'completed' : '')}"></span>`).join('')}
+          ${ACT2_PHONICS.map((_, i) => `<span class="dot ${i === subIndex ? 'active' : (i < subIndex ? 'completed' : '')}"></span>`).join('')}
         </div>
-        <div class="stage-badge">🧩 第二幕：字母積木拼讀 (${subIndex + 1} / ${ACT2_WORDS.length})</div>
-        <div style="width: 130px; height: 130px; margin: 4px auto;">${ILLUSTRATIONS[item.id]}</div>
-        <div class="word-zh" style="margin-bottom: 4px;">${item.zh}</div>
-        <p style="font-size: 16px; font-weight: 800; color: #64748B; margin: 4px 0 8px;">👆 逐粒點擊彩色積木，聽下每個字母發音！</p>
-        <div class="blocks-arena">
-          ${item.letters.map((ch, idx) => {
-            const isFirst = idx === 0;
-            const isLit = Boolean(litBlocks[idx]);
-            const altClass = !item.isMWord ? 'alt-color' : '';
-            return `
-              <div class="letter-block ${isFirst ? 'key-letter' : ''} ${isLit ? 'lit ' + altClass : ''}" onclick="tapLetterBlock(${idx})">
-                ${isFirst && item.isMWord ? '<span class="star-tag">⭐</span>' : ''}
-                ${ch}
-              </div>
-            `;
-          }).join('')}
+        <div class="stage-badge">🧩 第二幕：開頭首音配對 (${subIndex + 1} / ${ACT2_PHONICS.length})</div>
+        <p style="font-size: 18px; font-weight: 900; color: #1E3A8A; margin: 4px 0 10px;">
+          👆 第 1 步先撳左邊開頭字母 <b>${item.onset}</b>，第 2 步再撳右邊圖卡連讀！
+        </p>
+
+        <div class="phonics-train-stage">
+          <!-- 左邊：開頭首音積木 -->
+          <div class="onset-card ${!item.isMWord ? 'h-style' : ''} ${onsetTapped ? 'lit' : ''}" onclick="tapOnsetCard()">
+            <div class="onset-big-letter">${item.onset}</div>
+            <div class="onset-step-tag">${onsetTapped ? '✅ 已拍響首音' : '① 先拍我'}</div>
+          </div>
+
+          <div class="plus-connector">➡️</div>
+
+          <!-- 右邊：目標單字圖卡 -->
+          <div class="word-target-card ${wordTapped ? 'lit' : ''}" onclick="tapWordTargetCard()">
+            <div style="width: 110px; height: 110px; margin: 0 auto 4px;">${ILLUSTRATIONS[item.id]}</div>
+            <div style="font-size: 32px; font-weight: 900; color: #1E3A8A;">${wordDisplay}</div>
+            <div style="font-size: 18px; font-weight: 800; color: #475569;">${item.zh} ${wordTapped ? '🎉' : '· ② 再拍我'}</div>
+          </div>
         </div>
+
         <div class="btn-row">
-          <button class="btn-3d btn-blue" onclick="blendCurrentWord()">🔊 串連讀出成個字 (${item.letters.join('')})</button>
+          <button class="btn-3d btn-blue" onclick="blendOnsetAndWord()">🔊 聽老師連讀 (${item.onset} ➔ ${item.onset}${item.rest})</button>
         </div>
+
         <div class="btn-row" style="margin-top: 20px;">
-          ${subIndex > 0 ? `<button class="btn-3d btn-purple" onclick="prevAct2()">⬅️ 上一個字</button>` : ''}
+          ${subIndex > 0 ? `<button class="btn-3d btn-purple" onclick="prevAct2()">⬅️ 上一個</button>` : ''}
           <button class="btn-3d btn-green" onclick="nextAct2()">
-            ${subIndex < ACT2_WORDS.length - 1 ? '下一個字母積木 ➡️' : '進入第 3 幕：大聲讀 🎤'}
+            ${subIndex < ACT2_PHONICS.length - 1 ? '下一個首音配對 ➡️' : '進入第 3 幕：大聲讀 🎤'}
           </button>
         </div>
       `;
@@ -1006,21 +1219,21 @@
     else if (currentAct === 2) {
       const item = ACT3_SPEAK[subIndex];
       const isDone = speakingDone[subIndex];
-      setGuide(item.guideZh, item.audioFile, shouldSpeak);
+      setGuide(item.guideZh, item.id, shouldSpeak);
 
       container.innerHTML = `
         <div class="dots-row">
           ${ACT3_SPEAK.map((_, i) => `<span class="dot ${i === subIndex ? 'active' : (speakingDone[i] ? 'completed' : '')}"></span>`).join('')}
         </div>
         <div class="stage-badge ${subIndex === 0 ? 'warmup' : ''}">${item.badge}</div>
-        <div class="flashcard-3d" onclick="playEnglishAudio('${item.audioFile}')">
+        <div class="flashcard-3d" onclick="playHybridQueue([getWordAudioStep('${item.id}')])">
           <div class="illustration-wrap">${ILLUSTRATIONS[item.id]}</div>
           <div class="word-en">${item.en}</div>
           <div class="sentence-box">${item.sentence}</div>
           <div class="word-zh" style="margin-top: 8px; font-size: 20px;">${item.zh}</div>
         </div>
         <div class="btn-row">
-          <button class="btn-3d btn-blue" onclick="playEnglishAudio('${item.audioFile}')">🔊 聽老師示範發音</button>
+          <button class="btn-3d btn-blue" onclick="playHybridQueue([getWordAudioStep('${item.id}')])">🔊 聽老師示範發音</button>
         </div>
         <div class="btn-row" style="margin-top: 14px;">
           <button class="btn-3d btn-green" onclick="celebrateSpeaking()">
@@ -1031,22 +1244,24 @@
         <div class="btn-row" style="margin-top: 18px;">
           ${subIndex > 0 ? `<button class="btn-3d btn-purple" onclick="prevAct3()">⬅️ 上一個</button>` : ''}
           <button class="btn-3d btn-amber" onclick="nextAct3()">
-            ${subIndex < ACT3_SPEAK.length - 1 ? '下一個挑戰 ➡️' : '進入第 4 幕：輕鬆小遊戲 🎮'}
+            ${subIndex < ACT3_SPEAK.length - 1 ? '下一個挑戰 ➡️' : '進入第 4 幕：辨音王 🎮'}
           </button>
         </div>
       `;
     }
 
-    // ---------- 第四幕：Gentle Review 輕鬆小遊戲 ----------
+    // ---------- 第四幕：辨音王小遊戲 (答對前絕不劇透中文答案) ----------
     else if (currentAct === 3) {
       const q = ACT4_QUIZ[subIndex];
       currentGuideCantonese = q.guideZh;
-      currentGuideEnglishAudio = q.promptAudio;
-      document.getElementById('teacherMsg').textContent = q.questionZh;
-      
+      currentGuideWordId = "";
+      document.getElementById('teacherMsg').textContent = q.guideZh;
+
       if (shouldSpeak) {
-        playChineseTTS(q.guideZh);
-        setTimeout(() => { playEnglishAudio(q.promptAudio); }, 3500);
+        playHybridQueue([
+          { type: 'zh', text: q.guideZh },
+          ...q.promptSteps
+        ]);
       }
 
       container.innerHTML = `
@@ -1054,8 +1269,8 @@
           ${ACT4_QUIZ.map((_, i) => `<span class="dot ${i === subIndex ? 'active' : (i < subIndex ? 'completed' : '')}"></span>`).join('')}
         </div>
         <div class="stage-badge">${q.badge}</div>
-        <h2 style="font-size: 24px; color: #1E3A8A; margin: 8px 0 12px;">${q.questionZh}</h2>
-        <button class="btn-3d btn-blue" onclick="playEnglishAudio('${q.promptAudio}')">🔊 再聽一次題目聲音</button>
+        <h2 style="font-size: 23px; color: #1E3A8A; margin: 6px 0 12px;">${q.questionZh}</h2>
+        <button class="btn-3d btn-blue" onclick="replayQuizSound()">🔊 再聽一次題目發音</button>
 
         <div class="choice-grid">
           ${q.options.map(opt => {
@@ -1065,15 +1280,17 @@
             return `
               <div class="${cls}" onclick="pickQuizOption('${opt.id}')">
                 <div style="width: 135px; height: 135px; margin: 0 auto 8px;">${ILLUSTRATIONS[opt.id]}</div>
-                <div style="font-size: 22px; font-weight: 900; color: #1E3A8A;">${opt.label}</div>
+                <div style="font-size: 21px; font-weight: 900; color: #1E3A8A;">
+                  ${quizSolved ? opt.reveal : opt.hint}
+                </div>
               </div>
             `;
           }).join('')}
         </div>
 
         ${quizSolved
-          ? `<div class="gentle-hint-banner success">🎉 好叻呀玲玲！答啱咗喇！</div>`
-          : (quizWrongPicked ? `<div class="gentle-hint-banner">💛 試吓隔離嗰張圖卡啦！</div>` : '')
+          ? `<div class="gentle-hint-banner success">🎉 好叻呀玲玲！耳朵好靈敏，答啱咗喇！</div>`
+          : (quizWrongPicked ? `<div class="gentle-hint-banner">💛 聽清楚開頭係 m 音定係 h 音，試吓隔離嗰張圖卡啦！</div>` : '')
         }
 
         ${quizSolved ? `
@@ -1088,26 +1305,26 @@
 
     // ---------- 結算畫面 ----------
     else if (currentAct === 4) {
-      const completionMsg = "恭喜玲玲完成今日全部四個任務！你真係好棒呀！快啲撳下面個掣複製進度暗號俾老師啦！";
+      const completionMsg = "恭喜玲玲完成今日全部四個任務！你認得晒字母 m 開頭嘅字喇！快啲撳下面個掣複製進度暗號俾老師啦！";
       setGuide(completionMsg, "", shouldSpeak);
       if (shouldSpeak) {
         launchFireworks();
         setTimeout(launchFireworks, 700);
       }
 
-      const secretCode = `【玲玲英文課堂進度暗號】單元：Unit 4 Day 4 (en-unit4-day4.html)｜完成狀態：✅ 全課四部曲順利完成 (100% Hybrid Voice)｜重溫弱點：draw (I can draw.)｜新學內容：P.20 Phonics 字母 m (mouth, meat, milk vs hand)｜請 Anna 老師更新雲端英文總庫並解鎖 Day 5！`;
+      const secretCode = `【玲玲英文課堂進度暗號】單元：Unit 4 Day 4 (en-unit4-day4.html)｜完成狀態：✅ 全課四部曲順利完成 (100% 雙軌排隊平衡音量版)｜重溫弱點：draw (I can draw.)｜新學內容：P.20 Phonics 字母 m 首音辨別 (mouth, meat, milk vs hand)｜請 Anna 老師更新雲端英文總庫並解鎖 Day 5！`;
 
       container.innerHTML = `
         <div style="font-size: 74px; margin-bottom: 6px;">🏆🎉</div>
         <h1 style="font-size: 32px; color: #1E3A8A; margin: 4px 0 8px;">Unit 4 Day 4 大成功！</h1>
-        <p style="font-size: 19px; font-weight: 800; color: #475569; margin: 0 0 14px;">玲玲今日好專心，全部關卡都順利完成喇！</p>
+        <p style="font-size: 19px; font-weight: 800; color: #475569; margin: 0 0 14px;">玲玲今日好專心，全部 Phonics 首音關卡都順利完成喇！</p>
 
         <div class="summary-badges">
           <span class="summary-chip">🔥 熱身重溫：draw (I can draw.)</span>
-          <span class="summary-chip">🔤 字母發音：m</span>
-          <span class="summary-chip">👄 mouth</span>
-          <span class="summary-chip">🍗 meat</span>
-          <span class="summary-chip">🥛 milk</span>
+          <span class="summary-chip">🔤 首音辨別：m vs h</span>
+          <span class="summary-chip">👄 m · mouth</span>
+          <span class="summary-chip">🍗 m · meat</span>
+          <span class="summary-chip">🥛 m · milk</span>
         </div>
 
         <div class="btn-row" style="margin-top: 18px;">
@@ -1127,7 +1344,7 @@
   }
 
   // ==========================================
-  // 5. 各幕互動邏輯 (全面改為觸發 Hybrid 音軌)
+  // 5. 各幕互動邏輯 (100% 排隊發聲，絕不撞聲)
   // ==========================================
   
   // --- 第一幕互動 ---
@@ -1139,18 +1356,20 @@
       el.classList.add('pop');
     }
     const card = ACT1_CARDS[subIndex];
-    playChineseTTS(card.zh);
-    setTimeout(() => { playEnglishAudio(card.audioFile); }, 1000);
+    playHybridQueue([
+      { type: 'zh', text: card.zh },
+      getWordAudioStep(card.id)
+    ]);
   }
 
   function playMeaningZh() {
     const card = ACT1_CARDS[subIndex];
-    playChineseTTS(card.zh);
+    playHybridQueue([{ type: 'zh', text: card.zh }]);
   }
 
   function playMeaningEn() {
     const card = ACT1_CARDS[subIndex];
-    playEnglishAudio(card.audioFile);
+    playHybridQueue([getWordAudioStep(card.id)]);
   }
 
   function prevAct1() {
@@ -1169,49 +1388,54 @@
     }
   }
 
-  // --- 第二幕互動 (核心突破：動態讀取 A-Z MP3 庫) ---
-  function tapLetterBlock(letterIdx) {
-    const item = ACT2_WORDS[subIndex];
-    litBlocks[letterIdx] = true; 
+  // --- 第二幕互動 (K2 首音火車頭配對) ---
+  function tapOnsetCard() {
+    const item = ACT2_PHONICS[subIndex];
+    onsetTapped = true;
     renderStage(false);
-
-    const ch = item.letters[letterIdx].toLowerCase(); // 轉換為小寫，確保檔名正確
-    const allLit = item.letters.every((_, idx) => Boolean(litBlocks[idx]));
-
-    if (allLit) {
-      launchFireworks();
-      playEnglishAudio(`en-${ch}.mp3`); // 先播最後一粒字母
-      setTimeout(() => {
-        playChineseTTS('好叻呀！你已經拍晒全部字母積木喇！一齊聽下成個字點讀！');
-      }, 1000);
-      setTimeout(() => {
-        playEnglishAudio(item.fullAudio); // 播完成個字的 MP3
-      }, 4500);
-    } else {
-      // 完美調用你剛剛生成的 A-Z 單字母 MP3
-      playEnglishAudio(`en-${ch}.mp3`);
-    }
+    playHybridQueue([
+      { type: 'mp3', file: `en-${item.onset}.mp3`, boost: 2.3 }
+    ]);
   }
 
-  function blendCurrentWord() {
-    const item = ACT2_WORDS[subIndex];
-    litBlocks = item.letters.map(() => true);
+  function tapWordTargetCard() {
+    const item = ACT2_PHONICS[subIndex];
+    onsetTapped = true;
+    wordTapped = true;
     renderStage(false);
-    playEnglishAudio(item.fullAudio);
+    launchFireworks();
+    playHybridQueue([
+      getWordAudioStep(item.id),
+      { type: 'zh', text: `好叻呀！開頭係字母 ${item.onset}，加埋就係 ${item.zh}！` }
+    ]);
+  }
+
+  function blendOnsetAndWord() {
+    const item = ACT2_PHONICS[subIndex];
+    onsetTapped = true;
+    wordTapped = true;
+    renderStage(false);
+    launchFireworks();
+    playHybridQueue([
+      { type: 'mp3', file: `en-${item.onset}.mp3`, boost: 2.3 },
+      getWordAudioStep(item.id)
+    ]);
   }
 
   function prevAct2() {
     if (subIndex > 0) {
       subIndex--;
-      litBlocks = [];
+      onsetTapped = false;
+      wordTapped = false;
       renderStage(true);
     }
   }
 
   function nextAct2() {
-    if (subIndex < ACT2_WORDS.length - 1) {
+    if (subIndex < ACT2_PHONICS.length - 1) {
       subIndex++;
-      litBlocks = [];
+      onsetTapped = false;
+      wordTapped = false;
       renderStage(true);
     } else {
       jumpToAct(2);
@@ -1224,8 +1448,10 @@
     renderStage(false);
     launchFireworks();
     const item = ACT3_SPEAK[subIndex];
-    playChineseTTS('嘩！玲玲讀得又大聲又標準，超叻女呀！');
-    setTimeout(() => { playEnglishAudio(item.audioFile); }, 3000);
+    playHybridQueue([
+      { type: 'zh', text: '嘩！玲玲讀得又大聲又標準，超叻女呀！' },
+      getWordAudioStep(item.id)
+    ]);
   }
 
   function prevAct3() {
@@ -1245,6 +1471,11 @@
   }
 
   // --- 第四幕互動 ---
+  function replayQuizSound() {
+    const q = ACT4_QUIZ[subIndex];
+    playHybridQueue(q.promptSteps);
+  }
+
   function pickQuizOption(pickedId) {
     if (quizSolved) return;
     const q = ACT4_QUIZ[subIndex];
@@ -1254,12 +1485,17 @@
       quizWrongPicked = null;
       renderStage(false);
       launchFireworks();
-      playChineseTTS('好叻呀玲玲！答啱咗喇！');
-      setTimeout(() => { playEnglishAudio(q.promptAudio); }, 2500);
+      playHybridQueue([
+        getWordAudioStep(pickedId),
+        { type: 'zh', text: '好叻呀玲玲！答啱咗喇！' }
+      ]);
     } else {
       quizWrongPicked = pickedId; 
       renderStage(false);
-      playChineseTTS('試吓隔離嗰張圖卡啦！');
+      playHybridQueue([
+        getWordAudioStep(pickedId),
+        { type: 'zh', text: '呢個係 h 開頭嘅小手手嚟㗎，試吓隔離嗰張圖卡啦！' }
+      ]);
     }
   }
 
@@ -1274,14 +1510,16 @@
     }
   }
 
-  // --- 一鍵複製暗號 (相容 iPad Safari) ---
+  // --- 一鍵複製暗號 ---
   function copyProgressSecret() {
     const text = document.getElementById('secretCodeText').innerText;
     const btn = document.getElementById('copySecretBtn');
 
     function onCopied() {
       btn.textContent = '✅ 已複製暗號！快啲貼俾 Anna 老師啦！';
-      playChineseTTS('已複製暗號！請媽媽貼返去對話框俾老師更新進度啦！');
+      playHybridQueue([
+        { type: 'zh', text: '已複製暗號！請媽媽貼返去對話框俾老師更新進度啦！' }
+      ]);
     }
 
     if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -1372,7 +1610,7 @@
     }
   }
 
-  // 初始化第一幕（已預載雙語指引文字，點擊橫幅或任意按鈕即發聲）
+  // 初始化第一幕
   renderStage(false);
 </script>
 </body>
