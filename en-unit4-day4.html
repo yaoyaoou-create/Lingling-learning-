@@ -578,49 +578,18 @@
 
 <script>
   // ==========================================
-  // 1. iPad Safari 終極語音防吞聲、防撞聲 & 中英徹底分流引擎
+  // 1. iPad Safari 終極極簡語音引擎 (依賴系統設定，完全防男聲)
   // ==========================================
   window.utterancePool = [];
-  let cachedVoices = [];
   let currentSpeechId = 0; // 防連按撞聲計數鎖
   let currentGuideCantonese = "歡迎返到英文大本營！今日我哋先熱身重溫畫畫，再認識新嘅英文字母發音！";
   let currentGuideEnglish = "";
 
-  function loadVoices() {
-    if ('speechSynthesis' in window) {
-      cachedVoices = window.speechSynthesis.getVoices();
-    }
-  }
-  loadVoices();
-  if ('speechSynthesis' in window && window.speechSynthesis.onvoiceschanged !== undefined) {
-    window.speechSynthesis.onvoiceschanged = loadVoices;
-  }
-
-  function pickVoice(langType) {
-    if (!cachedVoices.length) loadVoices();
-    if (langType === 'zh-HK') {
-      return cachedVoices.find(v => v.lang === 'zh-HK' && (v.name.includes('Sin') || v.name.includes('Female')))
-          || cachedVoices.find(v => v.lang === 'zh-HK')
-          || cachedVoices.find(v => v.lang.toLowerCase().includes('hk'))
-          || cachedVoices.find(v => v.lang.toLowerCase().includes('zh-tw'));
-    } else {
-      // 鎖定英國女聲
-      const femaleHints = ['Kate', 'Serena', 'Martha', 'Stephanie', 'Libby', 'Sonia', 'Fiona', 'Female'];
-      return cachedVoices.find(v => v.lang === 'en-GB' && femaleHints.some(h => v.name.includes(h)))
-          || cachedVoices.find(v => v.lang === 'en-GB' && !v.name.includes('Daniel') && !v.name.includes('Oliver') && !v.name.includes('Arthur'))
-          || cachedVoices.find(v => v.lang === 'en-GB')
-          || cachedVoices.find(v => v.lang.startsWith('en'));
-    }
-  }
-
-  // 排隊播放：嚴格中英分流，絕不混雜，並具備防撞聲保護
   function speakQueue(segments) {
+    if (!('speechSynthesis' in window) || !segments || segments.length === 0) return;
     const mySpeechId = ++currentSpeechId;
-    if (!('speechSynthesis' in window)) return;
     window.speechSynthesis.cancel();
     window.utterancePool = [];
-
-    if (!segments || segments.length === 0) return;
 
     let idx = 0;
     function playNext() {
@@ -628,20 +597,24 @@
       const seg = segments[idx];
       idx++;
 
-      const u = new SpeechSynthesisUtterance(seg.text);
-      window.utterancePool.push(u); // Anti-GC 防回收
+      // 淨化文字：防止把 m 讀成 meter 或讀出標點
+      let safeText = seg.text.replace(/[·•｜|~～]/g, ',');
+      if (seg.lang !== 'zh-HK' && /^[a-zA-Z]$/.test(safeText.trim())) {
+        safeText = safeText.trim().toLowerCase() + '.';
+      }
 
-      const voice = pickVoice(seg.lang);
-      if (voice) u.voice = voice;
+      const u = new SpeechSynthesisUtterance(safeText);
+      window.utterancePool.push(u); 
 
+      // 🌟 絕對不設定 u.voice，完全交給 iPad 系統預設的女聲！
       if (seg.lang === 'zh-HK') {
         u.lang = 'zh-HK';
         u.pitch = 1.05;
         u.rate = 0.9;
       } else {
-        u.lang = 'en-GB';
-        u.pitch = 1.08;
-        u.rate = 0.78;
+        u.lang = 'en-GB'; 
+        u.pitch = 1.1; 
+        u.rate = 0.78; 
       }
 
       let advanced = false;
@@ -650,16 +623,17 @@
         advanced = true;
         setTimeout(() => {
           if (mySpeechId === currentSpeechId) playNext();
-        }, 140);
+        }, 150);
       };
 
       u.onend = done;
       u.onerror = done;
-
       window.speechSynthesis.speak(u);
     }
-
-    playNext();
+    
+    setTimeout(() => {
+      if (mySpeechId === currentSpeechId) playNext();
+    }, 60);
   }
 
   function setGuide(zhText, enText = "", autoSpeak = true) {
