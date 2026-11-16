@@ -552,7 +552,6 @@
   <!-- Anna 老師常駐黃色橫幅 -->
   <div class="teacher-banner" onclick="replayGuide()">
     <div class="teacher-avatar" aria-hidden="true">
-      <!-- 可愛卡通 Anna 老師頭像 SVG -->
       <svg viewBox="0 0 80 80" width="48" height="48">
         <circle cx="40" cy="40" r="36" fill="#FDE68A"/>
         <path d="M18 38 C18 18, 62 18, 62 38 L64 56 C64 60, 56 60, 56 54 L56 42 L24 42 L24 54 C24 60, 16 60, 16 56 Z" fill="#78350F"/>
@@ -578,67 +577,46 @@
 
 <script>
   // ==========================================
-  // 1. iPad Safari 終極極簡語音引擎 (依賴系統設定，完全防男聲)
+  // 1. 全新「中英雙軌 (Hybrid Voice) 引擎」
   // ==========================================
-  window.utterancePool = [];
-  let currentSpeechId = 0; // 防連按撞聲計數鎖
-  let currentGuideCantonese = "歡迎返到英文大本營！今日我哋先熱身重溫畫畫，再認識新嘅英文字母發音！";
-  let currentGuideEnglish = "";
-
-  function speakQueue(segments) {
-    if (!('speechSynthesis' in window) || !segments || segments.length === 0) return;
+  
+  // A. 中文 TTS 播放 (專門負責 Anna 老師廣東話導航)
+  let currentSpeechId = 0; 
+  function playChineseTTS(text) {
+    if (!('speechSynthesis' in window) || !text) return;
     const mySpeechId = ++currentSpeechId;
     window.speechSynthesis.cancel();
-    window.utterancePool = [];
-
-    let idx = 0;
-    function playNext() {
-      if (mySpeechId !== currentSpeechId || idx >= segments.length) return;
-      const seg = segments[idx];
-      idx++;
-
-      // 淨化文字：防止把 m 讀成 meter 或讀出標點
-      let safeText = seg.text.replace(/[·•｜|~～]/g, ',');
-      if (seg.lang !== 'zh-HK' && /^[a-zA-Z]$/.test(safeText.trim())) {
-        safeText = safeText.trim().toLowerCase() + '.';
-      }
-
-      const u = new SpeechSynthesisUtterance(safeText);
-      window.utterancePool.push(u); 
-
-      // 🌟 絕對不設定 u.voice，完全交給 iPad 系統預設的女聲！
-      if (seg.lang === 'zh-HK') {
-        u.lang = 'zh-HK';
-        u.pitch = 1.05;
-        u.rate = 0.9;
-      } else {
-        u.lang = 'en-GB'; 
-        u.pitch = 1.1; 
-        u.rate = 0.78; 
-      }
-
-      let advanced = false;
-      const done = () => {
-        if (advanced || mySpeechId !== currentSpeechId) return;
-        advanced = true;
-        setTimeout(() => {
-          if (mySpeechId === currentSpeechId) playNext();
-        }, 150);
-      };
-
-      u.onend = done;
-      u.onerror = done;
-      window.speechSynthesis.speak(u);
-    }
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'zh-HK';
+    u.pitch = 1.05;
+    u.rate = 0.9;
     
-    setTimeout(() => {
-      if (mySpeechId === currentSpeechId) playNext();
-    }, 60);
+    // 預防 iOS TTS 引擎卡死
+    u.onend = () => { if(mySpeechId === currentSpeechId) currentSpeechId = 0; };
+    u.onerror = () => { if(mySpeechId === currentSpeechId) currentSpeechId = 0; };
+    
+    setTimeout(() => { if (mySpeechId === currentSpeechId) window.speechSynthesis.speak(u); }, 60);
   }
 
-  function setGuide(zhText, enText = "", autoSpeak = true) {
+  // B. 英文 MP3 播放 (專門負責 ElevenLabs 高質音檔，絕對零報錯、不變男聲)
+  let currentAudio = null;
+  function playEnglishAudio(mp3FileName) {
+    if(currentAudio) {
+      currentAudio.pause();
+      currentAudio.currentTime = 0;
+    }
+    // 指向 GitHub 上你建立的 audio 資料夾
+    currentAudio = new Audio('audio/' + mp3FileName);
+    currentAudio.play().catch(e => console.log('Audio play hindered by browser policy until interaction.'));
+  }
+
+  // 老師導航狀態
+  let currentGuideCantonese = "歡迎返到英文大本營！今日我哋先熱身重溫畫畫，再認識新嘅英文字母發音！";
+  let currentGuideEnglishAudio = "";
+
+  function setGuide(zhText, enAudioFile = "", autoSpeak = true) {
     currentGuideCantonese = zhText;
-    currentGuideEnglish = enText;
+    currentGuideEnglishAudio = enAudioFile;
     document.getElementById('teacherMsg').textContent = zhText;
     if (autoSpeak) {
       replayGuide();
@@ -646,28 +624,26 @@
   }
 
   function replayGuide() {
-    const seq = [{ lang: 'zh-HK', text: currentGuideCantonese }];
-    if (currentGuideEnglish) {
-      seq.push({ lang: 'en-GB', text: currentGuideEnglish });
+    playChineseTTS(currentGuideCantonese);
+    // 雙軌並行：如果需要中英夾雜，可以透過 setTimeout 延遲播放英文 (這裡預設先播中文)
+    if (currentGuideEnglishAudio) {
+      // 假設中文導航平均需要 3.5 秒，這裡延遲 3.5 秒後自動播放英文 MP3
+      setTimeout(() => { playEnglishAudio(currentGuideEnglishAudio); }, 3500);
     }
-    speakQueue(seq);
   }
 
   // ==========================================
-  // 2. 可愛童趣 3D 卡通 SVG 圖庫 (絕無寫實器官)
+  // 2. 可愛童趣 3D 卡通 SVG 圖庫
   // ==========================================
   const ILLUSTRATIONS = {
     draw: `
       <svg viewBox="0 0 180 180" width="165" height="165">
-        <!-- 畫板 -->
         <rect x="24" y="26" width="118" height="106" rx="18" fill="#FEF3C7" stroke="#F59E0B" stroke-width="6"/>
         <rect x="34" y="36" width="98" height="86" rx="12" fill="#FFFFFF"/>
-        <!-- 畫板上可愛彩虹與太陽 -->
         <path d="M46 104 A36 36 0 0 1 118 104" fill="none" stroke="#F43F5E" stroke-width="7" stroke-linecap="round"/>
         <path d="M54 104 A28 28 0 0 1 110 104" fill="none" stroke="#FACC15" stroke-width="7" stroke-linecap="round"/>
         <path d="M62 104 A20 20 0 0 1 102 104" fill="none" stroke="#38BDF8" stroke-width="7" stroke-linecap="round"/>
         <circle cx="62" cy="58" r="11" fill="#FBBF24"/>
-        <!-- 魔法彩色畫筆 -->
         <g transform="rotate(-32 132 122)">
           <rect x="122" y="76" width="18" height="72" rx="9" fill="#3B82F6" stroke="#1D4ED8" stroke-width="4"/>
           <rect x="122" y="66" width="18" height="14" rx="3" fill="#CBD5E1"/>
@@ -677,37 +653,28 @@
     `,
     mouth: `
       <svg viewBox="0 0 180 180" width="165" height="165">
-        <!-- 可愛小熊笑臉聚焦微笑嘴巴 (童趣卡通風) -->
         <circle cx="44" cy="46" r="22" fill="#FBBF24" stroke="#D97706" stroke-width="5"/>
         <circle cx="136" cy="46" r="22" fill="#FBBF24" stroke="#D97706" stroke-width="5"/>
         <circle cx="90" cy="94" r="64" fill="#FDE68A" stroke="#F59E0B" stroke-width="6"/>
-        <!-- 瞇瞇笑眼 -->
         <path d="M60 72 Q68 62 76 72" stroke="#78350F" stroke-width="5" fill="none" stroke-linecap="round"/>
         <path d="M104 72 Q112 62 120 72" stroke="#78350F" stroke-width="5" fill="none" stroke-linecap="round"/>
-        <!-- 粉紅腮紅 -->
         <ellipse cx="52" cy="92" rx="11" ry="7" fill="#FDA4AF" opacity="0.8"/>
         <ellipse cx="128" cy="92" rx="11" ry="7" fill="#FDA4AF" opacity="0.8"/>
-        <!-- 可愛張開笑嘴巴 -->
         <ellipse cx="90" cy="84" rx="8" ry="6" fill="#78350F"/>
         <path d="M64 102 Q90 144 116 102 Z" fill="#FB7185" stroke="#E11D48" stroke-width="5" stroke-linejoin="round"/>
         <path d="M74 118 Q90 132 106 118" fill="#FDA4AF"/>
-        <!-- 閃亮星星提示 -->
         <text x="134" y="132" font-size="26">✨</text>
       </svg>
     `,
     meat: `
       <svg viewBox="0 0 180 180" width="165" height="165">
-        <!-- 可愛卡通美味雞腿/肉排 -->
         <g transform="rotate(-25 90 90)">
-          <!-- 骨頭兩端 -->
           <rect x="96" y="78" width="52" height="24" rx="10" fill="#FFFBEB" stroke="#D97706" stroke-width="5"/>
           <circle cx="148" cy="78" r="13" fill="#FFFBEB" stroke="#D97706" stroke-width="5"/>
           <circle cx="148" cy="102" r="13" fill="#FFFBEB" stroke="#D97706" stroke-width="5"/>
           <rect x="132" y="76" width="16" height="28" fill="#FFFBEB"/>
-          <!-- 香噴噴肉塊 -->
           <ellipse cx="76" cy="90" rx="52" ry="38" fill="#F97316" stroke="#C2410C" stroke-width="6"/>
           <ellipse cx="70" cy="82" rx="34" ry="20" fill="#FB923C"/>
-          <!-- 可愛笑臉 -->
           <circle cx="62" cy="88" r="4" fill="#431407"/>
           <circle cx="86" cy="88" r="4" fill="#431407"/>
           <path d="M68 96 Q74 103 80 96" stroke="#431407" stroke-width="3.5" fill="none" stroke-linecap="round"/>
@@ -717,38 +684,30 @@
     `,
     milk: `
       <svg viewBox="0 0 180 180" width="165" height="165">
-        <!-- 可愛微笑牛奶盒 -->
         <polygon points="56,52 90,28 124,52" fill="#60A5FA" stroke="#1D4ED8" stroke-width="5" stroke-linejoin="round"/>
         <rect x="56" y="52" width="68" height="98" rx="14" fill="#FFFFFF" stroke="#2563EB" stroke-width="5"/>
         <rect x="56" y="88" width="68" height="36" fill="#93C5FD"/>
-        <!-- 牛奶盒可愛笑臉 -->
         <circle cx="78" cy="74" r="4.5" fill="#1E3A8A"/>
         <circle cx="102" cy="74" r="4.5" fill="#1E3A8A"/>
         <path d="M84 80 Q90 87 96 80" stroke="#1E3A8A" stroke-width="3.5" fill="none" stroke-linecap="round"/>
         <circle cx="70" cy="79" r="5" fill="#FDA4AF" opacity="0.8"/>
         <circle cx="110" cy="79" r="5" fill="#FDA4AF" opacity="0.8"/>
-        <!-- 牛奶水滴圖案 -->
         <path d="M90 95 C90 95 100 107 100 113 A10 10 0 0 1 80 113 C80 107 90 95 90 95 Z" fill="#FFFFFF"/>
       </svg>
     `,
     hand: `
       <svg viewBox="0 0 180 180" width="165" height="165">
-        <!-- 可愛卡通小熊毛茸茸揮手手套 (童趣非寫實) -->
         <g transform="rotate(-10 90 95)">
           <rect x="54" y="64" width="72" height="74" rx="34" fill="#FBBF24" stroke="#B45309" stroke-width="6"/>
-          <!-- 拇指 -->
           <rect x="34" y="84" width="32" height="24" rx="12" transform="rotate(-25 50 96)" fill="#FBBF24" stroke="#B45309" stroke-width="6"/>
-          <!-- 可愛肉球愛心 -->
           <ellipse cx="90" cy="106" rx="20" ry="16" fill="#FEF3C7"/>
           <circle cx="74" cy="82" r="7" fill="#FEF3C7"/>
           <circle cx="90" cy="78" r="7" fill="#FEF3C7"/>
           <circle cx="106" cy="82" r="7" fill="#FEF3C7"/>
-          <!-- 可愛笑臉 -->
           <circle cx="83" cy="104" r="3" fill="#78350F"/>
           <circle cx="97" cy="104" r="3" fill="#78350F"/>
           <path d="M86 110 Q90 115 94 110" stroke="#78350F" stroke-width="3" fill="none" stroke-linecap="round"/>
         </g>
-        <!-- 揮手動態線 -->
         <path d="M132 48 Q144 58 140 72" stroke="#3B82F6" stroke-width="5" fill="none" stroke-linecap="round"/>
         <path d="M144 42 Q158 55 152 72" stroke="#60A5FA" stroke-width="5" fill="none" stroke-linecap="round"/>
       </svg>
@@ -756,7 +715,7 @@
   };
 
   // ==========================================
-  // 3. 課程資料定義 (對齊 Unit 4 Day 4 微調方案)
+  // 3. 課程資料定義 (綁定 ElevenLabs MP3 檔名)
   // ==========================================
   const ACT1_CARDS = [
     {
@@ -766,10 +725,8 @@
       en: 'draw',
       zh: '畫畫',
       sentence: 'I can draw.',
-      guideZh: '歡迎返到英文大本營！我哋先嚟熱身，重溫一個好重要嘅動作詞語，畫畫！跟我一齊讀啦！',
-      guideEn: 'draw. I can draw.',
-      zhSpeak: '畫畫，我可以畫畫！',
-      enSpeak: 'draw. I can draw.'
+      guideZh: '歡迎返到英文大本營！我哋先嚟熱身，重溫一個好重要嘅動作詞語，畫畫！',
+      audioFile: 'en-draw.mp3'
     },
     {
       id: 'mouth',
@@ -779,10 +736,8 @@
       highlightFirst: true,
       zh: '嘴巴',
       sentence: '',
-      guideZh: '好棒呀！今日我哋要認識新嘅英文字母發音！第一個字係，嘴巴！點擊圖卡聽下點讀啦！',
-      guideEn: 'm, mouth.',
-      zhSpeak: '嘴巴！',
-      enSpeak: 'm, mouth.'
+      guideZh: '好棒呀！今日我哋要認識新嘅英文字母發音！第一個字係，嘴巴！',
+      audioFile: 'en-mouth.mp3'
     },
     {
       id: 'meat',
@@ -792,10 +747,8 @@
       highlightFirst: true,
       zh: '肉',
       sentence: '',
-      guideZh: '第二個同一個開頭發音嘅字係，肉！美味嘅肉肉！點擊圖卡一齊讀啦！',
-      guideEn: 'm, meat.',
-      zhSpeak: '肉！',
-      enSpeak: 'm, meat.'
+      guideZh: '第二個同一個開頭發音嘅字係，肉！美味嘅肉肉！',
+      audioFile: 'en-meat.mp3'
     },
     {
       id: 'milk',
@@ -805,10 +758,8 @@
       highlightFirst: true,
       zh: '牛奶',
       sentence: '',
-      guideZh: '第三個字係香噴噴嘅，牛奶！佢都係同一個開頭發音㗎！點擊聽下啦！',
-      guideEn: 'm, milk.',
-      zhSpeak: '牛奶！',
-      enSpeak: 'm, milk.'
+      guideZh: '第三個字係香噴噴嘅，牛奶！佢都係同一個開頭發音㗎！',
+      audioFile: 'en-milk.mp3'
     },
     {
       id: 'hand',
@@ -819,9 +770,7 @@
       zh: '手',
       sentence: '',
       guideZh: '咦，呢個係小手手！聽下佢嘅開頭發音，同頭先嗰三個字一唔一樣呢？',
-      guideEn: 'h, hand.',
-      zhSpeak: '手！',
-      enSpeak: 'h, hand.'
+      audioFile: 'en-hand.mp3'
     }
   ];
 
@@ -829,10 +778,10 @@
     {
       id: 'mouth',
       zh: '嘴巴',
-      letters: ['m', 'o', 'u', 't', 'h'],
+      letters: ['m', 'o', 'u', 't', 'h'], // 點擊時自動調用 en-m.mp3, en-o.mp3 等
       isMWord: true,
       guideZh: '嚟到第二幕字母積木！逐粒點擊下面嘅彩色積木，聽下每個字母嘅發音啦！',
-      guideEn: 'm, o, u, t, h. mouth!'
+      fullAudio: 'en-mouth.mp3'
     },
     {
       id: 'meat',
@@ -840,7 +789,7 @@
       letters: ['m', 'e', 'a', 't'],
       isMWord: true,
       guideZh: '再嚟拼下美味嘅肉肉！逐粒拍打積木，聽下第一個字母嘅發音！',
-      guideEn: 'm, e, a, t. meat!'
+      fullAudio: 'en-meat.mp3'
     },
     {
       id: 'milk',
@@ -848,7 +797,7 @@
       letters: ['m', 'i', 'l', 'k'],
       isMWord: true,
       guideZh: '跟住拼下香噴噴嘅牛奶！逐粒點擊積木拼出成個字啦！',
-      guideEn: 'm, i, l, k. milk!'
+      fullAudio: 'en-milk.mp3'
     },
     {
       id: 'hand',
@@ -856,7 +805,7 @@
       letters: ['h', 'a', 'n', 'd'],
       isMWord: false,
       guideZh: '最後睇下小手手！佢嘅第一個字母係唔同嘅，點擊聽下有咩分別啦！',
-      guideEn: 'h, a, n, d. hand!'
+      fullAudio: 'en-hand.mp3'
     }
   ];
 
@@ -868,7 +817,7 @@
       sentence: 'I can draw.',
       zh: '畫畫 · 我可以畫畫',
       guideZh: '嚟到第三幕開口大聲讀！請玲玲大聲讀出畫畫同埋句式，讀完就請媽媽按綠色掣放煙花啦！',
-      guideEn: 'draw. I can draw.'
+      audioFile: 'en-draw.mp3'
     },
     {
       id: 'mouth',
@@ -877,7 +826,7 @@
       sentence: 'm · mouth',
       zh: '嘴巴',
       guideZh: '請玲玲大聲讀出，嘴巴！記得讀出開頭發音呀！',
-      guideEn: 'm, mouth.'
+      audioFile: 'en-mouth.mp3'
     },
     {
       id: 'meat',
@@ -886,7 +835,7 @@
       sentence: 'm · meat',
       zh: '肉',
       guideZh: '好棒呀！跟住請玲玲大聲讀出，肉！',
-      guideEn: 'm, meat.'
+      audioFile: 'en-meat.mp3'
     },
     {
       id: 'milk',
@@ -895,7 +844,7 @@
       sentence: 'm · milk',
       zh: '牛奶',
       guideZh: '最後一個大聲讀挑戰！請玲玲大聲讀出，牛奶！',
-      guideEn: 'm, milk.'
+      audioFile: 'en-milk.mp3'
     }
   ];
 
@@ -903,14 +852,9 @@
     {
       badge: '🎮 輕鬆小遊戲 1 · 熱身重溫',
       questionZh: '聽下邊一張圖卡係「畫畫」呢？',
-      promptSeq: [
-        { lang: 'zh-HK', text: '細心聽下，請找出，畫畫，我可以畫畫！' },
-        { lang: 'en-GB', text: 'draw. I can draw.' }
-      ],
       guideZh: '嚟到最後一幕輕鬆小遊戲！細心聽下聲音，揀出啱嘅圖卡啦！',
-      guideEn: 'draw. I can draw.',
+      promptAudio: 'en-draw.mp3',
       correctId: 'draw',
-      correctEn: 'draw. I can draw.',
       options: [
         { id: 'draw', label: 'draw (畫畫)' },
         { id: 'milk', label: 'milk (牛奶)' }
@@ -919,14 +863,9 @@
     {
       badge: '🎮 輕鬆小遊戲 2 · 聽音選圖',
       questionZh: '聽下邊一張圖卡係「嘴巴」呢？',
-      promptSeq: [
-        { lang: 'zh-HK', text: '請找出，嘴巴！' },
-        { lang: 'en-GB', text: 'm, mouth.' }
-      ],
       guideZh: '第二題！聽下邊一張圖卡係嘴巴呢？',
-      guideEn: 'm, mouth.',
+      promptAudio: 'en-mouth.mp3',
       correctId: 'mouth',
-      correctEn: 'mouth.',
       options: [
         { id: 'mouth', label: 'mouth (嘴巴)' },
         { id: 'hand', label: 'hand (手)' }
@@ -935,14 +874,9 @@
     {
       badge: '🎮 輕鬆小遊戲 3 · 聽音選圖',
       questionZh: '聽下邊一張圖卡係「肉」呢？',
-      promptSeq: [
-        { lang: 'zh-HK', text: '請找出，肉！' },
-        { lang: 'en-GB', text: 'm, meat.' }
-      ],
       guideZh: '第三題！聽下邊一張圖卡係美味嘅肉呢？',
-      guideEn: 'm, meat.',
+      promptAudio: 'en-meat.mp3',
       correctId: 'meat',
-      correctEn: 'meat.',
       options: [
         { id: 'draw', label: 'draw (畫畫)' },
         { id: 'meat', label: 'meat (肉)' }
@@ -951,15 +885,9 @@
     {
       badge: '⭐ 課本貼紙辨音小挑戰',
       questionZh: '邊一張圖卡嘅開頭發音同「嘴巴、肉」一樣呢？',
-      promptSeq: [
-        { lang: 'zh-HK', text: '課本貼紙大挑戰！邊一張圖卡嘅開頭發音係' },
-        { lang: 'en-GB', text: 'm' },
-        { lang: 'zh-HK', text: '呢？' }
-      ],
       guideZh: '最後一題課本貼紙大挑戰！邊一張圖卡嘅開頭發音同嘴巴、肉一樣呢？',
-      guideEn: 'm, m, milk.',
+      promptAudio: 'en-milk.mp3',
       correctId: 'milk',
-      correctEn: 'm, milk!',
       options: [
         { id: 'milk', label: 'milk (牛奶)' },
         { id: 'hand', label: 'hand (手)' }
@@ -970,7 +898,7 @@
   // ==========================================
   // 4. 狀態管理與四部曲渲染引擎
   // ==========================================
-  let currentAct = 0; // 0: Meaning, 1: Phonics, 2: Speaking, 3: Review, 4: Complete
+  let currentAct = 0; 
   let subIndex = 0;
   let litBlocks = [];
   let speakingDone = [false, false, false, false];
@@ -1006,7 +934,7 @@
     // ---------- 第一幕：Meaning ----------
     if (currentAct === 0) {
       const card = ACT1_CARDS[subIndex];
-      setGuide(card.guideZh, card.guideEn, shouldSpeak);
+      setGuide(card.guideZh, card.audioFile, shouldSpeak);
 
       const wordHtml = card.highlightFirst
         ? `<span class="highlight-m">${card.en[0]}</span>${card.en.slice(1)}`
@@ -1039,7 +967,7 @@
     // ---------- 第二幕：Phonics 字母積木 ----------
     else if (currentAct === 1) {
       const item = ACT2_WORDS[subIndex];
-      setGuide(item.guideZh, item.guideEn, shouldSpeak);
+      setGuide(item.guideZh, "", shouldSpeak); // 這一幕不自動播全字，讓小朋友自己點積木
 
       container.innerHTML = `
         <div class="dots-row">
@@ -1078,21 +1006,21 @@
     else if (currentAct === 2) {
       const item = ACT3_SPEAK[subIndex];
       const isDone = speakingDone[subIndex];
-      setGuide(item.guideZh, item.guideEn, shouldSpeak);
+      setGuide(item.guideZh, item.audioFile, shouldSpeak);
 
       container.innerHTML = `
         <div class="dots-row">
           ${ACT3_SPEAK.map((_, i) => `<span class="dot ${i === subIndex ? 'active' : (speakingDone[i] ? 'completed' : '')}"></span>`).join('')}
         </div>
         <div class="stage-badge ${subIndex === 0 ? 'warmup' : ''}">${item.badge}</div>
-        <div class="flashcard-3d" onclick="speakAct3Current()">
+        <div class="flashcard-3d" onclick="playEnglishAudio('${item.audioFile}')">
           <div class="illustration-wrap">${ILLUSTRATIONS[item.id]}</div>
           <div class="word-en">${item.en}</div>
           <div class="sentence-box">${item.sentence}</div>
           <div class="word-zh" style="margin-top: 8px; font-size: 20px;">${item.zh}</div>
         </div>
         <div class="btn-row">
-          <button class="btn-3d btn-blue" onclick="speakAct3Current()">🔊 聽老師示範發音</button>
+          <button class="btn-3d btn-blue" onclick="playEnglishAudio('${item.audioFile}')">🔊 聽老師示範發音</button>
         </div>
         <div class="btn-row" style="margin-top: 14px;">
           <button class="btn-3d btn-green" onclick="celebrateSpeaking()">
@@ -1113,10 +1041,12 @@
     else if (currentAct === 3) {
       const q = ACT4_QUIZ[subIndex];
       currentGuideCantonese = q.guideZh;
-      currentGuideEnglish = q.guideEn;
+      currentGuideEnglishAudio = q.promptAudio;
       document.getElementById('teacherMsg').textContent = q.questionZh;
+      
       if (shouldSpeak) {
-        speakQueue(q.promptSeq);
+        playChineseTTS(q.guideZh);
+        setTimeout(() => { playEnglishAudio(q.promptAudio); }, 3500);
       }
 
       container.innerHTML = `
@@ -1125,7 +1055,7 @@
         </div>
         <div class="stage-badge">${q.badge}</div>
         <h2 style="font-size: 24px; color: #1E3A8A; margin: 8px 0 12px;">${q.questionZh}</h2>
-        <button class="btn-3d btn-blue" onclick="playQuizPrompt()">🔊 再聽一次題目聲音</button>
+        <button class="btn-3d btn-blue" onclick="playEnglishAudio('${q.promptAudio}')">🔊 再聽一次題目聲音</button>
 
         <div class="choice-grid">
           ${q.options.map(opt => {
@@ -1159,13 +1089,13 @@
     // ---------- 結算畫面 ----------
     else if (currentAct === 4) {
       const completionMsg = "恭喜玲玲完成今日全部四個任務！你真係好棒呀！快啲撳下面個掣複製進度暗號俾老師啦！";
-      setGuide(completionMsg, "Great job! I can do it!", shouldSpeak);
+      setGuide(completionMsg, "", shouldSpeak);
       if (shouldSpeak) {
         launchFireworks();
         setTimeout(launchFireworks, 700);
       }
 
-      const secretCode = `【玲玲英文課堂進度暗號】單元：Unit 4 Day 4 (en-unit4-day4.html)｜完成狀態：✅ 全課四部曲順利完成｜重溫弱點：draw (I can draw.)｜新學內容：P.20 Phonics 字母 m (mouth, meat, milk vs hand)｜請 Anna 老師更新雲端英文總庫並解鎖 Day 5！`;
+      const secretCode = `【玲玲英文課堂進度暗號】單元：Unit 4 Day 4 (en-unit4-day4.html)｜完成狀態：✅ 全課四部曲順利完成 (100% Hybrid Voice)｜重溫弱點：draw (I can draw.)｜新學內容：P.20 Phonics 字母 m (mouth, meat, milk vs hand)｜請 Anna 老師更新雲端英文總庫並解鎖 Day 5！`;
 
       container.innerHTML = `
         <div style="font-size: 74px; margin-bottom: 6px;">🏆🎉</div>
@@ -1197,8 +1127,9 @@
   }
 
   // ==========================================
-  // 5. 各幕互動邏輯 (全數同步執行 UI 更新，零死鎖)
+  // 5. 各幕互動邏輯 (全面改為觸發 Hybrid 音軌)
   // ==========================================
+  
   // --- 第一幕互動 ---
   function playMeaningCard() {
     const el = document.getElementById('meaningCard');
@@ -1208,20 +1139,18 @@
       el.classList.add('pop');
     }
     const card = ACT1_CARDS[subIndex];
-    speakQueue([
-      { lang: 'zh-HK', text: card.zhSpeak },
-      { lang: 'en-GB', text: card.enSpeak }
-    ]);
+    playChineseTTS(card.zh);
+    setTimeout(() => { playEnglishAudio(card.audioFile); }, 1000);
   }
 
   function playMeaningZh() {
     const card = ACT1_CARDS[subIndex];
-    speakQueue([{ lang: 'zh-HK', text: card.zhSpeak }]);
+    playChineseTTS(card.zh);
   }
 
   function playMeaningEn() {
     const card = ACT1_CARDS[subIndex];
-    speakQueue([{ lang: 'en-GB', text: card.enSpeak }]);
+    playEnglishAudio(card.audioFile);
   }
 
   function prevAct1() {
@@ -1240,25 +1169,27 @@
     }
   }
 
-  // --- 第二幕互動 ---
+  // --- 第二幕互動 (核心突破：動態讀取 A-Z MP3 庫) ---
   function tapLetterBlock(letterIdx) {
     const item = ACT2_WORDS[subIndex];
-    litBlocks[letterIdx] = true; // 同步變色
+    litBlocks[letterIdx] = true; 
     renderStage(false);
 
-    const ch = item.letters[letterIdx];
-    // 嚴格逐格檢查，避免稀疏陣列 (Sparse Array) 誤判過關
+    const ch = item.letters[letterIdx].toLowerCase(); // 轉換為小寫，確保檔名正確
     const allLit = item.letters.every((_, idx) => Boolean(litBlocks[idx]));
 
     if (allLit) {
       launchFireworks();
-      speakQueue([
-        { lang: 'en-GB', text: ch },
-        { lang: 'zh-HK', text: '好叻呀！你已經拍晒全部字母積木喇！一齊聽下成個字點讀！' },
-        { lang: 'en-GB', text: item.letters.join('') }
-      ]);
+      playEnglishAudio(`en-${ch}.mp3`); // 先播最後一粒字母
+      setTimeout(() => {
+        playChineseTTS('好叻呀！你已經拍晒全部字母積木喇！一齊聽下成個字點讀！');
+      }, 1000);
+      setTimeout(() => {
+        playEnglishAudio(item.fullAudio); // 播完成個字的 MP3
+      }, 4500);
     } else {
-      speakQueue([{ lang: 'en-GB', text: ch }]);
+      // 完美調用你剛剛生成的 A-Z 單字母 MP3
+      playEnglishAudio(`en-${ch}.mp3`);
     }
   }
 
@@ -1266,9 +1197,7 @@
     const item = ACT2_WORDS[subIndex];
     litBlocks = item.letters.map(() => true);
     renderStage(false);
-    speakQueue([
-      { lang: 'en-GB', text: item.letters.join(', ') + '. ' + item.letters.join('') }
-    ]);
+    playEnglishAudio(item.fullAudio);
   }
 
   function prevAct2() {
@@ -1290,22 +1219,13 @@
   }
 
   // --- 第三幕互動 ---
-  function speakAct3Current() {
-    const item = ACT3_SPEAK[subIndex];
-    speakQueue([
-      { lang: 'en-GB', text: item.guideEn }
-    ]);
-  }
-
   function celebrateSpeaking() {
-    speakingDone[subIndex] = true; // 同步過關
+    speakingDone[subIndex] = true;
     renderStage(false);
     launchFireworks();
     const item = ACT3_SPEAK[subIndex];
-    speakQueue([
-      { lang: 'zh-HK', text: '嘩！玲玲讀得又大聲又標準，超叻女呀！' },
-      { lang: 'en-GB', text: item.guideEn }
-    ]);
+    playChineseTTS('嘩！玲玲讀得又大聲又標準，超叻女呀！');
+    setTimeout(() => { playEnglishAudio(item.audioFile); }, 3000);
   }
 
   function prevAct3() {
@@ -1325,30 +1245,21 @@
   }
 
   // --- 第四幕互動 ---
-  function playQuizPrompt() {
-    const q = ACT4_QUIZ[subIndex];
-    speakQueue(q.promptSeq);
-  }
-
   function pickQuizOption(pickedId) {
     if (quizSolved) return;
     const q = ACT4_QUIZ[subIndex];
 
     if (pickedId === q.correctId) {
-      quizSolved = true; // 同步變綠並解鎖下一題
+      quizSolved = true; 
       quizWrongPicked = null;
       renderStage(false);
       launchFireworks();
-      speakQueue([
-        { lang: 'zh-HK', text: '好叻呀玲玲！答啱咗喇！' },
-        { lang: 'en-GB', text: q.correctEn }
-      ]);
+      playChineseTTS('好叻呀玲玲！答啱咗喇！');
+      setTimeout(() => { playEnglishAudio(q.promptAudio); }, 2500);
     } else {
-      quizWrongPicked = pickedId; // 同步溫柔搖晃提示，絕不出現叉號
+      quizWrongPicked = pickedId; 
       renderStage(false);
-      speakQueue([
-        { lang: 'zh-HK', text: '試吓隔離嗰張圖卡啦！' }
-      ]);
+      playChineseTTS('試吓隔離嗰張圖卡啦！');
     }
   }
 
@@ -1370,9 +1281,7 @@
 
     function onCopied() {
       btn.textContent = '✅ 已複製暗號！快啲貼俾 Anna 老師啦！';
-      speakQueue([
-        { lang: 'zh-HK', text: '已複製暗號！請媽媽貼返去對話框俾老師更新進度啦！' }
-      ]);
+      playChineseTTS('已複製暗號！請媽媽貼返去對話框俾老師更新進度啦！');
     }
 
     if (navigator.clipboard && navigator.clipboard.writeText) {
