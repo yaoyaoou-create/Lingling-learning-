@@ -13,7 +13,6 @@
 
         body {
             font-family: 'Fredoka', 'Noto Sans TC', sans-serif;
-            /* 保留經典藍紫漸變背景 */
             background: linear-gradient(135deg, #a8c0ff 0%, #3f2b96 100%);
             min-height: 100vh;
         }
@@ -57,7 +56,6 @@
         }
         .hidden-element { display: none !important; }
 
-        /* 慶祝動畫 */
         @keyframes pop {
             0% { transform: scale(0.8); opacity: 0; }
             50% { transform: scale(1.2); opacity: 1; }
@@ -117,7 +115,7 @@
             </button>
         </div>
 
-        <!-- Level 1: 聽音選字 (重點抽考 draw) -->
+        <!-- Level 1: 聽音選字 -->
         <div id="level-1" class="w-full hidden-element">
             <div class="text-8xl mb-6">👂</div>
             <div class="grid grid-cols-2 gap-6 max-w-lg mx-auto">
@@ -219,7 +217,7 @@
         let audioCtx = null;
         let currentEnAudio = null;
 
-        // 初始化 AudioContext (需用戶點擊觸發)
+        // 初始化 AudioContext
         function initAudioCtx() {
             if (!audioCtx) {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -238,12 +236,14 @@
             }
             
             const audio = new Audio(url);
+            // 🌟 核心修復：突破 iPad Web Audio API 靜音封鎖！
+            audio.crossOrigin = "anonymous"; 
             currentEnAudio = audio;
             
             try {
                 const source = audioCtx.createMediaElementSource(audio);
                 const gainNode = audioCtx.createGain();
-                gainNode.gain.value = 2.2; // 放大 ElevenLabs 聲音
+                gainNode.gain.value = 2.2; 
                 source.connect(gainNode);
                 gainNode.connect(audioCtx.destination);
             } catch(e) {
@@ -273,7 +273,7 @@
             u.onend = () => {
                 if (advanced) return;
                 advanced = true;
-                if (onEndCallback) setTimeout(onEndCallback, 200); // 留白 0.2 秒接英文
+                if (onEndCallback) setTimeout(onEndCallback, 200);
             };
             u.onerror = u.onend;
             
