@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Unit 4 Day 5 - Grand Review | 玲玲學習樂園</title>
+  <style>
+    /* iPad 終極防護與全螢幕沉浸排版 */
+    * {
+      box-sizing: border-box;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      min-height: 100vh;
+      display: block !important;
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang HK", "Rounded Mplus 1c", sans-serif;
+      background: linear-gradient(180deg, #E0F2FE 0%, #BAE6FD 55%, #7DD3FC 100%);
+      color: #0F172A;
+      overflow-x: hidden;
+    }
+
+    #fireworksCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* 簡約高級導航列 */
+    .top-nav {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 20px rgba(2, 132, 199, 0.15);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 2px solid #38BDF8;
+    }
+
+    .btn-home {
+      background: #F59E0B;
+      color: #FFF;
+      text-decoration: none;
+      font-weight: 900;
+      font-size: 16px;
+      padding: 8px 16px;
+      border-radius: 20px;
+      box-shadow: 0 4px 0 #B45309;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-home:active { transform: translateY(3px); box-shadow: 0 1px 0 #B45309; }
+
+    .nav-title {
+      font-size: 19px;
+      font-weight: 900;
+      color: #0284C7;
+      letter-spacing: 0.5px;
+    }
+
+    .act-map { display: flex; gap: 8px; }
+    .act-pill {
+      padding: 6px 12px;
+      border-radius: 16px;
+      font-size: 14px;
+      font-weight: 900;
+      background: #E0F2FE;
+      color: #0284C7;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .act-pill.active {
+      background: #FACC15;
+      color: #854D0E;
+      border-color: #FDE047;
+      box-shadow: 0 4px 0 #CA8A04;
+      transform: scale(1.05);
+    }
+    .act-pill.done { background: #34D399; color: #064E3B; }
+
+    .container { max-width: 860px; margin: 0 auto; padding: 20px 16px 50px; }
+
+    /* 沉浸式 Anna 老師提示框 */
+    .teacher-banner {
+      background: #FFFFFF;
+      border: 3px solid #38BDF8;
+      border-radius: 24px;
+      padding: 14px 20px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 8px 24px rgba(2, 132, 199, 0.12);
+      cursor: pointer;
+      transition: transform 0.1s;
+    }
+    .teacher-banner:active { transform: scale(0.98); }
+
+    .teacher-avatar {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      background: #FEF08A;
+      border: 3px solid #F59E0B;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 4px 0 #D97706;
+    }
+
+    .teacher-msg {
+      flex: 1;
+      font-size: 18px;
+      font-weight: 800;
+      color: #1E293B;
+      line-height: 1.45;
+    }
+
+    .replay-btn {
+      background: #E0F2FE;
+      color: #0284C7;
+      padding: 10px 14px;
+      border-radius: 16px;
+      font-weight: 900;
+      font-size: 15px;
+      border: 2px solid #7DD3FC;
+    }
+
+    /* 高階主舞台設計 */
+    .stage-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 36px;
+      padding: 30px 20px;
+      box-shadow: 0 16px 40px rgba(2, 132, 199, 0.15);
+      border: 4px solid #FFFFFF;
+      text-align: center;
+    }
+
+    .stage-badge {
+      display: inline-block;
+      background: #FEF3C7;
+      color: #B45309;
+      font-size: 16px;
+      font-weight: 900;
+      padding: 8px 20px;
+      border-radius: 999px;
+      margin-bottom: 16px;
+      border: 2px solid #FDE68A;
+    }
+
+    /* 無痕點擊大圖卡 */
+    .flashcard-3d {
+      background: #FFFFFF;
+      border: 4px solid #BAE6FD;
+      border-radius: 32px;
+      padding: 30px 20px;
+      margin: 10px auto 24px;
+      max-width: 480px;
+      box-shadow: 0 12px 0 #7DD3FC;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.15s ease;
+    }
+    .flashcard-3d:active, .flashcard-3d.pop {
+      transform: scale(0.97) translateY(8px);
+      box-shadow: 0 4px 0 #7DD3FC;
+    }
+    
+    .pulse-ring {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%; height: 100%;
+      border-radius: 32px;
+      box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.4);
+      animation: pulseAnim 2s infinite;
+      pointer-events: none;
+    }
+    @keyframes pulseAnim {
+      0% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.6); }
+      70% { box-shadow: 0 0 0 20px rgba(56, 189, 248, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); }
+    }
+
+    .illustration-wrap {
+      width: 180px; height: 180px;
+      margin: 0 auto 16px;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .word-en {
+      font-size: 56px;
+      font-weight: 900;
+      color: #0F172A;
+      letter-spacing: 1.5px;
+    }
+
+    .hint-text {
+      font-size: 16px;
+      font-weight: 900;
+      color: #94A3B8;
+      margin-top: 16px;
+      letter-spacing: 1px;
+    }
+
+    /* 3D 通用按鈕 */
+    .btn-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin-top: 24px; }
+    .btn-3d {
+      border: none; border-radius: 20px;
+      padding: 16px 28px;
+      font-size: 20px; font-weight: 900;
+      cursor: pointer;
+      display: inline-flex; align-items: center; gap: 8px;
+      transition: transform 0.1s;
+    }
+    .btn-3d:active { transform: translateY(4px); }
+    .btn-green { background: #10B981; color: #FFF; box-shadow: 0 6px 0 #047857; }
+    .btn-green:active { box-shadow: 0 2px 0 #047857; }
+    .btn-purple { background: #8B5CF6; color: #FFF; box-shadow: 0 6px 0 #6D28D9; }
+    .btn-purple:active { box-shadow: 0 2px 0 #6D28D9; }
+
+    /* 第二/三/四幕特殊樣式 */
+    .rhythm-arena {
+      display: flex; justify-content: center; align-items: center; gap: 16px; margin: 24px 0; flex-wrap: wrap;
+    }
+    .drum-pad {
+      width: 120px; height: 140px; border-radius: 28px;
+      background: #FFFFFF; border: 4px solid #CBD5E1; box-shadow: 0 8px 0 #94A3B8;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      cursor: pointer; transition: all 0.15s;
+    }
+    .drum-pad.active-drum {
+      background: #F97316; border-color: #FDBA74; color: #FFF;
+      box-shadow: 0 4px 0 #9A3412; transform: translateY(4px) scale(1.05);
+    }
+    .drum-pad.target-card { width: 200px; border-color: #60A5FA; box-shadow: 0 8px 0 #2563EB; }
+    .drum-pad.target-card.active-drum { background: #10B981; border-color: #6EE7B7; box-shadow: 0 4px 0 #047857; }
+
+    .monster-stage {
+      background: linear-gradient(135deg, #FFF7ED 0%, #FFEDD5 100%);
+      border: 4px dashed #F97316; border-radius: 32px;
+      padding: 20px; margin-bottom: 24px;
+    }
+    .monster-avatar {
+      font-size: 64px; margin-bottom: 8px;
+      animation: monsterBounce 0.8s infinite alternate ease-in-out;
+    }
+    @keyframes monsterBounce { 0% { transform: translateY(0); } 100% { transform: translateY(-8px); } }
+    
+    .feed-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; max-width: 520px; margin: 0 auto; }
+    .feed-card {
+      background: #FFF; border: 4px solid #BAE6FD; border-radius: 28px;
+      padding: 20px 10px; box-shadow: 0 8px 0 #7DD3FC;
+      cursor: pointer; position: relative; transition: all 0.15s;
+    }
+    .feed-card:active { transform: translateY(4px); box-shadow: 0 4px 0 #7DD3FC; }
+    .feed-card.fed-success {
+      background: #DCFCE7; border-color: #22C55E; box-shadow: 0 4px 0 #15803D;
+      animation: flyIntoMonster 0.5s ease forwards;
+    }
+    @keyframes flyIntoMonster {
+      0% { transform: scale(1); opacity: 1; }
+      100% { transform: scale(0.1) translateY(-150px); opacity: 0; }
+    }
+    .feed-card.wrong-try {
+      background: #FEF3C7; border-color: #F59E0B; box-shadow: 0 8px 0 #D97706;
+      animation: gentleWiggle 0.4s ease;
+    }
+    @keyframes gentleWiggle { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(-4deg); } 75% { transform: rotate(4deg); } }
+
+    .gentle-hint-banner {
+      min-height: 48px; display: flex; align-items: center; justify-content: center;
+      font-size: 20px; font-weight: 900; color: #B45309; background: #FEF3C7;
+      border-radius: 20px; padding: 10px 20px; margin: 16px auto 0; max-width: 500px;
+    }
+    .gentle-hint-banner.success { color: #065F46; background: #D1FAE5; }
+    
+    .secret-code-box {
+      background: #F1F5F9; border: 3px dashed #64748B; border-radius: 20px; padding: 16px;
+      margin: 18px auto; max-width: 560px; font-size: 15px; font-weight: 700; color: #334155;
+      line-height: 1.5; text-align: left; user-select: text; -webkit-user-select: text;
+    }
+
+    /* 點狀進度條 */
+    .dots-row { display: flex; justify-content: center; gap: 8px; margin-bottom: 16px; }
+    .dot { width: 14px; height: 14px; border-radius: 50%; background: #E2E8F0; transition: all 0.2s; }
+    .dot.active { width: 32px; border-radius: 8px; background: #3B82F6; }
+    .dot.completed { background: #10B981; }
+
+    @media (max-width: 600px) {
+      .nav-title { font-size: 15px; }
+      .act-pill { padding: 6px 8px; font-size: 12px; }
+      .word-en { font-size: 46px; }
+      .illustration-wrap { width: 140px; height: 140px; }
+      .stage-card { padding: 20px 12px; }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="fireworksCanvas"></canvas>
+
+<nav class="top-nav">
+  <a href="en-unit4.html" class="btn-home">🏠 返回</a>
+  <div class="nav-title">Unit 4 · Day 5 (Grand Review)</div>
+  <div class="act-map" id="actMap">
+    <button class="act-pill active" onclick="jumpToAct(0)">1. 動作大重溫</button>
+    <button class="act-pill" onclick="jumpToAct(1)">2. 口語小劇場</button>
+    <button class="act-pill" onclick="jumpToAct(2)">3. 首音節奏鼓</button>
+    <button class="act-pill" onclick="jumpToAct(3)">4. 終極辨音王</button>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="teacher-banner" onclick="replayGuide()">
+    <div class="teacher-avatar" aria-hidden="true">
+      <svg viewBox="0 0 80 80" width="50" height="50">
+        <circle cx="40" cy="40" r="36" fill="#FDE68A"/>
+        <path d="M18 38 C18 18, 62 18, 62 38 L64 56 C64 60, 56 60, 56 54 L56 42 L24 42 L24 54 C24 60, 16 60, 16 56 Z" fill="#78350F"/>
+        <circle cx="40" cy="42" r="18" fill="#FED7AA"/>
+        <path d="M22 36 Q40 22 58 36" fill="#78350F"/>
+        <circle cx="34" cy="41" r="2.5" fill="#1E293B"/>
+        <circle cx="46" cy="41" r="2.5" fill="#1E293B"/>
+        <circle cx="29" cy="46" r="3" fill="#FCA5A5" opacity="0.7"/>
+        <circle cx="51" cy="46" r="3" fill="#FCA5A5" opacity="0.7"/>
+        <path d="M35 48 Q40 53 45 48" stroke="#DC2626" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="teacher-msg" id="teacherMsg">今日係 Unit 4 大結局！一齊重溫所有動作同首音啦！</div>
+    <div class="replay-btn">🔊 聽引導</div>
+  </div>
+  <main class="stage-card" id="stageContainer"></main>
+</div>
+
+<script>
+  // =========================================================================
+  // 1. 終極「雙軌排隊 + Web Audio」引擎
+  // =========================================================================
+  window.utterancePool = [];
+  let audioQueueId = 0;
+  let activeAudioElement = null;
+  let audioCtx = null;
+
+  function ensureAudioContext() {
+    if (!audioCtx) {
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (AudioContextClass) audioCtx = new AudioContextClass();
+    }
+    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume().catch(()=>{});
+  }
+
+  function stopAllAudio() {
+    audioQueueId++;
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    if (activeAudioElement) {
+      try { activeAudioElement.onended = null; activeAudioElement.onerror = null; activeAudioElement.pause(); activeAudioElement.currentTime = 0; } catch (e) {}
+      activeAudioElement = null;
+    }
+  }
+
+  function playSingleMp3(file, boostGain = 2.2, onDone) {
+    ensureAudioContext();
+    const audio = new Audio('audio/' + file);
+    audio.crossOrigin = 'anonymous';
+    activeAudioElement = audio;
+
+    if (audioCtx) {
+      try {
+        const source = audioCtx.createMediaElementSource(audio);
+        const gainNode = audioCtx.createGain();
+        gainNode.gain.value = boostGain;
+        source.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+      } catch (e) { audio.volume = 1.0; }
+    }
+
+    let finished = false;
+    const finish = () => { if(!finished){ finished = true; if(onDone) onDone(); }};
+    audio.onended = finish; audio.onerror = finish;
+    audio.play().catch(finish);
+  }
+
+  function playHybridQueue(steps) {
+    stopAllAudio();
+    if (!steps || !steps.length) return;
+    const myQueueId = audioQueueId;
+    let idx = 0;
+
+    function nextStep() {
+      if (myQueueId !== audioQueueId || idx >= steps.length) return;
+      const step = steps[idx++];
+
+      if (step.type === 'zh') {
+        if (!('speechSynthesis' in window) || !step.text) { nextStep(); return; }
+        const u = new SpeechSynthesisUtterance(step.text);
+        window.utterancePool.push(u);
+        u.lang = 'zh-HK'; u.pitch = 1.05; u.rate = 0.92; u.volume = 0.68;
+        let advanced = false;
+        const done = () => { if(!advanced && myQueueId === audioQueueId) { advanced = true; setTimeout(()=>nextStep(), 150); }};
+        u.onend = done; u.onerror = done;
+        setTimeout(() => { if (myQueueId === audioQueueId) window.speechSynthesis.speak(u); }, 50);
+      }
+      else if (step.type === 'mp3') {
+        playSingleMp3(step.file, step.boost || 2.2, () => {
+          if (myQueueId === audioQueueId) setTimeout(()=>nextStep(), 150);
+        });
+      }
+    }
+    nextStep();
+  }
+
+  function getWordAudioStep(wordId) {
+    const map = {
+      run: 'en-run.mp3', jump: 'en-jump.mp3', sing: 'en-sing.mp3', draw: 'en-draw.mp3',
+      how_old: 'en-how-old.mp3', four: 'en-four.mp3',
+      m_sound: 'en-m-sound.mp3', mouth: 'en-mouth.mp3', meat: 'en-meat.mp3', milk: 'en-milk.mp3'
+    };
+    const boost = (wordId === 'meat' || wordId === 'milk') ? 2.5 : 2.1;
+    return { type: 'mp3', file: map[wordId], boost };
+  }
+
+  let currentGuideCantonese = "";
+  function setGuide(zhText, autoSpeak = true) {
+    currentGuideCantonese = zhText;
+    document.getElementById('teacherMsg').textContent = zhText;
+    if (autoSpeak) replayGuide();
+  }
+  function replayGuide() {
+    playHybridQueue([{ type: 'zh', text: currentGuideCantonese }]);
+  }
+
+  // ==========================================
+  // 2. SVG 圖庫 (包含前4日所有精華)
+  // ==========================================
+  const ILLUSTRATIONS = {
+    draw: \`<svg viewBox="0 0 180 180" width="100%" height="100%"><rect x="24" y="26" width="118" height="106" rx="18" fill="#FEF3C7" stroke="#F59E0B" stroke-width="6"/><rect x="34" y="36" width="98" height="86" rx="12" fill="#FFFFFF"/><path d="M46 104 A36 36 0 0 1 118 104" fill="none" stroke="#F43F5E" stroke-width="7" stroke-linecap="round"/><path d="M54 104 A28 28 0 0 1 110 104" fill="none" stroke="#FACC15" stroke-width="7" stroke-linecap="round"/><path d="M62 104 A20 20 0 0 1 102 104" fill="none" stroke="#38BDF8" stroke-width="7" stroke-linecap="round"/><g transform="rotate(-32 132 122)"><rect x="122" y="76" width="18" height="72" rx="9" fill="#3B82F6" stroke="#1D4ED8" stroke-width="4"/><path d="M121 66 Q131 38 141 66 Z" fill="#EC4899"/></g></svg>\`,
+    run: \`<svg viewBox="0 0 180 180" width="100%" height="100%"><path d="M50 130 C70 130 80 100 120 100" stroke="#F97316" stroke-width="12" fill="none" stroke-linecap="round"/><ellipse cx="120" cy="100" rx="30" ry="18" fill="#3B82F6" transform="rotate(-15 120 100)"/><path d="M20 110 L45 110" stroke="#CBD5E1" stroke-width="6" stroke-linecap="round"/><path d="M15 130 L40 130" stroke="#CBD5E1" stroke-width="6" stroke-linecap="round"/></svg>\`,
+    jump: \`<svg viewBox="0 0 180 180" width="100%" height="100%"><path d="M40 140 Q90 50 140 140" stroke="#10B981" stroke-width="8" stroke-dasharray="12,12" fill="none" stroke-linecap="round"/><circle cx="90" cy="60" r="28" fill="#F59E0B"/><path d="M80 60 L100 60" stroke="#FFF" stroke-width="4"/><path d="M90 50 L90 70" stroke="#FFF" stroke-width="4"/><path d="M40 150 L140 150" stroke="#64748B" stroke-width="6" stroke-linecap="round"/></svg>\`,
+    sing: \`<svg viewBox="0 0 180 180" width="100%" height="100%"><rect x="75" y="40" width="30" height="60" rx="15" fill="#64748B"/><path d="M60 70 A30 30 0 0 0 120 70" fill="none" stroke="#94A3B8" stroke-width="6"/><rect x="85" y="100" width="10" height="40" fill="#94A3B8"/><path d="M65 140 L115 140" stroke="#94A3B8" stroke-width="8" stroke-linecap="round"/><text x="120" y="60" font-size="40" fill="#F43F5E" style="font-weight:bold;">♪</text><text x="30" y="80" font-size="30" fill="#F59E0B" style="font-weight:bold;">♫</text></svg>\`,
+    four: \`<svg viewBox="0 0 180 180" width="100%" height="100%"><rect x="40" y="80" width="100" height="70" rx="20" fill="#FDE68A" stroke="#F59E0B" stroke-width="6"/><rect x="50" y="30" width="16" height="55" rx="8" fill="#FDE68A" stroke="#F59E0B" stroke-width="6"/><rect x="75" y="20" width="16" height="65" rx="8" fill="#FDE68A" stroke="#F59E0B" stroke-width="6"/><rect x="100" y="25" width="16" height="60" rx="8" fill="#FDE68A" stroke="#F59E0B" stroke-width="6"/><rect x="125" y="40" width="16" height="45" rx="8" fill="#FDE68A" stroke="#F59E0B" stroke-width="6"/><path d="M38 100 C20 100 20 130 40 130" fill="#FDE68A" stroke="#F59E0B" stroke-width="6"/></svg>\`,
+    mouth: \`<svg viewBox="0 0 180 180" width="100%" height="100%"><circle cx="90" cy="94" r="64" fill="#FDE68A" stroke="#F59E0B" stroke-width="6"/><path d="M60 72 Q68 62 76 72" stroke="#78350F" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M104 72 Q112 62 120 72" stroke="#78350F" stroke-width="5" fill="none" stroke-linecap="round"/><ellipse cx="52" cy="92" rx="11" ry="7" fill="#FDA4AF" opacity="0.8"/><ellipse cx="128" cy="92" rx="11" ry="7" fill="#FDA4AF" opacity="0.8"/><path d="M64 102 Q90 144 116 102 Z" fill="#FB7185" stroke="#E11D48" stroke-width="5" stroke-linejoin="round"/></svg>\`,
+    meat: \`<svg viewBox="0 0 180 180" width="100%" height="100%"><g transform="rotate(-25 90 90)"><rect x="96" y="78" width="52" height="24" rx="10" fill="#FFFBEB" stroke="#D97706" stroke-width="5"/><circle cx="148" cy="78" r="13" fill="#FFFBEB" stroke="#D97706" stroke-width="5"/><circle cx="148" cy="102" r="13" fill="#FFFBEB" stroke="#D97706" stroke-width="5"/><ellipse cx="76" cy="90" rx="52" ry="38" fill="#F97316" stroke="#C2410C" stroke-width="6"/><ellipse cx="70" cy="82" rx="34" ry="20" fill="#FB923C"/></g></svg>\`,
+    milk: \`<svg viewBox="0 0 180 180" width="100%" height="100%"><polygon points="56,52 90,28 124,52" fill="#60A5FA" stroke="#1D4ED8" stroke-width="5" stroke-linejoin="round"/><rect x="56" y="52" width="68" height="98" rx="14" fill="#FFFFFF" stroke="#2563EB" stroke-width="5"/><rect x="56" y="88" width="68" height="36" fill="#93C5FD"/><path d="M90 95 C90 95 100 107 100 113 A10 10 0 0 1 80 113 C80 107 90 95 90 95 Z" fill="#FFFFFF"/></svg>\`
+  };
+
+  // ==========================================
+  // 3. 課程資料 (大重溫四部曲)
+  // ==========================================
+  // 第一幕：動作大重溫 (包含 draw 弱點)
+  const ACT1_CARDS = [
+    { id: 'run', badge: '🏃 動作重溫 1', guideZh: '第一幕動作大重溫！點擊圖卡聽下點樣講跑跑跑！' },
+    { id: 'jump', badge: '🦘 動作重溫 2', guideZh: '跳起嚟點講？點擊聽下！' },
+    { id: 'sing', badge: '🎵 動作重溫 3', guideZh: '唱歌又點講？聽下發音！' },
+    { id: 'draw', badge: '🔥 重點弱點擊破', guideZh: '最後係畫畫！呢個要記清楚，點擊聽發音！' }
+  ];
+
+  // 第二幕：口語小劇場
+  const ACT2_ORAL = {
+    guideZh: '第二幕口語劇場！當 Anna 老師問你幾多歲，你要點樣答呢？點擊下面嘅圖卡！'
+  };
+
+  // 第三幕：Phonics 節奏鼓 (/m/)
+  const ACT3_RHYTHM = [
+    { wordId: 'mouth', en: 'mouth', guideZh: '第三幕首音節奏鼓！跟住拍手：mmm - mmm - mouth!' },
+    { wordId: 'meat', en: 'meat', guideZh: '再嚟一次節奏：mmm - mmm - meat!' },
+    { wordId: 'milk', en: 'milk', guideZh: '最後一個節奏：mmm - mmm - milk!' }
+  ];
+
+  // 第四幕：終極辨音王 (動作 + 怪獸混合雙打)
+  const ACT4_QUIZ = [
+    {
+      badge: '🎧 動作聽力挑戰 1',
+      questionZh: '老師話 I can sing！邊張圖卡係唱歌呢？',
+      promptSteps: [{ type: 'mp3', file: 'en-sing.mp3' }],
+      correctId: 'sing', wrongId: 'draw'
+    },
+    {
+      badge: '🎧 動作聽力挑戰 2',
+      questionZh: '老師話 I can run！邊張圖卡係跑跑跑？',
+      promptSteps: [{ type: 'mp3', file: 'en-run.mp3' }],
+      correctId: 'run', wrongId: 'jump'
+    },
+    {
+      badge: '👾 餵怪獸挑戰 3',
+      questionZh: '怪獸要食 m 開頭嘅食物！邊一張係 m 開頭？',
+      promptSteps: [{ type: 'mp3', file: 'en-m-sound.mp3', boost: 2.3 }],
+      correctId: 'meat', wrongId: 'jump' // jump 係動作做錯選項
+    },
+    {
+      badge: '👾 餵怪獸挑戰 4',
+      questionZh: '最後一題！搵出 m 開頭嘅健康飲品餵怪獸！',
+      promptSteps: [{ type: 'mp3', file: 'en-m-sound.mp3', boost: 2.3 }],
+      correctId: 'milk', wrongId: 'sing'
+    }
+  ];
+
+  // ==========================================
+  // 4. 渲染引擎
+  // ==========================================
+  let currentAct = 0, subIndex = 0, drumStep = 0;
+  let oralTeacherDone = false;
+  let quizSolved = false, quizWrongPicked = null;
+
+  function updateActNav() {
+    document.querySelectorAll('.act-pill').forEach((p, idx) => {
+      p.className = \`act-pill \${currentAct === 4 || idx < currentAct ? 'done' : (idx === currentAct ? 'active' : '')}\`;
+    });
+  }
+
+  function jumpToAct(idx) {
+    currentAct = idx; subIndex = 0; drumStep = 0; oralTeacherDone = false; quizSolved = false; quizWrongPicked = null;
+    updateActNav(); renderStage(true);
+  }
+
+  function renderStage(shouldSpeak = true) {
+    const container = document.getElementById('stageContainer');
+    updateActNav();
+
+    // --- Act 1: 動作重溫 ---
+    if (currentAct === 0) {
+      const c = ACT1_CARDS[subIndex];
+      setGuide(c.guideZh, shouldSpeak);
+      container.innerHTML = \`
+        <div class="dots-row">\${ACT1_CARDS.map((_, i) => \`<span class="dot \${i === subIndex ? 'active' : (i < subIndex ? 'completed' : '')}"></span>\`).join('')}</div>
+        <div class="stage-badge">\${c.badge}</div>
+        <div class="flashcard-3d" id="meaningCard" onclick="playImmersiveEn('\${c.id}')">
+          <div class="pulse-ring"></div>
+          <div class="illustration-wrap">\${ILLUSTRATIONS[c.id]}</div>
+          <div class="word-en">\${c.id}</div>
+          <div class="hint-text">👆 點擊聽發音</div>
+        </div>
+        <div class="btn-row" style="margin-top: 30px;">
+          \${subIndex > 0 ? \`<button class="btn-3d btn-purple" onclick="subIndex--; renderStage(true);">⬅️ 上一個</button>\` : ''}
+          <button class="btn-3d btn-green" onclick="if(subIndex < ACT1_CARDS.length-1){ subIndex++; renderStage(true); } else jumpToAct(1);">
+            \${subIndex < ACT1_CARDS.length - 1 ? '下一個 ➡️' : '去口語劇場 💬'}
+          </button>
+        </div>
+      \`;
+    }
+
+    // --- Act 2: 口語對答 ---
+    else if (currentAct === 1) {
+      if (shouldSpeak) {
+        setGuide(ACT2_ORAL.guideZh, false);
+        playHybridQueue([
+          { type: 'zh', text: ACT2_ORAL.guideZh },
+          { type: 'mp3', file: 'en-how-old.mp3' }
+        ]);
+      } else {
+        setGuide(ACT2_ORAL.guideZh, false);
+      }
+      
+      container.innerHTML = \`
+        <div class="dots-row"><span class="dot active"></span></div>
+        <div class="stage-badge">💬 聽問題，答句子</div>
+        
+        <div style="display:flex; justify-content:center; align-items:center; gap:20px; margin: 20px 0;">
+           <div style="background:#F1F5F9; padding:15px; border-radius:20px; border:3px solid #CBD5E1;">
+             <div style="font-size:40px; margin-bottom:10px;">👩‍🏫</div>
+             <button class="btn-3d btn-purple" style="font-size:16px; padding:10px 15px;" onclick="playHybridQueue([getWordAudioStep('how_old')])">🔊 再聽問題</button>
+           </div>
+           <div style="font-size:40px; color:#3B82F6;">➔</div>
+           <div class="flashcard-3d" style="margin:0; max-width:280px;" onclick="playOralAnswer()">
+             <div class="pulse-ring"></div>
+             <div class="illustration-wrap" style="width:120px; height:120px;">\${ILLUSTRATIONS['four']}</div>
+             <div class="hint-text">👆 點擊聽答案</div>
+           </div>
+        </div>
+
+        <div class="btn-row" style="margin-top: 30px;">
+          <button class="btn-3d btn-green" onclick="launchFireworks(); playHybridQueue([{type:'zh', text:'玲玲答得好清楚！放煙花'}]);">🎉 我答啱喇！</button>
+          <button class="btn-3d btn-green" onclick="jumpToAct(2);">去節奏鼓 🥁 ➡️</button>
+        </div>
+      \`;
+    }
+
+    // --- Act 3: 節奏律動 (Rhythm) ---
+    else if (currentAct === 2) {
+      const c = ACT3_RHYTHM[subIndex];
+      setGuide(c.guideZh, shouldSpeak);
+      container.innerHTML = \`
+        <div class="dots-row">\${ACT3_RHYTHM.map((_, i) => \`<span class="dot \${i === subIndex ? 'active' : (i < subIndex ? 'completed' : '')}"></span>\`).join('')}</div>
+        <div class="stage-badge">🥁 節奏律動 (\${subIndex + 1} / 3)</div>
+        
+        <div class="rhythm-arena">
+          <div class="drum-pad \${drumStep >= 1 ? 'active-drum' : ''}" onclick="tapDrum(1)">
+            <div style="font-size: 40px;">👏</div>
+            <div style="font-size: 22px; font-weight: 900; margin-top: 8px;">m</div>
+          </div>
+          <div class="drum-pad \${drumStep >= 2 ? 'active-drum' : ''}" onclick="tapDrum(2)">
+            <div style="font-size: 40px;">👏</div>
+            <div style="font-size: 22px; font-weight: 900; margin-top: 8px;">m</div>
+          </div>
+          <div style="font-size: 28px; color: #3B82F6; font-weight: 900;">➔</div>
+          <div class="drum-pad target-card \${drumStep >= 3 ? 'active-drum' : ''}" onclick="tapDrum(3)">
+            <div style="width: 80px; height: 80px;">\${ILLUSTRATIONS[c.wordId]}</div>
+            <div style="font-size: 24px; font-weight: 900; margin-top: 4px; color: inherit;">\${c.en}</div>
+          </div>
+        </div>
+
+        <div class="btn-row" style="margin-top: 30px;">
+          \${subIndex > 0 ? \`<button class="btn-3d btn-purple" onclick="subIndex--; drumStep=0; renderStage(true);">⬅️</button>\` : ''}
+          <button class="btn-3d btn-green" onclick="if(subIndex < ACT3_RHYTHM.length-1){ subIndex++; drumStep=0; renderStage(true); } else jumpToAct(3);">
+            \${subIndex < ACT3_RHYTHM.length - 1 ? '下一個 ➡️' : '去終極挑戰 👾'}
+          </button>
+        </div>
+      \`;
+    }
+
+    // --- Act 4: 混合 Quiz ---
+    else if (currentAct === 3) {
+      const q = ACT4_QUIZ[subIndex];
+      setGuide(q.questionZh, false);
+      if (shouldSpeak) {
+        playHybridQueue([ { type: 'zh', text: q.questionZh }, ...q.promptSteps ]);
+      }
+
+      const isMonster = q.badge.includes('怪獸');
+
+      container.innerHTML = \`
+        <div class="dots-row">\${ACT4_QUIZ.map((_, i) => \`<span class="dot \${i === subIndex ? 'active' : ''}"></span>\`).join('')}</div>
+        
+        \${isMonster ? \`
+        <div class="monster-stage">
+          <div class="monster-avatar">👾</div>
+          <div style="font-size: 20px; font-weight: 900; color: #9A3412;">我要食 m 開頭嘅嘢！</div>
+        </div>
+        \` : \`
+        <div class="stage-badge" style="margin-bottom:20px;">\${q.badge}</div>
+        <button class="btn-3d btn-purple" style="margin-bottom:20px;" onclick="replayQuizSound()">🔊 再聽一次題目</button>
+        \`}
+
+        <div class="feed-grid">
+          <div class="feed-card \${quizSolved ? (isMonster?'fed-success':'correct') : ''}" onclick="pickQuiz('\${q.correctId}', \${isMonster})">
+            <div style="width: 130px; height: 130px; margin: 0 auto;">\${ILLUSTRATIONS[q.correctId]}</div>
+          </div>
+          <div class="feed-card \${!quizSolved && quizWrongPicked === q.wrongId ? 'wrong-try' : ''}" onclick="pickQuiz('\${q.wrongId}', \${isMonster})">
+            <div style="width: 130px; height: 130px; margin: 0 auto;">\${ILLUSTRATIONS[q.wrongId]}</div>
+          </div>
+        </div>
+        
+        \${quizSolved ? \`
+           <div class="gentle-hint-banner success">🎉 好叻呀！答啱咗喇！</div>
+           <div class="btn-row"><button class="btn-3d btn-green" onclick="if(subIndex < 3){ subIndex++; quizSolved=false; quizWrongPicked=null; renderStage(true); } else jumpToAct(4);">下一題 ➡️</button></div>
+        \` : (quizWrongPicked ? \`<div class="gentle-hint-banner">💛 試下揀隔離嗰張圖卡啦！</div>\` : '')}
+      \`;
+    }
+
+    // --- Summary ---
+    else if (currentAct === 4) {
+      setGuide("恭喜玲玲！Unit 4 全部內容已經完美掌握！", shouldSpeak);
+      if (shouldSpeak) { launchFireworks(); setTimeout(launchFireworks, 800); }
+      
+      const secretCode = \`【玲玲英文課堂進度暗號】單元：Unit 4 Day 5 大結局 (en-unit4-day5.html)｜完成狀態：✅ 全課順利完成 (完美動作重溫 + 口語劇場 + Phonics 節奏)｜請 Anna 老師更新雲端英文總庫，並準備 Unit 4 Test 1 闖關測驗！\`;
+
+      container.innerHTML = \`
+        <div style="font-size: 70px;">🏆</div>
+        <h1 style="color: #0284C7; margin: 10px 0;">Unit 4 完美過關！</h1>
+        
+        <div class="btn-row" style="margin-top: 18px;">
+          <button class="btn-3d btn-green" id="copySecretBtn" onclick="copyProgressSecret()">📋 複製暗號準備大闖關</button>
+        </div>
+        <div class="secret-code-box" id="secretCodeText" style="margin-bottom:20px;">\${secretCode}</div>
+
+        <div class="btn-row"><a href="en-unit4.html" class="btn-3d btn-amber" style="text-decoration:none;">🏠 返去主目錄</a></div>
+      \`;
+    }
+  }
+
+  // ==========================================
+  // 5. 互動邏輯 (純英文發音)
+  // ==========================================
+  function playImmersiveEn(wordId) {
+    const el = document.getElementById('meaningCard');
+    if (el) { el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); }
+    playHybridQueue([getWordAudioStep(wordId)]);
+  }
+
+  function playOralAnswer() {
+    playHybridQueue([getWordAudioStep('four')]);
+  }
+
+  function tapDrum(step) {
+    const c = ACT3_RHYTHM[subIndex];
+    drumStep = step; renderStage(false);
+    if (step === 1 || step === 2) {
+      playHybridQueue([{ type: 'mp3', file: 'en-m-sound.mp3', boost: 2.3 }]);
+    } else {
+      launchFireworks();
+      playHybridQueue([getWordAudioStep(c.wordId)]);
+    }
+  }
+
+  function replayQuizSound() {
+    const q = ACT4_QUIZ[subIndex];
+    playHybridQueue(q.promptSteps);
+  }
+
+  function pickQuiz(picked, isMonster) {
+    if (quizSolved) return;
+    const q = ACT4_QUIZ[subIndex];
+    if (picked === q.correctId) {
+      quizSolved = true; quizWrongPicked = null; renderStage(false); launchFireworks();
+      playHybridQueue([
+        getWordAudioStep(q.correctId), 
+        {type:'zh', text: isMonster ? '好味呀！' : '答啱喇！'}
+      ]);
+    } else {
+      quizWrongPicked = picked; renderStage(false);
+      playHybridQueue([
+        { type: 'zh', text: '試下隔離嗰張啦！' }
+      ]);
+    }
+  }
+
+  function copyProgressSecret() {
+    const text = document.getElementById('secretCodeText').innerText;
+    const btn = document.getElementById('copySecretBtn');
+    function onCopied() {
+      btn.textContent = '✅ 已複製暗號！快啲貼俾 Anna 老師！';
+      playHybridQueue([{ type: 'zh', text: '已複製暗號！請媽媽貼返去對話框俾老師啦！' }]);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(onCopied).catch(() => fallbackCopy(text, onCopied));
+    } else {
+      fallbackCopy(text, onCopied);
+    }
+  }
+
+  function fallbackCopy(text, callback) {
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.focus(); ta.select();
+    try { document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta); callback();
+  }
+
+  // ==========================================
+  // 6. 煙花引擎
+  // ==========================================
+  const canvas = document.getElementById('fireworksCanvas'), ctx = canvas.getContext('2d');
+  let particles = [], animRunning = false;
+  function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  window.addEventListener('resize', resizeCanvas); resizeCanvas();
+  function launchFireworks() {
+    const colors = ['#F43F5E', '#FACC15', '#34D399', '#38BDF8', '#A855F7'];
+    for (let burst=0; burst<3; burst++) {
+      const cx = canvas.width*(0.3+Math.random()*0.4), cy = canvas.height*(0.2+Math.random()*0.3);
+      for (let i=0; i<30; i++) {
+        const a = (Math.PI*2*i)/30, s = 2+Math.random()*4;
+        particles.push({x:cx, y:cy, vx:Math.cos(a)*s, vy:Math.sin(a)*s, alpha:1, color:colors[Math.floor(Math.random()*colors.length)], size:4+Math.random()*4});
+      }
+    }
+    if (!animRunning) { animRunning = true; requestAnimationFrame(animateParticles); }
+  }
+  function animateParticles() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    for (let i=particles.length-1; i>=0; i--) {
+      let p = particles[i]; p.x+=p.vx; p.y+=p.vy; p.vy+=0.1; p.alpha-=0.02;
+      if (p.alpha<=0) particles.splice(i,1);
+      else { ctx.globalAlpha=p.alpha; ctx.fillStyle=p.color; ctx.beginPath(); ctx.arc(p.x,p.y,p.size,0,Math.PI*2); ctx.fill(); }
+    }
+    ctx.globalAlpha=1;
+    if (particles.length>0) requestAnimationFrame(animateParticles); else animRunning = false;
+  }
+
+  renderStage(false);
+</script>
+</body>
+</html>
