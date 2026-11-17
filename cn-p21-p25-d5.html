@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>玲玲中文3D盲測闖關｜《我要謝謝你》Day 5 階段總動員</title>
+  <title>玲玲中文AI課堂｜《我要謝謝你》Day 5 階段溫習與闖關</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     /* iPad Safari 終極防護引擎：防雙擊放大鎖與版面鎖定 */
@@ -26,7 +26,7 @@
       overflow-x: hidden;
     }
 
-    /* 局部解鎖 textarea 確保可複製暗號 */
+    /* 局部解鎖 textarea 確保媽媽可長按複製暗號 */
     textarea {
       user-select: text !important;
       -webkit-user-select: text !important;
@@ -101,14 +101,14 @@
 </head>
 <body class="pb-10">
 
-  <!-- 頂部導航欄 (可點擊快捷按鈕) -->
+  <!-- 頂部導航欄 (已修復返回鍵 handleBackHome + 可點擊關卡快捷掣) -->
   <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b-4 border-slate-200 px-4 py-3 shadow-sm">
     <div class="max-w-5xl mx-auto flex flex-wrap items-center justify-between gap-2">
-      <button onclick="navToStage(0)" class="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-800 font-extrabold text-xl px-4 py-2 rounded-2xl border-2 border-slate-300 shadow-sm active:scale-95">
+      <button onclick="handleBackHome()" class="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-800 font-extrabold text-xl px-4 py-2 rounded-2xl border-2 border-slate-300 shadow-sm active:scale-95">
         <span>🏠</span><span>返回</span>
       </button>
 
-      <!-- 盲測關卡進度地圖 (改為按鈕) -->
+      <!-- 關卡進度地圖 (可點擊跳轉) -->
       <div class="flex items-center gap-1 sm:gap-2 bg-blue-50 px-2 py-1.5 rounded-2xl border-2 border-blue-200">
         <button id="mapBadge1" onclick="navToStage(1)" class="px-2.5 py-1 rounded-xl text-sm sm:text-base font-extrabold cursor-pointer transition-all active:scale-95">第1關</button>
         <span class="text-blue-400 font-bold hidden sm:inline">➔</span>
@@ -138,7 +138,7 @@
           <span class="text-amber-900 text-sm sm:text-base font-bold">🔊 點擊呢度聽語音提示</span>
         </div>
         <p id="tutorText" class="text-xl sm:text-2xl font-extrabold text-amber-950 leading-snug">
-          玲玲你好！歡迎嚟到《我要謝謝你》Day 5 3D 魔法盲測大闖關！
+          歡迎嚟到 Day 5 盲測闖關！點擊開始進入第一關聽音辨字！
         </p>
       </div>
     </div>
@@ -148,7 +148,7 @@
       <div class="card-3d p-8 sm:p-10 bg-white/95 border-blue-300">
         <div class="text-7xl sm:text-8xl mb-4">⭐🛡️🧠</div>
         <div class="inline-block bg-blue-100 text-blue-800 font-extrabold text-xl px-5 py-1.5 rounded-full border-2 border-blue-300 mb-3">
-          P.21–25 階段盲測大考驗 (cn-p21-p25-test1.html)
+          P.21–22 階段盲測大考驗 (Day 5)
         </div>
         <h1 class="text-4xl sm:text-5xl font-black text-blue-900 mb-4 leading-tight">
           3D 魔法盲測闖關大典
@@ -184,19 +184,24 @@
       </div>
     </section>
 
-    <!-- ==================== 第 2 關：視覺拆字魔法 (看圖拼字) ==================== -->
+    <!-- ==================== 第 2 關：視覺拆字魔法 (看圖拼字，無目標字提示) ==================== -->
     <section id="section-2" class="blind-section hidden">
       <div class="card-3d p-6 sm:p-8 text-center border-purple-300">
         <div class="inline-block bg-purple-100 text-purple-800 font-black text-xl px-5 py-1.5 rounded-full border-2 border-purple-300 mb-3">
           第 2 關：視覺拆字 (看圖拼字)
         </div>
-        
-        <!-- 【優化】完全隱藏中文字，只顯示問題同圖案 -->
+
         <h2 class="text-3xl sm:text-4xl font-black text-slate-800 mb-2" id="q2PromptTitle">
           邊個部件組合埋一齊，先至係圖中嘅字？
         </h2>
-        
-        <div id="q2PromptEmoji" class="text-7xl sm:text-8xl mb-6">🥬</div>
+
+        <div id="q2PromptEmoji" class="text-7xl sm:text-8xl mb-4">🥬</div>
+
+        <div class="mb-5">
+          <button onclick="playCurrentQ2Audio()" class="bg-purple-100 text-purple-900 border-2 border-purple-300 font-extrabold text-xl px-5 py-2 rounded-2xl">
+            🔊 再聽一次題目
+          </button>
+        </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto mb-6" id="q2OptionsGrid">
           <!-- 動態選項 -->
@@ -210,19 +215,17 @@
         <div class="inline-block bg-emerald-100 text-emerald-800 font-black text-xl px-5 py-1.5 rounded-full border-2 border-emerald-300 mb-3">
           第 3 關：食物類別句式大配對
         </div>
-        <h2 class="text-3xl sm:text-4xl font-black text-slate-800 mb-6">
+        <h2 class="text-3xl sm:text-4xl font-black text-slate-800 mb-6" id="q3Title">
           「紅蘿蔔是 ______ 的食物。」空格應該填邊個？
         </h2>
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto mb-6">
-          <button onclick="answerQ3('蔬菜類', true)" class="card-3d p-6 text-3xl sm:text-4xl font-black text-emerald-900 bg-emerald-50 hover:bg-emerald-100">🥬 蔬菜類</button>
-          <button onclick="answerQ3('五穀類', false)" class="card-3d p-6 text-3xl sm:text-4xl font-black text-amber-900 bg-amber-50 hover:bg-amber-100">🌾 五穀類</button>
-          <button onclick="answerQ3('肉類', false)" class="card-3d p-6 text-3xl sm:text-4xl font-black text-rose-900 bg-rose-50 hover:bg-rose-100">🥩 肉類</button>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto mb-6" id="q3OptionsGrid">
+          <!-- 動態載入句式分類題 -->
         </div>
       </div>
     </section>
 
-    <!-- ==================== 第 4 關：全字庫語境尋寶 (真盲測) ==================== -->
+    <!-- ==================== 第 4 關：全字庫語境尋寶 (真盲測，純聽音) ==================== -->
     <section id="section-4" class="blind-section hidden">
       <div class="card-3d p-6 sm:p-8 text-center border-amber-300">
         <div class="inline-block bg-amber-100 text-amber-900 font-black text-xl px-5 py-1.5 rounded-full border-2 border-amber-300 mb-3">
@@ -234,7 +237,7 @@
 
         <div class="mb-6">
           <button onclick="playQ4Audio()" class="btn-primary text-2xl font-black px-8 py-4 inline-flex items-center gap-3 shadow-lg">
-            <span>🔊</span><span>播放尋寶目標</span>
+            <span>🔊</span><span>播放尋寶目標字</span>
           </button>
         </div>
 
@@ -249,10 +252,10 @@
       <div class="card-3d p-6 sm:p-10 text-center bg-gradient-to-b from-white to-blue-50 border-blue-400">
         <div class="text-7xl sm:text-8xl mb-3">🏆🌟🎉</div>
         <h2 class="text-3xl sm:text-5xl font-black text-blue-900 mb-3">
-          太叻啦！Day 5 3D 盲測全數滿分通關！
+          太叻啦！Day 5 盲測全數滿分通關！
         </h2>
         <p class="text-xl sm:text-2xl font-bold text-slate-700 mb-6">
-          玲玲成功通過聽音辨字、拆字、句式同尋寶盲測考驗！
+          玲玲成功通過聽音辨字、看圖拆字、句式配對同聽音尋寶考驗！
         </p>
 
         <div class="max-w-2xl mx-auto mb-6">
@@ -261,7 +264,7 @@
 
         <button onclick="copyBlindReport()" class="btn-primary text-2xl sm:text-3xl font-black px-8 py-5 inline-flex items-center gap-3 mb-4 shadow-xl">
           <span>📋</span>
-          <span>一鍵複製 Day 5 盲測暗號俾 Anna 老師</span>
+          <span>一鍵複製 Day 5 進度暗號俾 Anna 老師</span>
         </button>
 
         <p id="blindCopyFeedback" class="text-xl font-black text-emerald-700 min-h-[32px]">
@@ -274,11 +277,11 @@
 
   <script>
     /* =====================================================================
-       語音引擎
+       語音引擎 (純廣東話 zh-HK + Anti-GC)
     ===================================================================== */
     window.utterancePool = [];
     let hkVoice = null;
-    let currentGuideText = "玲玲你好！歡迎嚟到《我要謝謝你》Day 5 3D 魔法盲測大闖關！";
+    let currentGuideText = "歡迎嚟到 Day 5 盲測闖關！點擊開始進入第一關聽音辨字！";
 
     function loadCantoneseVoice() {
       if (!('speechSynthesis' in window)) return;
@@ -321,7 +324,7 @@
     }
 
     /* =====================================================================
-       導航系統
+       導航與返回鍵系統 (已徹底修復首頁返回問題)
     ===================================================================== */
     let currentStage = 0;
     let engineUnlocked = false;
@@ -360,13 +363,30 @@
 
       if (idx === 1) initQ1();
       if (idx === 2) initQ2();
+      if (idx === 3) initQ3();
       if (idx === 4) initQ4();
       if (idx === 5) { updateBlindReportCode(); launchFireworks(); }
       if (stageGuides[idx]) setTutorGuide(stageGuides[idx], true);
     }
 
+    // 專屬返回按鈕：如果在首頁 (currentStage === 0)，直接返回單元導覽頁 cn-thankyou.html 或上一頁
+    function handleBackHome() {
+      if ('speechSynthesis' in window) {
+        try { window.speechSynthesis.cancel(); } catch (e) {}
+      }
+      if (currentStage === 0) {
+        if (document.referrer && document.referrer.includes('cn-thankyou')) {
+          window.history.back();
+        } else {
+          window.location.href = 'cn-thankyou.html';
+        }
+      } else {
+        navToStage(0);
+      }
+    }
+
     /* =====================================================================
-       第 1 關：聽音辨字 (純文字)
+       第 1 關：聽音辨字 (純文字，無圖片)
     ===================================================================== */
     const q1Data = [
       { audio: '請搵出椰菜！', options: [{name:'椰菜', correct:true}, {name:'紅蘿蔔', correct:false}, {name:'白飯', correct:false}] },
@@ -391,21 +411,21 @@
     function playCurrentQ1Audio() { speakCantonese(q1Data[q1Idx].audio); }
     function answerQ1(isCorrect, btn) {
       if (isCorrect) {
-        btn.classList.add('card-correct'); launchFireworks(); setTutorGuide("答啱啦！真係靠認字，好叻仔好叻女！", true);
+        btn.classList.add('card-correct'); launchFireworks(); setTutorGuide("答啱啦！真係靠認字，好叻女！", true);
         setTimeout(() => { q1Idx++; if (q1Idx < q1Data.length) renderQ1Question(); else navToStage(2); }, 1200);
       } else {
         btn.classList.remove('wobble-hint'); void btn.offsetWidth; btn.classList.add('wobble-hint');
-        setTutorGuide("唔係呢個字，再睇清楚啲字形啦！", true);
+        setTutorGuide("唔係呢個詞語，再睇清楚啲字形啦！", true);
       }
     }
 
     /* =====================================================================
-       第 2 關：視覺拆字 (看圖拼字)
+       第 2 關：視覺拆字 (看圖拼字，無目標字提示)
     ===================================================================== */
     const q2Data = [
-      { prompt: "邊個部件組合埋一齊，先至係圖中嘅字？", emoji: "🥬", audio: "邊個部件組合埋一齊，先至係菜字？", options: [{text:"艹 ＋ 采", correct:true}, {text:"飠 ＋ 反", correct:false}, {text:"宓 ＋ 虫", correct:false}] },
-      { prompt: "邊個部件組合埋一齊，先至係圖中嘅字？", emoji: "🍚", audio: "邊個部件組合埋一齊，先至係飯字？", options: [{text:"艹 ＋ 采", correct:false}, {text:"飠 ＋ 反", correct:true}, {text:"宓 ＋ 虫", correct:false}] },
-      { prompt: "圖中嘅字，下面藏住邊個小動物部件？", emoji: "🍯", audio: "蜜糖嘅蜜字，下面藏住邊個小動物部件？", options: [{text:"艸 草字頭", correct:false}, {text:"虫 小蜜蜂", correct:true}, {text:"飠 食字旁", correct:false}] }
+      { prompt: "邊個部件組合埋一齊，先至係圖中嘅字？", emoji: "🥬", audio: "邊個部件組合埋一齊，先至係蔬菜嘅菜字？", options: [{text:"艹 ＋ 采", correct:true}, {text:"飠 ＋ 反", correct:false}, {text:"宓 ＋ 虫", correct:false}] },
+      { prompt: "邊個部件組合埋一齊，先至係圖中嘅字？", emoji: "🍚", audio: "邊個部件組合埋一齊，先至係白飯嘅飯字？", options: [{text:"艹 ＋ 采", correct:false}, {text:"飠 ＋ 反", correct:true}, {text:"宓 ＋ 虫", correct:false}] },
+      { prompt: "圖中嘅字，下面藏住邊個小動物部件？", emoji: "🍯", audio: "蜜糖嘅蜜字，下面藏住邊個小動物部件？", options: [{text:"艹 草字頭", correct:false}, {text:"虫 小蜜蜂", correct:true}, {text:"飠 食字旁", correct:false}] }
     ];
     let q2Idx = 0;
     function initQ2() { q2Idx = 0; renderQ2Question(); }
@@ -423,24 +443,52 @@
       });
       speakCantonese(q.audio);
     }
+    function playCurrentQ2Audio() { speakCantonese(q2Data[q2Idx].audio); }
     function answerQ2(isCorrect, btn) {
       if (isCorrect) {
         btn.classList.add('card-correct'); launchFireworks(); setTutorGuide("拆字盲測答啱晒！太厲害啦！", true);
         setTimeout(() => { q2Idx++; if (q2Idx < q2Data.length) renderQ2Question(); else navToStage(3); }, 1200);
       } else {
         btn.classList.remove('wobble-hint'); void btn.offsetWidth; btn.classList.add('wobble-hint');
-        setTutorGuide("試吓第二個組合啦！", true);
+        setTutorGuide("試吓隔離嗰個部件組合啦！", true);
       }
     }
 
     /* =====================================================================
-       第 3 關：句式配對
+       第 3 關：句式配對 (2 題：蔬菜類 + 五穀類)
     ===================================================================== */
-    function answerQ3(choice, isCorrect) {
+    const q3Data = [
+      { sentence: "「紅蘿蔔是 ______ 的食物。」空格應該填邊個？", audio: "紅蘿蔔是邊一類的食物呢？", correctCat: "蔬菜類" },
+      { sentence: "「白飯是 ______ 的食物。」空格應該填邊個？", audio: "白飯是邊一類的食物呢？", correctCat: "五穀類" }
+    ];
+    let q3Idx = 0;
+    function initQ3() { q3Idx = 0; renderQ3Question(); }
+    function renderQ3Question() {
+      const q = q3Data[q3Idx];
+      document.getElementById('q3Title').textContent = q.sentence;
+      const grid = document.getElementById('q3OptionsGrid'); grid.innerHTML = '';
+      const cats = [
+        { label: "蔬菜類", style: "text-emerald-900 bg-emerald-50 hover:bg-emerald-100" },
+        { label: "五穀類", style: "text-amber-900 bg-amber-50 hover:bg-amber-100" },
+        { label: "肉類", style: "text-rose-900 bg-rose-50 hover:bg-rose-100" }
+      ];
+      cats.forEach(c => {
+        const btn = document.createElement('button');
+        btn.className = `card-3d p-6 text-3xl sm:text-4xl font-black ${c.style}`;
+        btn.textContent = c.label;
+        btn.onclick = () => answerQ3(c.label === q.correctCat, btn);
+        grid.appendChild(btn);
+      });
+      speakCantonese(q.audio);
+    }
+    function answerQ3(isCorrect, btn) {
       if (isCorrect) {
-        launchFireworks(); setTutorGuide("句式配對完全正確！紅蘿蔔係蔬菜類！", true);
-        setTimeout(() => navToStage(4), 1200);
-      } else setTutorGuide("再諗諗，紅蘿蔔屬於邊一類呢？", true);
+        btn.classList.add('card-correct'); launchFireworks(); setTutorGuide("句式配對完全正確！", true);
+        setTimeout(() => { q3Idx++; if (q3Idx < q3Data.length) renderQ3Question(); else navToStage(4); }, 1200);
+      } else {
+        btn.classList.remove('wobble-hint'); void btn.offsetWidth; btn.classList.add('wobble-hint');
+        setTutorGuide("再諗諗，佢屬於邊一類食物呢？", true);
+      }
     }
 
     /* =====================================================================
@@ -449,7 +497,7 @@
     const q4List = [
       { target: '菜', pool: ['飯', '菜', '牛', '果', '香', '甜'] },
       { target: '飯', pool: ['菜', '飯', '豆', '肉', '水', '果'] },
-      { target: '果', pool: ['米', '肉', '蛋', '菜', '果', '香'] }
+      { target: '蜜', pool: ['米', '肉', '蜜', '菜', '果', '甜'] }
     ];
     let q4Idx = 0;
     function initQ4() { q4Idx = 0; renderQ4Question(); }
@@ -458,7 +506,7 @@
       const poolEl = document.getElementById('searchWordPool'); poolEl.innerHTML = '';
       item.pool.forEach(char => {
         const btn = document.createElement('button');
-        btn.className = "px-5 py-3 rounded-2xl bg-white border-4 border-amber-300 shadow-sm text-amber-950 font-black hover:bg-amber-100 transition-all";
+        btn.className = "px-6 py-4 rounded-2xl bg-white border-4 border-amber-300 shadow-sm text-amber-950 font-black hover:bg-amber-100 transition-all";
         btn.textContent = char;
         btn.onclick = () => answerQ4(char, item.target, btn);
         poolEl.appendChild(btn);
@@ -481,13 +529,13 @@
        第 5 關：結算
     ===================================================================== */
     function updateBlindReportCode() {
-      const code = `【中文盲測回報】P.21–25 Day 5 階段總動員（cn-p21-p25-test1.html）| 盲測結果: 4大關卡全部滿分通關 ⭐ | 掌握字詞: 聽音辨字(純文字)、看圖拼字(無字提示)、句式配對、全字庫尋寶(聲音盲測)全數精通`;
+      const code = `【中文課堂回報】P.21–22 Day 5 階段盲測（cn-p21-p25-day5.html）| 盲測結果: 4大關卡全部滿分通關 ⭐ | 掌握字詞: 聽音辨字(純文字)、看圖拼字(無字提示)、句式配對、全字庫尋寶(聲音盲測)全數精通`;
       document.getElementById('blindReportCodeBox').value = code;
     }
     function copyBlindReport() {
       const box = document.getElementById('blindReportCodeBox'); const text = box.value;
-      document.getElementById('blindCopyFeedback').textContent = "✅ 已複製盲測暗號！請直接貼上給 Anna 老師更新雲端總庫！";
-      launchFireworks(); speakCantonese("盲測暗號已經複製好啦！請媽媽貼返去對話框俾我更新總庫紀錄！");
+      document.getElementById('blindCopyFeedback').textContent = "✅ 已複製進度暗號！請直接貼上給 Anna 老師更新雲端總庫！";
+      launchFireworks(); speakCantonese("進度暗號已經複製好啦！請媽媽貼返去對話框俾我更新總庫紀錄！");
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(text).catch(() => { box.select(); document.execCommand('copy'); });
       } else { box.select(); document.execCommand('copy'); }
