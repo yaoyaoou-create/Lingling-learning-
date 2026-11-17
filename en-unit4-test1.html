@@ -8,8 +8,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Noto+Sans+TC:wght@500;700&display=swap" rel="stylesheet">
     <style>
         /* iPad 防雙擊放大與死鎖鐵律 */
-        * { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
-        body { display: block !important; }
+        * { box-sizing: border-box; touch-action: manipulation; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; }
+        body { display: block !important; margin: 0; padding: 0; }
 
         body {
             font-family: 'Fredoka', 'Noto Sans TC', sans-serif;
@@ -22,11 +22,16 @@
             box-shadow: 0 15px 35px rgba(0,0,0,0.2), inset 0 -5px 15px rgba(255,200,100,0.3);
             border: 4px solid #fff;
         }
+        
+        /* 3D 按鈕設計 */
         .btn-3d {
             transition: all 0.1s ease;
             box-shadow: 0 8px 0px #cf921d, 0 12px 10px rgba(0,0,0,0.2);
             border: 3px solid white;
-            user-select: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
         .btn-3d:active, .btn-3d.pressed {
             transform: translateY(8px);
@@ -56,12 +61,23 @@
         }
         .hidden-element { display: none !important; }
 
+        /* 動畫 */
         @keyframes pop {
             0% { transform: scale(0.8); opacity: 0; }
             50% { transform: scale(1.2); opacity: 1; }
             100% { transform: scale(1); opacity: 1; }
         }
         .pop-anim { animation: pop 0.5s ease-out forwards; }
+        
+        /* 發音大喇叭特效 */
+        .audio-btn {
+            animation: pulse-ring 2s infinite;
+        }
+        @keyframes pulse-ring {
+            0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(245, 158, 11, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+        }
     </style>
 </head>
 <body class="p-4 flex flex-col items-center justify-center">
@@ -72,7 +88,7 @@
             🏠 <span>返回主頁</span>
         </button>
         <div class="bg-yellow-400 text-yellow-900 px-6 py-2 rounded-full font-bold shadow-md text-lg">
-            ✨ 關卡地圖 ✨
+            ✨ Unit 4 關卡地圖 ✨
         </div>
         <div class="text-white font-bold text-xl drop-shadow-md">
             Level <span id="level-indicator">0</span>/5
@@ -97,28 +113,31 @@
         <div id="level-0" class="w-full">
             <h1 class="text-4xl md:text-5xl font-bold text-blue-800 mb-6 pop-anim">準備好未呀？</h1>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8 max-w-3xl mx-auto">
-                <button onclick="playBoostedAudio('audio/run.mp3')" class="btn-3d btn-blue rounded-2xl p-6 flex flex-col items-center justify-center text-white">
+                <button onclick="playSingleMp3('en-run.mp3')" class="btn-3d btn-blue rounded-2xl p-6 flex flex-col items-center justify-center text-white">
                     <span class="text-6xl mb-2">🏃</span><span class="text-3xl font-bold">run</span>
                 </button>
-                <button onclick="playBoostedAudio('audio/jump.mp3')" class="btn-3d btn-green rounded-2xl p-6 flex flex-col items-center justify-center text-white">
+                <button onclick="playSingleMp3('en-jump.mp3')" class="btn-3d btn-green rounded-2xl p-6 flex flex-col items-center justify-center text-white">
                     <span class="text-6xl mb-2">🦘</span><span class="text-3xl font-bold">jump</span>
                 </button>
-                <button onclick="playBoostedAudio('audio/draw.mp3')" class="btn-3d btn-purple rounded-2xl p-6 flex flex-col items-center justify-center text-white">
+                <button onclick="playSingleMp3('en-draw.mp3')" class="btn-3d btn-purple rounded-2xl p-6 flex flex-col items-center justify-center text-white">
                     <span class="text-6xl mb-2">🎨</span><span class="text-3xl font-bold">draw</span>
                 </button>
-                <button onclick="playBoostedAudio('audio/sing.mp3')" class="btn-3d btn-pink rounded-2xl p-6 flex flex-col items-center justify-center text-white">
+                <button onclick="playSingleMp3('en-sing.mp3')" class="btn-3d btn-pink rounded-2xl p-6 flex flex-col items-center justify-center text-white">
                     <span class="text-6xl mb-2">🎤</span><span class="text-3xl font-bold">sing</span>
                 </button>
             </div>
-            <button onclick="startLevel(1)" class="btn-3d bg-yellow-400 text-yellow-900 text-3xl font-bold py-4 px-12 rounded-full mt-4 pop-anim mx-auto block">
+            <button onclick="startLevel(1)" class="btn-3d bg-yellow-400 text-yellow-900 text-3xl font-bold py-4 px-12 rounded-full mt-4 pop-anim mx-auto flex">
                 開始挑戰 🚀
             </button>
         </div>
 
-        <!-- Level 1: 聽音選字 -->
+        <!-- Level 1: 聽音選字 (重點抽考 draw) -->
         <div id="level-1" class="w-full hidden-element">
-            <div class="text-8xl mb-6">👂</div>
-            <div class="grid grid-cols-2 gap-6 max-w-lg mx-auto">
+            <div class="mb-6 flex justify-center">
+                <!-- 修復：大耳仔變為可點擊播放嘅發音按鈕 -->
+                <button onclick="playSingleMp3('en-draw.mp3')" class="btn-3d bg-yellow-100 text-8xl p-6 rounded-full border-4 border-yellow-400 audio-btn">👂</button>
+            </div>
+            <div class="grid grid-cols-2 gap-6 max-w-lg mx-auto mt-4">
                 <button onclick="checkAnswer(1, 'run')" class="btn-3d bg-white text-gray-800 text-4xl font-bold py-8 rounded-2xl">run</button>
                 <button onclick="checkAnswer(1, 'draw')" class="btn-3d bg-white text-gray-800 text-4xl font-bold py-8 rounded-2xl">draw</button>
                 <button onclick="checkAnswer(1, 'sing')" class="btn-3d bg-white text-gray-800 text-4xl font-bold py-8 rounded-2xl">sing</button>
@@ -128,7 +147,7 @@
 
         <!-- Level 2: SVG/圖文配對 -->
         <div id="level-2" class="w-full hidden-element">
-            <div class="bg-white rounded-3xl p-10 shadow-inner mb-8 inline-block border-4 border-dashed border-gray-300" onclick="playBoostedAudio('audio/jump.mp3')">
+            <div class="bg-white rounded-3xl p-10 shadow-inner mb-8 inline-block border-4 border-dashed border-gray-300 cursor-pointer active:scale-95" onclick="playSingleMp3('en-jump.mp3')">
                 <span class="text-9xl">🦘</span>
             </div>
             <div class="flex gap-6 justify-center max-w-3xl mx-auto flex-wrap">
@@ -140,12 +159,12 @@
 
         <!-- Level 3: Tickles 陷阱問答 -->
         <div id="level-3" class="w-full hidden-element">
-            <div class="text-9xl mb-6" onclick="playBoostedAudio('audio/how-old-are-you.mp3')">🐱</div>
+            <div class="text-9xl mb-6 cursor-pointer audio-btn inline-block rounded-full bg-white p-4" onclick="playSingleMp3('en-how-old.mp3')">🐱</div>
             <div class="flex flex-col md:flex-row gap-8 justify-center mt-8">
-                <button onclick="checkAnswer(3, 'yes')" class="btn-3d bg-red-400 text-white text-3xl font-bold py-8 px-12 rounded-2xl flex items-center justify-center gap-4">
+                <button onclick="checkAnswer(3, 'yes')" class="btn-3d bg-red-400 text-white text-3xl font-bold py-8 px-12 rounded-2xl gap-4">
                     <span class="text-5xl">❌</span> Yes
                 </button>
-                <button onclick="checkAnswer(3, 'no')" class="btn-3d bg-green-500 text-white text-3xl font-bold py-8 px-12 rounded-2xl flex items-center justify-center gap-4">
+                <button onclick="checkAnswer(3, 'no')" class="btn-3d bg-green-500 text-white text-3xl font-bold py-8 px-12 rounded-2xl gap-4">
                     <span class="text-5xl">✅</span> No
                 </button>
             </div>
@@ -154,10 +173,10 @@
         <!-- Level 4: Phonics /m/ 捉迷藏 -->
         <div id="level-4" class="w-full hidden-element">
             <div class="grid grid-cols-2 gap-6 max-w-lg mx-auto mt-6" id="m-words-container">
-                <button onclick="selectMWord(this, 'mouth', true)" class="btn-3d bg-white text-gray-800 text-3xl font-bold py-6 rounded-xl">mouth</button>
-                <button onclick="selectMWord(this, 'hand', false)" class="btn-3d bg-white text-gray-800 text-3xl font-bold py-6 rounded-xl">hand</button>
-                <button onclick="selectMWord(this, 'meat', true)" class="btn-3d bg-white text-gray-800 text-3xl font-bold py-6 rounded-xl">meat</button>
-                <button onclick="selectMWord(this, 'milk', true)" class="btn-3d bg-white text-gray-800 text-3xl font-bold py-6 rounded-xl">milk</button>
+                <button onclick="selectMWord(this, 'en-mouth.mp3', true)" class="btn-3d bg-white text-gray-800 text-3xl font-bold py-6 rounded-xl">mouth</button>
+                <button onclick="selectMWord(this, 'en-hand.mp3', false)" class="btn-3d bg-white text-gray-800 text-3xl font-bold py-6 rounded-xl">hand</button>
+                <button onclick="selectMWord(this, 'en-meat.mp3', true)" class="btn-3d bg-white text-gray-800 text-3xl font-bold py-6 rounded-xl">meat</button>
+                <button onclick="selectMWord(this, 'en-milk.mp3', true)" class="btn-3d bg-white text-gray-800 text-3xl font-bold py-6 rounded-xl">milk</button>
             </div>
             <div id="m-progress" class="mt-8 text-3xl font-bold text-blue-600">已搵到: 0/3</div>
         </div>
@@ -176,7 +195,8 @@
             </div>
             
             <div id="speak-task" class="hidden-element mt-10 bg-white p-8 rounded-3xl border-4 border-yellow-300 shadow-lg">
-                <div class="text-7xl mb-4" onclick="playBoostedAudio('audio/i-can-draw.mp3')">🗣️</div>
+                <!-- 連續播放兩句 MP3 -->
+                <div class="text-7xl mb-4 cursor-pointer audio-btn inline-block rounded-full bg-blue-50 p-6" onclick="playHybridQueue([{type:'mp3', file:'en-i-can-draw.mp3'}, {type:'mp3', file:'en-four.mp3'}])">🗣️</div>
                 <p class="text-5xl font-bold text-blue-600 mb-6 font-tc">
                     "I can draw!"<br><span class="text-3xl text-gray-500 mt-2 block">I am four years old.</span>
                 </p>
@@ -196,12 +216,12 @@
                 <p class="text-gray-600 text-xl font-tc">玲玲好叻女！成功克服咗易忘字 <strong>draw</strong>，Phonics /m/ 亦分辨得好清楚！</p>
             </div>
 
-            <button onclick="copyCode()" id="copyBtn" class="btn-3d bg-gray-800 text-white text-2xl font-bold py-4 px-8 rounded-full mb-4 mx-auto block">
+            <button onclick="copyCode()" id="copyBtn" class="btn-3d bg-gray-800 text-white text-2xl font-bold py-4 px-8 rounded-full mb-4 mx-auto flex">
                 📋 一鍵複製進度暗號
             </button>
         </div>
 
-        <!-- 回饋覆蓋層 (星星/煙花) -->
+        <!-- 回饋覆蓋層 -->
         <div id="feedback-overlay" class="absolute inset-0 bg-white/95 flex flex-col items-center justify-center hidden-element z-50 rounded-2xl">
             <div id="feedback-icon" class="text-9xl mb-6 pop-anim">🌟</div>
             <div id="feedback-text" class="text-5xl font-bold text-green-500 pop-anim font-tc">好嘢！答啱啦！</div>
@@ -211,87 +231,102 @@
 
     <script>
         // ==========================================
-        // 中英雙軌 (Hybrid Voice) 語音引擎
+        // 植入 Day 4 完美雙軌引擎 (保證防靜音、防撞聲)
         // ==========================================
         window.utterancePool = [];
+        let audioQueueId = 0;
+        let activeAudioElement = null;
         let audioCtx = null;
-        let currentEnAudio = null;
 
-        // 初始化 AudioContext
-        function initAudioCtx() {
+        function ensureAudioContext() {
             if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                if (AudioContextClass) audioCtx = new AudioContextClass();
             }
-            if (audioCtx.state === 'suspended') {
-                audioCtx.resume();
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume().catch(()=>{});
             }
         }
 
-        // 播放英文 MP3 (音量放大 2.2 倍)
-        function playBoostedAudio(url, callback) {
-            initAudioCtx();
-            if (currentEnAudio) {
-                currentEnAudio.pause();
-                currentEnAudio = null;
+        function stopAllAudio() {
+            audioQueueId++;
+            if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+            if (activeAudioElement) {
+                try {
+                    activeAudioElement.onended = null;
+                    activeAudioElement.onerror = null;
+                    activeAudioElement.pause();
+                    activeAudioElement.currentTime = 0;
+                } catch (e) {}
+                activeAudioElement = null;
             }
+        }
+
+        // 播放單一 MP3，預設放大 2.2 倍，並加入 crossOrigin 破解 iPad 靜音
+        function playSingleMp3(file, startTime = 0, boostGain = 2.2, onDone) {
+            ensureAudioContext();
+            stopAllAudio(); // 確保每次只播一把聲
             
-            const audio = new Audio(url);
-            // 🌟 核心修復：突破 iPad Web Audio API 靜音封鎖！
-            audio.crossOrigin = "anonymous"; 
-            currentEnAudio = audio;
-            
-            try {
-                const source = audioCtx.createMediaElementSource(audio);
-                const gainNode = audioCtx.createGain();
-                gainNode.gain.value = 2.2; 
-                source.connect(gainNode);
-                gainNode.connect(audioCtx.destination);
-            } catch(e) {
-                console.warn("Audio routing error:", e);
+            const audio = new Audio('audio/' + file);
+            audio.crossOrigin = 'anonymous'; // 💡 破解靜音核心！
+            activeAudioElement = audio;
+
+            if (audioCtx) {
+                try {
+                    const source = audioCtx.createMediaElementSource(audio);
+                    const gainNode = audioCtx.createGain();
+                    gainNode.gain.value = boostGain;
+                    source.connect(gainNode);
+                    gainNode.connect(audioCtx.destination);
+                } catch (e) { audio.volume = 1.0; }
             }
 
-            audio.onended = () => {
-                if (callback) callback();
+            let finished = false;
+            const finish = () => { if(!finished){ finished = true; if(onDone) onDone(); }};
+            audio.onended = finish; 
+            audio.onerror = finish;
+
+            const startPlayback = () => {
+                if (startTime > 0) try { audio.currentTime = startTime; } catch(e){}
+                audio.play().catch(finish);
             };
-            audio.play().catch(e => console.log("MP3 Play Error:", e));
+
+            if (startTime > 0) {
+                audio.addEventListener('loadedmetadata', startPlayback, {once:true});
+                audio.load();
+            } else {
+                startPlayback();
+            }
         }
 
-        // 播放廣東話 TTS (壓低音量至 0.68)
-        function speakCantonese(text, onEndCallback) {
-            window.speechSynthesis.cancel();
-            window.utterancePool = [];
-            
-            const u = new SpeechSynthesisUtterance(text);
-            u.lang = 'zh-HK';
-            u.volume = 0.68;
-            u.rate = 0.9;
-            u.pitch = 1.05;
-            
-            window.utterancePool.push(u); // 防吞聲
-            
-            let advanced = false;
-            u.onend = () => {
-                if (advanced) return;
-                advanced = true;
-                if (onEndCallback) setTimeout(onEndCallback, 200);
-            };
-            u.onerror = u.onend;
-            
-            window.speechSynthesis.speak(u);
-        }
+        // 雙軌排隊引擎 (支援 TTS 與 MP3 混播)
+        function playHybridQueue(steps) {
+            stopAllAudio();
+            if (!steps || !steps.length) return;
+            const myQueueId = audioQueueId;
+            let idx = 0;
 
-        // 雙軌接力播放
-        function playInstruction(zhText, enUrl) {
-            document.getElementById('anna-text').innerText = zhText;
-            speakCantonese(zhText, () => {
-                if (enUrl) playBoostedAudio(enUrl);
-            });
-        }
+            function nextStep() {
+                if (myQueueId !== audioQueueId || idx >= steps.length) return;
+                const step = steps[idx++];
 
-        function goHome() {
-            window.speechSynthesis.cancel();
-            if(currentEnAudio) currentEnAudio.pause();
-            window.location.href = "index.html";
+                if (step.type === 'zh') {
+                    if (!('speechSynthesis' in window) || !step.text) { nextStep(); return; }
+                    const u = new SpeechSynthesisUtterance(step.text);
+                    window.utterancePool.push(u);
+                    u.lang = 'zh-HK'; u.pitch = 1.05; u.rate = 0.92; u.volume = 0.68;
+                    let advanced = false;
+                    const done = () => { if(!advanced && myQueueId === audioQueueId) { advanced = true; setTimeout(()=>nextStep(), 150); }};
+                    u.onend = done; u.onerror = done;
+                    setTimeout(() => { if (myQueueId === audioQueueId) window.speechSynthesis.speak(u); }, 50);
+                }
+                else if (step.type === 'mp3') {
+                    playSingleMp3(step.file, step.startTime || 0, step.boost || 2.2, () => {
+                        if (myQueueId === audioQueueId) setTimeout(()=>nextStep(), 150);
+                    });
+                }
+            }
+            nextStep();
         }
 
         // ==========================================
@@ -299,18 +334,24 @@
         // ==========================================
         let currentLevel = 0;
         const levelInstructions = {
-            0: { text: "歡迎嚟到 Unit 4 第一關測試！先撳下啲積木聽下發音熱身，準備好就開始挑戰啦！", audio: null },
-            1: { text: "第一關：留心聽下個英文發音，邊個字先係啱㗎呢？", audio: "audio/draw.mp3" },
-            2: { text: "第二關：睇下幅圖隻袋鼠做緊咩動作，揀啱嘅英文字啦！", audio: null },
-            3: { text: "第三關：Tickles 問你幾多歲，聽下佢講得啱唔啱，揀 Yes 定 No 啦！", audio: "audio/how-old-are-you.mp3" },
-            4: { text: "第四關：Phonics 聲音捉迷藏！邊個字係 m 發音開頭㗎呢？幫我捉晒佢哋出嚟啦！", audio: "audio/en-m.mp3" },
-            5: { text: "第五關：聽下呢個字點讀，再順序撳下面嘅字母積木砌返個字出嚟啦！", audio: "audio/draw.mp3" }
+            0: { text: "歡迎嚟到 Unit 4 第一關測試！先撳下啲積木聽下發音熱身，準備好就開始挑戰啦！", file: null },
+            1: { text: "第一關：留心聽下個英文發音，邊個字先係啱㗎呢？", file: "en-draw.mp3" },
+            2: { text: "第二關：睇下幅圖隻袋鼠做緊咩動作，揀啱嘅英文字啦！", file: null },
+            3: { text: "第三關：Tickles 問你幾多歲，聽下佢講得啱唔啱，揀 Yes 定 No 啦！", file: "en-how-old.mp3" },
+            4: { text: "第四關：Phonics 聲音捉迷藏！邊個字係 m 發音開頭㗎呢？幫我捉晒佢哋出嚟啦！", file: "en-m-sound.mp3" },
+            5: { text: "第五關：聽下呢個字點讀，再順序撳下面嘅字母積木砌返個字出嚟啦！", file: "en-draw.mp3" }
         };
 
         function replayInstruction() {
-            initAudioCtx(); // 確保解鎖 Audio
+            ensureAudioContext(); 
             const inst = levelInstructions[currentLevel];
-            playInstruction(inst.text, inst.audio);
+            document.getElementById('anna-text').innerText = inst.text;
+            
+            const queue = [{ type: 'zh', text: inst.text }];
+            if (inst.file) {
+                queue.push({ type: 'mp3', file: inst.file });
+            }
+            playHybridQueue(queue);
         }
 
         function showFeedback(isCorrect, callback) {
@@ -323,22 +364,22 @@
                 icon.textContent = '🌟';
                 text.textContent = '好嘢！答啱啦！';
                 text.className = 'text-5xl font-bold text-green-500 pop-anim font-tc';
-                speakCantonese('好嘢！答啱啦！');
+                playHybridQueue([{ type: 'zh', text: '好嘢！答啱啦！' }]);
             } else {
                 icon.textContent = '🤔';
                 text.textContent = '哎呀，試多次啦！';
                 text.className = 'text-5xl font-bold text-red-500 pop-anim font-tc';
-                speakCantonese('哎呀，試多次啦！');
+                playHybridQueue([{ type: 'zh', text: '哎呀，試多次啦！' }]);
             }
             
             setTimeout(() => {
                 overlay.classList.add('hidden-element');
                 if (isCorrect && callback) callback();
-            }, 2000);
+            }, 1800);
         }
 
         function startLevel(lvl) {
-            initAudioCtx();
+            ensureAudioContext();
             document.getElementById(`level-${currentLevel}`).classList.add('hidden-element');
             currentLevel = lvl;
             document.getElementById(`level-${currentLevel}`).classList.remove('hidden-element');
@@ -354,18 +395,16 @@
             if (lvl === 2 && selected === 'jump') correct = true;
             if (lvl === 3 && selected === 'no') correct = true;
             
-            showFeedback(correct, () => {
-                startLevel(lvl + 1);
-            });
+            showFeedback(correct, () => startLevel(lvl + 1));
         }
 
         // Level 4 Logic
         let mWordsFound = 0;
-        function selectMWord(btn, word, isCorrect) {
+        function selectMWord(btn, file, isCorrect) {
             if (btn.classList.contains('opacity-50')) return; 
             
             if (isCorrect) {
-                playBoostedAudio(`audio/${word}.mp3`);
+                playSingleMp3(file);
                 btn.classList.remove('bg-white', 'text-gray-800');
                 btn.classList.add('bg-green-400', 'text-white', 'opacity-50');
                 mWordsFound++;
@@ -402,8 +441,8 @@
             const expected = slots[currentSlot].dataset.expected;
             
             if (letter === expected) {
-                // 播字母讀音
-                playBoostedAudio(`audio/en-${letter}.mp3`);
+                // 播單字母發音 (例如 en-d.mp3)
+                playSingleMp3(`en-${letter}.mp3`);
                 slots[currentSlot].innerText = letter.toUpperCase();
                 slots[currentSlot].classList.add('bg-green-200', 'border-green-500', 'text-green-700');
                 btn.classList.add('hidden-element');
@@ -411,9 +450,15 @@
                 
                 if (currentSlot === slots.length) {
                     setTimeout(() => {
-                        playInstruction('好叻呀！而家大聲讀一次俾媽媽聽啦！', 'audio/draw.mp3');
                         document.getElementById('letter-bank').classList.add('hidden-element');
                         document.getElementById('speak-task').classList.remove('hidden-element');
+                        
+                        // 拼完字，Anna 提示大聲讀，然後自動播 I can draw 同 I am four years old
+                        playHybridQueue([
+                            { type: 'zh', text: '好叻呀！而家大聲讀一次俾媽媽聽啦！' },
+                            { type: 'mp3', file: 'en-i-can-draw.mp3' },
+                            { type: 'mp3', file: 'en-four.mp3' }
+                        ]);
                     }, 1000);
                 }
             } else {
@@ -422,11 +467,12 @@
         }
 
         function finishTest() {
+            stopAllAudio();
             document.getElementById('level-5').classList.add('hidden-element');
             document.getElementById('result-screen').classList.remove('hidden-element');
             
             document.getElementById('anna-text').innerText = "恭喜玲玲完成挑戰！";
-            speakCantonese("恭喜玲玲，全部答啱晒，你真係好叻呀！");
+            playHybridQueue([{ type: 'zh', text: "恭喜玲玲，全部答啱晒，你真係好叻呀！" }]);
         }
 
         function copyCode() {
@@ -438,11 +484,10 @@
             });
         }
         
-        window.onload = () => {
-            if ('speechSynthesis' in window) {
-                window.speechSynthesis.getVoices();
-            }
-        };
+        function goHome() {
+            stopAllAudio();
+            window.location.href = "index.html";
+        }
     </script>
 </body>
 </html>
