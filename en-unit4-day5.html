@@ -233,6 +233,8 @@
     .btn-green:active { box-shadow: 0 2px 0 #047857; }
     .btn-purple { background: #8B5CF6; color: #FFF; box-shadow: 0 6px 0 #6D28D9; }
     .btn-purple:active { box-shadow: 0 2px 0 #6D28D9; }
+    .btn-amber { background: #F59E0B; color: #FFF; box-shadow: 0 6px 0 #B45309; }
+    .btn-amber:active { box-shadow: 0 2px 0 #B45309; }
 
     /* 第二/三/四幕特殊樣式 */
     .rhythm-arena {
@@ -276,6 +278,10 @@
     @keyframes flyIntoMonster {
       0% { transform: scale(1); opacity: 1; }
       100% { transform: scale(0.1) translateY(-150px); opacity: 0; }
+    }
+    .feed-card.correct {
+      background: #DCFCE7; border-color: #22C55E; box-shadow: 0 4px 0 #15803D;
+      transform: scale(1.05);
     }
     .feed-card.wrong-try {
       background: #FEF3C7; border-color: #F59E0B; box-shadow: 0 8px 0 #D97706;
@@ -349,7 +355,7 @@
 
 <script>
   // =========================================================================
-  // 1. 終極「雙軌排隊 + Web Audio」引擎
+  // 1. 終極「雙軌排隊 + Web Audio」引擎 (100% 清除反斜線轉義 Bug)
   // =========================================================================
   window.utterancePool = [];
   let audioQueueId = 0;
@@ -387,6 +393,8 @@
         source.connect(gainNode);
         gainNode.connect(audioCtx.destination);
       } catch (e) { audio.volume = 1.0; }
+    } else {
+      audio.volume = 1.0;
     }
 
     let finished = false;
@@ -445,17 +453,17 @@
   }
 
   // ==========================================
-  // 2. SVG 圖庫 (包含前4日所有精華)
+  // 2. SVG 圖庫 (包含前4日所有精華，純淨代碼無反斜線轉義)
   // ==========================================
   const ILLUSTRATIONS = {
-    draw: \`<svg viewBox="0 0 180 180" width="100%" height="100%"><rect x="24" y="26" width="118" height="106" rx="18" fill="#FEF3C7" stroke="#F59E0B" stroke-width="6"/><rect x="34" y="36" width="98" height="86" rx="12" fill="#FFFFFF"/><path d="M46 104 A36 36 0 0 1 118 104" fill="none" stroke="#F43F5E" stroke-width="7" stroke-linecap="round"/><path d="M54 104 A28 28 0 0 1 110 104" fill="none" stroke="#FACC15" stroke-width="7" stroke-linecap="round"/><path d="M62 104 A20 20 0 0 1 102 104" fill="none" stroke="#38BDF8" stroke-width="7" stroke-linecap="round"/><g transform="rotate(-32 132 122)"><rect x="122" y="76" width="18" height="72" rx="9" fill="#3B82F6" stroke="#1D4ED8" stroke-width="4"/><path d="M121 66 Q131 38 141 66 Z" fill="#EC4899"/></g></svg>\`,
-    run: \`<svg viewBox="0 0 180 180" width="100%" height="100%"><path d="M50 130 C70 130 80 100 120 100" stroke="#F97316" stroke-width="12" fill="none" stroke-linecap="round"/><ellipse cx="120" cy="100" rx="30" ry="18" fill="#3B82F6" transform="rotate(-15 120 100)"/><path d="M20 110 L45 110" stroke="#CBD5E1" stroke-width="6" stroke-linecap="round"/><path d="M15 130 L40 130" stroke="#CBD5E1" stroke-width="6" stroke-linecap="round"/></svg>\`,
-    jump: \`<svg viewBox="0 0 180 180" width="100%" height="100%"><path d="M40 140 Q90 50 140 140" stroke="#10B981" stroke-width="8" stroke-dasharray="12,12" fill="none" stroke-linecap="round"/><circle cx="90" cy="60" r="28" fill="#F59E0B"/><path d="M80 60 L100 60" stroke="#FFF" stroke-width="4"/><path d="M90 50 L90 70" stroke="#FFF" stroke-width="4"/><path d="M40 150 L140 150" stroke="#64748B" stroke-width="6" stroke-linecap="round"/></svg>\`,
-    sing: \`<svg viewBox="0 0 180 180" width="100%" height="100%"><rect x="75" y="40" width="30" height="60" rx="15" fill="#64748B"/><path d="M60 70 A30 30 0 0 0 120 70" fill="none" stroke="#94A3B8" stroke-width="6"/><rect x="85" y="100" width="10" height="40" fill="#94A3B8"/><path d="M65 140 L115 140" stroke="#94A3B8" stroke-width="8" stroke-linecap="round"/><text x="120" y="60" font-size="40" fill="#F43F5E" style="font-weight:bold;">♪</text><text x="30" y="80" font-size="30" fill="#F59E0B" style="font-weight:bold;">♫</text></svg>\`,
-    four: \`<svg viewBox="0 0 180 180" width="100%" height="100%"><rect x="40" y="80" width="100" height="70" rx="20" fill="#FDE68A" stroke="#F59E0B" stroke-width="6"/><rect x="50" y="30" width="16" height="55" rx="8" fill="#FDE68A" stroke="#F59E0B" stroke-width="6"/><rect x="75" y="20" width="16" height="65" rx="8" fill="#FDE68A" stroke="#F59E0B" stroke-width="6"/><rect x="100" y="25" width="16" height="60" rx="8" fill="#FDE68A" stroke="#F59E0B" stroke-width="6"/><rect x="125" y="40" width="16" height="45" rx="8" fill="#FDE68A" stroke="#F59E0B" stroke-width="6"/><path d="M38 100 C20 100 20 130 40 130" fill="#FDE68A" stroke="#F59E0B" stroke-width="6"/></svg>\`,
-    mouth: \`<svg viewBox="0 0 180 180" width="100%" height="100%"><circle cx="90" cy="94" r="64" fill="#FDE68A" stroke="#F59E0B" stroke-width="6"/><path d="M60 72 Q68 62 76 72" stroke="#78350F" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M104 72 Q112 62 120 72" stroke="#78350F" stroke-width="5" fill="none" stroke-linecap="round"/><ellipse cx="52" cy="92" rx="11" ry="7" fill="#FDA4AF" opacity="0.8"/><ellipse cx="128" cy="92" rx="11" ry="7" fill="#FDA4AF" opacity="0.8"/><path d="M64 102 Q90 144 116 102 Z" fill="#FB7185" stroke="#E11D48" stroke-width="5" stroke-linejoin="round"/></svg>\`,
-    meat: \`<svg viewBox="0 0 180 180" width="100%" height="100%"><g transform="rotate(-25 90 90)"><rect x="96" y="78" width="52" height="24" rx="10" fill="#FFFBEB" stroke="#D97706" stroke-width="5"/><circle cx="148" cy="78" r="13" fill="#FFFBEB" stroke="#D97706" stroke-width="5"/><circle cx="148" cy="102" r="13" fill="#FFFBEB" stroke="#D97706" stroke-width="5"/><ellipse cx="76" cy="90" rx="52" ry="38" fill="#F97316" stroke="#C2410C" stroke-width="6"/><ellipse cx="70" cy="82" rx="34" ry="20" fill="#FB923C"/></g></svg>\`,
-    milk: \`<svg viewBox="0 0 180 180" width="100%" height="100%"><polygon points="56,52 90,28 124,52" fill="#60A5FA" stroke="#1D4ED8" stroke-width="5" stroke-linejoin="round"/><rect x="56" y="52" width="68" height="98" rx="14" fill="#FFFFFF" stroke="#2563EB" stroke-width="5"/><rect x="56" y="88" width="68" height="36" fill="#93C5FD"/><path d="M90 95 C90 95 100 107 100 113 A10 10 0 0 1 80 113 C80 107 90 95 90 95 Z" fill="#FFFFFF"/></svg>\`
+    draw: `<svg viewBox="0 0 180 180" width="100%" height="100%"><rect x="24" y="26" width="118" height="106" rx="18" fill="#FEF3C7" stroke="#F59E0B" stroke-width="6"/><rect x="34" y="36" width="98" height="86" rx="12" fill="#FFFFFF"/><path d="M46 104 A36 36 0 0 1 118 104" fill="none" stroke="#F43F5E" stroke-width="7" stroke-linecap="round"/><path d="M54 104 A28 28 0 0 1 110 104" fill="none" stroke="#FACC15" stroke-width="7" stroke-linecap="round"/><path d="M62 104 A20 20 0 0 1 102 104" fill="none" stroke="#38BDF8" stroke-width="7" stroke-linecap="round"/><g transform="rotate(-32 132 122)"><rect x="122" y="76" width="18" height="72" rx="9" fill="#3B82F6" stroke="#1D4ED8" stroke-width="4"/><path d="M121 66 Q131 38 141 66 Z" fill="#EC4899"/></g></svg>`,
+    run: `<svg viewBox="0 0 180 180" width="100%" height="100%"><path d="M50 130 C70 130 80 100 120 100" stroke="#F97316" stroke-width="12" fill="none" stroke-linecap="round"/><ellipse cx="120" cy="100" rx="30" ry="18" fill="#3B82F6" transform="rotate(-15 120 100)"/><path d="M20 110 L45 110" stroke="#CBD5E1" stroke-width="6" stroke-linecap="round"/><path d="M15 130 L40 130" stroke="#CBD5E1" stroke-width="6" stroke-linecap="round"/></svg>`,
+    jump: `<svg viewBox="0 0 180 180" width="100%" height="100%"><path d="M40 140 Q90 50 140 140" stroke="#10B981" stroke-width="8" stroke-dasharray="12,12" fill="none" stroke-linecap="round"/><circle cx="90" cy="60" r="28" fill="#F59E0B"/><path d="M80 60 L100 60" stroke="#FFF" stroke-width="4"/><path d="M90 50 L90 70" stroke="#FFF" stroke-width="4"/><path d="M40 150 L140 150" stroke="#64748B" stroke-width="6" stroke-linecap="round"/></svg>`,
+    sing: `<svg viewBox="0 0 180 180" width="100%" height="100%"><rect x="75" y="40" width="30" height="60" rx="15" fill="#64748B"/><path d="M60 70 A30 30 0 0 0 120 70" fill="none" stroke="#94A3B8" stroke-width="6"/><rect x="85" y="100" width="10" height="40" fill="#94A3B8"/><path d="M65 140 L115 140" stroke="#94A3B8" stroke-width="8" stroke-linecap="round"/><text x="120" y="60" font-size="40" fill="#F43F5E" style="font-weight:bold;">♪</text><text x="30" y="80" font-size="30" fill="#F59E0B" style="font-weight:bold;">♫</text></svg>`,
+    four: `<svg viewBox="0 0 180 180" width="100%" height="100%"><rect x="40" y="80" width="100" height="70" rx="20" fill="#FDE68A" stroke="#F59E0B" stroke-width="6"/><rect x="50" y="30" width="16" height="55" rx="8" fill="#FDE68A" stroke="#F59E0B" stroke-width="6"/><rect x="75" y="20" width="16" height="65" rx="8" fill="#FDE68A" stroke="#F59E0B" stroke-width="6"/><rect x="100" y="25" width="16" height="60" rx="8" fill="#FDE68A" stroke="#F59E0B" stroke-width="6"/><rect x="125" y="40" width="16" height="45" rx="8" fill="#FDE68A" stroke="#F59E0B" stroke-width="6"/><path d="M38 100 C20 100 20 130 40 130" fill="#FDE68A" stroke="#F59E0B" stroke-width="6"/></svg>`,
+    mouth: `<svg viewBox="0 0 180 180" width="100%" height="100%"><circle cx="90" cy="94" r="64" fill="#FDE68A" stroke="#F59E0B" stroke-width="6"/><path d="M60 72 Q68 62 76 72" stroke="#78350F" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M104 72 Q112 62 120 72" stroke="#78350F" stroke-width="5" fill="none" stroke-linecap="round"/><ellipse cx="52" cy="92" rx="11" ry="7" fill="#FDA4AF" opacity="0.8"/><ellipse cx="128" cy="92" rx="11" ry="7" fill="#FDA4AF" opacity="0.8"/><path d="M64 102 Q90 144 116 102 Z" fill="#FB7185" stroke="#E11D48" stroke-width="5" stroke-linejoin="round"/></svg>`,
+    meat: `<svg viewBox="0 0 180 180" width="100%" height="100%"><g transform="rotate(-25 90 90)"><rect x="96" y="78" width="52" height="24" rx="10" fill="#FFFBEB" stroke="#D97706" stroke-width="5"/><circle cx="148" cy="78" r="13" fill="#FFFBEB" stroke="#D97706" stroke-width="5"/><circle cx="148" cy="102" r="13" fill="#FFFBEB" stroke="#D97706" stroke-width="5"/><ellipse cx="76" cy="90" rx="52" ry="38" fill="#F97316" stroke="#C2410C" stroke-width="6"/><ellipse cx="70" cy="82" rx="34" ry="20" fill="#FB923C"/></g></svg>`,
+    milk: `<svg viewBox="0 0 180 180" width="100%" height="100%"><polygon points="56,52 90,28 124,52" fill="#60A5FA" stroke="#1D4ED8" stroke-width="5" stroke-linejoin="round"/><rect x="56" y="52" width="68" height="98" rx="14" fill="#FFFFFF" stroke="#2563EB" stroke-width="5"/><rect x="56" y="88" width="68" height="36" fill="#93C5FD"/><path d="M90 95 C90 95 100 107 100 113 A10 10 0 0 1 80 113 C80 107 90 95 90 95 Z" fill="#FFFFFF"/></svg>`
   };
 
   // ==========================================
@@ -513,17 +521,16 @@
   // 4. 渲染引擎
   // ==========================================
   let currentAct = 0, subIndex = 0, drumStep = 0;
-  let oralTeacherDone = false;
   let quizSolved = false, quizWrongPicked = null;
 
   function updateActNav() {
     document.querySelectorAll('.act-pill').forEach((p, idx) => {
-      p.className = \`act-pill \${currentAct === 4 || idx < currentAct ? 'done' : (idx === currentAct ? 'active' : '')}\`;
+      p.className = `act-pill ${currentAct === 4 || idx < currentAct ? 'done' : (idx === currentAct ? 'active' : '')}`;
     });
   }
 
   function jumpToAct(idx) {
-    currentAct = idx; subIndex = 0; drumStep = 0; oralTeacherDone = false; quizSolved = false; quizWrongPicked = null;
+    currentAct = idx; subIndex = 0; drumStep = 0; quizSolved = false; quizWrongPicked = null;
     updateActNav(); renderStage(true);
   }
 
@@ -535,22 +542,22 @@
     if (currentAct === 0) {
       const c = ACT1_CARDS[subIndex];
       setGuide(c.guideZh, shouldSpeak);
-      container.innerHTML = \`
-        <div class="dots-row">\${ACT1_CARDS.map((_, i) => \`<span class="dot \${i === subIndex ? 'active' : (i < subIndex ? 'completed' : '')}"></span>\`).join('')}</div>
-        <div class="stage-badge">\${c.badge}</div>
-        <div class="flashcard-3d" id="meaningCard" onclick="playImmersiveEn('\${c.id}')">
+      container.innerHTML = `
+        <div class="dots-row">${ACT1_CARDS.map((_, i) => `<span class="dot ${i === subIndex ? 'active' : (i < subIndex ? 'completed' : '')}"></span>`).join('')}</div>
+        <div class="stage-badge">${c.badge}</div>
+        <div class="flashcard-3d" id="meaningCard" onclick="playImmersiveEn('${c.id}')">
           <div class="pulse-ring"></div>
-          <div class="illustration-wrap">\${ILLUSTRATIONS[c.id]}</div>
-          <div class="word-en">\${c.id}</div>
+          <div class="illustration-wrap">${ILLUSTRATIONS[c.id]}</div>
+          <div class="word-en">${c.id}</div>
           <div class="hint-text">👆 點擊聽發音</div>
         </div>
         <div class="btn-row" style="margin-top: 30px;">
-          \${subIndex > 0 ? \`<button class="btn-3d btn-purple" onclick="subIndex--; renderStage(true);">⬅️ 上一個</button>\` : ''}
+          ${subIndex > 0 ? `<button class="btn-3d btn-purple" onclick="subIndex--; renderStage(true);">⬅️ 上一個</button>` : ''}
           <button class="btn-3d btn-green" onclick="if(subIndex < ACT1_CARDS.length-1){ subIndex++; renderStage(true); } else jumpToAct(1);">
-            \${subIndex < ACT1_CARDS.length - 1 ? '下一個 ➡️' : '去口語劇場 💬'}
+            ${subIndex < ACT1_CARDS.length - 1 ? '下一個 ➡️' : '去口語劇場 💬'}
           </button>
         </div>
-      \`;
+      `;
     }
 
     // --- Act 2: 口語對答 ---
@@ -565,7 +572,7 @@
         setGuide(ACT2_ORAL.guideZh, false);
       }
       
-      container.innerHTML = \`
+      container.innerHTML = `
         <div class="dots-row"><span class="dot active"></span></div>
         <div class="stage-badge">💬 聽問題，答句子</div>
         
@@ -577,7 +584,7 @@
            <div style="font-size:40px; color:#3B82F6;">➔</div>
            <div class="flashcard-3d" style="margin:0; max-width:280px;" onclick="playOralAnswer()">
              <div class="pulse-ring"></div>
-             <div class="illustration-wrap" style="width:120px; height:120px;">\${ILLUSTRATIONS['four']}</div>
+             <div class="illustration-wrap" style="width:120px; height:120px;">${ILLUSTRATIONS['four']}</div>
              <div class="hint-text">👆 點擊聽答案</div>
            </div>
         </div>
@@ -586,40 +593,40 @@
           <button class="btn-3d btn-green" onclick="launchFireworks(); playHybridQueue([{type:'zh', text:'玲玲答得好清楚！放煙花'}]);">🎉 我答啱喇！</button>
           <button class="btn-3d btn-green" onclick="jumpToAct(2);">去節奏鼓 🥁 ➡️</button>
         </div>
-      \`;
+      `;
     }
 
     // --- Act 3: 節奏律動 (Rhythm) ---
     else if (currentAct === 2) {
       const c = ACT3_RHYTHM[subIndex];
       setGuide(c.guideZh, shouldSpeak);
-      container.innerHTML = \`
-        <div class="dots-row">\${ACT3_RHYTHM.map((_, i) => \`<span class="dot \${i === subIndex ? 'active' : (i < subIndex ? 'completed' : '')}"></span>\`).join('')}</div>
-        <div class="stage-badge">🥁 節奏律動 (\${subIndex + 1} / 3)</div>
+      container.innerHTML = `
+        <div class="dots-row">${ACT3_RHYTHM.map((_, i) => `<span class="dot ${i === subIndex ? 'active' : (i < subIndex ? 'completed' : '')}"></span>`).join('')}</div>
+        <div class="stage-badge">🥁 節奏律動 (${subIndex + 1} / 3)</div>
         
         <div class="rhythm-arena">
-          <div class="drum-pad \${drumStep >= 1 ? 'active-drum' : ''}" onclick="tapDrum(1)">
+          <div class="drum-pad ${drumStep >= 1 ? 'active-drum' : ''}" onclick="tapDrum(1)">
             <div style="font-size: 40px;">👏</div>
             <div style="font-size: 22px; font-weight: 900; margin-top: 8px;">m</div>
           </div>
-          <div class="drum-pad \${drumStep >= 2 ? 'active-drum' : ''}" onclick="tapDrum(2)">
+          <div class="drum-pad ${drumStep >= 2 ? 'active-drum' : ''}" onclick="tapDrum(2)">
             <div style="font-size: 40px;">👏</div>
             <div style="font-size: 22px; font-weight: 900; margin-top: 8px;">m</div>
           </div>
           <div style="font-size: 28px; color: #3B82F6; font-weight: 900;">➔</div>
-          <div class="drum-pad target-card \${drumStep >= 3 ? 'active-drum' : ''}" onclick="tapDrum(3)">
-            <div style="width: 80px; height: 80px;">\${ILLUSTRATIONS[c.wordId]}</div>
-            <div style="font-size: 24px; font-weight: 900; margin-top: 4px; color: inherit;">\${c.en}</div>
+          <div class="drum-pad target-card ${drumStep >= 3 ? 'active-drum' : ''}" onclick="tapDrum(3)">
+            <div style="width: 80px; height: 80px;">${ILLUSTRATIONS[c.wordId]}</div>
+            <div style="font-size: 24px; font-weight: 900; margin-top: 4px; color: inherit;">${c.en}</div>
           </div>
         </div>
 
         <div class="btn-row" style="margin-top: 30px;">
-          \${subIndex > 0 ? \`<button class="btn-3d btn-purple" onclick="subIndex--; drumStep=0; renderStage(true);">⬅️</button>\` : ''}
+          ${subIndex > 0 ? `<button class="btn-3d btn-purple" onclick="subIndex--; drumStep=0; renderStage(true);">⬅️</button>` : ''}
           <button class="btn-3d btn-green" onclick="if(subIndex < ACT3_RHYTHM.length-1){ subIndex++; drumStep=0; renderStage(true); } else jumpToAct(3);">
-            \${subIndex < ACT3_RHYTHM.length - 1 ? '下一個 ➡️' : '去終極挑戰 👾'}
+            ${subIndex < ACT3_RHYTHM.length - 1 ? '下一個 ➡️' : '去終極挑戰 👾'}
           </button>
         </div>
-      \`;
+      `;
     }
 
     // --- Act 4: 混合 Quiz ---
@@ -632,33 +639,33 @@
 
       const isMonster = q.badge.includes('怪獸');
 
-      container.innerHTML = \`
-        <div class="dots-row">\${ACT4_QUIZ.map((_, i) => \`<span class="dot \${i === subIndex ? 'active' : ''}"></span>\`).join('')}</div>
+      container.innerHTML = `
+        <div class="dots-row">${ACT4_QUIZ.map((_, i) => `<span class="dot ${i === subIndex ? 'active' : ''}"></span>`).join('')}</div>
         
-        \${isMonster ? \`
+        ${isMonster ? `
         <div class="monster-stage">
           <div class="monster-avatar">👾</div>
           <div style="font-size: 20px; font-weight: 900; color: #9A3412;">我要食 m 開頭嘅嘢！</div>
         </div>
-        \` : \`
-        <div class="stage-badge" style="margin-bottom:20px;">\${q.badge}</div>
+        ` : `
+        <div class="stage-badge" style="margin-bottom:20px;">${q.badge}</div>
         <button class="btn-3d btn-purple" style="margin-bottom:20px;" onclick="replayQuizSound()">🔊 再聽一次題目</button>
-        \`}
+        `}
 
         <div class="feed-grid">
-          <div class="feed-card \${quizSolved ? (isMonster?'fed-success':'correct') : ''}" onclick="pickQuiz('\${q.correctId}', \${isMonster})">
-            <div style="width: 130px; height: 130px; margin: 0 auto;">\${ILLUSTRATIONS[q.correctId]}</div>
+          <div class="feed-card ${quizSolved ? (isMonster?'fed-success':'correct') : ''}" onclick="pickQuiz('${q.correctId}', ${isMonster})">
+            <div style="width: 130px; height: 130px; margin: 0 auto;">${ILLUSTRATIONS[q.correctId]}</div>
           </div>
-          <div class="feed-card \${!quizSolved && quizWrongPicked === q.wrongId ? 'wrong-try' : ''}" onclick="pickQuiz('\${q.wrongId}', \${isMonster})">
-            <div style="width: 130px; height: 130px; margin: 0 auto;">\${ILLUSTRATIONS[q.wrongId]}</div>
+          <div class="feed-card ${!quizSolved && quizWrongPicked === q.wrongId ? 'wrong-try' : ''}" onclick="pickQuiz('${q.wrongId}', ${isMonster})">
+            <div style="width: 130px; height: 130px; margin: 0 auto;">${ILLUSTRATIONS[q.wrongId]}</div>
           </div>
         </div>
         
-        \${quizSolved ? \`
+        ${quizSolved ? `
            <div class="gentle-hint-banner success">🎉 好叻呀！答啱咗喇！</div>
            <div class="btn-row"><button class="btn-3d btn-green" onclick="if(subIndex < 3){ subIndex++; quizSolved=false; quizWrongPicked=null; renderStage(true); } else jumpToAct(4);">下一題 ➡️</button></div>
-        \` : (quizWrongPicked ? \`<div class="gentle-hint-banner">💛 試下揀隔離嗰張圖卡啦！</div>\` : '')}
-      \`;
+        ` : (quizWrongPicked ? `<div class="gentle-hint-banner">💛 試下揀隔離嗰張圖卡啦！</div>` : '')}
+      `;
     }
 
     // --- Summary ---
@@ -666,19 +673,19 @@
       setGuide("恭喜玲玲！Unit 4 全部內容已經完美掌握！", shouldSpeak);
       if (shouldSpeak) { launchFireworks(); setTimeout(launchFireworks, 800); }
       
-      const secretCode = \`【玲玲英文課堂進度暗號】單元：Unit 4 Day 5 大結局 (en-unit4-day5.html)｜完成狀態：✅ 全課順利完成 (完美動作重溫 + 口語劇場 + Phonics 節奏)｜請 Anna 老師更新雲端英文總庫，並準備 Unit 4 Test 1 闖關測驗！\`;
+      const secretCode = `【玲玲英文課堂進度暗號】單元：Unit 4 Day 5 大結局 (en-unit4-day5.html)｜完成狀態：✅ 全課順利完成 (完美動作重溫 + 口語劇場 + Phonics 節奏)｜請 Anna 老師更新雲端英文總庫，並準備 Unit 4 Test 1 闖關測驗！`;
 
-      container.innerHTML = \`
+      container.innerHTML = `
         <div style="font-size: 70px;">🏆</div>
         <h1 style="color: #0284C7; margin: 10px 0;">Unit 4 完美過關！</h1>
         
         <div class="btn-row" style="margin-top: 18px;">
           <button class="btn-3d btn-green" id="copySecretBtn" onclick="copyProgressSecret()">📋 複製暗號準備大闖關</button>
         </div>
-        <div class="secret-code-box" id="secretCodeText" style="margin-bottom:20px;">\${secretCode}</div>
+        <div class="secret-code-box" id="secretCodeText" style="margin-bottom:20px;">${secretCode}</div>
 
         <div class="btn-row"><a href="en-unit4.html" class="btn-3d btn-amber" style="text-decoration:none;">🏠 返去主目錄</a></div>
-      \`;
+      `;
     }
   }
 
