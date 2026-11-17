@@ -346,6 +346,7 @@
                 <h3 class="unit-name">Unit 8: Love at Home</h3>
                 <p class="unit-desc">點擊展開 Test 1-3 列表</p>
             </a>
+            <a href="javascript:void(0)" onclick="openModal('modal-en-unit4')" class="unit-card card-en-quiz"><span class="unit-card-icon">🤸</span><span class="unit-tag">單元闖關入口</span><h3 class="unit-name">Unit 4: I can do it</h3><p class="unit-desc">點擊展開 Test 1-3 列表</p></a>
             
             <a href="en-animals.html" class="unit-card card-en-quiz"><span class="unit-card-icon">🐾</span><span class="unit-tag">專題挑戰 · 1</span><h3 class="unit-name">動物家庭</h3><p class="unit-desc">Cat, Dog, Family</p></a>
             <a href="en-emotions.html" class="unit-card card-en-quiz"><span class="unit-card-icon">😄</span><span class="unit-tag">專題挑戰 · 2</span><h3 class="unit-name">情緒句子</h3><p class="unit-desc">Happy, Sad, Angry</p></a>
@@ -426,6 +427,18 @@
             <a href="en-unit8-test3.html" class="modal-item locked">
                 <span class="text-xl mr-2">🔒</span> Test 3：全單元錯題特訓 (預留)
             </a>
+        </div>
+    </div>
+</div>
+<!-- 英文闖關：Unit 4 子欄目彈窗 -->
+<div id="modal-en-unit4" class="modal-overlay" onclick="closeModal('modal-en-unit4')">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <button class="modal-close" onclick="closeModal('modal-en-unit4')">✖</button>
+        <h2 class="modal-title">🤸 Unit 4: I can do it</h2>
+        <div class="modal-list">
+            <a href="en-unit4-test1.html?v=1" class="modal-item unlocked"><span class="text-xl mr-2">🏆</span> Test 1：動作單字與 Phonics m</a>
+            <a href="en-unit4-test2.html" class="modal-item locked"><span class="text-xl mr-2">🔒</span> Test 2：進階綜合挑戰 (預留)</a>
+            <a href="en-unit4-test3.html" class="modal-item locked"><span class="text-xl mr-2">🔒</span> Test 3：全單元錯題特訓 (預留)</a>
         </div>
     </div>
 </div>
