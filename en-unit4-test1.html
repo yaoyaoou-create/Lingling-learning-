@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit 4: I can do it! - Test 2</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Noto+Sans+TC:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Fredoka', 'Noto Sans TC', sans-serif;
+            background: linear-gradient(135deg, #a8c0ff 0%, #3f2b96 100%);
+            min-height: 100vh;
+            touch-action: manipulation;
+        }
+        .stage-card {
+            background: linear-gradient(to bottom, #fffdf8, #ffe5b4);
+            border-radius: 2rem;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2), inset 0 -5px 15px rgba(255,200,100,0.3);
+            border: 4px solid #fff;
+        }
+        .btn-3d {
+            transition: all 0.1s ease;
+            box-shadow: 0 8px 0px #cf921d, 0 12px 10px rgba(0,0,0,0.2);
+            border: 3px solid white;
+        }
+        .btn-3d:active, .btn-3d.pressed {
+            transform: translateY(8px);
+            box-shadow: 0 0px 0px #cf921d, 0 2px 3px rgba(0,0,0,0.2);
+        }
+        .btn-blue { background-color: #4facfe; box-shadow: 0 8px 0px #2a7cbd; }
+        .btn-blue:active, .btn-blue.pressed { box-shadow: 0 0px 0px #2a7cbd; }
+        
+        .btn-green { background-color: #52c234; box-shadow: 0 8px 0px #32851b; }
+        .btn-green:active, .btn-green.pressed { box-shadow: 0 0px 0px #32851b; }
+
+        .btn-purple { background-color: #9d50bb; box-shadow: 0 8px 0px #61277a; }
+        .btn-purple:active, .btn-purple.pressed { box-shadow: 0 0px 0px #61277a; }
+
+        .word-slot {
+            border: 4px dashed #ccc;
+            min-width: 60px;
+            height: 70px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #333;
+            background: rgba(255,255,255,0.5);
+        }
+        .letter-block {
+            cursor: pointer;
+            user-select: none;
+        }
+        .hidden-element { display: none !important; }
+        
+        /* Fireworks Animation for Success */
+        @keyframes pop {
+            0% { transform: scale(0.8); opacity: 0; }
+            50% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .pop-anim { animation: pop 0.5s ease-out forwards; }
+    </style>
+</head>
+<body class="p-4 flex flex-col items-center justify-center">
+
+    <!-- Top Navigation -->
+    <div class="w-full max-w-4xl flex justify-between items-center mb-6">
+        <button onclick="goHome()" class="bg-white text-gray-800 px-4 py-2 rounded-full font-bold shadow-md hover:bg-gray-100 flex items-center gap-2">
+            🏠 <span>返回主頁</span>
+        </button>
+        <div class="bg-yellow-400 text-yellow-900 px-6 py-2 rounded-full font-bold shadow-md text-lg">
+            ✨ Unit 4: I can do it! ✨
+        </div>
+        <div class="text-white font-bold text-xl drop-shadow-md">
+            Level <span id="level-indicator">0</span>/5
+        </div>
+    </div>
+
+    <!-- Main Stage -->
+    <div class="stage-card w-full max-w-4xl p-6 md:p-10 relative overflow-hidden flex flex-col items-center text-center" id="main-stage">
+        
+        <!-- Step 0: Lobby -->
+        <div id="level-0" class="w-full">
+            <h1 class="text-4xl md:text-5xl font-bold text-blue-800 mb-2 pop-anim">準備好闖關未呀？</h1>
+            <p class="text-xl text-gray-600 mb-8 font-tc">撳下啲積木溫習下先，然後開始挑戰！</p>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+                <button onclick="speak('run')" class="btn-3d btn-blue rounded-2xl p-6 flex flex-col items-center justify-center text-white">
+                    <span class="text-5xl mb-2">🏃</span>
+                    <span class="text-2xl font-bold">run</span>
+                </button>
+                <button onclick="speak('jump')" class="btn-3d btn-green rounded-2xl p-6 flex flex-col items-center justify-center text-white">
+                    <span class="text-5xl mb-2">🦘</span>
+                    <span class="text-2xl font-bold">jump</span>
+                </button>
+                <button onclick="speak('draw')" class="btn-3d btn-purple rounded-2xl p-6 flex flex-col items-center justify-center text-white">
+                    <span class="text-5xl mb-2">🎨</span>
+                    <span class="text-2xl font-bold">draw</span>
+                </button>
+                <button onclick="speak('sing')" class="btn-3d bg-pink-500 rounded-2xl p-6 flex flex-col items-center justify-center text-white" style="box-shadow: 0 8px 0px #b51f5c;">
+                    <span class="text-5xl mb-2">🎤</span>
+                    <span class="text-2xl font-bold">sing</span>
+                </button>
+            </div>
+            
+            <button onclick="startLevel(1)" class="btn-3d bg-yellow-400 text-yellow-900 text-3xl font-bold py-4 px-12 rounded-full mt-4 pop-anim">
+                開始挑戰 🚀
+            </button>
+        </div>
+
+        <!-- Level 1: Listen & Select (Focus: draw) -->
+        <div id="level-1" class="w-full hidden-element">
+            <div class="text-6xl mb-4">👂</div>
+            <h2 class="text-3xl font-bold text-gray-800 mb-6">聽一聽，邊個字係啱？</h2>
+            <button onclick="speak('draw')" class="bg-blue-100 text-blue-800 p-4 rounded-full mb-8 text-2xl shadow-sm active:scale-95 transition">
+                🔊 撳我再聽一次
+            </button>
+            <div class="grid grid-cols-2 gap-6 max-w-lg mx-auto">
+                <button onclick="checkAnswer(1, 'run')" class="btn-3d bg-white text-gray-800 text-3xl font-bold py-6 rounded-2xl">run</button>
+                <button onclick="checkAnswer(1, 'draw')" class="btn-3d bg-white text-gray-800 text-3xl font-bold py-6 rounded-2xl">draw</button>
+                <button onclick="checkAnswer(1, 'sing')" class="btn-3d bg-white text-gray-800 text-3xl font-bold py-6 rounded-2xl">sing</button>
+                <button onclick="checkAnswer(1, 'jump')" class="btn-3d bg-white text-gray-800 text-3xl font-bold py-6 rounded-2xl">jump</button>
+            </div>
+        </div>
+
+        <!-- Level 2: Visual Match -->
+        <div id="level-2" class="w-full hidden-element">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6">圖文配對：佢做緊咩？</h2>
+            <div class="bg-white rounded-3xl p-8 shadow-inner mb-8 inline-block border-4 border-dashed border-gray-300">
+                <span class="text-8xl">🦘</span>
+            </div>
+            <div class="flex gap-4 justify-center max-w-2xl mx-auto flex-wrap">
+                <button onclick="checkAnswer(2, 'draw')" class="btn-3d bg-blue-500 text-white text-3xl font-bold py-4 px-8 rounded-2xl">draw</button>
+                <button onclick="checkAnswer(2, 'jump')" class="btn-3d bg-green-500 text-white text-3xl font-bold py-4 px-8 rounded-2xl">jump</button>
+                <button onclick="checkAnswer(2, 'run')" class="btn-3d bg-purple-500 text-white text-3xl font-bold py-4 px-8 rounded-2xl">run</button>
+            </div>
+        </div>
+
+        <!-- Level 3: Tickles Yes/No -->
+        <div id="level-3" class="w-full hidden-element">
+            <div class="text-8xl mb-4">🐱</div>
+            <h2 class="text-3xl font-bold text-gray-800 mb-4 font-tc">Tickles 問你：</h2>
+            <button onclick="speak('How old are you? Are you five years old?')" class="bg-yellow-100 text-yellow-800 p-6 rounded-3xl mb-8 text-3xl font-bold shadow-md cursor-pointer border-4 border-yellow-300 active:scale-95">
+                🔊 "How old are you?<br><span class="text-xl">Are you five years old?</span>" (🖐️)
+            </button>
+            <div class="flex flex-col md:flex-row gap-6 justify-center">
+                <button onclick="checkAnswer(3, 'yes')" class="btn-3d bg-red-400 text-white text-2xl font-bold py-6 px-10 rounded-2xl flex items-center justify-center gap-3">
+                    <span class="text-4xl">❌</span> Yes, I am five.
+                </button>
+                <button onclick="checkAnswer(3, 'no')" class="btn-3d bg-green-500 text-white text-2xl font-bold py-6 px-10 rounded-2xl flex items-center justify-center gap-3">
+                    <span class="text-4xl">✅</span> No, I am four.
+                </button>
+            </div>
+        </div>
+
+        <!-- Level 4: Phonics /m/ -->
+        <div id="level-4" class="w-full hidden-element">
+            <h2 class="text-3xl font-bold text-gray-800 mb-4 font-tc">Phonics 捉迷藏：搵出 /m/ 音嘅字！</h2>
+            <button onclick="speak('Which words start with the mmm sound?')" class="bg-blue-100 text-blue-800 px-6 py-3 rounded-full mb-8 text-xl font-bold shadow-sm active:scale-95">
+                🔊 聽指示
+            </button>
+            <p class="text-gray-500 mb-6">（搵出 3 個 /m/ 開頭嘅單字）</p>
+            <div class="grid grid-cols-2 gap-4 max-w-lg mx-auto" id="m-words-container">
+                <button onclick="selectMWord(this, 'mouth', true)" class="btn-3d bg-white text-gray-800 text-2xl font-bold py-4 rounded-xl">mouth</button>
+                <button onclick="selectMWord(this, 'hand', false)" class="btn-3d bg-white text-gray-800 text-2xl font-bold py-4 rounded-xl">hand</button>
+                <button onclick="selectMWord(this, 'meat', true)" class="btn-3d bg-white text-gray-800 text-2xl font-bold py-4 rounded-xl">meat</button>
+                <button onclick="selectMWord(this, 'milk', true)" class="btn-3d bg-white text-gray-800 text-2xl font-bold py-4 rounded-xl">milk</button>
+            </div>
+            <div id="m-progress" class="mt-8 text-2xl font-bold text-blue-600">已搵到: 0/3</div>
+        </div>
+
+        <!-- Level 5: Spelling & Speaking -->
+        <div id="level-5" class="w-full hidden-element">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 font-tc">砌字挑戰：🎨 畫畫點拼？</h2>
+            <button onclick="speak('draw')" class="bg-gray-100 text-gray-800 p-4 rounded-full mb-8 text-2xl shadow-sm active:scale-95 transition">
+                🔊 聽發音
+            </button>
+            
+            <div class="flex gap-2 justify-center mb-8" id="spelling-slots">
+                <div class="word-slot" data-expected="d"></div>
+                <div class="word-slot" data-expected="r"></div>
+                <div class="word-slot" data-expected="a"></div>
+                <div class="word-slot" data-expected="w"></div>
+            </div>
+
+            <div class="flex gap-4 justify-center flex-wrap" id="letter-bank">
+                <!-- Letters generated by JS -->
+            </div>
+            
+            <div id="speak-task" class="hidden-element mt-12 bg-yellow-100 p-6 rounded-2xl border-4 border-yellow-300">
+                <h3 class="text-2xl font-bold text-yellow-800 mb-4 font-tc">📸 親子口語打卡時間</h3>
+                <p class="text-xl mb-4">同媽媽一齊大聲讀：</p>
+                <p class="text-4xl font-bold text-blue-600 mb-4 bg-white p-4 rounded-xl inline-block shadow-sm cursor-pointer active:scale-95" onclick="speak('I can draw. I am four years old.')">
+                    "I can draw!" <br><span class="text-2xl mt-2 block text-gray-600">I am four years old.</span>
+                </p>
+                <br>
+                <button onclick="finishTest()" class="btn-3d btn-green text-white text-2xl font-bold py-4 px-10 rounded-full mt-4 pop-anim">
+                    讀完啦，完成測試！ 🏆
+                </button>
+            </div>
+        </div>
+
+        <!-- Success Result -->
+        <div id="result-screen" class="w-full hidden-element">
+            <div class="text-9xl mb-4 pop-anim">🏆</div>
+            <h1 class="text-5xl font-bold text-yellow-600 mb-4 font-tc pop-anim" style="text-shadow: 2px 2px 0px #fff;">恭喜過關！</h1>
+            <p class="text-2xl text-gray-700 mb-8 font-tc">玲玲好叻女，全部答啱晒！</p>
+            
+            <div class="bg-white p-6 rounded-2xl shadow-md text-left mb-8 max-w-md mx-auto border-l-8 border-green-500">
+                <h3 class="font-bold text-xl mb-2">📋 老師回饋：</h3>
+                <p class="text-gray-600 text-lg">玲玲已經克服咗易忘字 <strong>draw</strong> 嘅聽音同拼寫！Phonics /m/ 嘅分辨亦好清晰。</p>
+            </div>
+
+            <button onclick="copyCode()" id="copyBtn" class="btn-3d bg-gray-800 text-white text-2xl font-bold py-4 px-8 rounded-full mb-4">
+                📋 一鍵複製進度暗號
+            </button>
+            <p class="text-gray-500 text-sm font-tc">複製後請貼俾 AI 老師更新 Google Drive</p>
+        </div>
+
+        <!-- Feedback Overlay -->
+        <div id="feedback-overlay" class="absolute inset-0 bg-white/90 flex flex-col items-center justify-center hidden-element z-50 rounded-2xl">
+            <div id="feedback-icon" class="text-9xl mb-4 pop-anim">✅</div>
+            <div id="feedback-text" class="text-4xl font-bold text-green-500 pop-anim font-tc">好嘢！</div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- Strict UK Female Voice Setup ---
+        let ukFemaleVoice = null;
+        
+        function initVoice() {
+            const voices = window.speechSynthesis.getVoices();
+            if (voices.length === 0) return;
+            
+            ukFemaleVoice = voices.find(v => 
+                v.lang.includes('en-GB') && 
+                (v.name.includes('Serena') || v.name.includes('Martha') || v.name.includes('Female') || v.name.includes('Kate') || v.name.includes('Google UK English Female'))
+            );
+            
+            if (!ukFemaleVoice) {
+                ukFemaleVoice = voices.find(v => v.lang.includes('en-GB') || v.lang.includes('en-US'));
+            }
+        }
+        
+        window.speechSynthesis.onvoiceschanged = initVoice;
+
+        function speak(text, rate = 0.78, pitch = 1.08) {
+            window.speechSynthesis.cancel();
+            if (!ukFemaleVoice) initVoice();
+            
+            const msg = new SpeechSynthesisUtterance(text);
+            if (ukFemaleVoice) msg.voice = ukFemaleVoice;
+            msg.rate = rate;
+            msg.pitch = pitch;
+            msg.lang = 'en-GB';
+            window.speechSynthesis.speak(msg);
+        }
+
+        function goHome() {
+            window.speechSynthesis.cancel();
+            window.location.href = "index.html"; // Assume index is home
+        }
+
+        // --- Game Logic ---
+        let currentLevel = 0;
+        
+        function showFeedback(isCorrect, callback) {
+            const overlay = document.getElementById('feedback-overlay');
+            const icon = document.getElementById('feedback-icon');
+            const text = document.getElementById('feedback-text');
+            
+            overlay.classList.remove('hidden-element');
+            if (isCorrect) {
+                icon.textContent = '🌟';
+                text.textContent = '好嘢！答啱啦！';
+                text.className = 'text-5xl font-bold text-green-500 pop-anim font-tc';
+                speak('Good job!', 0.9);
+            } else {
+                icon.textContent = '🤔';
+                text.textContent = '哎呀，試多次啦！';
+                text.className = 'text-5xl font-bold text-red-500 pop-anim font-tc';
+                speak('Try again.', 0.9);
+            }
+            
+            setTimeout(() => {
+                overlay.classList.add('hidden-element');
+                if (isCorrect && callback) callback();
+            }, 1800);
+        }
+
+        function startLevel(lvl) {
+            document.getElementById(`level-${currentLevel}`).classList.add('hidden-element');
+            currentLevel = lvl;
+            document.getElementById(`level-${currentLevel}`).classList.remove('hidden-element');
+            document.getElementById('level-indicator').innerText = lvl;
+            
+            if (lvl === 1) setTimeout(() => speak('draw'), 500);
+            if (lvl === 5) setupSpelling();
+        }
+
+        function checkAnswer(lvl, selected) {
+            let correct = false;
+            if (lvl === 1 && selected === 'draw') correct = true;
+            if (lvl === 2 && selected === 'jump') correct = true;
+            if (lvl === 3 && selected === 'no') correct = true;
+            
+            showFeedback(correct, () => {
+                startLevel(lvl + 1);
+            });
+        }
+
+        // Level 4 Logic
+        let mWordsFound = 0;
+        function selectMWord(btn, word, isCorrect) {
+            if (btn.classList.contains('opacity-50')) return; // already clicked
+            
+            if (isCorrect) {
+                speak(word);
+                btn.classList.remove('bg-white', 'text-gray-800');
+                btn.classList.add('bg-green-400', 'text-white', 'opacity-50');
+                mWordsFound++;
+                document.getElementById('m-progress').innerText = `已搵到: ${mWordsFound}/3`;
+                
+                if (mWordsFound === 3) {
+                    setTimeout(() => showFeedback(true, () => startLevel(5)), 1000);
+                }
+            } else {
+                showFeedback(false);
+            }
+        }
+
+        // Level 5 Logic (Spelling)
+        const targetWord = 'draw';
+        const letters = ['r', 'w', 'a', 'd']; // shuffled
+        let currentSlot = 0;
+        
+        function setupSpelling() {
+            const bank = document.getElementById('letter-bank');
+            bank.innerHTML = '';
+            letters.forEach(l => {
+                const btn = document.createElement('button');
+                btn.className = 'btn-3d bg-pink-500 text-white text-3xl font-bold py-4 px-6 rounded-xl letter-block uppercase';
+                btn.innerText = l;
+                btn.onclick = () => placeLetter(btn, l);
+                bank.appendChild(btn);
+            });
+        }
+
+        function placeLetter(btn, letter) {
+            const slots = document.querySelectorAll('.word-slot');
+            if (currentSlot >= slots.length) return;
+            
+            const expected = slots[currentSlot].dataset.expected;
+            
+            if (letter === expected) {
+                speak(letter);
+                slots[currentSlot].innerText = letter.toUpperCase();
+                slots[currentSlot].classList.add('bg-green-200', 'border-green-500', 'text-green-700');
+                btn.classList.add('hidden-element');
+                currentSlot++;
+                
+                if (currentSlot === slots.length) {
+                    setTimeout(() => {
+                        speak('draw');
+                        document.getElementById('letter-bank').classList.add('hidden-element');
+                        document.getElementById('speak-task').classList.remove('hidden-element');
+                    }, 1000);
+                }
+            } else {
+                showFeedback(false);
+            }
+        }
+
+        function finishTest() {
+            document.getElementById('level-5').classList.add('hidden-element');
+            document.getElementById('result-screen').classList.remove('hidden-element');
+            speak('Congratulations! You did it!', 1.0, 1.2);
+        }
+
+        function copyCode() {
+            const code = "[Unit 4 Test 2 已完成，重點抽查 draw 與 m 順利通過]";
+            navigator.clipboard.writeText(code).then(() => {
+                const btn = document.getElementById('copyBtn');
+                btn.innerText = "✅ 已複製！請貼俾 AI";
+                btn.classList.replace('bg-gray-800', 'bg-green-600');
+            });
+        }
+        
+        // Initial setup
+        window.onload = () => {
+            initVoice();
+        };
+    </script>
+</body>
+</html>
