@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>🎡 數學探索島・第 7 日：遊樂園派對</title>
+  <style>
+    /* =========================================
+       iPad Safari 終極防護引擎 & 基礎設定
+       ========================================= */
+    * {
+      box-sizing: border-box;
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      min-height: 100vh;
+      font-family: "PingFang HK", "Hiragino Sans GB", "Microsoft JhengHei", sans-serif;
+      background: linear-gradient(180deg, #fdf4ff 0%, #f5d0fe 55%, #e879f9 100%);
+      color: #4a044e;
+      overflow-x: hidden;
+    }
+
+    /* 背景遊樂園裝飾 */
+    .park-bg {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+    }
+    .balloon {
+      position: absolute;
+      bottom: -60px;
+      font-size: 3rem;
+      opacity: 0.6;
+      animation: floatUp 8s linear infinite;
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(0) rotate(-10deg); opacity: 0; }
+      10% { opacity: 0.6; }
+      100% { transform: translateY(-110vh) rotate(10deg); opacity: 0; }
+    }
+
+    /* 主容器 */
+    .app-wrapper {
+      position: relative;
+      z-index: 1;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 14px 18px 36px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    /* 頂部導航列 */
+    .top-nav {
+      background: rgba(255, 255, 255, 0.92);
+      border-radius: 24px;
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      box-shadow: 0 6px 0 #d946ef, 0 10px 20px rgba(192, 38, 211, 0.12);
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .home-btn {
+      text-decoration: none;
+      background: #fef08a;
+      color: #854d0e;
+      font-weight: 800;
+      font-size: 1rem;
+      padding: 8px 14px;
+      border-radius: 16px;
+      border-bottom: 4px solid #eab308;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform 0.1s;
+    }
+    .home-btn:active {
+      transform: translateY(3px);
+      border-bottom-width: 1px;
+    }
+
+    .theme-title {
+      font-size: 1.2rem;
+      font-weight: 900;
+      color: #701a75;
+      letter-spacing: 0.5px;
+    }
+
+    .step-dots {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .step-dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #fae8ff;
+      border: 3px solid #f0abfc;
+      color: #86198f;
+      font-weight: 800;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+    .step-dot.active {
+      background: #facc15;
+      border-color: #ca8a04;
+      color: #713f12;
+      transform: scale(1.18);
+    }
+    .step-dot.done {
+      background: #d946ef;
+      border-color: #a21caf;
+      color: #ffffff;
+    }
+
+    /* Anna 老師語音橫幅 */
+    .teacher-banner {
+      background: #ffffff;
+      border-radius: 26px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      border: 3px solid #e879f9;
+      box-shadow: 0 7px 0 #d946ef;
+    }
+
+    .teacher-info {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex: 1;
+    }
+
+    .teacher-avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #fde047, #f59e0b);
+      border: 4px solid #ffffff;
+      box-shadow: 0 4px 10px rgba(245, 158, 11, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      flex-shrink: 0;
+    }
+
+    .question-text {
+      font-size: 1.32rem;
+      font-weight: 800;
+      color: #4a044e;
+      line-height: 1.45;
+    }
+
+    .speak-btn {
+      background: linear-gradient(180deg, #e879f9 0%, #c026d3 100%);
+      color: #ffffff;
+      border: none;
+      border-bottom: 5px solid #86198f;
+      border-radius: 20px;
+      padding: 12px 18px;
+      font-size: 1.1rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+      box-shadow: 0 4px 10px rgba(192, 38, 211, 0.25);
+    }
+    .speak-btn:active {
+      transform: translateY(4px);
+      border-bottom-width: 1px;
+    }
+
+    /* 題目視覺主舞台 */
+    .stage-card {
+      background: rgba(255, 255, 255, 0.96);
+      border-radius: 30px;
+      padding: 24px 20px;
+      min-height: 250px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      box-shadow: 0 9px 0 #f0abfc, 0 14px 28px rgba(192, 38, 211, 0.14);
+      position: relative;
+    }
+
+    .stage-badge {
+      background: #fae8ff;
+      color: #86198f;
+      font-size: 0.98rem;
+      font-weight: 800;
+      padding: 6px 16px;
+      border-radius: 999px;
+      border: 2px solid #f5d0fe;
+    }
+
+    /* 降難度超直觀排隊 (Q1, Q2) */
+    .queue-stage {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 14px;
+      padding: 30px 20px 20px;
+      border-bottom: 6px solid #d946ef;
+      position: relative;
+      width: 100%;
+    }
+    .queue-gate {
+      position: absolute;
+      left: 10px;
+      bottom: 20px;
+      font-size: 4rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .gate-label {
+      background: #facc15;
+      color: #713f12;
+      font-size: 1rem;
+      font-weight: 900;
+      padding: 4px 12px;
+      border-radius: 12px;
+      border: 2px solid #ca8a04;
+      margin-bottom: -10px;
+      z-index: 2;
+    }
+    .queue-character {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      position: relative;
+    }
+    .char-emoji {
+      font-size: 4.5rem;
+      background: #ffffff;
+      border-radius: 50%;
+      border: 4px solid #f0abfc;
+      box-shadow: 0 4px 0 #f0abfc;
+      width: 90px;
+      height: 90px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .char-label {
+      background: #f3e8ff;
+      color: #6b21a8;
+      font-weight: 900;
+      padding: 4px 14px;
+      border-radius: 999px;
+      border: 2px solid #d8b4fe;
+    }
+    .leader-crown {
+      position: absolute;
+      top: -35px;
+      font-size: 2.5rem;
+      animation: bounce 1.5s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    /* 摩天輪數字車廂 (Q3, Q4, Q5, Q6) */
+    .ferris-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .ferris-cabin {
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 4px solid #c026d3;
+      box-shadow: 0 5px 0 #a21caf;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: #701a75;
+      position: relative;
+    }
+    .ferris-cabin::before {
+      content: "";
+      position: absolute;
+      top: -15px;
+      width: 4px;
+      height: 15px;
+      background: #a21caf;
+    }
+    .cabin-mystery {
+      background: #fffbeb;
+      border-color: #f59e0b;
+      box-shadow: 0 5px 0 #d97706;
+      color: #d97706;
+      animation: pulseMystery 1.4s infinite ease-in-out;
+    }
+    .cabin-pink { border-color: #f472b6; box-shadow: 0 5px 0 #db2777; }
+    .cabin-blue { border-color: #38bdf8; box-shadow: 0 5px 0 #0284c7; }
+    .cabin-yellow { border-color: #facc15; box-shadow: 0 5px 0 #ca8a04; }
+
+    /* 加減法區塊 */
+    .math-visual {
+      font-size: 3.5rem;
+      background: #fdf4ff;
+      border: 4px solid #f0abfc;
+      border-radius: 24px;
+      padding: 20px 30px;
+      box-shadow: 0 6px 0 #e879f9;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .math-symbol {
+      color: #c026d3;
+      font-weight: 900;
+      font-size: 3rem;
+    }
+    .eaten-item {
+      opacity: 0.3;
+      text-decoration: line-through;
+      filter: grayscale(100%);
+    }
+
+    /* 溫柔提示框 */
+    .gentle-hint-box {
+      display: none;
+      width: 100%;
+      background: #fffbeb;
+      border: 3px solid #fbbf24;
+      border-radius: 22px;
+      padding: 14px 18px;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 5px 0 #fcd34d;
+      animation: popIn 0.25s ease;
+    }
+    .gentle-hint-box.visible {
+      display: flex;
+    }
+    .hint-icon {
+      font-size: 2rem;
+      flex-shrink: 0;
+    }
+    .hint-text {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #92400e;
+      line-height: 1.4;
+    }
+
+    /* 選項按鈕區 */
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .option-btn {
+      background: #ffffff;
+      border: 3px solid #e879f9;
+      border-bottom: 8px solid #c026d3;
+      border-radius: 26px;
+      padding: 18px 12px;
+      font-size: 2rem;
+      font-weight: 900;
+      color: #4a044e;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      box-shadow: 0 8px 16px rgba(192, 38, 211, 0.14);
+      transition: transform 0.1s, background 0.15s;
+    }
+    .option-btn:active {
+      transform: translateY(5px);
+      border-bottom-width: 3px;
+    }
+    .option-sub {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #701a75;
+    }
+
+    /* 防呆搖晃動畫 */
+    .wrong-shake {
+      animation: shakeGentle 0.42s ease;
+      background: #fef3c7 !important;
+      border-color: #f59e0b !important;
+      border-bottom-color: #d97706 !important;
+    }
+    @keyframes shakeGentle {
+      0%, 100% { transform: translateX(0); }
+      22% { transform: translateX(-8px); }
+      45% { transform: translateX(8px); }
+      68% { transform: translateX(-5px); }
+      85% { transform: translateX(5px); }
+    }
+
+    /* 答對發光狀態 */
+    .correct-pop {
+      background: #dcfce7 !important;
+      border-color: #22c55e !important;
+      border-bottom-color: #15803d !important;
+      color: #14532d !important;
+      transform: scale(1.04);
+    }
+
+    /* 下一題按鈕 */
+    .next-action-wrap {
+      display: none;
+      justify-content: center;
+      margin-top: 4px;
+    }
+    .next-action-wrap.visible {
+      display: flex;
+    }
+    .next-btn {
+      background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
+      color: #ffffff;
+      border: none;
+      border-bottom: 7px solid #1d4ed8;
+      border-radius: 26px;
+      padding: 16px 38px;
+      font-size: 1.45rem;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3);
+      animation: popIn 0.25s ease;
+    }
+    .next-btn:active {
+      transform: translateY(5px);
+      border-bottom-width: 2px;
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.92); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* 開場歡迎遮罩 */
+    .start-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      background: rgba(74, 4, 78, 0.78);
+      backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .start-modal {
+      background: #ffffff;
+      border-radius: 34px;
+      padding: 32px 26px;
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+      border: 5px solid #e879f9;
+      box-shadow: 0 12px 0 #c026d3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+    .start-modal h1 {
+      margin: 0;
+      font-size: 1.8rem;
+      color: #701a75;
+    }
+    .start-modal p {
+      margin: 0;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #334155;
+      line-height: 1.5;
+    }
+    .start-btn {
+      background: linear-gradient(180deg, #facc15 0%, #eab308 100%);
+      color: #713f12;
+      border: none;
+      border-bottom: 7px solid #ca8a04;
+      border-radius: 26px;
+      padding: 16px 36px;
+      font-size: 1.45rem;
+      font-weight: 900;
+      cursor: pointer;
+      width: 100%;
+    }
+    .start-btn:active {
+      transform: translateY(5px);
+      border-bottom-width: 2px;
+    }
+
+    /* 結算報告畫面 */
+    .summary-card {
+      display: none;
+      background: #ffffff;
+      border-radius: 32px;
+      padding: 26px 22px;
+      border: 4px solid #facc15;
+      box-shadow: 0 10px 0 #eab308;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+    }
+    .summary-card.visible {
+      display: flex;
+    }
+
+    .trophy-header {
+      text-align: center;
+    }
+    .trophy-header .trophy-icon {
+      font-size: 4rem;
+    }
+    .trophy-header h2 {
+      margin: 6px 0 4px;
+      font-size: 1.75rem;
+      color: #701a75;
+    }
+    .trophy-header p {
+      margin: 0;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #475569;
+    }
+
+    .report-table {
+      width: 100%;
+      border-collapse: collapse;
+      border-radius: 18px;
+      overflow: hidden;
+      font-size: 1rem;
+    }
+    .report-table th {
+      background: #c026d3;
+      color: #ffffff;
+      padding: 12px 10px;
+      font-weight: 800;
+      text-align: center;
+    }
+    .report-table td {
+      padding: 11px 10px;
+      border-bottom: 2px solid #fae8ff;
+      text-align: center;
+      font-weight: 700;
+      color: #1e293b;
+    }
+    .report-table tr:nth-child(even) td {
+      background: #f8fafc;
+    }
+
+    .copy-box {
+      width: 100%;
+      background: #fdf4ff;
+      border: 3px dashed #e879f9;
+      border-radius: 22px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .secret-code-preview {
+      width: 100%;
+      background: #ffffff;
+      border: 2px solid #f0abfc;
+      border-radius: 14px;
+      padding: 10px 12px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #701a75;
+      word-break: break-all;
+      user-select: text;
+      -webkit-user-select: text;
+    }
+
+    .copy-btn {
+      background: linear-gradient(180deg, #e879f9 0%, #c026d3 100%);
+      color: #ffffff;
+      border: none;
+      border-bottom: 6px solid #86198f;
+      border-radius: 22px;
+      padding: 15px 26px;
+      font-size: 1.2rem;
+      font-weight: 900;
+      cursor: pointer;
+      width: 100%;
+      max-width: 440px;
+    }
+    .copy-btn:active {
+      transform: translateY(4px);
+      border-bottom-width: 2px;
+    }
+
+    .copy-toast {
+      display: none;
+      background: #dcfce7;
+      border: 2px solid #22c55e;
+      color: #14532d;
+      font-weight: 800;
+      font-size: 1.05rem;
+      padding: 10px 16px;
+      border-radius: 16px;
+      text-align: center;
+    }
+    .copy-toast.visible {
+      display: block;
+    }
+
+    @media (max-width: 600px) {
+      .queue-gate { font-size: 3rem; }
+      .char-emoji { width: 70px; height: 70px; font-size: 3.5rem; }
+      .ferris-cabin { width: 60px; height: 60px; font-size: 2rem; }
+      .question-text { font-size: 1.15rem; }
+      .option-btn { font-size: 1.7rem; padding: 14px 8px; }
+      .math-visual { font-size: 2.5rem; padding: 15px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 背景裝飾 -->
+  <div class="park-bg" id="bgDecor"></div>
+
+  <!-- 開場遮罩 -->
+  <div class="start-overlay" id="startOverlay">
+    <div class="start-modal">
+      <div style="font-size: 4.2rem;">🎢🎡🎈</div>
+      <h1>數學探索島・第 7 日</h1>
+      <p>歡迎嚟到《遊樂園派對》！<br>準備好同 Anna 老師一齊玩過山車同摩天輪未呀？</p>
+      <button class="start-btn" id="startBtn">🎡 派對開始！</button>
+    </div>
+  </div>
+
+  <div class="app-wrapper">
+    <!-- 頂部導航列 -->
+    <header class="top-nav">
+      <div class="nav-left">
+        <a href="index.html" class="home-btn">🏠 返回樂園</a>
+        <div class="theme-title">🎡 第 7 日：遊樂園派對</div>
+      </div>
+      <div class="step-dots" id="stepDots"></div>
+    </header>
+
+    <!-- 測驗區 -->
+    <main id="quizSection" style="display: flex; flex-direction: column; gap: 14px;">
+      <section class="teacher-banner">
+        <div class="teacher-info">
+          <div class="teacher-avatar">👩‍🏫</div>
+          <div class="question-text" id="questionText">準備出發啦！</div>
+        </div>
+        <button class="speak-btn" id="replayBtn">🔊 再聽一次</button>
+      </section>
+
+      <section class="stage-card">
+        <div class="stage-badge" id="stageBadge">第 1 關</div>
+        <div id="visualStage" style="width: 100%; display: flex; flex-direction: column; align-items: center; gap: 12px;"></div>
+      </section>
+
+      <div class="gentle-hint-box" id="gentleHintBox">
+        <div class="hint-icon">💡</div>
+        <div class="hint-text" id="gentleHintText"></div>
+      </div>
+
+      <section class="options-grid" id="optionsGrid"></section>
+
+      <div class="next-action-wrap" id="nextActionWrap">
+        <button class="next-btn" id="nextBtn">➡️ 去下一個機動遊戲！</button>
+      </div>
+    </main>
+
+    <!-- 結算區 -->
+    <section class="summary-card" id="summaryCard">
+      <div class="trophy-header">
+        <div class="trophy-icon">🏆</div>
+        <h2>恭喜玲玲玩勻晒成個遊樂園！</h2>
+        <p>你識得排隊、數摩天輪車廂，仲計啱晒加減數，真係好叻女！</p>
+      </div>
+
+      <table class="report-table">
+        <thead>
+          <tr>
+            <th>關卡題型</th>
+            <th>表現狀態</th>
+            <th>思考時間</th>
+          </tr>
+        </thead>
+        <tbody id="reportTableBody"></tbody>
+      </table>
+
+      <div class="copy-box">
+        <div style="font-weight: 800; color: #701a75; font-size: 1.05rem;">
+          👇 請媽媽撳下面粒掣，將今日成績暗號貼返俾 Anna 老師：
+        </div>
+        <div class="secret-code-preview" id="secretCodePreview"></div>
+        <button class="copy-btn" id="copyReportBtn">📋 一鍵複製進度暗號俾 Anna 老師</button>
+        <div class="copy-toast" id="copyToast">✅ 已經複製好進度暗號啦！請貼返俾 AI 更新總庫。</div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    /* =========================================
+       1. 數據驅動題庫 (Day 7：遊樂園派對)
+       針對 Day 6 表現：方位概念【大幅降難度】，數字順序與加減【保持難度換場景】
+       ========================================= */
+    const quizData = [
+      {
+        id: "Q1",
+        reportLabel: "Q1 方位(最前面)",
+        badge: "第 1 關・過山車排隊",
+        questionSpeech: "準備玩過山車啦！睇吓邊個排喺大門口最前面，頭頂有皇冠，帶領大家入去㗎？",
+        questionDisplay: "排喺大門口最前面，頭頂有皇冠嗰個係邊個？",
+        hintSpeech: "望吓左邊黃色嘅入口大門，最近大門、頭頂有皇冠嗰個係長頸鹿呀！",
+        hintDisplay: "最靠近左邊入口大門、有皇冠嘅係長頸鹿！",
+        praiseSpeech: "好叻呀！長頸鹿排第一，喺最前面帶隊！",
+        type: "queue",
+        chars: [
+          { emoji: "🦒", label: "長頸鹿", isLeader: true },
+          { emoji: "🦓", label: "斑馬", isLeader: false },
+          { emoji: "🦛", label: "河馬", isLeader: false }
+        ],
+        options: [
+          { main: "🦒", sub: "長頸鹿", isCorrect: true },
+          { main: "🦓", sub: "斑馬", isCorrect: false },
+          { main: "🦛", sub: "河馬", isCorrect: false }
+        ]
+      },
+      {
+        id: "Q2",
+        reportLabel: "Q2 方位(最後面)",
+        badge: "第 2 關・邊個排最尾",
+        questionSpeech: "跟住睇清楚，邊個排喺最後面，即係離大門口最遠嗰個呢？",
+        questionDisplay: "邊個排喺最後面（離大門口最遠）？",
+        hintSpeech: "排最尾、離黃色大門口最遠嗰個係河馬呀！",
+        hintDisplay: "排第三、離大門口最遠嘅係河馬！",
+        praiseSpeech: "啱晒啦！河馬排喺最後面！",
+        type: "queue",
+        chars: [
+          { emoji: "🦒", label: "長頸鹿", isLeader: false },
+          { emoji: "🦓", label: "斑馬", isLeader: false },
+          { emoji: "🦛", label: "河馬", isLeader: false }
+        ],
+        options: [
+          { main: "🦒", sub: "長頸鹿", isCorrect: false },
+          { main: "🦓", sub: "斑馬", isCorrect: false },
+          { main: "🦛", sub: "河馬", isCorrect: true }
+        ]
+      },
+      {
+        id: "Q3",
+        reportLabel: "Q3 數字順序(1-5)",
+        badge: "第 3 關・摩天輪車廂",
+        questionSpeech: "摩天輪轉呀轉！車廂號碼係 1、2、3，跟住唔見咗一個，然後係 5。邊個號碼嘅車廂唔見咗呀？",
+        questionDisplay: "摩天輪車廂 1、2、3、❓、5，邊個號碼唔見咗？",
+        hintSpeech: "我哋順序數一次：1、2、3，下一個係咩呢？係 4 呀！",
+        hintDisplay: "順序數一次：1、2、3 ➔ 下一個係 4！",
+        praiseSpeech: "答啱啦！3 之後係 4，你數得好順呀！",
+        type: "ferris",
+        cabins: ["1️⃣", "2️⃣", "3️⃣", "❓", "5️⃣"],
+        options: [
+          { main: "4️⃣", sub: "4 號", isCorrect: true },
+          { main: "6️⃣", sub: "6 號", isCorrect: false },
+          { main: "8️⃣", sub: "8 號", isCorrect: false }
+        ]
+      },
+      {
+        id: "Q4",
+        reportLabel: "Q4 數字順序(6-10)",
+        badge: "第 4 關・彩色摩天輪",
+        questionSpeech: "呢邊嘅車廂號碼係 6、7，跟住唔見咗一個，然後係 9 同 10。唔見咗嗰個係咩號碼？",
+        questionDisplay: "摩天輪車廂 6、7、❓、9、10，邊個號碼唔見咗？",
+        hintSpeech: "我哋跟住數：6、7，下一個應該係 8 呀！",
+        hintDisplay: "順序數一次：6、7 ➔ 下一個係 8！",
+        praiseSpeech: "好叻呀玲玲！7 之後就係 8，搵返 8 號車廂啦！",
+        type: "ferris",
+        cabins: ["6️⃣", "7️⃣", "❓", "9️⃣", "🔟"],
+        options: [
+          { main: "5️⃣", sub: "5 號", isCorrect: false },
+          { main: "8️⃣", sub: "8 號", isCorrect: true },
+          { main: "1️⃣", sub: "1 號", isCorrect: false }
+        ]
+      },
+      {
+        id: "Q5",
+        reportLabel: "Q5 邏輯規律(AABB)",
+        badge: "第 5 關・派對氣球規律",
+        questionSpeech: "派對有好多氣球同禮物！睇吓排隊規律：氣球、氣球、禮物、禮物、氣球、氣球。下一個應該係咩呢？",
+        questionDisplay: "氣球、氣球、禮物、禮物、氣球、氣球，下一個係咩？",
+        hintSpeech: "一齊讀一次：氣球、氣球、禮物、禮物。所以氣球、氣球之後，應該係禮物呀！",
+        hintDisplay: "讀一次：氣球、氣球、禮物、禮物 ➔ 下一個係禮物！",
+        praiseSpeech: "答啱啦！規律好清晰，下一個就係禮物！",
+        type: "pattern",
+        items: ["🎈", "🎈", "🎁", "🎁", "🎈", "🎈"],
+        classes: ["cabin-pink", "cabin-pink", "cabin-yellow", "cabin-yellow", "cabin-pink", "cabin-pink"],
+        options: [
+          { main: "🎁", sub: "禮物", isCorrect: true },
+          { main: "🎈", sub: "氣球", isCorrect: false },
+          { main: "🍰", sub: "蛋糕", isCorrect: false }
+        ]
+      },
+      {
+        id: "Q6",
+        reportLabel: "Q6 邏輯規律(ABC)",
+        badge: "第 6 關・旋轉木馬規律",
+        questionSpeech: "旋轉木馬好好玩！馬仔、獨角獸、大象；馬仔、獨角獸。下一個應該輪到邊隻動物？",
+        questionDisplay: "馬仔、獨角獸、大象；馬仔、獨角獸，下一個係邊個？",
+        hintSpeech: "三個一組呀：馬仔、獨角獸、大象。所以獨角獸之後，下一個係大象！",
+        hintDisplay: "馬仔、獨角獸、大象 ➔ 獨角獸之後係大象！",
+        praiseSpeech: "好眼力呀！馬仔、獨角獸、大象，你搵到個規律啦！",
+        type: "pattern",
+        items: ["🐴", "🦄", "🐘", "🐴", "🦄"],
+        classes: ["cabin-blue", "cabin-pink", "cabin-yellow", "cabin-blue", "cabin-pink"],
+        options: [
+          { main: "🐴", sub: "馬仔", isCorrect: false },
+          { main: "🦄", sub: "獨角獸", isCorrect: false },
+          { main: "🐘", sub: "大象", isCorrect: true }
+        ]
+      },
+      {
+        id: "Q7",
+        reportLabel: "Q7 基礎加法(2+2)",
+        badge: "第 7 關・數雪糕球",
+        questionSpeech: "玩到肚餓啦，食雪糕先！左邊有 2 球雪糕，右邊又買多 2 球。合埋一共有幾多球雪糕？",
+        questionDisplay: "左邊 2 球雪糕，右邊買多 2 球，一共有幾多球？",
+        hintSpeech: "我哋由左邊數到右邊：1、2、3、4，合埋一共有 4 球雪糕呀！",
+        hintDisplay: "左邊 2 球加右邊 2 球：1、2、3、4，一共 4 球！",
+        praiseSpeech: "好叻女！2 加 2 等於 4，一共有 4 球好味嘅雪糕！",
+        type: "math-visual",
+        mathType: "add",
+        emoji: "🍨",
+        left: 2,
+        right: 2,
+        options: [
+          { main: "3", sub: "3 球", isCorrect: false },
+          { main: "4", sub: "4 球", isCorrect: true },
+          { main: "5", sub: "5 球", isCorrect: false }
+        ]
+      },
+      {
+        id: "Q8",
+        reportLabel: "Q8 動態減法(4-2)",
+        badge: "第 8 關・食熱狗",
+        questionSpeech: "呢度有 4 隻熱狗，河馬一口氣食咗 2 隻（變咗灰色）。睇吓仲剩低幾多隻熱狗？",
+        questionDisplay: "有 4 隻熱狗，食咗 2 隻，剩低幾多隻？",
+        hintSpeech: "睇吓仲有顏色嗰幾隻：1、2。食咗 2 隻，仲剩低 2 隻熱狗呀！",
+        hintDisplay: "食咗 2 隻，數吓仲有顏色嘅：1、2，剩低 2 隻！",
+        praiseSpeech: "恭喜晒！4 減 2 等於 2，剩低 2 隻熱狗！派對大豐收！",
+        type: "math-visual",
+        mathType: "sub",
+        emoji: "🌭",
+        total: 4,
+        away: 2,
+        options: [
+          { main: "1", sub: "1 隻", isCorrect: false },
+          { main: "2", sub: "2 隻", isCorrect: true },
+          { main: "3", sub: "3 隻", isCorrect: false }
+        ]
+      }
+    ];
+
+    /* =========================================
+       2. iPad Safari 安全廣東話語音引擎
+       ========================================= */
+    window.utterancePool = [];
+    let selectedCantoneseVoice = null;
+
+    function loadCantoneseVoice() {
+      if (!("speechSynthesis" in window)) return;
+      const voices = window.speechSynthesis.getVoices();
+      selectedCantoneseVoice =
+        voices.find(v => v.lang === "zh-HK" && (v.name.includes("Sin") || v.name.includes("Female") || v.name.includes("善怡"))) ||
+        voices.find(v => v.lang === "zh-HK") ||
+        voices.find(v => v.lang.toLowerCase().includes("hk")) ||
+        null;
+    }
+
+    if ("speechSynthesis" in window) {
+      loadCantoneseVoice();
+      window.speechSynthesis.onvoiceschanged = loadCantoneseVoice;
+    }
+
+    function speakCantonese(text) {
+      if (!("speechSynthesis" in window)) return;
+      try { window.speechSynthesis.cancel(); } catch (e) {}
+      setTimeout(() => {
+        try {
+          const u = new SpeechSynthesisUtterance(text);
+          u.lang = "zh-HK";
+          u.rate = 0.72;
+          u.pitch = 1.08;
+          if (selectedCantoneseVoice) u.voice = selectedCantoneseVoice;
+          window.utterancePool.push(u);
+          if (window.utterancePool.length > 12) window.utterancePool.shift();
+          window.speechSynthesis.speak(u);
+        } catch (err) { console.warn("語音略過:", err); }
+      }, 40);
+    }
+
+    function playTone(type) {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        const now = ctx.currentTime;
+
+        if (type === "tap") {
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(520, now);
+          osc.frequency.exponentialRampToValueAtTime(760, now + 0.09);
+          gain.gain.setValueAtTime(0.15, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+          osc.start(now); osc.stop(now + 0.1);
+        } else if (type === "correct") {
+          osc.type = "triangle";
+          osc.frequency.setValueAtTime(523.25, now);
+          osc.frequency.setValueAtTime(659.25, now + 0.11);
+          osc.frequency.setValueAtTime(783.99, now + 0.22);
+          gain.gain.setValueAtTime(0.22, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+          osc.start(now); osc.stop(now + 0.45);
+        } else if (type === "gentle") {
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(340, now);
+          osc.frequency.linearRampToValueAtTime(290, now + 0.18);
+          gain.gain.setValueAtTime(0.14, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+          osc.start(now); osc.stop(now + 0.2);
+        }
+      } catch (e) {}
+    }
+
+    function initBalloons() {
+      const decor = document.getElementById("bgDecor");
+      for(let i=0; i<8; i++) {
+        const b = document.createElement("div");
+        b.className = "balloon";
+        b.textContent = ["🎈", "🎠", "🎡", "✨"][Math.floor(Math.random()*4)];
+        b.style.left = (10 + Math.random()*80) + "%";
+        b.style.animationDuration = (7 + Math.random()*5) + "s";
+        b.style.animationDelay = (Math.random()*4) + "s";
+        decor.appendChild(b);
+      }
+    }
+
+    /* =========================================
+       3. 測驗邏輯與渲染
+       ========================================= */
+    let currentIndex = 0;
+    let questionStartTime = 0;
+    let questionSolved = false;
+    let currentNeedsHint = false;
+    const resultsLog = [];
+
+    const stepDotsEl = document.getElementById("stepDots");
+    const questionTextEl = document.getElementById("questionText");
+    const stageBadgeEl = document.getElementById("stageBadge");
+    const visualStageEl = document.getElementById("visualStage");
+    const gentleHintBoxEl = document.getElementById("gentleHintBox");
+    const gentleHintTextEl = document.getElementById("gentleHintText");
+    const optionsGridEl = document.getElementById("optionsGrid");
+    const nextActionWrapEl = document.getElementById("nextActionWrap");
+    const nextBtnEl = document.getElementById("nextBtn");
+
+    function renderStepDots() {
+      stepDotsEl.innerHTML = "";
+      quizData.forEach((q, idx) => {
+        const dot = document.createElement("div");
+        dot.className = "step-dot";
+        if (idx < currentIndex) dot.classList.add("done");
+        if (idx === currentIndex && !document.getElementById("summaryCard").classList.contains("visible")) {
+          dot.classList.add("active");
+        }
+        dot.textContent = idx < currentIndex ? "✓" : (idx + 1);
+        stepDotsEl.appendChild(dot);
+      });
+    }
+
+    function renderQuestion(index) {
+      const q = quizData[index];
+      questionSolved = false;
+      currentNeedsHint = false;
+
+      renderStepDots();
+      stageBadgeEl.textContent = q.badge;
+      questionTextEl.textContent = q.questionDisplay;
+      gentleHintBoxEl.classList.remove("visible");
+      nextActionWrapEl.classList.remove("visible");
+      visualStageEl.innerHTML = "";
+      optionsGridEl.innerHTML = "";
+
+      /* 渲染場景 */
+      if (q.type === "queue") {
+        const stage = document.createElement("div");
+        stage.className = "queue-stage";
+
+        const gate = document.createElement("div");
+        gate.className = "queue-gate";
+        gate.innerHTML = `<div class="gate-label">入口</div>⛩️`;
+        stage.appendChild(gate);
+
+        q.chars.forEach(c => {
+          const charEl = document.createElement("div");
+          charEl.className = "queue-character";
+          let html = `<div class="char-emoji">${c.emoji}</div><div class="char-label">${c.label}</div>`;
+          if (c.isLeader) {
+            html += `<div class="leader-crown">👑</div>`;
+          }
+          charEl.innerHTML = html;
+          stage.appendChild(charEl);
+        });
+        visualStageEl.appendChild(stage);
+
+      } else if (q.type === "ferris" || q.type === "pattern") {
+        const row = document.createElement("div");
+        row.className = "ferris-row";
+        
+        let items = q.type === "ferris" ? q.cabins : q.items;
+        items.forEach((item, idx) => {
+          const cabin = document.createElement("div");
+          if (item === "❓") {
+            cabin.className = "ferris-cabin cabin-mystery";
+          } else {
+            const extraClass = q.classes ? q.classes[idx] : "";
+            cabin.className = `ferris-cabin ${extraClass}`;
+          }
+          cabin.textContent = item;
+          row.appendChild(cabin);
+        });
+
+        if (q.type === "pattern") {
+          const mystery = document.createElement("div");
+          mystery.className = "ferris-cabin cabin-mystery";
+          mystery.textContent = "❓";
+          row.appendChild(mystery);
+        }
+
+        visualStageEl.appendChild(row);
+
+      } else if (q.type === "math-visual") {
+        const mathEl = document.createElement("div");
+        mathEl.className = "math-visual";
+        
+        if (q.mathType === "add") {
+          let leftHtml = "";
+          for(let i=0; i<q.left; i++) leftHtml += q.emoji;
+          let rightHtml = "";
+          for(let i=0; i<q.right; i++) rightHtml += q.emoji;
+          
+          mathEl.innerHTML = `${leftHtml} <div class="math-symbol">＋</div> ${rightHtml}`;
+        } else {
+          let html = "";
+          const remain = q.total - q.away;
+          for(let i=0; i<remain; i++) html += q.emoji;
+          for(let i=0; i<q.away; i++) html += `<span class="eaten-item">${q.emoji}</span>`;
+          mathEl.innerHTML = html;
+        }
+        visualStageEl.appendChild(mathEl);
+      }
+
+      /* 渲染選項 */
+      q.options.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.className = "option-btn";
+        btn.innerHTML = `<span>${opt.main}</span><span class="option-sub">${opt.sub}</span>`;
+
+        btn.addEventListener("click", () => {
+          if (questionSolved) return;
+
+          if (opt.isCorrect) {
+            questionSolved = true;
+            const elapsedSec = Math.max(1, Math.round((Date.now() - questionStartTime) / 1000));
+            btn.classList.add("correct-pop");
+            playTone("correct");
+            gentleHintBoxEl.classList.remove("visible");
+
+            resultsLog.push({ id: q.id, reportLabel: q.reportLabel, seconds: elapsedSec, needsHint: currentNeedsHint });
+
+            nextBtnEl.textContent = (currentIndex === quizData.length - 1) ? "🏆 睇成績啦！" : "➡️ 去下一個機動遊戲！";
+            nextActionWrapEl.classList.add("visible");
+            speakCantonese(q.praiseSpeech);
+          } else {
+            currentNeedsHint = true;
+            playTone("gentle");
+            btn.classList.remove("wrong-shake");
+            void btn.offsetWidth;
+            btn.classList.add("wrong-shake");
+            gentleHintTextEl.textContent = q.hintDisplay;
+            gentleHintBoxEl.classList.add("visible");
+            speakCantonese(q.hintSpeech);
+          }
+        });
+        optionsGridEl.appendChild(btn);
+      });
+
+      questionStartTime = Date.now();
+      speakCantonese(q.questionSpeech);
+    }
+
+    function showSummaryReport() {
+      document.getElementById("quizSection").style.display = "none";
+      document.getElementById("summaryCard").classList.add("visible");
+
+      stepDotsEl.innerHTML = "";
+      quizData.forEach(() => {
+        const dot = document.createElement("div");
+        dot.className = "step-dot done";
+        dot.textContent = "✓";
+        stepDotsEl.appendChild(dot);
+      });
+
+      const tbody = document.getElementById("reportTableBody");
+      const codeParts = ["【數學測驗回報】Day 7 (遊樂園派對)"];
+
+      resultsLog.forEach(item => {
+        const tr = document.createElement("tr");
+        const statusText = item.needsHint ? "💡 需提示" : "✅ 1次答對";
+        tr.innerHTML = `<td>${item.reportLabel}</td><td>${statusText}</td><td>${item.seconds}s</td>`;
+        tbody.appendChild(tr);
+        codeParts.push(`${item.reportLabel}: ${item.seconds}s${item.needsHint ? "(需提示)" : ""}`);
+      });
+
+      document.getElementById("secretCodePreview").textContent = codeParts.join(" | ");
+      speakCantonese("哇！玲玲好叻女呀，遊樂園派對玩得好開心！請媽媽撳下面粒掣，將成績暗號傳送俾 Anna 老師啦！");
+    }
+
+    /* 一鍵複製 */
+    document.getElementById("copyReportBtn").addEventListener("click", () => {
+      const text = document.getElementById("secretCodePreview").textContent;
+      const toast = document.getElementById("copyToast");
+      const done = () => {
+        playTone("correct");
+        toast.classList.add("visible");
+        document.getElementById("copyReportBtn").textContent = "✅ 已複製好進度暗號！";
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done).catch(() => fallbackCopy(text, done));
+      } else { fallbackCopy(text, done); }
+    });
+
+    function fallbackCopy(text, callback) {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.focus(); ta.select();
+      try { document.execCommand("copy"); callback(); } catch (e) {}
+      document.body.removeChild(ta);
+    }
+
+    /* 事件綁定 */
+    document.getElementById("startBtn").addEventListener("click", () => {
+      document.getElementById("startOverlay").style.display = "none";
+      playTone("tap");
+      initBalloons();
+      renderQuestion(0);
+    });
+
+    document.getElementById("replayBtn").addEventListener("click", () => {
+      const q = quizData[currentIndex];
+      if (q) speakCantonese(q.questionSpeech);
+    });
+
+    nextBtnEl.addEventListener("click", () => {
+      playTone("tap");
+      if (currentIndex < quizData.length - 1) {
+        currentIndex++;
+        renderQuestion(currentIndex);
+      } else { showSummaryReport(); }
+    });
+
+    renderStepDots();
+  </script>
+</body>
+</html>
