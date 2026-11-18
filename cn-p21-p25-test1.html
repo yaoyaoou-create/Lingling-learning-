@@ -67,26 +67,36 @@
             100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
         }
         .correct-glow { animation: greenGlow 0.6s ease-out; background-color: #4ade80 !important; color: white !important;}
-
-        .hidden-screen { display: none !important; }
     </style>
 </head>
 <body class="p-4 md:p-8">
 
-    <!-- 頂部導航列 (嚴格加入 cancel 語音防重疊) -->
-    <nav class="max-w-4xl mx-auto flex justify-between items-center mb-6">
-        <a href="index.html" onclick="window.speechSynthesis.cancel()" class="btn-3d btn-white px-4 py-2 text-lg">
+    <!-- 頂部導航列 (完美復刻截圖 UI) -->
+    <nav class="max-w-5xl mx-auto flex justify-between items-center mb-6 bg-white/95 backdrop-blur-sm p-3 rounded-2xl shadow-sm border-2 border-gray-100">
+        <!-- 左側返回大廳主頁 -->
+        <a href="index.html" onclick="window.speechSynthesis.cancel()" class="bg-gray-100 text-gray-700 font-bold py-2 px-4 rounded-xl border-2 border-gray-200 active:bg-gray-200 flex items-center gap-2">
             🏠 返回
         </a>
-        <div class="flex gap-4">
-            <button onclick="window.speechSynthesis.cancel(); renderLevel(0)" class="btn-3d btn-yellow px-4 py-2 text-lg">✨ 關卡地圖</button>
-            <button onclick="window.location.reload()" class="btn-3d btn-purple px-4 py-2 text-lg">🎲 洗牌</button>
+
+        <!-- 中間進度列 (Breadcrumb) -->
+        <div id="breadcrumb" class="flex flex-wrap items-center justify-center gap-1 md:gap-3 text-sm md:text-base font-bold text-gray-400">
+            <!-- 由 JS 動態生成 -->
+        </div>
+
+        <!-- 右側按鈕群 -->
+        <div class="flex gap-2">
+            <div class="bg-green-100 text-green-700 border-2 border-green-300 font-bold py-2 px-3 rounded-xl items-center gap-1 hidden md:flex">
+                🇭🇰 廣東話
+            </div>
+            <button onclick="window.location.reload()" class="bg-orange-500 text-white font-bold py-2 px-4 rounded-xl shadow-[0_4px_0_#c2410c] active:translate-y-1 active:shadow-none transition-all">
+                首頁
+            </button>
         </div>
     </nav>
 
-    <!-- 遊戲容器 -->
-    <div id="game-container" class="max-w-4xl mx-auto stage-card relative overflow-hidden">
-        <!-- 各關卡畫面將由 JS 動態生成於此 -->
+    <!-- 遊戲主舞台 -->
+    <div id="game-container" class="max-w-5xl mx-auto stage-card relative overflow-hidden p-6 md:p-10">
+        <!-- 畫面動態生成於此 -->
     </div>
 
     <!-- 音效庫 -->
@@ -95,7 +105,7 @@
 
 <script>
     // ==========================================
-    // 1. 核心字庫與錯誤追蹤 (Cloud Data)
+    // 1. 核心字庫與錯誤追蹤
     // ==========================================
     const ALL_LEARNED_WORDS = [
         '我','你','爸','媽','哥','姐','朋','友','生','人','家','庭',
@@ -105,7 +115,7 @@
         '學','校','室','課','書','圖','畫','愛','好','樂'
     ];
 
-    let errorLog = {}; // 記錄玲玲點錯嘅字
+    let errorLog = {}; 
     let currentLevelIndex = 0;
     
     function recordError(word) {
@@ -114,14 +124,14 @@
     }
 
     // ==========================================
-    // 2. iPad 廣東話語音引擎 (防吞聲版)
+    // 2. iPad 廣東話語音引擎
     // ==========================================
     window.utterancePool = [];
     function speak(text, callback) {
-        window.speechSynthesis.cancel(); // 斬斷殘影
+        window.speechSynthesis.cancel(); 
         const msg = new SpeechSynthesisUtterance(text);
         msg.lang = 'zh-HK';
-        msg.rate = 0.85; // 語速稍慢適合 K2
+        msg.rate = 0.85; 
         msg.pitch = 1.1;
         
         if (callback) {
@@ -136,7 +146,6 @@
         if(snd) { snd.currentTime = 0; snd.play(); }
     }
 
-    // 工具函數：獲取不重複隨機干擾字
     function getRandomWords(count, excludeWords = []) {
         let pool = ALL_LEARNED_WORDS.filter(w => !excludeWords.includes(w));
         let result = [];
@@ -154,67 +163,60 @@
     }
 
     // ==========================================
-    // 3. 關卡數據定義
+    // 3. 關卡數據與橫向導航列
     // ==========================================
     const LEVELS = [
-        // Level 0: 預習大廳
         { type: 'lobby', title: '🏰 課前預習魔法卡' },
-        
-        // Level 1: 10秒閃卡
-        { type: 'flashcard', title: '🥚 Level 1: 魔法蛋閃卡 (大聲讀)', 
-          words: ['蜜糖', '翠綠', '新鮮', '蔬菜', '蛋糕', '食物', '豆', '肉', '均衡'] },
-          
-        // Level 2: 聽音選字 (純文字)
-        { type: 'listen', title: '👂 Level 2: 聽音選字 (無圖片)', 
-          questions: [
-              { target: '蜜', deco: ['糖','家','菜'] },
-              { target: '綠', deco: ['紅','白','香'] },
-              { target: '鮮', deco: ['魚','羊','肉'] },
-              { target: '菜', deco: ['果','豆','蛋'] },
-              { target: '飯', deco: ['麵','包','米'] }
-          ]
-        },
-
-        // Level 3: 雙字火車
-        { type: 'train', title: '🚂 Level 3: 詞語小火車',
-          pairs: [ ['蜜','糖'], ['翠','綠'], ['新','鮮'], ['蔬','菜'], ['蛋','糕'], ['食','物'], ['白','飯'] ]
-        },
-
-        // Level 4: 語境尋寶 4x4
-        { type: 'hunt', title: '🔍 Level 4: 語境尋寶大陣列',
-          questions: [
-              { hint: '小蜜蜂採花釀出甜甜的什麼？', targets: ['蜜','糖'] },
-              { hint: '我們每天都要多吃翠綠的什麼？', targets: ['蔬','菜'] },
-              { hint: '《均衡飲食》兒歌說：什麼牛奶肉和蛋，一日三餐要均衡。', targets: ['米','飯'] },
-              { hint: '紅蘿蔔和椰菜，都是什麼類的食物？', targets: ['蔬','菜'] }
-          ]
-        },
-
-        // Level 5: 句式積木
-        { type: 'sentence', title: '🧱 Level 5: 句式積木重組',
-          sentences: [
-              ['翠綠的', '蔬菜', '。'],
-              ['甜甜的', '蜜糖', '。'],
-              ['紅蘿蔔', '是', '蔬菜類', '的食物。'],
-              ['麵條', '是', '五穀類', '的食物。'],
-              ['少吃零食', '多吃菜', '。']
-          ]
-        }
+        { type: 'flashcard', title: '🥚 Level 1: 魔法蛋閃卡 (大聲讀)', words: ['蜜糖', '翠綠', '新鮮', '蔬菜', '蛋糕', '食物', '豆', '肉', '均衡'] },
+        { type: 'listen', title: '👂 Level 2: 聽音選字 (無圖片)', questions: [{ target: '蜜', deco: ['糖','家','菜'] }, { target: '綠', deco: ['紅','白','香'] }, { target: '鮮', deco: ['魚','羊','肉'] }, { target: '菜', deco: ['果','豆','蛋'] }, { target: '飯', deco: ['麵','包','米'] }] },
+        { type: 'train', title: '🚂 Level 3: 詞語小火車', pairs: [ ['蜜','糖'], ['翠','綠'], ['新','鮮'], ['蔬','菜'], ['蛋','糕'], ['食','物'], ['白','飯'] ] },
+        { type: 'hunt', title: '🔍 Level 4: 語境尋寶大陣列', questions: [{ hint: '小蜜蜂採花釀出甜甜的什麼？', targets: ['蜜','糖'] }, { hint: '我們每天都要多吃翠綠的什麼？', targets: ['蔬','菜'] }, { hint: '《均衡飲食》兒歌說：什麼牛奶肉和蛋，一日三餐要均衡。', targets: ['米','飯'] }, { hint: '紅蘿蔔和椰菜，都是什麼類的食物？', targets: ['蔬','菜'] }] },
+        { type: 'sentence', title: '🧱 Level 5: 句式積木重組', sentences: [['翠綠的', '蔬菜', '。'], ['甜甜的', '蜜糖', '。'], ['紅蘿蔔', '是', '蔬菜類', '的食物。'], ['麵條', '是', '五穀類', '的食物。'], ['少吃零食', '多吃菜', '。']] }
     ];
+
+    const BREADCRUMB_STEPS = [
+        { idx: 1, name: '1.閃卡' },
+        { idx: 2, name: '2.聽音' },
+        { idx: 3, name: '3.火車' },
+        { idx: 4, name: '4.尋寶' },
+        { idx: 5, name: '5.句式' },
+        { idx: 6, name: '結算' }
+    ];
+
+    function updateBreadcrumb(currentIdx) {
+        const bc = document.getElementById('breadcrumb');
+        if (!bc) return;
+        let html = '';
+        BREADCRUMB_STEPS.forEach((step, i) => {
+            let isCurrent = (currentIdx === step.idx) || (currentIdx >= 6 && step.idx === 6);
+            let colorClass = isCurrent ? 'text-orange-500 scale-110 transition-transform' : 'text-gray-400 hover:text-gray-600 cursor-pointer';
+            
+            html += `<span onclick="renderLevel(${step.idx < 6 ? step.idx : 99})" class="transition-colors ${colorClass}">${step.name}</span>`;
+            
+            if (i < BREADCRUMB_STEPS.length - 1) {
+                html += `<span class="text-orange-300">➔</span>`;
+            }
+        });
+        bc.innerHTML = html;
+    }
 
     // ==========================================
     // 4. 關卡渲染邏輯
     // ==========================================
     const container = document.getElementById('game-container');
 
-    function renderLevel(index) {
+    window.renderLevel = function(index) {
+        window.speechSynthesis.cancel(); 
         currentLevelIndex = index;
-        container.innerHTML = '';
+        
         if (index >= LEVELS.length) {
             renderResult();
             return;
         }
 
+        updateBreadcrumb(index);
+        container.innerHTML = '';
+        
         const level = LEVELS[index];
         const header = `<h2 class="text-2xl md:text-3xl font-bold text-center text-orange-800 mb-6">${level.title}</h2>`;
         
@@ -227,8 +229,6 @@
         else if (level.type === 'sentence') content = renderSentence(level);
 
         container.innerHTML = header + content;
-        
-        // 進入新關卡時，自動朗讀標題
         speak(level.title.replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g, ''));
     }
 
@@ -299,7 +299,7 @@
             <div class="grid grid-cols-2 gap-6 w-full max-w-md" id="l2-options">
         `;
         options.forEach(opt => {
-            html += `<button onclick="checkL2('${opt}', '${q.target}', this)" class="btn-3d btn-white h-24 text-5xl">${opt}</button>`;
+            html += `<button onclick="checkL2('${opt}', '${q.target}', this)" class="btn-3d btn-white h-24 text-5xl font-bold text-gray-700">${opt}</button>`;
         });
         html += `</div>`;
         document.getElementById('l2-area').innerHTML = html;
@@ -313,7 +313,7 @@
         } else {
             playSound('wrong');
             btn.classList.add('shake', 'btn-red');
-            recordError(target); // 記錄標的字為需提示
+            recordError(target); 
             setTimeout(() => { btn.classList.remove('shake', 'btn-red'); }, 500);
         }
     }
@@ -331,12 +331,10 @@
         const word1 = pair[0];
         const word2 = pair[1];
         
-        // 1 個正確 + 3 個從字庫隨機抽取的干擾
         let distractors = getRandomWords(3, [word1, word2]);
         let options = shuffle([word2, ...distractors]);
 
         let html = `
-            <!-- 火車頭 -->
             <div class="flex items-center gap-2 mb-10 pop-in">
                 <div class="text-6xl">🧚‍♀️</div>
                 <div class="bg-red-500 text-white w-24 h-24 flex items-center justify-center text-5xl rounded-l-3xl border-4 border-red-700 shadow-[0_8px_0_#991b1b]">
@@ -346,8 +344,7 @@
                     ?
                 </div>
             </div>
-            <!-- 車廂選項 -->
-            <div class="grid grid-cols-4 gap-4 w-full" id="l3-options">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 w-full" id="l3-options">
         `;
         options.forEach(opt => {
             html += `<button onclick="checkL3('${opt}', '${word2}', '${word1}', this)" class="btn-3d btn-white h-20 text-4xl border-4 border-blue-200">${opt}</button>`;
@@ -365,7 +362,7 @@
         } else {
             playSound('wrong');
             btn.classList.add('shake', 'bg-red-200');
-            recordError(word1+target); // 記錄整個詞語
+            recordError(word1+target); 
             setTimeout(() => { btn.classList.remove('shake', 'bg-red-200'); }, 500);
         }
     }
@@ -383,27 +380,26 @@
         const q = qs[l4Index];
         l4Found = 0;
         
-        // 16 格陣列：2 目標字 + 14 隨機字
         let distractors = getRandomWords(14, q.targets);
         let options = shuffle([...q.targets, ...distractors]);
 
         let html = `
             <div class="bg-blue-100 p-4 rounded-xl border-2 border-blue-300 mb-6 w-full text-center">
-                <p class="text-xl text-blue-800 font-bold mb-2">${q.hint}</p>
-                <button onclick="speak('${q.hint}')" class="btn-3d btn-blue px-4 py-1 text-sm">🔊 聽提示</button>
+                <p class="text-xl md:text-2xl text-blue-800 font-bold mb-2">${q.hint}</p>
+                <button onclick="speak('${q.hint}')" class="btn-3d btn-blue px-4 py-1 text-sm md:text-base">🔊 聽提示</button>
             </div>
             <div class="grid grid-cols-4 gap-3 w-full max-w-md mx-auto" id="l4-grid">
         `;
         options.forEach((opt, idx) => {
             let isTarget = q.targets.includes(opt);
-            html += `<button id="l4-btn-${idx}" onclick="checkL4('${opt}', ${isTarget}, this, '${q.targets.join('')}')" class="btn-3d btn-white h-16 text-3xl font-bold">${opt}</button>`;
+            html += `<button id="l4-btn-${idx}" onclick="checkL4('${opt}', ${isTarget}, this, '${q.targets.join('')}')" class="btn-3d btn-white h-16 md:h-20 text-3xl font-bold">${opt}</button>`;
         });
         html += `</div>`;
         document.getElementById('l4-area').innerHTML = html;
         speak(q.hint);
     }
     window.checkL4 = function(selected, isTarget, btn, targetStr) {
-        if(btn.classList.contains('correct-glow')) return; // 已點過
+        if(btn.classList.contains('correct-glow')) return;
         if(isTarget) {
             playSound('correct');
             btn.classList.add('correct-glow');
@@ -454,7 +450,6 @@
 
         let btnHtml = ``;
         if(l5Blocks.length === 0) {
-            // Check correct
             if(l5Ans.join('') === targetArr.join('')) {
                 playSound('correct');
                 btnHtml = `<div class="mt-8 text-center pop-in">
@@ -498,17 +493,17 @@
     // 5. 結算與暗號生成
     // ==========================================
     function renderResult() {
-        playSound('correct'); // 勝出音效
+        updateBreadcrumb(6); // 高亮結算
+        playSound('correct'); 
         
-        // 整理錯題
         let errorListHtml = '';
         let errorKeys = Object.keys(errorLog);
         
         if (errorKeys.length === 0) {
             errorListHtml = `<p class="text-green-600 font-bold text-2xl my-4">完美過關！零錯誤！🎉</p>`;
         } else {
-            errorListHtml = `<div class="bg-red-50 border-2 border-red-200 rounded-xl p-4 my-4 text-left">
-                                <p class="text-red-600 font-bold mb-2">🔍 家長錯題診斷 (需提示字詞)：</p>
+            errorListHtml = `<div class="bg-red-50 border-2 border-red-200 rounded-xl p-4 my-4 text-left max-w-sm mx-auto">
+                                <p class="text-red-600 font-bold mb-2 text-lg">🔍 家長錯題診斷 (需提示字詞)：</p>
                                 <ul class="list-disc pl-5 text-gray-700 text-lg">`;
             errorKeys.forEach(k => {
                 errorListHtml += `<li>${k} (錯誤: ${errorLog[k]} 次)</li>`;
@@ -524,10 +519,10 @@
                 <div class="text-8xl mb-4">🏆</div>
                 <h2 class="text-4xl font-bold text-orange-600 mb-6">闖關成功！</h2>
                 ${errorListHtml}
-                <button onclick="copyReport('${reportCode}')" class="btn-3d btn-blue text-xl px-8 py-4 mt-4 w-full md:w-auto flex items-center justify-center gap-2 mx-auto">
+                <button onclick="copyReport('${reportCode}')" class="btn-3d btn-blue text-xl px-8 py-4 mt-4 w-full md:w-auto flex items-center justify-center mx-auto">
                     📋 一鍵複製測驗暗號
                 </button>
-                <p class="text-gray-400 text-sm mt-4">複製後請貼上對話框，交由 AI 老師更新進度。</p>
+                <p class="text-gray-500 text-sm mt-4">複製後請貼上對話框，交由 AI 老師更新進度。</p>
             </div>
         `;
     }
