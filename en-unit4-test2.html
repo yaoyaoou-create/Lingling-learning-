@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Unit 4: I can do it! - Test 2 | 玲玲學習樂園</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Noto+Sans+TC:wght@500;700;900&display=swap" rel="stylesheet">
+  <style>
+    /* iPad 終極防護：防雙擊放大鎖 & 強制區塊排版 */
+    * {
+      box-sizing: border-box;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      min-height: 100vh;
+      display: block !important;
+      font-family: 'Fredoka', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, "PingFang HK", sans-serif;
+      /* 經典藍紫漸變背景 */
+      background: linear-gradient(135deg, #a8c0ff 0%, #3f2b96 100%);
+      color: #1E293B;
+      overflow-x: hidden;
+    }
+
+    #fireworksCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* 頂部導航列 */
+    .top-nav {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 14px 16px 6px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-home {
+      background: #FFFFFF;
+      color: #1E293B;
+      text-decoration: none;
+      font-weight: 900;
+      font-size: 16px;
+      padding: 8px 16px;
+      border-radius: 999px;
+      box-shadow: 0 4px 0 #CBD5E1;
+      border: 2px solid #FFFFFF;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+    .btn-home:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 #CBD5E1;
+    }
+
+    .level-map {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .lvl-pill {
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 900;
+      background: rgba(255, 255, 255, 0.22);
+      color: #FFFFFF;
+      border: 2px solid rgba(255, 255, 255, 0.4);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .lvl-pill.active {
+      background: #FACC15;
+      color: #713F12;
+      border-color: #FEF08A;
+      box-shadow: 0 4px 0 #CA8A04;
+      transform: scale(1.06);
+    }
+    .lvl-pill.done {
+      background: #34D399;
+      color: #064E3B;
+      border-color: #A7F3D0;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 12px 16px 48px;
+    }
+
+    /* 主舞台暖奶油色 3D 卡片 */
+    .stage-card {
+      background: linear-gradient(to bottom, #fffdf8, #ffe5b4);
+      border-radius: 32px;
+      padding: 24px 20px 32px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.28), inset 0 -5px 15px rgba(255,200,100,0.3);
+      border: 4px solid #FFFFFF;
+      text-align: center;
+      position: relative;
+    }
+
+    /* Anna 老師常駐橫幅 */
+    .teacher-banner {
+      background: linear-gradient(135deg, #FEF9C3 0%, #FDE047 100%);
+      border: 3px solid #F59E0B;
+      border-radius: 24px;
+      padding: 12px 18px;
+      margin: 0 auto 22px;
+      max-width: 760px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      box-shadow: 0 6px 0 #D97706;
+      cursor: pointer;
+      transition: transform 0.1s;
+    }
+    .teacher-banner:active {
+      transform: translateY(3px);
+      box-shadow: 0 3px 0 #D97706;
+    }
+    .teacher-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: #FFFFFF;
+      border: 3px solid #F59E0B;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .teacher-msg {
+      flex: 1; text-align: left; font-size: 18px; font-weight: 900; color: #78350F; line-height: 1.4;
+    }
+    .replay-btn {
+      background: #F59E0B; color: #FFFFFF; padding: 8px 14px; border-radius: 999px; font-weight: 900; font-size: 15px; box-shadow: 0 3px 0 #B45309; white-space: nowrap;
+    }
+
+    /* 3D 實體積木按鈕 */
+    .btn-3d {
+      transition: all 0.1s ease;
+      box-shadow: 0 8px 0px #cf921d, 0 12px 10px rgba(0,0,0,0.18);
+      border: 3px solid #FFFFFF; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; font-weight: 900;
+    }
+    .btn-3d:active, .btn-3d.pressed { transform: translateY(6px); box-shadow: 0 2px 0px #cf921d, 0 4px 4px rgba(0,0,0,0.15); }
+
+    .btn-blue { background-color: #3B82F6; box-shadow: 0 8px 0px #1D4ED8; color: #FFF; }
+    .btn-blue:active { box-shadow: 0 2px 0px #1D4ED8; }
+    .btn-green { background-color: #10B981; box-shadow: 0 8px 0px #047857; color: #FFF; }
+    .btn-green:active { box-shadow: 0 2px 0px #047857; }
+    .btn-purple { background-color: #8B5CF6; box-shadow: 0 8px 0px #6D28D9; color: #FFF; }
+    .btn-purple:active { box-shadow: 0 2px 0px #6D28D9; }
+    .btn-pink { background-color: #EC4899; box-shadow: 0 8px 0px #BE185D; color: #FFF; }
+    .btn-pink:active { box-shadow: 0 2px 0px #BE185D; }
+    .btn-red { background-color: #EF4444; box-shadow: 0 8px 0px #B91C1C; color: #FFF; }
+    .btn-red:active { box-shadow: 0 2px 0px #B91C1C; }
+    .btn-white { background-color: #FFFFFF; box-shadow: 0 8px 0px #CBD5E1; color: #1E293B; border-color: #E2E8F0; }
+    .btn-white:active { box-shadow: 0 2px 0px #CBD5E1; }
+    .btn-amber { background-color: #F59E0B; box-shadow: 0 8px 0px #B45309; color: #FFF; }
+    .btn-amber:active { box-shadow: 0 2px 0px #B45309; }
+
+    /* 呼吸光暈發音大按鈕 */
+    .pulse-speaker { animation: pulseRing 2s infinite; }
+    @keyframes pulseRing {
+      0% { box-shadow: 0 8px 0 #D97706, 0 0 0 0 rgba(245, 158, 11, 0.65); }
+      70% { box-shadow: 0 8px 0 #D97706, 0 0 0 22px rgba(245, 158, 11, 0); }
+      100% { box-shadow: 0 8px 0 #D97706, 0 0 0 0 rgba(245, 158, 11, 0); }
+    }
+
+    .word-slot {
+      border: 4px dashed #94A3B8; width: 68px; height: 78px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 40px; font-weight: 900; color: #1E293B; background: rgba(255, 255, 255, 0.75); transition: all 0.2s;
+    }
+    .word-slot.filled {
+      border-style: solid; border-color: #10B981; background: #D1FAE5; color: #065F46; transform: scale(1.05);
+    }
+
+    .hidden-element { display: none !important; }
+
+    @keyframes pop {
+      0% { transform: scale(0.85); opacity: 0; }
+      50% { transform: scale(1.08); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .pop-anim { animation: pop 0.4s ease-out forwards; }
+  </style>
+</head>
+<body>
+
+<canvas id="fireworksCanvas"></canvas>
+
+<!-- 頂部導航與關卡地圖 -->
+<nav class="top-nav">
+  <button onclick="goHome()" class="btn-home">🏠 返回</button>
+  <div class="level-map" id="levelMap">
+    <button class="lvl-pill active" onclick="jumpToLevel(0)">0. 預習</button>
+    <button class="lvl-pill" onclick="jumpToLevel(1)">L1 聽音</button>
+    <button class="lvl-pill" onclick="jumpToLevel(2)">L2 配對</button>
+    <button class="lvl-pill" onclick="jumpToLevel(3)">L3 問答</button>
+    <button class="lvl-pill" onclick="jumpToLevel(4)">L4 辨音</button>
+    <button class="lvl-pill" onclick="jumpToLevel(5)">L5 拼字</button>
+  </div>
+</nav>
+
+<div class="container">
+  <main class="stage-card" id="main-stage">
+
+    <!-- Anna 老師常駐橫幅 -->
+    <div class="teacher-banner" onclick="replayInstruction()">
+      <div class="teacher-avatar" aria-hidden="true">
+        <svg viewBox="0 0 80 80" width="48" height="48">
+          <circle cx="40" cy="40" r="36" fill="#FDE68A"/>
+          <path d="M18 38 C18 18, 62 18, 62 38 L64 56 C64 60, 56 60, 56 54 L56 42 L24 42 L24 54 C24 60, 16 60, 16 56 Z" fill="#78350F"/>
+          <circle cx="40" cy="42" r="18" fill="#FED7AA"/>
+          <path d="M22 36 Q40 22 58 36" fill="#78350F"/>
+          <circle cx="34" cy="41" r="2.5" fill="#1E293B"/>
+          <circle cx="46" cy="41" r="2.5" fill="#1E293B"/>
+          <circle cx="29" cy="46" r="3" fill="#FCA5A5" opacity="0.7"/>
+          <circle cx="51" cy="46" r="3" fill="#FCA5A5" opacity="0.7"/>
+          <path d="M35 48 Q40 53 45 48" stroke="#DC2626" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="teacher-msg" id="anna-text">歡迎嚟到 Unit 4 第二關進階測試！先撳下啲積木聽下發音熱身啦！</div>
+      <div class="replay-btn">🔊 重聽題目</div>
+    </div>
+
+    <!-- Step 0: 預習大廳 -->
+    <div id="level-0" class="w-full">
+      <h1 class="text-3xl md:text-4xl font-black text-blue-900 mb-2 pop-anim">Unit 4 · Test 2 預習大廳</h1>
+      <p class="text-lg font-bold text-amber-800 mb-6">👆 點擊下面嘅 3D 積木聽純正英文發音！</p>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-5 mb-8 max-w-3xl mx-auto">
+        <button onclick="playWordNow('run')" class="btn-3d btn-blue rounded-3xl p-5 flex flex-col items-center">
+          <span class="text-6xl mb-2">🏃</span><span class="text-3xl font-black">run</span>
+        </button>
+        <button onclick="playWordNow('jump')" class="btn-3d btn-green rounded-3xl p-5 flex flex-col items-center">
+          <span class="text-6xl mb-2">🦘</span><span class="text-3xl font-black">jump</span>
+        </button>
+        <button onclick="playWordNow('draw')" class="btn-3d btn-purple rounded-3xl p-5 flex flex-col items-center">
+          <span class="text-6xl mb-2">🎨</span><span class="text-3xl font-black">draw</span>
+        </button>
+        <button onclick="playWordNow('sing')" class="btn-3d btn-pink rounded-3xl p-5 flex flex-col items-center">
+          <span class="text-6xl mb-2">🎤</span><span class="text-3xl font-black">sing</span>
+        </button>
+      </div>
+      <button onclick="startLevel(1)" class="btn-3d bg-yellow-400 text-amber-950 text-2xl md:text-3xl font-black py-4 px-12 rounded-full mt-2 pop-anim">
+        開始挑戰 🚀
+      </button>
+    </div>
+
+    <!-- Level 1: 聽句選圖 (2 題) -->
+    <div id="level-1" class="w-full hidden-element">
+      <div class="inline-block bg-blue-100 text-blue-800 font-black px-5 py-1.5 rounded-full mb-4 text-lg" id="l1-progress">🎧 第 1 關：聽句選圖</div>
+      <div class="my-4 flex flex-col items-center">
+        <button onclick="playL1TargetAudio()" class="btn-3d bg-amber-400 text-amber-950 rounded-full w-32 h-32 flex flex-col items-center justify-center pulse-speaker">
+          <span class="text-6xl">👂</span>
+          <span class="text-sm font-black mt-1">🔊 點擊聽音</span>
+        </button>
+      </div>
+      <div class="grid grid-cols-2 gap-5 max-w-lg mx-auto mt-6">
+        <button onclick="checkL1Answer('run')" class="btn-3d btn-white text-5xl py-6 rounded-2xl flex-col gap-2">🏃<span class="text-xl">run</span></button>
+        <button onclick="checkL1Answer('draw')" class="btn-3d btn-white text-5xl py-6 rounded-2xl flex-col gap-2">🎨<span class="text-xl">draw</span></button>
+        <button onclick="checkL1Answer('sing')" class="btn-3d btn-white text-5xl py-6 rounded-2xl flex-col gap-2">🎤<span class="text-xl">sing</span></button>
+        <button onclick="checkL1Answer('jump')" class="btn-3d btn-white text-5xl py-6 rounded-2xl flex-col gap-2">🦘<span class="text-xl">jump</span></button>
+      </div>
+    </div>
+
+    <!-- Level 2: Tickles 動作陷阱 (2 題) -->
+    <div id="level-2" class="w-full hidden-element">
+      <div class="inline-block bg-green-100 text-green-800 font-black px-5 py-1.5 rounded-full mb-4 text-lg" id="l2-progress">🖼️ 第 2 關：動作陷阱</div>
+      <div class="my-4">
+        <button onclick="playL2TargetAudio()" class="btn-3d bg-white rounded-3xl p-8 border-4 border-amber-300 pulse-speaker flex-col items-center">
+          <div id="l2-illustration" class="text-8xl mb-2">🦘</div>
+          <span class="text-sm font-black text-amber-700 bg-amber-100 px-3 py-1 rounded-full">🔊 點擊聽發音</span>
+        </button>
+      </div>
+      <p class="text-xl font-bold text-rose-600 mb-4">圖案同發音吻合嗎？</p>
+      <div class="flex flex-col md:flex-row gap-5 justify-center max-w-xl mx-auto">
+        <button onclick="checkL2Answer('yes')" class="btn-3d btn-green text-3xl py-5 px-10 rounded-2xl flex-1 gap-3"><span class="text-4xl">✅</span> Yes</button>
+        <button onclick="checkL2Answer('no')" class="btn-3d btn-red text-3xl py-5 px-10 rounded-2xl flex-1 gap-3"><span class="text-4xl">❌</span> No</button>
+      </div>
+    </div>
+
+    <!-- Level 3: 年齡聽力題 (2 題) -->
+    <div id="level-3" class="w-full hidden-element">
+      <div class="inline-block bg-amber-100 text-amber-800 font-black px-5 py-1.5 rounded-full mb-4 text-lg" id="l3-progress">🐱 第 3 關：年齡問答</div>
+      
+      <!-- L3 Q1 Content -->
+      <div id="l3-q1-content" class="w-full">
+        <div class="my-4">
+          <button onclick="playWordNow('how_old')" class="btn-3d bg-amber-400 text-amber-950 rounded-full w-32 h-32 flex flex-col items-center justify-center pulse-speaker mx-auto">
+            <span class="text-6xl">👂</span><span class="text-sm font-black mt-1">🔊 聽問題</span>
+          </button>
+        </div>
+        <div class="flex justify-center gap-6 mt-8">
+          <button onclick="checkL3Answer('4')" class="btn-3d btn-white py-6 px-10 rounded-2xl flex-col gap-2"><span class="text-6xl text-blue-500">4️⃣</span><span class="text-lg">4 歲</span></button>
+          <button onclick="checkL3Answer('5')" class="btn-3d btn-white py-6 px-10 rounded-2xl flex-col gap-2"><span class="text-6xl text-pink-500">5️⃣</span><span class="text-lg">5 歲</span></button>
+        </div>
+      </div>
+
+      <!-- L3 Q2 Content -->
+      <div id="l3-q2-content" class="w-full hidden-element">
+        <div class="bg-white rounded-3xl p-6 max-w-xl mx-auto border-4 border-amber-300 shadow-md mb-6 btn-3d pulse-speaker flex-col items-center" onclick="playWordNow('four')">
+          <div class="flex items-center justify-center gap-4 mb-3"><span class="text-7xl">🐱</span><span class="text-6xl">5️⃣</span></div>
+          <span class="inline-block mt-2 text-sm font-black text-blue-700 bg-blue-100 px-4 py-1 rounded-full">🔊 聽 Tickles 點講</span>
+        </div>
+        <div class="flex flex-col md:flex-row gap-5 justify-center max-w-xl mx-auto">
+          <button onclick="checkL3Answer('yes')" class="btn-3d btn-green text-2xl py-5 px-8 rounded-2xl flex-1"><span class="text-4xl">✅</span> Yes</button>
+          <button onclick="checkL3Answer('no')" class="btn-3d btn-red text-2xl py-5 px-8 rounded-2xl flex-1"><span class="text-4xl">❌</span> No</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Level 4: Phonics /m/ 盲測捉迷藏 (2 題) -->
+    <div id="level-4" class="w-full hidden-element">
+      <div class="inline-block bg-purple-100 text-purple-800 font-black px-5 py-1.5 rounded-full mb-3 text-lg" id="l4-progress">🔤 第 4 關：Phonics 盲測</div>
+      <div class="mb-5">
+        <button onclick="playWordNow('m_sound')" class="btn-3d bg-orange-500 text-white px-6 py-2.5 rounded-full text-xl pulse-speaker">🔊 聽 /m/ 首音 (Mmmm)</button>
+      </div>
+
+      <!-- L4 Q1 -->
+      <div id="l4-q1-content" class="flex justify-center gap-6 mt-6">
+        <button onclick="checkL4Answer('mouth', true)" class="btn-3d btn-white py-6 px-10 rounded-2xl"><span class="text-7xl">👄</span></button>
+        <button onclick="checkL4Answer('hand', false)" class="btn-3d btn-white py-6 px-10 rounded-2xl"><span class="text-7xl">✋</span></button>
+      </div>
+
+      <!-- L4 Q2 -->
+      <div id="l4-q2-content" class="flex justify-center gap-6 mt-6 hidden-element">
+        <button onclick="checkL4Answer('draw', false)" class="btn-3d btn-white py-6 px-10 rounded-2xl"><span class="text-7xl">🎨</span></button>
+        <button onclick="checkL4Answer('meat', true)" class="btn-3d btn-white py-6 px-10 rounded-2xl"><span class="text-7xl">🍖</span></button>
+      </div>
+    </div>
+
+    <!-- Level 5: 字母拼寫積木 ＋ 親子打卡 -->
+    <div id="level-5" class="w-full hidden-element">
+      <div class="inline-block bg-pink-100 text-pink-800 font-black px-5 py-1.5 rounded-full mb-4 text-lg" id="l5-progress">🧱 第 5 關：字母積木拼字</div>
+
+      <!-- 5A 拼字區 -->
+      <div id="spelling-section">
+        <div class="mb-4">
+          <button id="l5-target-btn" onclick="playL5TargetAudio()" class="btn-3d bg-amber-400 text-amber-950 px-6 py-3 rounded-2xl text-2xl gap-2 pulse-speaker">
+            <span id="l5-emoji">🦘</span> <span>🔊 聽發音拼字</span>
+          </button>
+        </div>
+        <div class="flex gap-3 justify-center my-6" id="spelling-slots"></div>
+        <div class="flex gap-4 justify-center flex-wrap" id="letter-bank"></div>
+      </div>
+
+      <!-- 5B 親子口語打卡區 -->
+      <div id="speak-task" class="hidden-element mt-6 bg-white p-6 rounded-3xl border-4 border-amber-400 shadow-lg max-w-xl mx-auto pop-anim">
+        <h3 class="text-2xl font-black text-amber-800 mb-3">🎤 親子口語打卡時間</h3>
+        <div class="flex flex-col gap-3 mb-6">
+          <button onclick="playWordNow('i_can_jump')" class="btn-3d btn-green py-4 px-6 rounded-2xl text-2xl md:text-3xl justify-between">
+            <span>🦘 "I can jump."</span><span class="text-lg bg-white/25 px-3 py-1 rounded-full">🔊 聽示範</span>
+          </button>
+          <button onclick="playWordNow('i_can_run')" class="btn-3d btn-blue py-4 px-6 rounded-2xl text-2xl md:text-3xl justify-between">
+            <span>🏃 "I can run."</span><span class="text-lg bg-white/25 px-3 py-1 rounded-full">🔊 聽示範</span>
+          </button>
+        </div>
+        <button onclick="finishTest()" class="btn-3d bg-pink-500 text-white text-2xl md:text-3xl py-4 px-10 rounded-full pop-anim">
+          🎉 玲玲讀完喇！過關領獎盃 🏆
+        </button>
+      </div>
+    </div>
+
+    <!-- 獎盃結算畫面 -->
+    <div id="result-screen" class="w-full hidden-element pt-4">
+      <div class="text-8xl mb-4 pop-anim">🏆</div>
+      <h1 class="text-4xl md:text-5xl font-black text-amber-600 mb-3 pop-anim">Unit 4 Test 2 大成功！</h1>
+      
+      <div class="bg-white p-5 rounded-2xl shadow-md text-left mb-6 max-w-lg mx-auto border-l-8 border-emerald-500">
+        <h3 class="font-black text-xl mb-2 text-slate-800">📋 家長診斷報告：</h3>
+        <p class="text-slate-600 text-lg font-bold leading-relaxed" id="report-text">
+          ✅ 完整句子聽力 (I can draw/jump) 通過<br>
+          ✅ 圖文動作陷阱辨析 通過<br>
+          ✅ 歲數對答辨析 (How old are you / four) 通過<br>
+          ✅ Phonics /m/ 無字盲測通過<br>
+          ✅ 單字拼寫 (jump, run) 通過
+        </p>
+      </div>
+
+      <button onclick="copyCode()" id="copyBtn" class="btn-3d bg-slate-800 text-white text-xl md:text-2xl py-4 px-8 rounded-full mb-3 mx-auto">
+        📋 一鍵複製測驗暗號俾 Anna 老師
+      </button>
+    </div>
+
+    <!-- 答對/答錯覆蓋層 -->
+    <div id="feedback-overlay" class="absolute inset-0 bg-white/95 flex flex-col items-center justify-center hidden-element z-50 rounded-3xl p-6">
+      <div id="feedback-icon" class="text-8xl mb-4 pop-anim">🌟</div>
+      <div id="feedback-text" class="text-3xl md:text-4xl font-black text-emerald-600 pop-anim">好嘢！答啱啦！</div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  // =========================================================================
+  // 1. 雙軌排隊 + MP3 引擎 (嚴格遵守零死鎖與 100% 檔名對齊)
+  // =========================================================================
+  window.utterancePool = [];
+  let audioQueueId = 0;
+  let activeAudioElement = null;
+  let audioCtx = null;
+
+  const AUDIO_MAP = {
+    run: 'en-run.mp3', jump: 'en-jump.mp3', draw: 'en-draw.mp3', sing: 'en-sing.mp3',
+    mouth: 'en-mouth.mp3', meat: 'en-meat.mp3', milk: 'en-milk.mp3', hand: 'en-hand.mp3',
+    m_sound: 'en-m-sound.mp3', h_sound: 'en-h-sound.mp3',
+    how_old: 'en-how-old.mp3', four: 'en-four.mp3',
+    i_can_draw: 'en-I-can-draw.mp3', i_can_jump: 'en-I-can-jump.mp3', i_can_sing: 'en-I-can-sing.mp3', i_can_run: 'en-I-can-run.mp3',
+    j: 'en-j.mp3', u: 'en-u.mp3', m: 'en-m.mp3', p: 'en-p.mp3', r: 'en-r.mp3', n: 'en-n.mp3'
+  };
+
+  function ensureAudioContext() {
+    if (!audioCtx) {
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (AudioContextClass) audioCtx = new AudioContextClass();
+    }
+    if (audioCtx && audioCtx.state === 'suspended') {
+      audioCtx.resume().catch(() => {});
+    }
+  }
+
+  function stopAllAudio() {
+    audioQueueId++;
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    if (activeAudioElement) {
+      try {
+        activeAudioElement.onended = null;
+        activeAudioElement.onerror = null;
+        activeAudioElement.pause();
+        activeAudioElement.currentTime = 0;
+      } catch (e) {}
+      activeAudioElement = null;
+    }
+  }
+
+  // 嚴禁內部呼叫 stopAllAudio()
+  function playSingleMp3(file, startTime = 0, boostGain = 2.2, onDone) {
+    ensureAudioContext();
+    const audio = new Audio('audio/' + file);
+    audio.crossOrigin = 'anonymous';
+    activeAudioElement = audio;
+
+    if (audioCtx) {
+      try {
+        const source = audioCtx.createMediaElementSource(audio);
+        const gainNode = audioCtx.createGain();
+        gainNode.gain.value = boostGain;
+        source.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+      } catch (e) {
+        audio.volume = 1.0;
+      }
+    } else {
+      audio.volume = 1.0;
+    }
+
+    let finished = false;
+    const finish = () => { if (!finished) { finished = true; if (onDone) onDone(); } };
+    audio.onended = finish; audio.onerror = finish;
+
+    const startPlayback = () => {
+      if (startTime > 0) { try { audio.currentTime = startTime; } catch (e) {} }
+      audio.play().catch(finish);
+    };
+
+    if (startTime > 0) {
+      audio.addEventListener('loadedmetadata', startPlayback, { once: true });
+      audio.load();
+    } else {
+      startPlayback();
+    }
+  }
+
+  function playHybridQueue(steps) {
+    stopAllAudio();
+    if (!steps || !steps.length) return;
+    const myQueueId = audioQueueId;
+    let idx = 0;
+
+    function nextStep() {
+      if (myQueueId !== audioQueueId || idx >= steps.length) return;
+      const step = steps[idx++];
+
+      if (step.type === 'zh') {
+        if (!('speechSynthesis' in window) || !step.text) { nextStep(); return; }
+        const u = new SpeechSynthesisUtterance(step.text);
+        window.utterancePool.push(u);
+        u.lang = 'zh-HK'; u.pitch = 1.05; u.rate = 0.92; u.volume = 0.68;
+        let advanced = false;
+        const done = () => { if (!advanced && myQueueId === audioQueueId) { advanced = true; setTimeout(() => nextStep(), 150); } };
+        u.onend = done; u.onerror = done;
+        setTimeout(() => { if (myQueueId === audioQueueId) window.speechSynthesis.speak(u); }, 50);
+      }
+      else if (step.type === 'mp3') {
+        playSingleMp3(step.file, step.startTime || 0, step.boost || 2.2, () => {
+          if (myQueueId === audioQueueId) setTimeout(() => nextStep(), 150);
+        });
+      }
+    }
+    nextStep();
+  }
+
+  function getWordAudioStep(wordKey) {
+    const file = AUDIO_MAP[wordKey] || wordKey;
+    return { type: 'mp3', file, boost: 2.2 };
+  }
+  function playWordNow(wordKey) { playHybridQueue([getWordAudioStep(wordKey)]); }
+
+  // =========================================================================
+  // 2. 雙題版關卡邏輯
+  // =========================================================================
+  let currentLevel = 0;
+  let wrongAttempts = [];
+
+  // Level 1: 聽句選圖
+  const L1_QUESTIONS = [
+    { targetAudio: 'i_can_draw', targetAns: 'draw', zh: '第一關第 1 題：聽下完整句子，揀出啱嘅動作圖片啦！' },
+    { targetAudio: 'i_can_jump', targetAns: 'jump', zh: '第一關第 2 題：再聽下呢句，邊個動作先係啱㗎呢？' }
+  ];
+  let l1Index = 0;
+
+  // Level 2: Tickles 動作陷阱
+  const L2_QUESTIONS = [
+    { emoji: '🦘', audio: 'i_can_sing', ans: 'no', zh: '第二關第 1 題：畫面係跳躍，但發音係咩呢？啱定錯呀？' },
+    { emoji: '🏃', audio: 'i_can_run', ans: 'yes', zh: '第二關第 2 題：再睇下呢幅圖同發音，夾唔夾呀？' }
+  ];
+  let l2Index = 0;
+
+  // Level 3: 年齡問答
+  const L3_QUESTIONS = [
+    { type: 'q1', audio: 'how_old', ans: '4', zh: '第三關第 1 題：聽下問題，應該點樣回答呀？' },
+    { type: 'q2', audio: 'four', ans: 'no', zh: '第三關第 2 題：畫面舉起 5 隻手指，但發音點講？啱定錯呀？' }
+  ];
+  let l3Index = 0;
+
+  // Level 4: Phonics 盲測
+  const L4_QUESTIONS = [
+    { targetObj: 'mouth', wrongObj: 'hand', zh: '第四關第 1 題：聽下 /m/ 首音，圖入面邊個係 m 開頭㗎呢？' },
+    { targetObj: 'meat', wrongObj: 'draw', zh: '第四關第 2 題：再搵下另一個 m 開頭嘅圖案出嚟啦！' }
+  ];
+  let l4Index = 0;
+
+  // Level 5: 拼字
+  const L5_QUESTIONS = [
+    { word: 'jump', letters: ['m', 'p', 'j', 'u'], emoji: '🦘', zh: '第五關第 1 題：聽發音，順序撳積木砌出 jump！' },
+    { word: 'run', letters: ['n', 'r', 'u'], emoji: '🏃', zh: '第五關第 2 題：最後一題拼字，順序砌出 run 啦！' }
+  ];
+  let l5Index = 0;
+  let currentSlot = 0;
+
+  function updateLevelNav() {
+    document.querySelectorAll('.lvl-pill').forEach((pill, idx) => {
+      pill.className = idx < currentLevel ? 'lvl-pill done' : (idx === currentLevel ? 'lvl-pill active' : 'lvl-pill');
+    });
+  }
+  function jumpToLevel(lvl) { startLevel(lvl); }
+
+  function startLevel(lvl) {
+    ensureAudioContext();
+    for (let i = 0; i <= 5; i++) {
+      const el = document.getElementById(`level-${i}`);
+      if (el) el.classList.add('hidden-element');
+    }
+    document.getElementById('result-screen').classList.add('hidden-element');
+
+    currentLevel = lvl;
+    const targetEl = document.getElementById(`level-${currentLevel}`);
+    if (targetEl) targetEl.classList.remove('hidden-element');
+    updateLevelNav();
+
+    if (lvl === 1) { l1Index = 0; renderL1(); }
+    else if (lvl === 2) { l2Index = 0; renderL2(); }
+    else if (lvl === 3) { l3Index = 0; renderL3(); }
+    else if (lvl === 4) { l4Index = 0; renderL4(); }
+    else if (lvl === 5) { l5Index = 0; renderL5(); }
+    else { replayInstruction(); }
+  }
+
+  function replayInstruction() {
+    ensureAudioContext();
+    const banner = document.getElementById('anna-text');
+    let zh = '', audio = '';
+
+    if (currentLevel === 0) zh = '歡迎嚟到 Unit 4 第二關進階測試！先撳下啲積木聽下發音熱身啦！';
+    else if (currentLevel === 1) { zh = L1_QUESTIONS[l1Index].zh; audio = L1_QUESTIONS[l1Index].targetAudio; }
+    else if (currentLevel === 2) { zh = L2_QUESTIONS[l2Index].zh; audio = L2_QUESTIONS[l2Index].audio; }
+    else if (currentLevel === 3) { zh = L3_QUESTIONS[l3Index].zh; audio = L3_QUESTIONS[l3Index].audio; }
+    else if (currentLevel === 4) { zh = L4_QUESTIONS[l4Index].zh; audio = 'm_sound'; }
+    else if (currentLevel === 5) { zh = L5_QUESTIONS[l5Index].zh; audio = L5_QUESTIONS[l5Index].word; }
+
+    banner.innerText = zh;
+    const q = [{ type: 'zh', text: zh }];
+    if (audio) q.push(getWordAudioStep(audio));
+    playHybridQueue(q);
+  }
+
+  // L1
+  function renderL1() {
+    document.getElementById('l1-progress').innerText = `🎧 第 1 關：聽句選圖 (第 ${l1Index + 1} / 2 題)`;
+    replayInstruction();
+  }
+  function playL1TargetAudio() { playWordNow(L1_QUESTIONS[l1Index].targetAudio); }
+  function checkL1Answer(selected) {
+    if (selected === L1_QUESTIONS[l1Index].targetAns) {
+      showFeedback(true, selected, () => {
+        if (l1Index === 0) { l1Index++; renderL1(); } else { startLevel(2); }
+      });
+    } else {
+      wrongAttempts.push(`L1 Q${l1Index+1} 聽句錯選`);
+      showFeedback(false, selected);
+    }
+  }
+
+  // L2
+  function renderL2() {
+    const q = L2_QUESTIONS[l2Index];
+    document.getElementById('l2-progress').innerText = `🖼️ 第 2 關：動作陷阱 (第 ${l2Index + 1} / 2 題)`;
+    document.getElementById('l2-illustration').innerText = q.emoji;
+    replayInstruction();
+  }
+  function playL2TargetAudio() { playWordNow(L2_QUESTIONS[l2Index].audio); }
+  function checkL2Answer(selected) {
+    if (selected === L2_QUESTIONS[l2Index].ans) {
+      showFeedback(true, null, () => {
+        if (l2Index === 0) { l2Index++; renderL2(); } else { startLevel(3); }
+      });
+    } else {
+      wrongAttempts.push(`L2 Q${l2Index+1} 陷阱誤判`);
+      showFeedback(false, null);
+    }
+  }
+
+  // L3
+  function renderL3() {
+    document.getElementById('l3-progress').innerText = `🐱 第 3 關：年齡問答 (第 ${l3Index + 1} / 2 題)`;
+    if (l3Index === 0) {
+      document.getElementById('l3-q1-content').classList.remove('hidden-element');
+      document.getElementById('l3-q2-content').classList.add('hidden-element');
+    } else {
+      document.getElementById('l3-q1-content').classList.add('hidden-element');
+      document.getElementById('l3-q2-content').classList.remove('hidden-element');
+    }
+    replayInstruction();
+  }
+  function checkL3Answer(selected) {
+    if (selected === L3_QUESTIONS[l3Index].ans) {
+      showFeedback(true, selected === '4' ? 'four' : null, () => {
+        if (l3Index === 0) { l3Index++; renderL3(); } else { startLevel(4); }
+      });
+    } else {
+      wrongAttempts.push(`L3 Q${l3Index+1} 歲數誤判`);
+      showFeedback(false, null);
+    }
+  }
+
+  // L4
+  function renderL4() {
+    document.getElementById('l4-progress').innerText = `🔤 第 4 關：Phonics 盲測 (第 ${l4Index + 1} / 2 題)`;
+    if (l4Index === 0) {
+      document.getElementById('l4-q1-content').classList.remove('hidden-element');
+      document.getElementById('l4-q2-content').classList.add('hidden-element');
+    } else {
+      document.getElementById('l4-q1-content').classList.add('hidden-element');
+      document.getElementById('l4-q2-content').classList.remove('hidden-element');
+    }
+    replayInstruction();
+  }
+  function checkL4Answer(obj, isCorrect) {
+    if (isCorrect) {
+      showFeedback(true, obj, () => {
+        if (l4Index === 0) { l4Index++; renderL4(); } else { startLevel(5); }
+      });
+    } else {
+      wrongAttempts.push(`L4 Q${l4Index+1} 首音誤選`);
+      playHybridQueue([getWordAudioStep(obj), { type: 'zh', text: '首音唔啱喎，聽清楚再揀啦！' }]);
+    }
+  }
+
+  // L5
+  function renderL5() {
+    document.getElementById('l5-progress').innerText = `🧱 第 5 關：字母積木拼字 (第 ${l5Index + 1} / 2 題)`;
+    document.getElementById('spelling-section').classList.remove('hidden-element');
+    document.getElementById('speak-task').classList.add('hidden-element');
+    setupSpelling();
+    replayInstruction();
+  }
+  function playL5TargetAudio() { playWordNow(L5_QUESTIONS[l5Index].word); }
+  
+  function setupSpelling() {
+    const q = L5_QUESTIONS[l5Index];
+    document.getElementById('l5-emoji').innerText = q.emoji;
+    currentSlot = 0;
+    
+    const slotContainer = document.getElementById('spelling-slots');
+    slotContainer.innerHTML = '';
+    const wordArr = q.word.split('');
+    wordArr.forEach(char => {
+      const div = document.createElement('div');
+      div.className = 'word-slot';
+      div.dataset.expected = char;
+      slotContainer.appendChild(div);
+    });
+
+    const bank = document.getElementById('letter-bank');
+    bank.innerHTML = '';
+    q.letters.forEach(l => {
+      const btn = document.createElement('button');
+      btn.className = 'btn-3d btn-pink text-4xl py-5 px-8 rounded-2xl uppercase';
+      btn.innerText = l;
+      btn.onclick = () => placeLetter(btn, l);
+      bank.appendChild(btn);
+    });
+  }
+
+  function placeLetter(btn, letter) {
+    const slots = document.querySelectorAll('.word-slot');
+    if (currentSlot >= slots.length) return;
+    const expected = slots[currentSlot].dataset.expected;
+
+    if (letter === expected) {
+      slots[currentSlot].innerText = letter;
+      slots[currentSlot].classList.add('filled');
+      btn.classList.add('hidden-element');
+      currentSlot++;
+
+      if (currentSlot === slots.length) {
+        launchFireworks();
+        playHybridQueue([
+          getWordAudioStep(letter),
+          getWordAudioStep(L5_QUESTIONS[l5Index].word),
+          { type: 'zh', text: '拼啱啦！' }
+        ]);
+        setTimeout(() => {
+          if (l5Index === 0) { l5Index++; renderL5(); } 
+          else {
+            document.getElementById('spelling-section').classList.add('hidden-element');
+            document.getElementById('speak-task').classList.remove('hidden-element');
+            playHybridQueue([{ type: 'zh', text: '好叻呀！而家大聲讀呢兩句俾媽媽聽啦！' }]);
+          }
+        }, 1500);
+      } else {
+        playWordNow(letter);
+      }
+    } else {
+      wrongAttempts.push(`L5 Q${l5Index+1} 拼字錯按`);
+      playHybridQueue([getWordAudioStep(letter), { type: 'zh', text: '呢粒字母順序唔啱喎，試下另一粒啦！' }]);
+    }
+  }
+
+  // --- 答對/答錯覆蓋層 ---
+  function showFeedback(isCorrect, wordKeyToPlay, callback) {
+    const overlay = document.getElementById('feedback-overlay');
+    const icon = document.getElementById('feedback-icon');
+    const text = document.getElementById('feedback-text');
+
+    overlay.classList.remove('hidden-element');
+    if (isCorrect) {
+      launchFireworks();
+      icon.textContent = '🌟'; text.textContent = '好嘢！答啱啦！';
+      text.className = 'text-3xl md:text-4xl font-black text-emerald-600 pop-anim';
+      const steps = [];
+      if (wordKeyToPlay) steps.push(getWordAudioStep(wordKeyToPlay));
+      steps.push({ type: 'zh', text: '好嘢！答啱啦！' });
+      playHybridQueue(steps);
+      setTimeout(() => { overlay.classList.add('hidden-element'); if (callback) callback(); }, 2100);
+    } else {
+      icon.textContent = '🤗'; text.textContent = '差少少，試多次啦！';
+      text.className = 'text-3xl md:text-4xl font-black text-amber-600 pop-anim';
+      playHybridQueue([{ type: 'zh', text: '試下隔離嗰個啦！' }]);
+      setTimeout(() => { overlay.classList.add('hidden-element'); }, 1700);
+    }
+  }
+
+  function finishTest() {
+    stopAllAudio();
+    for (let i = 0; i <= 5; i++) {
+      const el = document.getElementById(`level-${i}`);
+      if (el) el.classList.add('hidden-element');
+    }
+    document.getElementById('result-screen').classList.remove('hidden-element');
+    document.querySelectorAll('.lvl-pill').forEach(p => p.className = 'lvl-pill done');
+
+    launchFireworks();
+    setTimeout(launchFireworks, 700);
+    const msg = '恭喜玲玲完成 Unit 4 第二關測試！全部過關，真係超叻女呀！';
+    document.getElementById('anna-text').innerText = msg;
+    playHybridQueue([{ type: 'zh', text: msg }]);
+  }
+
+  function copyCode() {
+    const uniqueErrors = [...new Set(wrongAttempts)];
+    const errorNote = uniqueErrors.length === 0 ? '零失誤一次過關' : `期間曾試錯：${uniqueErrors.join('、')}`;
+    const code = `[Unit 4 Test 2 (en-unit4-test2.html) 已完成！重點考核聽句選圖及拼寫 jump/run 順利通過 (${errorNote})]`;
+
+    navigator.clipboard.writeText(code).then(() => {
+      const btn = document.getElementById('copyBtn');
+      btn.innerText = '✅ 已複製暗號！請貼俾 AI 老師更新進度';
+      btn.style.backgroundColor = '#10B981';
+    });
+  }
+
+  function goHome() {
+    stopAllAudio();
+    window.location.href = 'en-unit4.html';
+  }
+
+  // --- 煙花特效引擎 ---
+  const canvas = document.getElementById('fireworksCanvas');
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+  let animRunning = false;
+  function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  window.addEventListener('resize', resizeCanvas); resizeCanvas();
+  function launchFireworks() {
+    const colors = ['#F43F5E', '#FACC15', '#34D399', '#38BDF8', '#A855F7'];
+    for (let burst = 0; burst < 3; burst++) {
+      const cx = canvas.width * (0.25 + Math.random() * 0.5);
+      const cy = canvas.height * (0.2 + Math.random() * 0.35);
+      for (let i = 0; i < 28; i++) {
+        const a = (Math.PI * 2 * i) / 28; const s = 2 + Math.random() * 4.5;
+        particles.push({ x: cx, y: cy, vx: Math.cos(a) * s, vy: Math.sin(a) * s, alpha: 1, color: colors[Math.floor(Math.random() * colors.length)], size: 4 + Math.random() * 4 });
+      }
+    }
+    if (!animRunning) { animRunning = true; requestAnimationFrame(animateParticles); }
+  }
+  function animateParticles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let i = particles.length - 1; i >= 0; i--) {
+      const p = particles[i]; p.x += p.vx; p.y += p.vy; p.vy += 0.1; p.alpha -= 0.022;
+      if (p.alpha <= 0) particles.splice(i, 1);
+      else { ctx.globalAlpha = p.alpha; ctx.fillStyle = p.color; ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill(); }
+    }
+    ctx.globalAlpha = 1;
+    if (particles.length > 0) requestAnimationFrame(animateParticles); else animRunning = false;
+  }
+</script>
+</body>
+</html>
