@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>中文闖關：我要謝謝你 Test 2</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@700;800&family=Noto+Sans+TC:wght@700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'M PLUS Rounded 1c', 'Noto Sans TC', sans-serif;
+            background: linear-gradient(135deg, #a8c0ff 0%, #5b4bb7 50%, #3f2b96 100%);
+            min-height: 100vh;
+            touch-action: manipulation;
+            user-select: none;
+            -webkit-user-select: none;
+            overflow-x: hidden;
+        }
+
+        /* 浮動背景裝飾 */
+        .float-bg {
+            position: fixed;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.22;
+            animation: floatSlow 7s ease-in-out infinite;
+        }
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-16px) rotate(6deg); }
+        }
+
+        /* 3D 暖奶油色主舞台 */
+        .stage-card {
+            background: linear-gradient(to bottom, #fffdf9, #ffecd2);
+            border-radius: 28px;
+            border: 4px solid #f8cfa1;
+            box-shadow: 0 12px 0 #d9a066, 0 22px 30px -5px rgba(0, 0, 0, 0.25);
+            position: relative;
+            z-index: 10;
+        }
+
+        /* 3D 實體積木按鈕 */
+        .btn-3d {
+            transition: transform 0.1s, box-shadow 0.1s;
+            border-radius: 18px;
+            font-weight: 800;
+            text-align: center;
+            cursor: pointer;
+            border: 2px solid rgba(0,0,0,0.08);
+        }
+        .btn-3d:active {
+            transform: translateY(7px);
+            box-shadow: 0 0px 0 transparent !important;
+        }
+
+        /* 色彩變體 */
+        .btn-blue   { background-color: #60a5fa; color: #ffffff; box-shadow: 0 7px 0 #2563eb; }
+        .btn-green  { background-color: #4ade80; color: #ffffff; box-shadow: 0 7px 0 #16a34a; }
+        .btn-yellow { background-color: #facc15; color: #713f12; box-shadow: 0 7px 0 #ca8a04; }
+        .btn-orange { background-color: #fb923c; color: #ffffff; box-shadow: 0 7px 0 #c2410c; }
+        .btn-red    { background-color: #f87171; color: #ffffff; box-shadow: 0 7px 0 #dc2626; }
+        .btn-purple { background-color: #c084fc; color: #ffffff; box-shadow: 0 7px 0 #9333ea; }
+        .btn-white  { background-color: #ffffff; color: #374151; box-shadow: 0 7px 0 #cbd5e1; }
+
+        /* 動畫特效 */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px) rotate(-3deg); }
+            40%, 80% { transform: translateX(8px) rotate(3deg); }
+        }
+        .shake { animation: shake 0.4s ease-in-out; }
+
+        @keyframes popIn {
+            0% { transform: scale(0.55); opacity: 0; }
+            80% { transform: scale(1.06); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .pop-in { animation: popIn 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+
+        @keyframes eggWobble {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-7deg); }
+            75% { transform: rotate(7deg); }
+        }
+        .egg-wobble { animation: eggWobble 1.6s ease-in-out infinite; }
+
+        @keyframes greenGlow {
+            0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.85); transform: scale(1.06); }
+            70% { box-shadow: 0 0 0 22px rgba(74, 222, 128, 0); transform: scale(1.02); }
+            100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); transform: scale(1); }
+        }
+        .correct-glow {
+            animation: greenGlow 0.6s ease-out;
+            background-color: #4ade80 !important;
+            color: #ffffff !important;
+            border-color: #16a34a !important;
+        }
+
+        /* 全螢幕星星粒子 */
+        .star-particle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            font-size: 28px;
+            animation: starBurst 0.9s ease-out forwards;
+        }
+        @keyframes starBurst {
+            0% { transform: translate(0, 0) scale(0.5) rotate(0deg); opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) scale(1.3) rotate(240deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body class="p-3 md:p-6">
+
+    <!-- 浮動 SVG 雲朵與星星裝飾 -->
+    <svg class="float-bg top-10 left-6 w-24 h-24" viewBox="0 0 100 100" fill="white">
+        <circle cx="35" cy="55" r="22"/><circle cx="58" cy="48" r="26"/><circle cx="75" cy="60" r="18"/>
+    </svg>
+    <svg class="float-bg bottom-12 right-8 w-20 h-20" style="animation-delay: 2s;" viewBox="0 0 100 100" fill="#fde047">
+        <polygon points="50,5 63,36 96,39 71,61 79,94 50,76 21,94 29,61 4,39 37,36"/>
+    </svg>
+
+    <!-- 頂部橫向導航列 (Breadcrumb) -->
+    <nav class="relative z-20 max-w-5xl mx-auto flex flex-wrap justify-between items-center gap-2 mb-5 bg-white/95 backdrop-blur-sm p-3 rounded-2xl shadow-md border-2 border-orange-100">
+        <!-- 左側返回主頁 -->
+        <a href="index.html" onclick="stopSpeech()" class="bg-gray-100 text-gray-700 font-bold py-2 px-4 rounded-xl border-2 border-gray-200 active:bg-gray-200 flex items-center gap-1.5 text-sm md:text-base">
+            🏠 返回
+        </a>
+
+        <!-- 中間橫向進度列 -->
+        <div id="breadcrumb" class="flex flex-wrap items-center justify-center gap-1 md:gap-2.5 text-xs sm:text-sm md:text-base font-bold text-gray-400">
+            <!-- 由 JS 動態生成 -->
+        </div>
+
+        <!-- 右側控制群 -->
+        <div class="flex items-center gap-2">
+            <span class="bg-emerald-50 text-emerald-700 border-2 border-emerald-200 font-bold py-1.5 px-2.5 rounded-xl text-xs md:text-sm hidden lg:inline-flex items-center gap-1">
+                🇭🇰 廣東話
+            </span>
+            <button onclick="shuffleAndRestart()" class="bg-purple-500 text-white font-bold py-2 px-3 rounded-xl shadow-[0_4px_0_#7e22ce] active:translate-y-1 active:shadow-none transition-all text-xs md:text-sm">
+                🎲 洗牌
+            </button>
+            <button onclick="renderLevel(0)" class="bg-orange-500 text-white font-bold py-2 px-3.5 rounded-xl shadow-[0_4px_0_#c2410c] active:translate-y-1 active:shadow-none transition-all text-xs md:text-sm">
+                首頁
+            </button>
+        </div>
+    </nav>
+
+    <!-- 遊戲主舞台 -->
+    <main id="game-container" class="max-w-5xl mx-auto stage-card overflow-hidden p-5 md:p-9 min-h-[460px]">
+        <!-- 關卡動態渲染 -->
+    </main>
+
+    <!-- 音效庫 -->
+    <audio id="snd-correct" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3" preload="auto"></audio>
+    <audio id="snd-wrong" src="https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3" preload="auto"></audio>
+
+<script>
+    // ==========================================
+    // 1. 熟字總庫與錯題追蹤
+    // ==========================================
+    const ALL_LEARNED_WORDS = [
+        '我','你','爸','媽','哥','姐','朋','友','人','家','庭',
+        '眼','耳','口','鼻','手','唱','歌','玩','出',
+        '米','飯','牛','奶','肉','蛋','菜','豆','水','果','香','甜','蜜','糖','紅','白','蔬','食','物',
+        '一','二','三','四','大','小','多','少','上','下','中','不','的',
+        '學','校','室','課','書','圖','畫','愛','好','樂'
+    ];
+
+    let errorLog = {};
+    let currentLevelIndex = 0;
+    let fcTimerInterval = null;
+
+    function recordError(key) {
+        if (!errorLog[key]) errorLog[key] = 0;
+        errorLog[key]++;
+    }
+
+    function clearTimers() {
+        if (fcTimerInterval) {
+            clearInterval(fcTimerInterval);
+            fcTimerInterval = null;
+        }
+    }
+
+    // ==========================================
+    // 2. iPad 標準廣東話女聲引擎 (防吞聲／防疊聲)
+    // ==========================================
+    window.utterancePool = [];
+    let selectedHKVoice = null;
+
+    function loadHKVoice() {
+        if (!('speechSynthesis' in window)) return;
+        const voices = window.speechSynthesis.getVoices();
+        selectedHKVoice =
+            voices.find(v => v.lang === 'zh-HK' && /Sin-ji|Sinji|Tracy|HiuGaai|HiuMaan|Female/i.test(v.name)) ||
+            voices.find(v => v.lang === 'zh-HK') ||
+            voices.find(v => v.lang && v.lang.toLowerCase().includes('hk')) ||
+            null;
+    }
+    if ('speechSynthesis' in window) {
+        loadHKVoice();
+        window.speechSynthesis.onvoiceschanged = loadHKVoice;
+    }
+
+    function stopSpeech() {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+        }
+    }
+
+    function speak(text, callback) {
+        if (!('speechSynthesis' in window)) {
+            if (callback) callback();
+            return;
+        }
+        window.speechSynthesis.cancel();
+        const msg = new SpeechSynthesisUtterance(text);
+        msg.lang = 'zh-HK';
+        if (selectedHKVoice) msg.voice = selectedHKVoice;
+        msg.rate = 0.85;
+        msg.pitch = 1.08;
+
+        window.utterancePool.push(msg);
+        msg.onend = () => {
+            window.utterancePool = window.utterancePool.filter(u => u !== msg);
+            if (callback) callback();
+        };
+        msg.onerror = () => {
+            window.utterancePool = window.utterancePool.filter(u => u !== msg);
+            if (callback) callback();
+        };
+        window.speechSynthesis.speak(msg);
+    }
+
+    function playSound(type) {
+        const snd = document.getElementById(`snd-${type}`);
+        if (snd) {
+            snd.currentTime = 0;
+            snd.play().catch(() => {});
+        }
+    }
+
+    // 全螢幕星星粒子特效
+    function spawnStars(count = 14) {
+        const icons = ['⭐', '✨', '🌟', '💫'];
+        const cx = window.innerWidth / 2;
+        const cy = window.innerHeight / 2;
+        for (let i = 0; i < count; i++) {
+            const el = document.createElement('div');
+            el.className = 'star-particle';
+            el.textContent = icons[Math.floor(Math.random() * icons.length)];
+            const angle = (Math.PI * 2 * i) / count + (Math.random() * 0.4);
+            const dist = 110 + Math.random() * 170;
+            el.style.left = `${cx}px`;
+            el.style.top = `${cy}px`;
+            el.style.setProperty('--tx', `${Math.cos(angle) * dist}px`);
+            el.style.setProperty('--ty', `${Math.sin(angle) * dist}px`);
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 950);
+        }
+    }
+
+    // 工具函數
+    function shuffle(arr) {
+        const copy = [...arr];
+        for (let i = copy.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [copy[i], copy[j]] = [copy[j], copy[i]];
+        }
+        return copy;
+    }
+
+    function getRandomWords(count, excludeWords = []) {
+        const pool = shuffle(ALL_LEARNED_WORDS.filter(w => !excludeWords.includes(w)));
+        return pool.slice(0, count);
+    }
+
+    // ==========================================
+    // 3. Test 2 關卡題庫定義
+    // ==========================================
+    function buildLevelsData(shouldShuffle = false) {
+        const l1Words = ['蜜糖', '翠綠', '新鮮', '蛋糕', '食物', '米飯', '牛奶', '水果', '香氣', '一日三餐'];
+        const l2Questions = [
+            { target: '蜜', deco: ['糖', '甜', '家'] },
+            { target: '香', deco: ['白', '甜', '米'] },
+            { target: '奶', deco: ['牛', '媽', '姐'] },
+            { target: '蛋', deco: ['肉', '豆', '菜'] },
+            { target: '果', deco: ['水', '米', '菜'] },
+            { target: '出', deco: ['上', '下', '中'] }
+        ];
+        const l3Pairs = [
+            ['蜜', '糖'], ['米', '飯'], ['牛', '奶'], ['水', '果'],
+            ['蔬', '菜'], ['新', '鮮'], ['香', '甜']
+        ];
+        const l4Questions = [
+            { hint: '小蜜蜂採花釀出甜甜的＿＿？', speakHint: '小蜜蜂採花釀出甜甜的什麼？', targets: ['蜜', '糖'] },
+            { hint: '米飯＿＿肉和蛋，一日三餐要均衡。', speakHint: '米飯什麼肉和蛋，一日三餐要均衡。', targets: ['牛', '奶'] },
+            { hint: '少吃零食多吃菜，還有＿＿不可減。', speakHint: '少吃零食多吃菜，還有什麼不可減。', targets: ['水', '果'] },
+            { hint: '電飯鍋，一打開，＿＿香氣飄過來。', speakHint: '電飯鍋，一打開，什麼香氣飄過來。', targets: ['米', '飯'] },
+            { hint: '香香的蛋糕、新鮮的＿＿。', speakHint: '香香的蛋糕、新鮮的什麼。', targets: ['食', '物'] }
+        ];
+        const l5Sentences = [
+            ['紅蘿蔔', '是', '蔬菜類', '的食物。'],
+            ['少吃零食', '多吃菜', '。'],
+            ['白飯', '是', '五穀類', '的食物。'],
+            ['米飯牛奶', '肉和蛋', '，', '一日三餐', '要均衡。'],
+            ['電飯鍋', '，一打開，', '米飯香氣', '飄過來。'],
+            ['蝸牛蝸牛', '，喜歡', '慢慢四處遊。']
+        ];
+
+        return [
+            { type: 'lobby', title: '🏰 全單元魔法重溫大廳' },
+            { type: 'flashcard', title: '🥚 Level 1：孵魔法蛋閃卡', words: shouldShuffle ? shuffle(l1Words) : l1Words },
+            { type: 'listen', title: '👂 Level 2：無圖聽音選字', questions: shouldShuffle ? shuffle(l2Questions) : l2Questions },
+            { type: 'train', title: '🚂 Level 3：雙字詞語小火車', pairs: shouldShuffle ? shuffle(l3Pairs) : l3Pairs },
+            { type: 'hunt', title: '🔍 Level 4：字寶寶語境尋寶', questions: shouldShuffle ? shuffle(l4Questions) : l4Questions },
+            { type: 'sentence', title: '🧱 Level 5：句式金句積木重組', sentences: shouldShuffle ? shuffle(l5Sentences) : l5Sentences }
+        ];
+    }
+
+    let LEVELS = buildLevelsData(false);
+
+    const BREADCRUMB_STEPS = [
+        { idx: 1, name: '1.閃卡' },
+        { idx: 2, name: '2.聽音' },
+        { idx: 3, name: '3.火車' },
+        { idx: 4, name: '4.尋寶' },
+        { idx: 5, name: '5.句式' },
+        { idx: 6, name: '結算' }
+    ];
+
+    function updateBreadcrumb(currentIdx) {
+        const bc = document.getElementById('breadcrumb');
+        if (!bc) return;
+        let html = '';
+        BREADCRUMB_STEPS.forEach((step, i) => {
+            const isCurrent = (currentIdx === step.idx) || (currentIdx >= 6 && step.idx === 6);
+            const activeClass = isCurrent
+                ? 'text-orange-500 scale-110 font-extrabold underline decoration-2 underline-offset-4'
+                : 'text-gray-400 hover:text-orange-400 cursor-pointer';
+            html += `<button type="button" onclick="renderLevel(${step.idx})" class="px-1 py-0.5 transition-all ${activeClass}">${step.name}</button>`;
+            if (i < BREADCRUMB_STEPS.length - 1) {
+                html += `<span class="text-orange-300 select-none">➔</span>`;
+            }
+        });
+        bc.innerHTML = html;
+    }
+
+    window.shuffleAndRestart = function() {
+        stopSpeech();
+        clearTimers();
+        errorLog = {};
+        LEVELS = buildLevelsData(true);
+        renderLevel(1);
+    };
+
+    // ==========================================
+    // 4. 關卡總控渲染
+    // ==========================================
+    const container = document.getElementById('game-container');
+
+    window.renderLevel = function(index) {
+        stopSpeech();
+        clearTimers();
+        currentLevelIndex = index;
+
+        if (index >= LEVELS.length) {
+            renderResult();
+            return;
+        }
+
+        updateBreadcrumb(index);
+        container.innerHTML = '';
+
+        const level = LEVELS[index];
+        const header = `<h2 class="text-2xl md:text-3xl font-extrabold text-center text-orange-800 mb-5">${level.title}</h2>`;
+
+        let content = '';
+        if (level.type === 'lobby') content = renderLobby();
+        else if (level.type === 'flashcard') content = renderFlashcard(level);
+        else if (level.type === 'listen') content = renderListen(level);
+        else if (level.type === 'train') content = renderTrain(level);
+        else if (level.type === 'hunt') content = renderHunt(level);
+        else if (level.type === 'sentence') content = renderSentence(level);
+
+        container.innerHTML = header + content;
+
+        if (level.type === 'lobby') {
+            speak('玲玲你好！歡迎嚟到我要謝謝你大挑戰第二關，可以先撳圖卡溫習，或者直接開始闖關！');
+        }
+    };
+
+    // --- 預習大廳 ---
+    function renderLobby() {
+        const cards = [
+            { w: '蜜糖', sub: '甜甜的（舌＋虫）', say: '甜甜的蜜糖。甜字左邊有個舌頭，蜜字下面有條小昆蟲。' },
+            { w: '蔬菜', sub: '翠綠的', say: '翠綠的蔬菜' },
+            { w: '食物', sub: '新鮮的', say: '新鮮的食物' },
+            { w: '蛋糕', sub: '香香的', say: '香香的蛋糕' },
+            { w: '豆', sub: 'P.21 詞語', say: '豆' },
+            { w: '肉', sub: 'P.21 詞語', say: '肉' },
+            { w: '米飯', sub: '兒歌熟字', say: '米飯' },
+            { w: '牛奶', sub: '兒歌熟字', say: '牛奶' },
+            { w: '水果', sub: '兒歌熟字', say: '水果' },
+            { w: '香氣', sub: '米飯香氣', say: '香氣' },
+            { w: '蝸牛', sub: '慢慢四處遊', say: '蝸牛' }
+        ];
+
+        let html = `
+            <p class="text-center text-orange-700/80 font-bold mb-5 text-sm md:text-base">點擊任何一張 3D 魔法卡聽廣東話發音，準備好就出發！</p>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3.5 pb-7">
+        `;
+        cards.forEach(c => {
+            html += `
+                <button type="button" onclick="speak('${c.say}')" class="btn-3d btn-white p-4 flex flex-col items-center justify-center pop-in hover:bg-yellow-50">
+                    <span class="text-3xl md:text-4xl text-indigo-700 mb-1">${c.w}</span>
+                    <span class="text-xs text-gray-500">${c.sub}</span>
+                </button>
+            `;
+        });
+        html += `
+            </div>
+            <div class="text-center">
+                <button type="button" onclick="renderLevel(1)" class="btn-3d btn-green text-xl md:text-2xl px-10 py-4">開始 Test 2 闖關 🚀</button>
+            </div>
+        `;
+        return html;
+    }
+
+    // --- Level 1: 孵魔法蛋 ＋ 10秒限時純文字閃卡 ---
+    let fcIndex = 0;
+    let fcHatched = false;
+    function renderFlashcard(level) {
+        fcIndex = 0;
+        fcHatched = false;
+        setTimeout(() => showFlashcardEgg(), 50);
+        return `<div id="fc-area" class="flex flex-col items-center justify-center min-h-[340px]"></div>`;
+    }
+
+    function showFlashcardEgg() {
+        clearTimers();
+        const words = LEVELS[currentLevelIndex].words;
+        if (fcIndex >= words.length) {
+            renderLevel(currentLevelIndex + 1);
+            return;
+        }
+        fcHatched = false;
+        const area = document.getElementById('fc-area');
+        area.innerHTML = `
+            <div class="text-sm font-bold text-orange-600 mb-3">第 ${fcIndex + 1} / ${words.length} 隻魔法蛋</div>
+            <button type="button" onclick="hatchEgg()" class="egg-wobble bg-gradient-to-b from-yellow-200 via-amber-300 to-orange-400 w-44 h-56 rounded-[50%_50%_45%_45%] border-4 border-amber-600 shadow-xl flex flex-col items-center justify-center cursor-pointer mb-5">
+                <span class="text-6xl">🥚</span>
+                <span class="text-amber-900 font-extrabold mt-2 text-lg">點我孵蛋！</span>
+            </button>
+            <p class="text-gray-500 font-bold">敲開魔法蛋後，請在 10 秒內大聲讀出中文字！</p>
+        `;
+        if (fcIndex === 0) speak('第一關，敲開魔法蛋，大聲讀出字寶寶！');
+    }
+
+    window.hatchEgg = function() {
+        if (fcHatched) return;
+        fcHatched = true;
+        playSound('correct');
+        const words = LEVELS[currentLevelIndex].words;
+        const w = words[fcIndex];
+        let timeLeft = 10;
+
+        const area = document.getElementById('fc-area');
+        area.innerHTML = `
+            <div class="flex items-center gap-4 mb-4">
+                <span class="text-sm font-bold text-orange-600">第 ${fcIndex + 1} / ${words.length} 張</span>
+                <span id="fc-timer" class="bg-red-100 text-red-600 border-2 border-red-300 px-3 py-1 rounded-full font-extrabold text-lg">⏱️ 10s</span>
+            </div>
+            <div class="w-72 h-56 bg-white border-4 border-yellow-400 rounded-3xl flex items-center justify-center shadow-xl pop-in mb-7 px-4">
+                <span class="${w.length >= 4 ? 'text-5xl' : 'text-7xl'} font-black text-gray-800 tracking-wider">${w}</span>
+            </div>
+            <div class="flex flex-wrap justify-center gap-4">
+                <button type="button" onclick="finishFlashcard(false)" class="btn-3d btn-yellow px-6 py-3 text-lg md:text-xl">需要提示 💡</button>
+                <button type="button" onclick="finishFlashcard(true)" class="btn-3d btn-green px-6 py-3 text-lg md:text-xl">1次答對 🌟</button>
+            </div>
+        `;
+
+        fcTimerInterval = setInterval(() => {
+            timeLeft--;
+            const timerEl = document.getElementById('fc-timer');
+            if (timerEl) timerEl.textContent = `⏱️ ${Math.max(0, timeLeft)}s`;
+            if (timeLeft <= 0) {
+                clearTimers();
+                if (timerEl) timerEl.textContent = '⏱️ 時間到！';
+            }
+        }, 1000);
+    };
+
+    window.finishFlashcard = function(isCorrect) {
+        clearTimers();
+        const words = LEVELS[currentLevelIndex].words;
+        const w = words[fcIndex];
+        if (isCorrect) {
+            playSound('correct');
+            spawnStars(10);
+        } else {
+            recordError(`閃卡:${w}`);
+            speak(w);
+        }
+        fcIndex++;
+        setTimeout(() => showFlashcardEgg(), isCorrect ? 450 : 900);
+    };
+
+    // --- Level 2: 無圖聽音選字 ---
+    let l2Index = 0;
+    function renderListen(level) {
+        l2Index = 0;
+        setTimeout(() => buildListenUI(), 50);
+        return `<div id="l2-area" class="flex flex-col items-center min-h-[340px]"></div>`;
+    }
+
+    function buildListenUI() {
+        const qs = LEVELS[currentLevelIndex].questions;
+        if (l2Index >= qs.length) return renderLevel(currentLevelIndex + 1);
+        const q = qs[l2Index];
+        const options = shuffle([q.target, ...q.deco]);
+
+        let html = `
+            <div class="text-sm font-bold text-orange-600 mb-3">第 ${l2Index + 1} / ${qs.length} 題</div>
+            <button type="button" onclick="speak('請找出，${q.target}')" class="btn-3d btn-blue w-24 h-24 rounded-full flex flex-col items-center justify-center mb-7 pop-in">
+                <span class="text-4xl">🔊</span>
+                <span class="text-xs mt-0.5">再聽一次</span>
+            </button>
+            <div class="grid grid-cols-2 gap-5 w-full max-w-md">
+        `;
+        options.forEach(opt => {
+            html += `<button type="button" onclick="checkL2('${opt}', '${q.target}', this)" class="btn-3d btn-white h-24 text-5xl font-black text-gray-800">${opt}</button>`;
+        });
+        html += `</div>`;
+        document.getElementById('l2-area').innerHTML = html;
+        speak(`請找出，${q.target}`);
+    }
+
+    window.checkL2 = function(selected, target, btn) {
+        if (btn.disabled) return;
+        if (selected === target) {
+            btn.disabled = true;
+            playSound('correct');
+            btn.classList.add('correct-glow');
+            spawnStars(12);
+            setTimeout(() => { l2Index++; buildListenUI(); }, 800);
+        } else {
+            playSound('wrong');
+            btn.classList.add('shake', 'btn-red');
+            recordError(`聽音:${target}`);
+            setTimeout(() => btn.classList.remove('shake', 'btn-red'), 500);
+        }
+    };
+
+    // --- Level 3: 雙字詞語小火車 (Anna 仙女 SVG ＋ 3D 小火車) ---
+    let l3Index = 0;
+    function renderTrain(level) {
+        l3Index = 0;
+        setTimeout(() => buildTrainUI(), 50);
+        return `<div id="l3-area" class="flex flex-col items-center min-h-[340px]"></div>`;
+    }
+
+    function getAnnaSVG() {
+        return `
+        <svg class="w-20 h-20 drop-shadow-md flex-shrink-0" viewBox="0 0 100 100">
+            <circle cx="50" cy="52" r="34" fill="#fde68a" stroke="#f59e0b" stroke-width="4"/>
+            <path d="M22 45 Q50 10 78 45" fill="#92400e"/>
+            <circle cx="38" cy="52" r="4.5" fill="#1f2937"/>
+            <circle cx="62" cy="52" r="4.5" fill="#1f2937"/>
+            <circle cx="32" cy="60" r="5" fill="#fca5a5" opacity="0.7"/>
+            <circle cx="68" cy="60" r="5" fill="#fca5a5" opacity="0.7"/>
+            <path d="M40 65 Q50 75 60 65" fill="none" stroke="#b45309" stroke-width="4" stroke-linecap="round"/>
+            <polygon points="50,6 54,18 66,18 56,25 60,36 50,29 40,36 44,25 34,18 46,18" fill="#facc15" stroke="#ca8a04" stroke-width="2"/>
+        </svg>`;
+    }
+
+    function buildTrainUI() {
+        const pairs = LEVELS[currentLevelIndex].pairs;
+        if (l3Index >= pairs.length) return renderLevel(currentLevelIndex + 1);
+        const [word1, word2] = pairs[l3Index];
+        const distractors = getRandomWords(3, [word1, word2]);
+        const options = shuffle([word2, ...distractors]);
+
+        let html = `
+            <div class="text-sm font-bold text-orange-600 mb-3">第 ${l3Index + 1} / ${pairs.length} 列小火車</div>
+            <div class="flex items-center justify-center gap-2 mb-9 pop-in">
+                ${getAnnaSVG()}
+                <div class="relative flex items-end gap-2">
+                    <div class="bg-red-500 text-white w-24 h-24 flex items-center justify-center text-5xl font-black rounded-l-3xl rounded-tr-xl border-4 border-red-700 shadow-[0_8px_0_#991b1b]">
+                        ${word1}
+                    </div>
+                    <div class="w-4 h-3 bg-gray-700 mb-8 rounded"></div>
+                    <div id="train-slot" class="bg-white/80 border-4 border-dashed border-amber-500 w-24 h-24 rounded-r-3xl rounded-tl-xl flex items-center justify-center text-4xl font-black text-amber-400 shadow-inner">
+                        ?
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full max-w-xl">
+        `;
+        options.forEach(opt => {
+            html += `<button type="button" onclick="checkL3('${opt}', '${word2}', '${word1}', this)" class="btn-3d btn-white h-20 text-4xl font-black border-4 border-blue-200">${opt}</button>`;
+        });
+        html += `</div>`;
+        document.getElementById('l3-area').innerHTML = html;
+        speak(`幫小火車駁車廂，${word1}，配邊個字？`);
+    }
+
+    window.checkL3 = function(selected, target, word1, btn) {
+        if (btn.disabled) return;
+        if (selected === target) {
+            btn.disabled = true;
+            playSound('correct');
+            btn.classList.add('correct-glow');
+            const slot = document.getElementById('train-slot');
+            if (slot) {
+                slot.textContent = target;
+                slot.className = 'bg-emerald-500 text-white border-4 border-emerald-700 w-24 h-24 rounded-r-3xl rounded-tl-xl flex items-center justify-center text-5xl font-black shadow-[0_8px_0_#047857] pop-in';
+            }
+            spawnStars(14);
+            speak(`${word1}${target}！好叻呀！`);
+            setTimeout(() => { l3Index++; buildTrainUI(); }, 1250);
+        } else {
+            playSound('wrong');
+            btn.classList.add('shake', 'btn-red');
+            recordError(`火車:${word1}${target}`);
+            setTimeout(() => btn.classList.remove('shake', 'btn-red'), 500);
+        }
+    };
+
+    // --- Level 4: 全字庫 4x4 語境尋寶 ---
+    let l4Index = 0;
+    let l4Found = 0;
+    function renderHunt(level) {
+        l4Index = 0;
+        setTimeout(() => buildHuntUI(), 50);
+        return `<div id="l4-area" class="flex flex-col items-center min-h-[360px]"></div>`;
+    }
+
+    function buildHuntUI() {
+        const qs = LEVELS[currentLevelIndex].questions;
+        if (l4Index >= qs.length) return renderLevel(currentLevelIndex + 1);
+        const q = qs[l4Index];
+        l4Found = 0;
+
+        const distractors = getRandomWords(14, q.targets);
+        const options = shuffle([...q.targets, ...distractors]);
+
+        let html = `
+            <div class="text-sm font-bold text-orange-600 mb-2">第 ${l4Index + 1} / ${qs.length} 題（找出 2 個字寶寶）</div>
+            <div class="bg-blue-50 p-4 rounded-2xl border-2 border-blue-200 mb-5 w-full max-w-xl text-center">
+                <p class="text-xl md:text-2xl text-blue-900 font-extrabold mb-3">${q.hint}</p>
+                <button type="button" onclick="speak('${q.speakHint}')" class="btn-3d btn-blue px-5 py-1.5 text-sm md:text-base">🔊 聽語境提示</button>
+            </div>
+            <div class="grid grid-cols-4 gap-3 w-full max-w-md mx-auto">
+        `;
+        options.forEach(opt => {
+            const isTarget = q.targets.includes(opt);
+            html += `<button type="button" onclick="checkL4('${opt}', ${isTarget}, this, '${q.targets.join('')}')" class="btn-3d btn-white h-16 md:h-20 text-3xl font-black">${opt}</button>`;
+        });
+        html += `</div>`;
+        document.getElementById('l4-area').innerHTML = html;
+        speak(q.speakHint);
+    }
+
+    window.checkL4 = function(selected, isTarget, btn, targetStr) {
+        if (btn.classList.contains('correct-glow')) return;
+        if (isTarget) {
+            playSound('correct');
+            btn.classList.add('correct-glow');
+            l4Found++;
+            if (l4Found >= 2) {
+                spawnStars(14);
+                speak(`搵到${targetStr}啦！`);
+                setTimeout(() => { l4Index++; buildHuntUI(); }, 1100);
+            }
+        } else {
+            playSound('wrong');
+            btn.classList.add('shake', 'btn-red');
+            recordError(`尋寶:${targetStr}`);
+            setTimeout(() => btn.classList.remove('shake', 'btn-red'), 500);
+        }
+    };
+
+    // --- Level 5: 句式與兒歌金句積木重組 ＋ 親子朗讀打卡 ---
+    let l5Index = 0;
+    let l5Blocks = [];
+    let l5Ans = [];
+
+    function renderSentence(level) {
+        l5Index = 0;
+        setTimeout(() => buildSentenceUI(), 50);
+        return `<div id="l5-area" class="flex flex-col items-center min-h-[360px]"></div>`;
+    }
+
+    function buildSentenceUI() {
+        const sentences = LEVELS[currentLevelIndex].sentences;
+        if (l5Index >= sentences.length) return renderLevel(currentLevelIndex + 1);
+        const targetArr = sentences[l5Index];
+        l5Blocks = shuffle(targetArr);
+        // 避免洗牌後剛好與原句完全一致
+        if (l5Blocks.join('') === targetArr.join('') && targetArr.length > 1) {
+            [l5Blocks[0], l5Blocks[1]] = [l5Blocks[1], l5Blocks[0]];
+        }
+        l5Ans = [];
+        drawSentenceUI(targetArr);
+        speak('請按順序點擊積木，排成正確嘅句子。');
+    }
+
+    function drawSentenceUI(targetArr) {
+        const sentences = LEVELS[currentLevelIndex].sentences;
+        const area = document.getElementById('l5-area');
+        const fullSentence = targetArr.join('');
+
+        let ansHtml = `
+            <div class="text-sm font-bold text-orange-600 mb-3">第 ${l5Index + 1} / ${sentences.length} 句</div>
+            <div class="flex flex-wrap gap-2.5 mb-7 min-h-[76px] p-4 bg-white/80 rounded-2xl w-full max-w-2xl border-4 border-dashed border-amber-300 items-center justify-center">
+        `;
+        if (l5Ans.length === 0) {
+            ansHtml += `<span class="text-gray-400 font-bold">點擊下方積木組裝句子...</span>`;
+        } else {
+            l5Ans.forEach((txt, idx) => {
+                ansHtml += `<button type="button" onclick="l5Remove(${idx})" class="bg-emerald-100 border-2 border-emerald-500 text-emerald-900 px-4 py-2 text-xl md:text-2xl font-extrabold rounded-xl shadow-sm active:scale-95">${txt}</button>`;
+            });
+        }
+        ansHtml += `</div>`;
+
+        let srcHtml = `<div class="flex flex-wrap gap-3 justify-center w-full max-w-2xl">`;
+        l5Blocks.forEach((txt, idx) => {
+            srcHtml += `<button type="button" onclick="l5Add(${idx})" class="btn-3d btn-yellow px-4 py-3 text-xl md:text-2xl">${txt}</button>`;
+        });
+        srcHtml += `</div>`;
+
+        let btnHtml = '';
+        if (l5Blocks.length === 0) {
+            if (l5Ans.join('') === fullSentence) {
+                playSound('correct');
+                spawnStars(14);
+                btnHtml = `
+                    <div class="mt-7 text-center pop-in bg-emerald-50 border-2 border-emerald-300 rounded-2xl p-5 w-full max-w-xl">
+                        <p class="text-emerald-700 font-extrabold text-xl mb-3">🌟 排啱啦！一齊大聲朗讀：</p>
+                        <p class="text-2xl md:text-3xl font-black text-gray-800 mb-4">${fullSentence}</p>
+                        <div class="flex flex-wrap justify-center gap-3">
+                            <button type="button" onclick="speak('${fullSentence}')" class="btn-3d btn-blue px-5 py-3 text-lg">🔊 聽老師讀</button>
+                            <button type="button" onclick="nextL5()" class="btn-3d btn-green px-7 py-3 text-lg">親子朗讀打卡 ✅</button>
+                        </div>
+                    </div>
+                `;
+            } else {
+                playSound('wrong');
+                recordError(`句式:${fullSentence}`);
+                btnHtml = `
+                    <div class="mt-7 text-center pop-in">
+                        <p class="text-red-500 font-extrabold text-xl mb-3">哎呀，次序仲差少少，再試多次呀！</p>
+                        <button type="button" onclick="l5Reset()" class="btn-3d btn-red px-7 py-3 text-lg">重頭排過 🔄</button>
+                    </div>
+                `;
+            }
+        }
+
+        area.innerHTML = ansHtml + srcHtml + btnHtml;
+    }
+
+    window.l5Add = function(idx) {
+        l5Ans.push(l5Blocks[idx]);
+        l5Blocks.splice(idx, 1);
+        drawSentenceUI(LEVELS[currentLevelIndex].sentences[l5Index]);
+    };
+
+    window.l5Remove = function(idx) {
+        l5Blocks.push(l5Ans[idx]);
+        l5Ans.splice(idx, 1);
+        drawSentenceUI(LEVELS[currentLevelIndex].sentences[l5Index]);
+    };
+
+    window.l5Reset = function() {
+        const targetArr = LEVELS[currentLevelIndex].sentences[l5Index];
+        l5Blocks = shuffle(targetArr);
+        l5Ans = [];
+        drawSentenceUI(targetArr);
+    };
+
+    window.nextL5 = function() {
+        l5Index++;
+        buildSentenceUI();
+    };
+
+    // ==========================================
+    // 5. 獎盃結算與一鍵複製暗號
+    // ==========================================
+    function renderResult() {
+        updateBreadcrumb(6);
+        playSound('correct');
+        spawnStars(20);
+        speak('恭喜玲玲闖關成功！你真係好叻呀！');
+
+        const errorKeys = Object.keys(errorLog);
+        let errorListHtml = '';
+
+        if (errorKeys.length === 0) {
+            errorListHtml = `<p class="text-emerald-600 font-extrabold text-2xl my-4">完美過關！全部一次全對！🎉</p>`;
+        } else {
+            errorListHtml = `
+                <div class="bg-red-50 border-2 border-red-200 rounded-2xl p-4 my-5 text-left max-w-md mx-auto">
+                    <p class="text-red-600 font-extrabold mb-2 text-lg">🔍 家長錯題診斷（需加強／提示項目）：</p>
+                    <ul class="list-disc pl-5 text-gray-700 text-base md:text-lg space-y-1">
+                        ${errorKeys.map(k => `<li><span class="font-bold">${k}</span>（錯誤／提示：${errorLog[k]} 次）</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+        }
+
+        const reportCode = `【中文盲測回報】P.21-25 Test 2 | 錯誤字詞: ${errorKeys.length === 0 ? '無' : errorKeys.join(', ')}`;
+
+        container.innerHTML = `
+            <div class="text-center pop-in py-6">
+                <div class="text-8xl mb-3">🏆</div>
+                <h2 class="text-3xl md:text-4xl font-black text-orange-600 mb-3">《我要謝謝你》Test 2 通關！</h2>
+                ${errorListHtml}
+                <div class="flex flex-wrap justify-center gap-4 mt-6">
+                    <button type="button" id="copy-btn" onclick="copyReport()" class="btn-3d btn-blue text-lg md:text-xl px-8 py-4">
+                        📋 一鍵複製測驗暗號
+                    </button>
+                    <button type="button" onclick="shuffleAndRestart()" class="btn-3d btn-purple text-lg md:text-xl px-7 py-4">
+                        🎲 洗牌再挑戰
+                    </button>
+                </div>
+                <textarea id="report-hidden" class="sr-only" readonly>${reportCode}</textarea>
+                <p class="text-gray-500 text-sm mt-4">複製後貼回對話框，AI 老師就會自動幫玲玲更新雲端學習總庫！</p>
+            </div>
+        `;
+    }
+
+    window.copyReport = function() {
+        const text = document.getElementById('report-hidden').value;
+        const btn = document.getElementById('copy-btn');
+        const onCopied = () => {
+            if (btn) btn.textContent = '✅ 已複製暗號！';
+            alert('✅ 測驗暗號已複製！請貼回畀 AI 老師更新進度。');
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(onCopied).catch(() => fallbackCopy(text, onCopied));
+        } else {
+            fallbackCopy(text, onCopied);
+        }
+    };
+
+    function fallbackCopy(text, cb) {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        cb();
+    }
+
+    // 初始化啟動
+    renderLevel(0);
+</script>
+</body>
+</html>
