@@ -1,6 +1,6 @@
 (function () {
   // ▼ 只需將下面引號內的文字替換成你第一步複製的 Apps Script 網頁應用程式網址
-  var CLOUD_API_URL = "請替換成你的Apps_Script網址";
+  var CLOUD_API_URL = "https://script.google.com/macros/s/AKfycbwQ2ddWL9Fgq_cwA5F_WFp5dPQ-lr0mjQAga8rlSxX2jiVBBVn82xo9oR0TRkCQTchafA/exec";
   var LOCAL_KEY = "lingling_pending_reports_v1";
 
   function formatNow() {
