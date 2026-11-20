@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>玲玲中文AI課堂｜《我要謝謝你》Day 9 三首兒歌綜合複習</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* iPad Safari 終極防護引擎：防雙擊放大鎖與版面鎖定 */
+    * {
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    body {
+      display: block !important;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      font-family: "PingFang HK", "Heiti TC", "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+      background: linear-gradient(135deg, #EFF6FF 0%, #FEF3C7 50%, #F0FDF4 100%);
+      color: #1E293B;
+      overflow-x: hidden;
+    }
+
+    /* 局部解鎖 textarea，確保媽媽可長按複製成績暗號 */
+    textarea {
+      user-select: text !important;
+      -webkit-user-select: text !important;
+    }
+
+    /* 3D 立體按鈕與卡片 */
+    .card-3d {
+      background: #FFFFFF;
+      border: 4px solid #CBD5E1;
+      box-shadow: 0 8px 0 #94A3B8, 0 12px 20px rgba(15, 23, 42, 0.08);
+      border-radius: 28px;
+      transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.2s ease, background-color 0.2s ease;
+    }
+    .card-3d:active {
+      transform: translateY(5px);
+      box-shadow: 0 3px 0 #94A3B8, 0 6px 10px rgba(15, 23, 42, 0.08);
+    }
+    .card-correct {
+      background: #F0FDF4 !important;
+      border-color: #34D399 !important;
+      box-shadow: 0 8px 0 #10B981, 0 12px 20px rgba(16, 185, 129, 0.18) !important;
+      transform: scale(1.03);
+    }
+
+    .btn-primary {
+      background: linear-gradient(180deg, #3B82F6 0%, #2563EB 100%);
+      border: 4px solid #DBEAFE;
+      box-shadow: 0 7px 0 #1D4ED8, 0 10px 18px rgba(29, 78, 216, 0.25);
+      color: #FFFFFF;
+      border-radius: 9999px;
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+    .btn-primary:active {
+      transform: translateY(5px);
+      box-shadow: 0 2px 0 #1D4ED8;
+    }
+
+    /* Anna 老師黃色常駐橫幅 */
+    .tutor-banner {
+      background: linear-gradient(90deg, #FEF08A 0%, #FDE047 100%);
+      border: 4px solid #FACC15;
+      box-shadow: 0 6px 0 #EAB308;
+      border-radius: 24px;
+      cursor: pointer;
+    }
+    .tutor-banner:active {
+      transform: translateY(3px);
+      box-shadow: 0 3px 0 #EAB308;
+    }
+
+    /* 溫柔搖晃提示（零壓力，不設紅叉） */
+    .wrong-shake {
+      animation: shakeGentle 0.45s ease;
+      background: #FEF2F2 !important;
+      border-color: #FCA5A5 !important;
+    }
+    @keyframes shakeGentle {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-8px) rotate(-2deg); }
+      75% { transform: translateX(8px) rotate(2deg); }
+    }
+
+    /* 方格字牆靜音圈字按鈕 */
+    .grid-char-btn {
+      position: relative;
+      background: #FFFFFF;
+      border: 4px solid #BFDBFE;
+      box-shadow: 0 5px 0 #3B82F6;
+      border-radius: 20px;
+      transition: transform 0.12s ease, background-color 0.15s ease, border-color 0.15s ease;
+    }
+    .grid-char-btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 2px 0 #3B82F6;
+    }
+    /* 點中後畫上醒目紅圈 ⭕，再點可取消 */
+    .grid-char-btn.circled {
+      background: #FEF2F2 !important;
+      border-color: #EF4444 !important;
+      box-shadow: 0 5px 0 #DC2626 !important;
+      color: #DC2626 !important;
+    }
+    .grid-char-btn.circled::after {
+      content: "⭕";
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.4rem;
+      opacity: 0.72;
+      pointer-events: none;
+    }
+
+    /* 煙花粒子 */
+    .confetti-piece {
+      position: fixed;
+      width: 14px;
+      height: 14px;
+      border-radius: 4px;
+      pointer-events: none;
+      z-index: 9999;
+      animation: confettiFall 1.3s ease-out forwards;
+    }
+    @keyframes confettiFall {
+      0% { transform: translate(0, 0) rotate(0deg) scale(1); opacity: 1; }
+      100% { transform: translate(var(--dx), var(--dy)) rotate(540deg) scale(0.4); opacity: 0; }
+    }
+
+    /* 成績報告表格 */
+    .report-table { width: 100%; border-collapse: collapse; border-radius: 18px; overflow: hidden; font-size: 1.1rem; }
+    .report-table th { background: #2563EB; color: #FFFFFF; padding: 12px 10px; font-weight: 900; text-align: center; }
+    .report-table td { padding: 12px 10px; border-bottom: 2px solid #DBEAFE; text-align: center; font-weight: 800; color: #1E293B; }
+    .report-table tr:nth-child(even) td { background: #EFF6FF; }
+  </style>
+</head>
+<body class="pb-10">
+
+  <!-- 頂部導航欄 -->
+  <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b-4 border-slate-200 px-4 py-3 shadow-sm">
+    <div class="max-w-5xl mx-auto flex flex-wrap items-center justify-between gap-2">
+      <button onclick="handleBackHome()" class="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-800 font-extrabold text-xl px-4 py-2 rounded-2xl border-2 border-slate-300 shadow-sm active:scale-95">
+        <span>🏠</span><span>返回</span>
+      </button>
+
+      <!-- 關卡進度地圖 (可點擊跳轉) -->
+      <div class="flex items-center gap-1 sm:gap-2 bg-blue-50 px-2 py-1.5 rounded-2xl border-2 border-blue-200">
+        <button id="mapBadge1" onclick="navToStage(1)" class="px-2.5 py-1 rounded-xl text-sm sm:text-base font-extrabold cursor-pointer transition-all active:scale-95">1.聽音辨詞</button>
+        <span class="text-blue-400 font-bold hidden sm:inline">➔</span>
+        <button id="mapBadge2" onclick="navToStage(2)" class="px-2.5 py-1 rounded-xl text-sm sm:text-base font-extrabold cursor-pointer transition-all active:scale-95">2.兒歌接龍</button>
+        <span class="text-blue-400 font-bold hidden sm:inline">➔</span>
+        <button id="mapBadge3" onclick="navToStage(3)" class="px-2.5 py-1 rounded-xl text-sm sm:text-base font-extrabold cursor-pointer transition-all active:scale-95">3.靜音圈字</button>
+        <span class="text-blue-400 font-bold hidden sm:inline">➔</span>
+        <button id="mapBadge4" onclick="navToStage(4)" class="px-2.5 py-1 rounded-xl text-sm sm:text-base font-extrabold cursor-pointer transition-all active:scale-95">結算</button>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <span class="bg-emerald-100 text-emerald-800 border-2 border-emerald-300 font-extrabold text-base sm:text-lg px-3 py-1.5 rounded-2xl hidden sm:inline-block">🇭🇰 廣東話</span>
+        <span id="stageIndicator" class="bg-blue-600 text-white font-extrabold text-base sm:text-lg px-3 py-1.5 rounded-2xl">首頁</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 pt-4">
+    <!-- Anna 老師黃色常駐橫幅 -->
+    <div id="tutorBanner" onclick="replayTutorGuide()" class="tutor-banner p-4 sm:p-5 mb-5 flex items-center gap-4">
+      <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white border-4 border-amber-400 flex items-center justify-center text-4xl sm:text-5xl shrink-0 shadow-inner">👩‍🏫</div>
+      <div class="flex-1">
+        <div class="flex items-center gap-2 mb-1">
+          <span class="bg-amber-500 text-white text-sm sm:text-base font-extrabold px-3 py-0.5 rounded-full">Anna 老師帶讀</span>
+          <span class="text-amber-900 text-sm sm:text-base font-bold">🔊 點擊呢度重聽語音指引</span>
+        </div>
+        <p id="tutorText" class="text-xl sm:text-2xl font-extrabold text-amber-950 leading-snug">
+          玲玲你好！歡迎嚟到 Day 9 三首兒歌綜合複習大挑戰！
+        </p>
+      </div>
+    </div>
+
+    <!-- ==================== 0. 歡迎首頁 ==================== -->
+    <section id="section-0" class="lesson-section text-center py-6">
+      <div class="card-3d p-8 sm:p-10 bg-white/95 border-blue-300">
+        <div class="text-7xl sm:text-8xl mb-4">🎵🍚🐌</div>
+        <div class="inline-block bg-blue-100 text-blue-800 font-extrabold text-xl px-5 py-1.5 rounded-full border-2 border-blue-300 mb-3">
+          P.21–25 單元 · Day 9（P.23–25 三首兒歌綜合複習）
+        </div>
+        <h1 class="text-4xl sm:text-5xl font-black text-blue-900 mb-4 leading-tight">
+          三首兒歌大串燒與語境拆詞
+        </h1>
+        <p class="text-2xl sm:text-3xl font-bold text-slate-700 mb-8 leading-relaxed">
+          一次過重溫《均衡飲食》、《米飯哪裏來？》同《蝸牛》，<br class="hidden sm:inline" />仲有兒歌接龍同方格字牆「零提示紅圈自讀」！
+        </p>
+        <button onclick="navToStage(1)" class="btn-primary text-3xl sm:text-4xl font-black px-10 py-5 inline-flex items-center gap-3">
+          <span>🚀</span><span>開始 Day 9 綜合複習！</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ==================== 第一幕：語境拆詞與純文字聽音辨字 (4 題) ==================== -->
+    <section id="section-1" class="lesson-section hidden">
+      <div class="card-3d p-6 sm:p-8 text-center border-blue-300">
+        <div class="inline-block bg-blue-100 text-blue-800 font-black text-xl px-5 py-1.5 rounded-full border-2 border-blue-300 mb-3">
+          第一幕：語境拆詞・純文字聽音辨字
+        </div>
+        <h2 id="q1Title" class="text-3xl sm:text-4xl font-black text-slate-800 mb-6">
+          🔊 聽清楚讀音，搵出正確詞語！
+        </h2>
+
+        <div class="mb-6">
+          <button onclick="playCurrentQ1Audio()" class="btn-primary text-2xl font-black px-8 py-4 inline-flex items-center gap-3 shadow-lg">
+            <span>🔊</span><span>重聽呢題</span>
+          </button>
+        </div>
+
+        <div id="q1OptionsGrid" class="grid grid-cols-1 sm:grid-cols-3 gap-5 max-w-3xl mx-auto mb-4">
+          <!-- 動態載入純文字選項（無圖片防靠估） -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 第二幕：三首兒歌精華逐句慢讀 ＋ 語境接龍 ==================== -->
+    <section id="section-2" class="lesson-section hidden">
+      <!-- 子階段 2A：三首兒歌精華逐句慢讀 -->
+      <div id="stage2-read" class="card-3d p-6 sm:p-8 text-center border-emerald-300">
+        <div class="inline-block bg-emerald-100 text-emerald-800 font-black text-xl px-5 py-1.5 rounded-full border-2 border-emerald-300 mb-3">
+          第二幕：三首兒歌精華逐句慢讀
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-black text-slate-800 mb-5">
+          《均衡飲食》·《米飯哪裏來？》·《蝸牛》
+        </h2>
+
+        <!-- 頂部僅保留一個「🎵 聽全段」按鈕 -->
+        <div class="mb-6">
+          <button onclick="speakCantonese('米飯牛奶肉和蛋，少吃零食多吃菜。電飯鍋，一打開，米飯香氣飄過來。蝸牛、蝸牛，背着房子也不愁。', 0.9)" class="bg-emerald-100 text-emerald-900 border-4 border-emerald-300 font-black text-2xl px-8 py-3 rounded-full hover:bg-emerald-200 active:scale-95 transition-all">
+            🎵 聽全段
+          </button>
+        </div>
+
+        <!-- 每句獨立行，最右邊配置獨立慢速喇叭 (rate: 0.78) -->
+        <div class="flex flex-col gap-4 max-w-2xl mx-auto mb-8 text-3xl sm:text-4xl font-black text-slate-800">
+          <div class="flex items-center justify-between gap-3 bg-green-50 p-4 rounded-2xl border-2 border-green-200">
+            <span class="text-left">米飯牛奶肉和蛋，</span>
+            <button onclick="speakCantonese('米飯牛奶肉和蛋', 0.78)" class="shrink-0 bg-white text-emerald-700 border-2 border-emerald-300 text-xl font-extrabold px-4 py-2 rounded-xl active:scale-95 shadow-sm">🔊 聽呢句</button>
+          </div>
+          <div class="flex items-center justify-between gap-3 bg-green-50 p-4 rounded-2xl border-2 border-green-200">
+            <span class="text-left">少吃零食多吃菜，</span>
+            <button onclick="speakCantonese('少吃零食多吃菜', 0.78)" class="shrink-0 bg-white text-emerald-700 border-2 border-emerald-300 text-xl font-extrabold px-4 py-2 rounded-xl active:scale-95 shadow-sm">🔊 聽呢句</button>
+          </div>
+          <div class="flex items-center justify-between gap-3 bg-amber-50 p-4 rounded-2xl border-2 border-amber-200">
+            <span class="text-left">電飯鍋，一打開，</span>
+            <button onclick="speakCantonese('電飯鍋，一打開', 0.78)" class="shrink-0 bg-white text-amber-700 border-2 border-amber-300 text-xl font-extrabold px-4 py-2 rounded-xl active:scale-95 shadow-sm">🔊 聽呢句</button>
+          </div>
+          <div class="flex items-center justify-between gap-3 bg-amber-50 p-4 rounded-2xl border-2 border-amber-200">
+            <span class="text-left">米飯香氣飄過來。</span>
+            <button onclick="speakCantonese('米飯香氣飄過來', 0.78)" class="shrink-0 bg-white text-amber-700 border-2 border-amber-300 text-xl font-extrabold px-4 py-2 rounded-xl active:scale-95 shadow-sm">🔊 聽呢句</button>
+          </div>
+          <div class="flex items-center justify-between gap-3 bg-sky-50 p-4 rounded-2xl border-2 border-sky-200">
+            <span class="text-left">蝸牛、蝸牛，背着房子也不愁。</span>
+            <button onclick="speakCantonese('蝸牛、蝸牛，背着房子也不愁', 0.78)" class="shrink-0 bg-white text-sky-700 border-2 border-sky-300 text-xl font-extrabold px-4 py-2 rounded-xl active:scale-95 shadow-sm">🔊 聽呢句</button>
+          </div>
+        </div>
+
+        <div class="flex justify-center">
+          <button onclick="startStage2Chain()" class="btn-primary text-2xl font-black px-10 py-4 rounded-full">
+            ✅ 讀完啦！玩 2 題兒歌接龍 ➔
+          </button>
+        </div>
+      </div>
+
+      <!-- 子階段 2B：兒歌接龍／語境拆詞積木 (2 題) -->
+      <div id="stage2-chain" class="card-3d p-6 sm:p-8 text-center border-amber-300 hidden">
+        <div class="inline-block bg-amber-100 text-amber-900 font-black text-xl px-5 py-1.5 rounded-full border-2 border-amber-300 mb-3">
+          第二幕小遊戲：兒歌語境接龍
+        </div>
+        <h2 id="q2Title" class="text-3xl sm:text-4xl font-black text-slate-800 mb-6">
+          「少吃零食 ______。」後面應該接邊句？
+        </h2>
+
+        <div class="mb-6">
+          <button onclick="playCurrentQ2Audio()" class="bg-amber-100 text-amber-900 border-4 border-amber-300 text-2xl font-black px-8 py-3 rounded-full active:scale-95">
+            🔊 重聽題目
+          </button>
+        </div>
+
+        <div id="q2OptionsGrid" class="grid grid-cols-1 sm:grid-cols-3 gap-5 max-w-3xl mx-auto mb-4">
+          <!-- 動態載入接龍選項 -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 第三幕：方格字牆・靜音紅圈自讀測試 ==================== -->
+    <section id="section-3" class="lesson-section hidden">
+      <div class="card-3d p-6 sm:p-8 text-center border-purple-300">
+        <div class="inline-block bg-purple-100 text-purple-800 font-black text-xl px-5 py-1.5 rounded-full border-2 border-purple-300 mb-3">
+          第三幕：三首兒歌精華字牆・零提示紅圈自讀
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-black text-slate-800 mb-2">
+          請點出你識得讀嘅字畫上紅圈 ⭕，並自己大聲讀出嚟！
+        </h2>
+        <p class="text-xl font-bold text-slate-500 mb-5">
+          （靜音模式：點中只會畫紅圈，再點可取消，無發聲提示）
+        </p>
+
+        <div class="flex justify-center mb-5">
+          <div id="circledCountBadge" class="bg-red-100 text-red-800 font-extrabold text-xl px-6 py-2 rounded-full border-2 border-red-300">
+            已圈出識得嘅字：0 個
+          </div>
+        </div>
+
+        <!-- 方格字牆（三首兒歌精華句） -->
+        <div id="silentCharWall" class="bg-blue-50 border-4 border-blue-200 rounded-3xl p-5 sm:p-7 max-w-3xl mx-auto flex flex-col gap-4 mb-8">
+          <!-- 動態生成方格字牆 -->
+        </div>
+
+        <div class="flex justify-center">
+          <button onclick="finishSilentCircling()" class="btn-primary text-2xl sm:text-3xl font-black px-10 py-4 rounded-full">
+            ✅ 圈完晒識得嘅字啦！去結算 ➔
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 第四幕：精準數據結算與查漏暗號 ==================== -->
+    <section id="section-4" class="lesson-section hidden">
+      <div class="card-3d p-6 sm:p-10 text-center bg-gradient-to-b from-white to-blue-50 border-blue-400">
+        <div class="text-7xl sm:text-8xl mb-3">🏆🌟🎉</div>
+        <h2 class="text-3xl sm:text-5xl font-black text-blue-900 mb-3">
+          太叻啦！Day 9 綜合複習任務完成！
+        </h2>
+
+        <!-- 表現報告表 -->
+        <div class="max-w-2xl mx-auto mb-6 mt-6">
+          <table class="report-table">
+            <thead>
+              <tr>
+                <th>課堂環節</th>
+                <th>表現狀態</th>
+                <th>思考時間</th>
+              </tr>
+            </thead>
+            <tbody id="reportTableBody">
+              <!-- 動態生成數據 -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 玲玲圈出的識字清單預覽 -->
+        <div class="max-w-2xl mx-auto mb-5 bg-white border-4 border-red-200 rounded-2xl p-4 text-left">
+          <div class="text-lg font-black text-red-800 mb-1">⭕ 今日玲玲自己圈出並讀出嘅字：</div>
+          <div id="circledWordsPreview" class="text-2xl font-black text-slate-800 leading-relaxed">（尚未圈字）</div>
+        </div>
+
+        <div class="max-w-2xl mx-auto mb-6">
+          <textarea id="reportCodeBox" readonly rows="3" class="w-full p-4 rounded-2xl border-4 border-blue-300 bg-blue-100/70 text-lg sm:text-xl font-bold text-blue-950 resize-none focus:outline-none"></textarea>
+        </div>
+
+        <button onclick="copyReportCode()" class="btn-primary text-2xl sm:text-3xl font-black px-8 py-5 inline-flex items-center gap-3 mb-4 shadow-xl">
+          <span>📋</span>
+          <span>一鍵複製進度暗號俾 Anna 老師</span>
+        </button>
+
+        <p id="copyFeedback" class="text-xl font-black text-emerald-700 min-h-[32px]">
+          複製後直接貼返去對話框，我就會自動比對字庫同更新 Google Drive 總庫！
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    /* =====================================================================
+       純廣東話語音防護引擎 (Anti-GC + 合併語音防搶聲)
+    ===================================================================== */
+    window.utterancePool = [];
+    let hkVoice = null;
+    let currentGuideText = "玲玲你好！歡迎嚟到 Day 9 三首兒歌綜合複習大挑戰！";
+
+    function loadCantoneseVoice() {
+      if (!('speechSynthesis' in window)) return;
+      const voices = window.speechSynthesis.getVoices();
+      hkVoice = voices.find(v => v.lang === 'zh-HK' && (v.name.includes('Sinji') || v.name.includes('Female') || v.name.includes('女'))) ||
+                voices.find(v => v.lang === 'zh-HK') ||
+                voices.find(v => v.lang.toLowerCase().includes('yue')) || null;
+    }
+    if ('speechSynthesis' in window) {
+      loadCantoneseVoice();
+      window.speechSynthesis.onvoiceschanged = loadCantoneseVoice;
+    }
+
+    function sanitizeCantonese(raw) {
+      return String(raw || '').replace(/[A-Za-z]/g, '').trim();
+    }
+
+    function speakCantonese(text, rate = 0.9) {
+      const clean = sanitizeCantonese(text);
+      if (!clean || !('speechSynthesis' in window)) return;
+      try { window.speechSynthesis.cancel(); } catch (e) {}
+      setTimeout(() => {
+        const u = new SpeechSynthesisUtterance(clean);
+        u.lang = 'zh-HK';
+        if (hkVoice) u.voice = hkVoice;
+        u.rate = rate;
+        u.pitch = 1.05;
+        window.utterancePool.push(u);
+        u.onend = () => {
+          const idx = window.utterancePool.indexOf(u);
+          if (idx > -1) window.utterancePool.splice(idx, 1);
+        };
+        u.onerror = () => {
+          const idx = window.utterancePool.indexOf(u);
+          if (idx > -1) window.utterancePool.splice(idx, 1);
+        };
+        window.speechSynthesis.speak(u);
+      }, 40);
+    }
+
+    function setTutorGuide(text, autoSpeak = true) {
+      currentGuideText = text;
+      document.getElementById('tutorText').textContent = text;
+      if (autoSpeak) speakCantonese(text);
+    }
+
+    function replayTutorGuide() {
+      speakCantonese(currentGuideText);
+    }
+
+    function launchFireworks() {
+      const colors = ['#3B82F6', '#10B981', '#F59E0B', '#EC4899', '#8B5CF6'];
+      for (let i = 0; i < 34; i++) {
+        const el = document.createElement('div');
+        el.className = 'confetti-piece';
+        el.style.left = (20 + Math.random() * 60) + 'vw';
+        el.style.top = (25 + Math.random() * 35) + 'vh';
+        el.style.backgroundColor = colors[i % colors.length];
+        el.style.setProperty('--dx', ((Math.random() - 0.5) * 320) + 'px');
+        el.style.setProperty('--dy', ((Math.random() - 0.2) * 360) + 'px');
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 1350);
+      }
+    }
+
+    /* =====================================================================
+       精準數據反饋機制 (區塊鎖定防重複 Map)
+    ===================================================================== */
+    let sectionStartTime = 0;
+    let sectionNeedsHint = false;
+    let currentActiveSection = "";
+
+    const resultsMap = {
+      "聽音辨詞": { seconds: 0, needsHint: false, completed: false },
+      "兒歌與接龍": { seconds: 0, needsHint: false, completed: false },
+      "靜音圈字": { seconds: 0, needsHint: false, completed: false }
+    };
+
+    function startSectionTimer(sectionName) {
+      currentActiveSection = sectionName;
+      sectionStartTime = Date.now();
+      sectionNeedsHint = false;
+    }
+
+    function finalizeSectionResult() {
+      if (!currentActiveSection) return;
+      const elapsedSec = Math.max(1, Math.round((Date.now() - sectionStartTime) / 1000));
+      resultsMap[currentActiveSection] = {
+        seconds: elapsedSec,
+        needsHint: sectionNeedsHint,
+        completed: true
+      };
+      currentActiveSection = "";
+    }
+
+    /* =====================================================================
+       導航與返回鍵系統（返回連結統一為 cn-thankyou.html?v=2）
+    ===================================================================== */
+    let currentStage = 0;
+    let engineUnlocked = false;
+
+    function updateNavMap(stageIdx) {
+      document.getElementById('stageIndicator').textContent = stageIdx === 0 ? "首頁" : (stageIdx === 4 ? "結算" : `幕 ${stageIdx} / 3`);
+      for (let i = 1; i <= 4; i++) {
+        const badge = document.getElementById(`mapBadge${i}`);
+        const baseClasses = "px-2.5 py-1 rounded-xl text-sm sm:text-base font-extrabold cursor-pointer transition-all active:scale-95 ";
+        if (i === stageIdx) {
+          badge.className = baseClasses + "bg-blue-600 text-white shadow-sm";
+        } else if (i < stageIdx) {
+          badge.className = baseClasses + "bg-emerald-100 text-emerald-800 border-2 border-emerald-300";
+        } else {
+          badge.className = baseClasses + "bg-slate-100 text-slate-500 border-2 border-slate-200 hover:bg-slate-200";
+        }
+      }
+    }
+
+    function navToStage(idx) {
+      // iOS Safari 首次點擊同步解鎖語音引擎
+      if (!engineUnlocked && 'speechSynthesis' in window) {
+        window.speechSynthesis.speak(new SpeechSynthesisUtterance(''));
+        engineUnlocked = true;
+      }
+
+      document.querySelectorAll('.lesson-section').forEach(el => el.classList.add('hidden'));
+      const target = document.getElementById(`section-${idx}`);
+      if (target) target.classList.remove('hidden');
+
+      currentStage = idx;
+      updateNavMap(idx);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      // 嚴格遵守「語音防搶聲鐵律」：每個場景切換只發聲一次
+      if (idx === 0) {
+        setTutorGuide("玲玲你好！歡迎嚟到 Day 9 三首兒歌綜合複習大挑戰！", true);
+      } else if (idx === 1) {
+        startSectionTimer("聽音辨詞");
+        initQ1();
+      } else if (idx === 2) {
+        startSectionTimer("兒歌與接龍");
+        initStage2Read();
+        setTutorGuide("第二幕：三首兒歌精華逐句慢讀！撳右邊個喇叭掣，可以一句一句慢慢跟住 Anna 老師讀！", true);
+      } else if (idx === 3) {
+        startSectionTimer("靜音圈字");
+        initSilentCharWall();
+        setTutorGuide("第三幕：靜音紅圈自讀！請玲玲喺方格字牆入面，點出你識得讀嘅字畫上紅圈，再自己大聲讀俾媽媽聽！", true);
+      } else if (idx === 4) {
+        renderFinalReport();
+        launchFireworks();
+        setTutorGuide("恭喜玲玲完成 Day 9 綜合複習！請媽媽一鍵複製進度暗號俾我更新總庫啦！", true);
+      }
+    }
+
+    function handleBackHome() {
+      if ('speechSynthesis' in window) {
+        try { window.speechSynthesis.cancel(); } catch (e) {}
+      }
+      if (currentStage === 0) {
+        window.location.href = 'cn-thankyou.html?v=2';
+      } else {
+        navToStage(0);
+      }
+    }
+
+    /* =====================================================================
+       第一幕：語境拆詞與純文字聽音辨字 (4 題：蜜糖、電飯鍋、蝸牛、水果)
+    ===================================================================== */
+    const q1Data = [
+      {
+        audio: '請玲玲搵出，甜甜的「蜜糖」！',
+        options: [{ name: '蜜糖', correct: true }, { name: '蛋糕', correct: false }, { name: '白飯', correct: false }]
+      },
+      {
+        audio: '請玲玲搵出，一打開就有米飯香氣嘅「電飯鍋」！',
+        options: [{ name: '紅蘿蔔', correct: false }, { name: '電飯鍋', correct: true }, { name: '蔬菜', correct: false }]
+      },
+      {
+        audio: '請玲玲搵出，背着房子也不愁嘅「蝸牛」！',
+        options: [{ name: '牛奶', correct: false }, { name: '麵條', correct: false }, { name: '蝸牛', correct: true }]
+      },
+      {
+        audio: '請玲玲搵出，還有「水果」不可減入面嘅「水果」！',
+        options: [{ name: '水果', correct: true }, { name: '米飯', correct: false }, { name: '肉類', correct: false }]
+      }
+    ];
+    let q1Idx = 0;
+
+    function initQ1() {
+      q1Idx = 0;
+      renderQ1Question(true);
+    }
+
+    function renderQ1Question(isFirstEnter = false) {
+      const q = q1Data[q1Idx];
+      document.getElementById('q1Title').textContent = `第一幕（第 ${q1Idx + 1}/4 題）：純文字聽音辨詞`;
+      const grid = document.getElementById('q1OptionsGrid');
+      grid.innerHTML = '';
+
+      q.options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = "card-3d p-8 flex items-center justify-center bg-white border-slate-300 hover:bg-slate-50";
+        btn.innerHTML = `<span class="text-4xl sm:text-5xl font-black text-slate-900">${opt.name}</span>`;
+        btn.onclick = () => answerQ1(opt.correct, btn);
+        grid.appendChild(btn);
+      });
+
+      const mergedPrompt = isFirstEnter ? `第一幕：純文字聽音辨詞！${q.audio}` : q.audio;
+      setTutorGuide(mergedPrompt, true);
+    }
+
+    function playCurrentQ1Audio() {
+      speakCantonese(q1Data[q1Idx].audio);
+    }
+
+    function answerQ1(isCorrect, btn) {
+      if (isCorrect) {
+        btn.classList.add('card-correct');
+        launchFireworks();
+        setTutorGuide("答啱啦！玲玲好醒目！", true);
+        setTimeout(() => {
+          q1Idx++;
+          if (q1Idx < q1Data.length) {
+            renderQ1Question(false);
+          } else {
+            finalizeSectionResult();
+            navToStage(2);
+          }
+        }, 1300);
+      } else {
+        sectionNeedsHint = true;
+        btn.classList.remove('wrong-shake');
+        void btn.offsetWidth;
+        btn.classList.add('wrong-shake');
+        setTutorGuide("唔係呢個詞語，再聽多次，睇清楚啲字形啦！", true);
+      }
+    }
+
+    /* =====================================================================
+       第二幕：三首兒歌精華逐句慢讀 ＋ 語境接龍 (2 題)
+    ===================================================================== */
+    const q2Data = [
+      {
+        display: "「少吃零食 ______。」後面應該接邊句？",
+        audio: "兒歌接龍第一題：少吃零食，後面應該接邊一句呢？",
+        options: [
+          { text: "多吃菜", correct: true },
+          { text: "一打開", correct: false },
+          { text: "也不愁", correct: false }
+        ]
+      },
+      {
+        display: "「電飯鍋，______。」後面應該接邊句？",
+        audio: "兒歌接龍第二題：電飯鍋，後面應該接邊一句呢？",
+        options: [
+          { text: "四處遊", correct: false },
+          { text: "一打開", correct: true },
+          { text: "多吃菜", correct: false }
+        ]
+      }
+    ];
+    let q2Idx = 0;
+
+    function initStage2Read() {
+      document.getElementById('stage2-read').classList.remove('hidden');
+      document.getElementById('stage2-chain').classList.add('hidden');
+    }
+
+    function startStage2Chain() {
+      document.getElementById('stage2-read').classList.add('hidden');
+      document.getElementById('stage2-chain').classList.remove('hidden');
+      q2Idx = 0;
+      renderQ2Question();
+    }
+
+    function renderQ2Question() {
+      const q = q2Data[q2Idx];
+      document.getElementById('q2Title').textContent = q.display;
+      const grid = document.getElementById('q2OptionsGrid');
+      grid.innerHTML = '';
+
+      q.options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = "card-3d p-7 text-3xl sm:text-4xl font-black text-slate-900 bg-white border-amber-300 hover:bg-amber-50";
+        btn.textContent = opt.text;
+        btn.onclick = () => answerQ2(opt.correct, btn);
+        grid.appendChild(btn);
+      });
+
+      setTutorGuide(q.audio, true);
+    }
+
+    function playCurrentQ2Audio() {
+      speakCantonese(q2Data[q2Idx].audio);
+    }
+
+    function answerQ2(isCorrect, btn) {
+      if (isCorrect) {
+        btn.classList.add('card-correct');
+        launchFireworks();
+        setTutorGuide("接龍完全正確！記性真係好！", true);
+        setTimeout(() => {
+          q2Idx++;
+          if (q2Idx < q2Data.length) {
+            renderQ2Question();
+          } else {
+            finalizeSectionResult();
+            navToStage(3);
+          }
+        }, 1300);
+      } else {
+        sectionNeedsHint = true;
+        btn.classList.remove('wrong-shake');
+        void btn.offsetWidth;
+        btn.classList.add('wrong-shake');
+        setTutorGuide("再諗一諗，頭先首兒歌係點讀嘅呢？", true);
+      }
+    }
+
+    /* =====================================================================
+       第三幕：方格字牆・靜音紅圈自讀（絕對禁止發聲讀字）
+    ===================================================================== */
+    const rhymeLines = [
+      "米飯牛奶肉和蛋，",
+      "少吃零食多吃菜，",
+      "電飯鍋，一打開，",
+      "蝸牛背着房子也不愁。"
+    ];
+
+    const circledCellMap = new Map();
+
+    function initSilentCharWall() {
+      circledCellMap.clear();
+      updateCircledCounter();
+
+      const wall = document.getElementById('silentCharWall');
+      wall.innerHTML = '';
+
+      rhymeLines.forEach((line, rowIdx) => {
+        const rowDiv = document.createElement('div');
+        rowDiv.className = "flex flex-wrap justify-center items-center gap-2 sm:gap-3";
+
+        Array.from(line).forEach((char, colIdx) => {
+          if (char === '，' || char === '。' || char === '、' || char === '？') {
+            const punc = document.createElement('span');
+            punc.textContent = char;
+            punc.className = "text-3xl sm:text-4xl font-black text-blue-700 px-0.5 self-end pb-2";
+            rowDiv.appendChild(punc);
+          } else {
+            const cellId = `${rowIdx}-${colIdx}`;
+            const btn = document.createElement('button');
+            btn.textContent = char;
+            btn.className = "grid-char-btn text-4xl sm:text-5xl font-black text-slate-800 w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center";
+            // 靜音切換紅圈：絕對不觸發任何 speechSynthesis
+            btn.onclick = () => toggleSilentCircle(cellId, char, btn);
+            rowDiv.appendChild(btn);
+          }
+        });
+
+        wall.appendChild(rowDiv);
+      });
+    }
+
+    function toggleSilentCircle(cellId, char, btn) {
+      if (circledCellMap.has(cellId)) {
+        circledCellMap.delete(cellId);
+        btn.classList.remove('circled');
+      } else {
+        circledCellMap.set(cellId, char);
+        btn.classList.add('circled');
+      }
+      updateCircledCounter();
+    }
+
+    function getUniqueCircledChars() {
+      return Array.from(new Set(circledCellMap.values()));
+    }
+
+    function updateCircledCounter() {
+      const uniqueCount = getUniqueCircledChars().length;
+      document.getElementById('circledCountBadge').textContent = `已圈出識得嘅字：${uniqueCount} 個`;
+    }
+
+    function finishSilentCircling() {
+      finalizeSectionResult();
+      navToStage(4);
+    }
+
+    /* =====================================================================
+       第四幕：結算報告與精準查漏暗號（僅列出玲玲圈出的字）
+    ===================================================================== */
+    function renderFinalReport() {
+      const tbody = document.getElementById("reportTableBody");
+      tbody.innerHTML = "";
+
+      const uniqueChars = getUniqueCircledChars();
+      const charsDisplay = uniqueChars.length > 0 ? uniqueChars.join("、") : "無";
+      document.getElementById('circledWordsPreview').textContent = charsDisplay;
+
+      const sectionKeys = ["聽音辨詞", "兒歌與接龍", "靜音圈字"];
+      const codeParts = ["【中文課堂回報】P.21-25 Day 9 (cn-p21-p25-d9.html)"];
+
+      sectionKeys.forEach(key => {
+        const item = resultsMap[key];
+        const tr = document.createElement("tr");
+
+        const sec = item.completed ? item.seconds : 0;
+        let statusText = "✅ 完成";
+        let codeStatus = "";
+
+        if (key === "聽音辨詞" || key === "兒歌與接龍") {
+          const hintStatus = item.completed && item.needsHint;
+          statusText = hintStatus ? "💡 需提示" : "✅ 1次答對";
+          codeStatus = hintStatus ? "(需提示)" : "(1次答對)";
+        } else if (key === "靜音圈字") {
+          statusText = `⭕ 圈出 ${uniqueChars.length} 字`;
+          codeStatus = `(圈出${uniqueChars.length}字)`;
+        }
+
+        tr.innerHTML = `<td>${key}</td><td>${statusText}</td><td>${sec}s</td>`;
+        tbody.appendChild(tr);
+        codeParts.push(`${key}: ${sec}s${codeStatus}`);
+      });
+
+      codeParts.push(`圈出識字清單: ${charsDisplay}`);
+      document.getElementById('reportCodeBox').value = codeParts.join(" | ");
+    }
+
+    function copyReportCode() {
+      const box = document.getElementById('reportCodeBox');
+      const text = box.value;
+      document.getElementById('copyFeedback').textContent = "✅ 已複製進度暗號！請直接貼上給 Anna 老師比對字庫同更新總庫！";
+      launchFireworks();
+      speakCantonese("進度暗號已經複製好啦！請媽媽貼返去對話框俾我更新紀錄！");
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).catch(() => { box.select(); document.execCommand('copy'); });
+      } else {
+        box.select();
+        document.execCommand('copy');
+      }
+    }
+  </script>
+</body>
+</html>
