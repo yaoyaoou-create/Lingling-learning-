@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>中文 AI 課堂 · P.21-25 Day 10 全單元總結</title>
+  <link rel="stylesheet" href="theme.css?v=1" />
+  <script src="report-hub.js?v=2"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100dvh;
+      overflow: hidden;
+      font-family: "PingFang HK", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 50%, #fef3c7 100%);
+      color: #431407;
+    }
+
+    .app-shell {
+      width: 100%;
+      max-width: 1024px;
+      height: 100dvh;
+      margin: 0 auto;
+      padding: 10px 14px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      overflow: hidden;
+    }
+
+    /* 頂部導覽列 */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: 16px;
+      background: #ffffff;
+      color: #c2410c;
+      font-weight: 800;
+      font-size: clamp(14px, 2vw, 17px);
+      text-decoration: none;
+      border: 2px solid #fdba74;
+      box-shadow: 0 4px 0 #fb923c;
+      white-space: nowrap;
+    }
+
+    .back-btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 #fb923c;
+    }
+
+    .stage-nav {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+    }
+
+    .stage-pill {
+      padding: 7px 12px;
+      border-radius: 14px;
+      border: 2px solid #fed7aa;
+      background: #fffbeb;
+      color: #9a3412;
+      font-weight: 800;
+      font-size: clamp(13px, 1.8vw, 16px);
+      cursor: pointer;
+      box-shadow: 0 3px 0 #fdba74;
+      white-space: nowrap;
+    }
+
+    .stage-pill.active {
+      background: #f97316;
+      color: #ffffff;
+      border-color: #ea580c;
+      box-shadow: 0 3px 0 #c2410c;
+    }
+
+    .stage-pill.done {
+      background: #22c55e;
+      color: #ffffff;
+      border-color: #16a34a;
+      box-shadow: 0 3px 0 #15803d;
+    }
+
+    /* Anna 老師提示橫幅（嚴格零劇透） */
+    .teacher-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 14px;
+      background: #ffffff;
+      border-radius: 20px;
+      border: 3px solid #fdba74;
+      box-shadow: 0 5px 0 #fed7aa;
+      flex-shrink: 0;
+    }
+
+    .teacher-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .teacher-avatar {
+      font-size: clamp(28px, 4vw, 38px);
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .teacher-text {
+      font-size: clamp(16px, 2.2vw, 22px);
+      font-weight: 800;
+      color: #7c2d12;
+      line-height: 1.3;
+    }
+
+    .speak-btn {
+      padding: 10px 16px;
+      border-radius: 16px;
+      border: none;
+      background: #0ea5e9;
+      color: #ffffff;
+      font-size: clamp(15px, 2vw, 18px);
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 4px 0 #0284c7;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .speak-btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 #0284c7;
+    }
+
+    /* 主互動舞台：嚴格單屏無捲動 */
+    .stage-card {
+      flex: 1;
+      min-height: 0;
+      background: rgba(255, 255, 255, 0.94);
+      border-radius: 26px;
+      border: 3px solid #fed7aa;
+      box-shadow: 0 8px 0 #fdba74;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+
+    .stage-panel {
+      display: none;
+      width: 100%;
+      height: 100%;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 10px;
+      min-height: 0;
+    }
+
+    .stage-panel.active {
+      display: flex;
+    }
+
+    .sub-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .badge-title {
+      font-size: clamp(16px, 2.2vw, 21px);
+      font-weight: 900;
+      color: #ea580c;
+      background: #ffedd5;
+      padding: 6px 14px;
+      border-radius: 999px;
+    }
+
+    .progress-text {
+      font-size: clamp(15px, 2vw, 19px);
+      font-weight: 800;
+      color: #9a3412;
+    }
+
+    /* 第 1 關：純字詞語聽音盲測 */
+    .vocab-grid {
+      flex: 1;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      align-content: center;
+      padding: 6px 10px;
+    }
+
+    .word-btn {
+      min-height: clamp(86px, 16dvh, 130px);
+      border-radius: 24px;
+      border: 4px solid #fcd34d;
+      background: linear-gradient(180deg, #ffffff 0%, #fefce8 100%);
+      color: #431407;
+      font-size: clamp(32px, 5vw, 52px);
+      font-weight: 900;
+      letter-spacing: 3px;
+      cursor: pointer;
+      box-shadow: 0 7px 0 #f59e0b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.1s ease;
+    }
+
+    .word-btn:active {
+      transform: translateY(4px);
+      box-shadow: 0 3px 0 #f59e0b;
+    }
+
+    .word-btn.correct {
+      background: #dcfce7;
+      border-color: #22c55e;
+      color: #14532d;
+      box-shadow: 0 7px 0 #16a34a;
+    }
+
+    .word-btn.shake {
+      animation: wrongShake 0.4s ease;
+      background: #fef2f2;
+      border-color: #fca5a5;
+    }
+
+    .hint-box {
+      min-height: 44px;
+      padding: 8px 14px;
+      border-radius: 16px;
+      background: #fef9c3;
+      border: 2px dashed #eab308;
+      color: #854d0e;
+      font-size: clamp(16px, 2.2vw, 20px);
+      font-weight: 800;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .hint-box.hidden {
+      visibility: hidden;
+    }
+
+    /* 第 2 關：純聽音句式積木 */
+    .sentence-scene {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(44px, 7dvh, 66px);
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .sentence-slots {
+      min-height: clamp(72px, 12dvh, 96px);
+      padding: 10px 14px;
+      border-radius: 22px;
+      background: #fff7ed;
+      border: 3px dashed #fb923c;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .slot-placeholder {
+      color: #c2410c;
+      opacity: 0.6;
+      font-size: clamp(18px, 2.4vw, 24px);
+      font-weight: 800;
+    }
+
+    .block-bank {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: 6px;
+    }
+
+    .block-btn {
+      padding: 14px 22px;
+      border-radius: 20px;
+      border: 3px solid #38bdf8;
+      background: linear-gradient(180deg, #ffffff 0%, #e0f2fe 100%);
+      color: #0c4a6e;
+      font-size: clamp(24px, 3.6vw, 36px);
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 6px 0 #0284c7;
+    }
+
+    .block-btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 2px 0 #0284c7;
+    }
+
+    .block-btn.placed {
+      background: linear-gradient(180deg, #fef08a 0%, #fde047 100%);
+      border-color: #eab308;
+      color: #713f12;
+      box-shadow: 0 5px 0 #ca8a04;
+    }
+
+    .block-btn.used {
+      opacity: 0.28;
+      pointer-events: none;
+      box-shadow: none;
+      transform: translateY(3px);
+    }
+
+    .action-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .primary-btn {
+      padding: 12px 26px;
+      border-radius: 18px;
+      border: none;
+      background: #22c55e;
+      color: #ffffff;
+      font-size: clamp(18px, 2.4vw, 22px);
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 5px 0 #15803d;
+    }
+
+    .primary-btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 2px 0 #15803d;
+    }
+
+    .secondary-btn {
+      padding: 12px 20px;
+      border-radius: 18px;
+      border: 2px solid #cbd5e1;
+      background: #f8fafc;
+      color: #475569;
+      font-size: clamp(16px, 2.2vw, 20px);
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 4px 0 #94a3b8;
+    }
+
+    .secondary-btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 #94a3b8;
+    }
+
+    /* 第 3 關：兒歌金曲點唱機（逐句獨立喇叭） */
+    .rhyme-tabs {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      flex-shrink: 0;
+    }
+
+    .rhyme-tab {
+      padding: 8px 14px;
+      border-radius: 14px;
+      border: 2px solid #f9a8d4;
+      background: #fdf2f8;
+      color: #9d174d;
+      font-size: clamp(15px, 2vw, 18px);
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 3px 0 #f472b6;
+    }
+
+    .rhyme-tab.active {
+      background: #ec4899;
+      color: #ffffff;
+      border-color: #db2777;
+      box-shadow: 0 3px 0 #be185d;
+    }
+
+    .rhyme-lines {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .rhyme-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 16px;
+      border-radius: 18px;
+      background: #fffbeb;
+      border: 2px solid #fde68a;
+      box-shadow: 0 3px 0 #fcd34d;
+    }
+
+    .rhyme-row.playing {
+      background: #fef08a;
+      border-color: #f59e0b;
+    }
+
+    .rhyme-line-text {
+      font-size: clamp(22px, 3.2vw, 34px);
+      font-weight: 900;
+      color: #451a03;
+      letter-spacing: 2px;
+    }
+
+    .line-speak-btn {
+      padding: 8px 14px;
+      border-radius: 14px;
+      border: none;
+      background: #f97316;
+      color: #ffffff;
+      font-size: clamp(15px, 2vw, 18px);
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 4px 0 #c2410c;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .line-speak-btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 #c2410c;
+    }
+
+    /* 第 4 關：靜音紅圈方格字牆 */
+    .wall-grid {
+      flex: 1;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      grid-template-rows: repeat(4, 1fr);
+      gap: 8px;
+      padding: 4px;
+    }
+
+    @media (max-width: 640px) {
+      .wall-grid {
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: repeat(6, 1fr);
+      }
+    }
+
+    .char-cell {
+      position: relative;
+      border-radius: 18px;
+      border: 3px solid #fed7aa;
+      background: #ffffff;
+      color: #1e293b;
+      font-size: clamp(28px, 4.2vw, 44px);
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 4px 0 #fdba74;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.1s ease;
+    }
+
+    .char-cell:active {
+      transform: scale(0.95);
+    }
+
+    .char-cell.circled {
+      background: #fff1f2;
+      border-color: #fb7185;
+      color: #9f1239;
+    }
+
+    .char-cell.circled::after {
+      content: "";
+      position: absolute;
+      width: 78%;
+      height: 78%;
+      border: 5px solid #ef4444;
+      border-radius: 50%;
+      pointer-events: none;
+      box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.15);
+    }
+
+    /* 第 5 幕：畢業結算畫面 */
+    .summary-wrap {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      text-align: center;
+    }
+
+    .trophy-banner {
+      font-size: clamp(24px, 3.6vw, 36px);
+      font-weight: 900;
+      color: #c2410c;
+    }
+
+    .sync-badge {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: #dcfce7;
+      border: 2px solid #22c55e;
+      color: #166534;
+      font-size: clamp(14px, 1.9vw, 17px);
+      font-weight: 800;
+    }
+
+    .summary-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: clamp(14px, 1.9vw, 17px);
+      background: #fffbeb;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 2px solid #fde68a;
+    }
+
+    .summary-table th, .summary-table td {
+      padding: 7px 10px;
+      border-bottom: 1px solid #fde68a;
+      text-align: left;
+      font-weight: 700;
+    }
+
+    .summary-table th {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .circled-box {
+      width: 100%;
+      padding: 8px 12px;
+      border-radius: 14px;
+      background: #fff1f2;
+      border: 2px solid #fda4af;
+      color: #9f1239;
+      font-size: clamp(15px, 2vw, 18px);
+      font-weight: 800;
+      line-height: 1.4;
+    }
+
+    .copy-feedback {
+      font-size: 15px;
+      font-weight: 800;
+      color: #15803d;
+      min-height: 22px;
+    }
+
+    @keyframes wrongShake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-8px); }
+      50% { transform: translateX(8px); }
+      75% { transform: translateX(-6px); }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <!-- 頂部導覽 -->
+    <div class="top-bar">
+      <a href="cn-thankyou.html?v=3" class="back-btn" onclick="stopAllSpeech()">⬅️ 返回目錄</a>
+      <div class="stage-nav">
+        <button class="stage-pill active" id="nav-1" onclick="goToStage(1)">1. 詞語</button>
+        <button class="stage-pill" id="nav-2" onclick="goToStage(2)">2. 句式</button>
+        <button class="stage-pill" id="nav-3" onclick="goToStage(3)">3. 兒歌</button>
+        <button class="stage-pill" id="nav-4" onclick="goToStage(4)">4. 圈字</button>
+      </div>
+    </div>
+
+    <!-- Anna 老師導航橫幅（只顯示無劇透指引，題目由語音讀出） -->
+    <div class="teacher-bar">
+      <div class="teacher-left">
+        <div class="teacher-avatar">👩‍🏫</div>
+        <div class="teacher-text" id="teacherText">👂 聽清楚 Anna 老師讀邊個詞語，再撳下面嘅字卡！</div>
+      </div>
+      <button class="speak-btn" id="repeatBtn" onclick="replayCurrentPrompt()">🔊 聽題目</button>
+    </div>
+
+    <!-- 主舞台 -->
+    <div class="stage-card">
+      <!-- 第 1 關：純字詞語聽音盲測 -->
+      <section class="stage-panel active" id="stage-1">
+        <div class="sub-header">
+          <span class="badge-title">⭐ 第 1 關：純字聽音熱身</span>
+          <span class="progress-text" id="s1Progress">第 1 / 4 題</span>
+        </div>
+        <div class="vocab-grid" id="vocabGrid"></div>
+        <div class="hint-box hidden" id="s1Hint"></div>
+      </section>
+
+      <!-- 第 2 關：純聽音句式積木 -->
+      <section class="stage-panel" id="stage-2">
+        <div class="sub-header">
+          <span class="badge-title">🧱 第 2 關：聽音拼句大挑戰</span>
+          <span class="progress-text" id="s2Progress">第 1 / 3 題</span>
+        </div>
+        <div class="sentence-scene" id="s2Scene"></div>
+        <div class="sentence-slots" id="s2Slots">
+          <span class="slot-placeholder">按語音次序點選下方積木拼出完整句子</span>
+        </div>
+        <div class="block-bank" id="s2Bank"></div>
+        <div class="hint-box hidden" id="s2Hint"></div>
+        <div class="action-row">
+          <button class="secondary-btn" onclick="resetSentenceBlocks()">🔄 重排</button>
+          <button class="primary-btn" onclick="checkSentence()">✅ 檢查句子</button>
+        </div>
+      </section>
+
+      <!-- 第 3 關：三首兒歌逐句點讀 -->
+      <section class="stage-panel" id="stage-3">
+        <div class="sub-header">
+          <span class="badge-title">🎵 第 3 關：兒歌金曲點唱機</span>
+          <button class="speak-btn" onclick="playFullRhyme()">🎵 聽全首</button>
+        </div>
+        <div class="rhyme-tabs" id="rhymeTabs"></div>
+        <div class="rhyme-lines" id="rhymeLines"></div>
+        <div class="action-row">
+          <button class="primary-btn" onclick="finishStage3()">讀完喇！去第 4 關尋寶 ➡️</button>
+        </div>
+      </section>
+
+      <!-- 第 4 關：靜音紅圈方格字牆 -->
+      <section class="stage-panel" id="stage-4">
+        <div class="sub-header">
+          <span class="badge-title">⭕ 第 4 關：靜音紅圈自讀挑戰（零提示）</span>
+          <span class="progress-text" id="s4Count">已圈出：0 字</span>
+        </div>
+        <div class="wall-grid" id="wallGrid"></div>
+        <div class="action-row">
+          <button class="primary-btn" onclick="finishLesson()">🏆 完成畢業總結，拎大獎杯！</button>
+        </div>
+      </section>
+
+      <!-- 第 5 幕：畢業結算畫面 -->
+      <section class="stage-panel" id="stage-5">
+        <div class="summary-wrap">
+          <div class="trophy-banner">🏆 恭喜玲玲完成《我要謝謝你》全單元畢業！</div>
+          <div class="sync-badge">☁️ 戰報已自動同步至家長戰報箱</div>
+          <table class="summary-table">
+            <thead>
+              <tr>
+                <th>關卡</th>
+                <th>表現</th>
+                <th>耗時</th>
+              </tr>
+            </thead>
+            <tbody id="summaryBody"></tbody>
+          </table>
+          <div class="circled-box" id="summaryCircled"></div>
+          <div class="action-row">
+            <button class="primary-btn" onclick="copyReport()">📋 一鍵複製進度暗號</button>
+            <button class="secondary-btn" onclick="restartAll()">🔁 再玩一次</button>
+          </div>
+          <div class="copy-feedback" id="copyFeedback"></div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    // ========= iOS Safari 廣東話防吞聲安全引擎 =========
+    window.utterancePool = [];
+    let speakTimer = null;
+    let currentQuestionAudio = "";
+    let currentQuestionRate = 0.82;
+    let fullRhymeAbort = false;
+
+    function getCantoneseVoice() {
+      const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+      return (
+        voices.find(v => v.lang === "zh-HK" && /sinji|tracy|ting|female/i.test(v.name)) ||
+        voices.find(v => v.lang === "zh-HK") ||
+        voices.find(v => v.lang && v.lang.toLowerCase().includes("hk")) ||
+        voices.find(v => v.lang && v.lang.toLowerCase().includes("zh")) ||
+        null
+      );
+    }
+
+    function stopAllSpeech() {
+      fullRhymeAbort = true;
+      if (speakTimer) {
+        clearTimeout(speakTimer);
+        speakTimer = null;
+      }
+      if (window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+      }
+      document.querySelectorAll(".rhyme-row.playing").forEach(el => el.classList.remove("playing"));
+    }
+
+    function speak(text, rate = 0.82, onEnd = null, saveAsQuestion = false) {
+      stopAllSpeech();
+      if (!window.speechSynthesis || !text) return;
+      if (saveAsQuestion) {
+        currentQuestionAudio = text;
+        currentQuestionRate = rate;
+      }
+
+      speakTimer = setTimeout(() => {
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = "zh-HK";
+        u.rate = rate;
+        u.pitch = 1.05;
+        const v = getCantoneseVoice();
+        if (v) u.voice = v;
+
+        u.onend = () => {
+          const idx = window.utterancePool.indexOf(u);
+          if (idx > -1) window.utterancePool.splice(idx, 1);
+          if (typeof onEnd === "function") onEnd();
+        };
+        u.onerror = () => {
+          const idx = window.utterancePool.indexOf(u);
+          if (idx > -1) window.utterancePool.splice(idx, 1);
+        };
+
+        window.utterancePool.push(u);
+        window.speechSynthesis.speak(u);
+      }, 45);
+    }
+
+    function replayCurrentPrompt() {
+      if (currentQuestionAudio) {
+        speak(currentQuestionAudio, currentQuestionRate, null, false);
+      }
+    }
+
+    window.addEventListener("pagehide", stopAllSpeech);
+    window.addEventListener("beforeunload", stopAllSpeech);
+    if (window.speechSynthesis) {
+      window.speechSynthesis.onvoiceschanged = () => getCantoneseVoice();
+    }
+
+    // ========= 課程數據（畫面指引與語音題目完全分離，嚴禁畫面出現答案） =========
+    const stage1Data = [
+      {
+        target: "蜜糖",
+        options: ["蜜糖", "蛋糕", "白飯", "麵包"],
+        spokenPrompt: "請玲玲聽清楚，搵出甜甜嘅「蜜糖」！",
+        spokenHint: "唔緊要呀，再試下！第一隻字下面有隻小昆蟲「虫」字呀！",
+        screenHint: "💡 小提示：第一隻字下面有隻小昆「虫」字呀！"
+      },
+      {
+        target: "翠綠的",
+        options: ["香香的", "翠綠的", "甜甜的", "新鮮的"],
+        spokenPrompt: "請玲玲聽清楚，搵出形容蔬菜顏色嘅「翠綠的」！",
+        spokenHint: "唔緊要呀，再試下！係形容綠色蔬菜嘅「翠綠的」呀！",
+        screenHint: "💡 小提示：形容綠色蔬菜嗰個詞語！再撳「🔊 聽題目」聽多次！"
+      },
+      {
+        target: "新鮮的",
+        options: ["新鮮的", "香香的", "紅蘿蔔", "電飯鍋"],
+        spokenPrompt: "請玲玲聽清楚，搵出好好味嘅「新鮮的」！",
+        spokenHint: "唔緊要呀，再試下！第二隻字左邊係條魚、右邊係隻羊呀！",
+        screenHint: "💡 小提示：第二隻字左邊係「魚」、右邊係「羊」呀！"
+      },
+      {
+        target: "蝸牛",
+        options: ["牛奶", "牛肉", "蝸牛", "米飯"],
+        spokenPrompt: "最後一題！請玲玲聽清楚，搵出背住屋仔慢慢行嘅「蝸牛」！",
+        spokenHint: "唔緊要呀，再試下！第一隻字左邊有隻小昆「虫」字呀！",
+        screenHint: "💡 小提示：第一隻字左邊有隻小昆「虫」字呀！"
+      }
+    ];
+
+    const stage2Data = [
+      {
+        sceneEmoji: "🥕",
+        answer: ["紅蘿蔔", "是", "蔬菜類", "的食物。"],
+        blocks: ["蔬菜類", "紅蘿蔔", "的食物。", "是"],
+        spoken: "紅蘿蔔是蔬菜類的食物。",
+        spokenPrompt: "請玲玲聽清楚，按次序拼出呢句：紅蘿蔔是蔬菜類的食物。",
+        spokenHint: "次序爭少少咋，再聽慢啲一次：紅蘿蔔、是、蔬菜類、的食物。",
+        screenHint: "💡 次序爭少少咋！撳右上角「🔊 聽題目」再聽清楚邊舊積木排先！"
+      },
+      {
+        sceneEmoji: "🥦",
+        answer: ["少吃", "零食", "多吃", "菜。"],
+        blocks: ["多吃", "少吃", "菜。", "零食"],
+        spoken: "少吃零食多吃菜。",
+        spokenPrompt: "請玲玲聽清楚，按次序拼出兒歌呢句：少吃零食多吃菜。",
+        spokenHint: "次序爭少少咋，再聽慢啲一次：少吃、零食、多吃、菜。",
+        screenHint: "💡 次序爭少少咋！撳右上角「🔊 聽題目」再聽清楚邊舊積木排先！"
+      },
+      {
+        sceneEmoji: "🍚",
+        answer: ["白飯", "是", "五穀類", "的食物。"],
+        blocks: ["的食物。", "是", "白飯", "五穀類"],
+        spoken: "白飯是五穀類的食物。",
+        spokenPrompt: "最後一句！請玲玲聽清楚，拼出呢句：白飯是五穀類的食物。",
+        spokenHint: "次序爭少少咋，再聽慢啲一次：白飯、是、五穀類、的食物。",
+        screenHint: "💡 次序爭少少咋！撳右上角「🔊 聽題目」再聽清楚邊舊積木排先！"
+      }
+    ];
+
+    const rhymesData = [
+      {
+        title: "P.23 均衡飲食",
+        lines: [
+          "米飯牛奶肉和蛋，",
+          "一日三餐要均衡，",
+          "少吃零食多吃菜，",
+          "還有水果不可減。"
+        ]
+      },
+      {
+        title: "P.24 米飯哪裏來？",
+        lines: [
+          "電飯鍋，一打開，",
+          "米飯香氣飄過來。",
+          "究竟米飯哪裏來？",
+          "飯鍋先生變出來？"
+        ]
+      },
+      {
+        title: "P.25 蝸牛",
+        lines: [
+          "蝸牛、蝸牛，",
+          "喜歡神造的樣貌，",
+          "背着房子也不愁，",
+          "喜歡慢慢四處遊。"
+        ]
+      }
+    ];
+
+    // 24 個全單元重點與熟字方格牆（靜音紅圈自讀）
+    const wallChars = [
+      "香", "甜", "蜜", "糖", "翠", "綠",
+      "蔬", "菜", "新", "鮮", "食", "物",
+      "豆", "肉", "米", "飯", "牛", "奶",
+      "蛋", "水", "果", "電", "蝸", "遊"
+    ];
+
+    // ========= 狀態與計時器 =========
+    let currentStage = 1;
+    let s1Idx = 0;
+    let s2Idx = 0;
+    let s3Tab = 0;
+    let selectedBlocks = [];
+    let circledSet = new Set();
+    let stageStartTs = Date.now();
+    let hasSavedReport = false;
+    let generatedReportText = "";
+    let lockClick = false;
+
+    const stats = {
+      s1Sec: 0, s1NeedHint: false, s1Done: false,
+      s2Sec: 0, s2NeedHint: false, s2Done: false,
+      s3Sec: 0, s3Done: false,
+      s4Sec: 0, s4Done: false
+    };
+
+    function recordStageElapsed(stageNum) {
+      const delta = Math.max(1, Math.round((Date.now() - stageStartTs) / 1000));
+      if (stageNum === 1) stats.s1Sec += delta;
+      if (stageNum === 2) stats.s2Sec += delta;
+      if (stageNum === 3) stats.s3Sec += delta;
+      if (stageNum === 4) stats.s4Sec += delta;
+    }
+
+    function updateNavPills() {
+      for (let i = 1; i <= 4; i++) {
+        const btn = document.getElementById("nav-" + i);
+        btn.classList.remove("active", "done");
+        if (i === currentStage) btn.classList.add("active");
+        else if (
+          (i === 1 && stats.s1Done) ||
+          (i === 2 && stats.s2Done) ||
+          (i === 3 && stats.s3Done) ||
+          (i === 4 && stats.s4Done)
+        ) {
+          btn.classList.add("done");
+        }
+      }
+    }
+
+    function goToStage(num, autoSpeak = true) {
+      stopAllSpeech();
+      if (currentStage >= 1 && currentStage <= 4 && currentStage !== num) {
+        recordStageElapsed(currentStage);
+      }
+      currentStage = num;
+      stageStartTs = Date.now();
+      lockClick = false;
+
+      document.querySelectorAll(".stage-panel").forEach(p => p.classList.remove("active"));
+      document.getElementById("stage-" + num).classList.add("active");
+      updateNavPills();
+
+      if (num === 1) renderStage1(autoSpeak, true);
+      if (num === 2) renderStage2(autoSpeak, true);
+      if (num === 3) renderStage3(autoSpeak);
+      if (num === 4) renderStage4(autoSpeak);
+      if (num === 5) renderSummary();
+    }
+
+    // ========= 第 1 關：純字詞語聽音盲測（零劇透） =========
+    function renderStage1(shouldSpeak = true, isStageEntry = false) {
+      const q = stage1Data[s1Idx];
+      document.getElementById("s1Progress").textContent = `第 ${s1Idx + 1} / ${stage1Data.length} 題`;
+      const hintEl = document.getElementById("s1Hint");
+      hintEl.classList.add("hidden");
+      hintEl.textContent = "";
+
+      const grid = document.getElementById("vocabGrid");
+      grid.innerHTML = "";
+      q.options.forEach(word => {
+        const btn = document.createElement("button");
+        btn.className = "word-btn";
+        btn.textContent = word;
+        btn.onclick = () => handleStage1Pick(btn, word);
+        grid.appendChild(btn);
+      });
+
+      // 畫面只顯示通用指引，嚴禁出現答案字詞
+      document.getElementById("teacherText").textContent =
+        "👂 聽清楚 Anna 老師讀邊個詞語，再撳下面嘅字卡！（唔確定可以撳右邊「🔊 聽題目」）";
+
+      // 語音讀出題目，並把純題目存入重聽鍵
+      currentQuestionAudio = q.spokenPrompt;
+      currentQuestionRate = 0.82;
+      const entryVoice = isStageEntry && s1Idx === 0
+        ? `第一關，純字聽音熱身！${q.spokenPrompt}`
+        : q.spokenPrompt;
+      if (shouldSpeak) speak(entryVoice, 0.82, null, false);
+    }
+
+    function handleStage1Pick(btn, word) {
+      if (lockClick) return;
+      const q = stage1Data[s1Idx];
+      const hintEl = document.getElementById("s1Hint");
+
+      if (word === q.target) {
+        lockClick = true;
+        btn.classList.add("correct");
+        hintEl.classList.add("hidden");
+        const praise = `🎉 答啱喇！呢個就係「${q.target}」，玲玲好叻呀！`;
+        document.getElementById("teacherText").textContent = praise;
+        speak(`答啱喇！呢個就係「${q.target}」，玲玲好叻呀！`, 0.84, () => {
+          lockClick = false;
+          if (s1Idx < stage1Data.length - 1) {
+            s1Idx++;
+            renderStage1(true, false);
+          } else {
+            stats.s1Done = true;
+            goToStage(2, true);
+          }
+        }, false);
+      } else {
+        stats.s1NeedHint = true;
+        btn.classList.remove("shake");
+        void btn.offsetWidth;
+        btn.classList.add("shake");
+        hintEl.textContent = q.screenHint;
+        hintEl.classList.remove("hidden");
+        document.getElementById("teacherText").textContent =
+          "🌟 唔緊要呀，聽下小提示再搵一次！（想再聽題目可以撳「🔊 聽題目」）";
+        speak(q.spokenHint, 0.80, null, false);
+      }
+    }
+
+    // ========= 第 2 關：純聽音句式積木（零劇透） =========
+    function renderStage2(shouldSpeak = true, isStageEntry = false) {
+      const q = stage2Data[s2Idx];
+      selectedBlocks = [];
+      document.getElementById("s2Progress").textContent = `第 ${s2Idx + 1} / ${stage2Data.length} 題`;
+      document.getElementById("s2Scene").textContent = q.sceneEmoji;
+      const hintEl = document.getElementById("s2Hint");
+      hintEl.classList.add("hidden");
+      hintEl.textContent = "";
+
+      renderSentenceUI();
+
+      // 畫面嚴禁印出目標句子
+      document.getElementById("teacherText").textContent =
+        "👂 聽清楚 Anna 老師讀嘅句子，按次序撳下面嘅積木拼出嚟！（可隨時撳「🔊 聽題目」）";
+
+      currentQuestionAudio = q.spokenPrompt;
+      currentQuestionRate = 0.78;
+      const entryVoice = isStageEntry && s2Idx === 0
+        ? `第二關，聽音拼句大挑戰！${q.spokenPrompt}`
+        : q.spokenPrompt;
+      if (shouldSpeak) speak(entryVoice, 0.78, null, false);
+    }
+
+    function renderSentenceUI() {
+      const q = stage2Data[s2Idx];
+      const slotsEl = document.getElementById("s2Slots");
+      const bankEl = document.getElementById("s2Bank");
+
+      slotsEl.innerHTML = "";
+      if (selectedBlocks.length === 0) {
+        const ph = document.createElement("span");
+        ph.className = "slot-placeholder";
+        ph.textContent = "按語音次序點選下方積木拼出完整句子";
+        slotsEl.appendChild(ph);
+      } else {
+        selectedBlocks.forEach((bIdx, pos) => {
+          const btn = document.createElement("button");
+          btn.className = "block-btn placed";
+          btn.textContent = q.blocks[bIdx];
+          btn.onclick = () => {
+            if (lockClick) return;
+            selectedBlocks.splice(pos, 1);
+            renderSentenceUI();
+          };
+          slotsEl.appendChild(btn);
+        });
+      }
+
+      bankEl.innerHTML = "";
+      q.blocks.forEach((txt, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "block-btn" + (selectedBlocks.includes(idx) ? " used" : "");
+        btn.textContent = txt;
+        btn.onclick = () => {
+          if (lockClick || selectedBlocks.includes(idx)) return;
+          selectedBlocks.push(idx);
+          renderSentenceUI();
+        };
+        bankEl.appendChild(btn);
+      });
+    }
+
+    function resetSentenceBlocks() {
+      if (lockClick) return;
+      selectedBlocks = [];
+      renderSentenceUI();
+    }
+
+    function checkSentence() {
+      if (lockClick) return;
+      const q = stage2Data[s2Idx];
+      const hintEl = document.getElementById("s2Hint");
+      const userArr = selectedBlocks.map(i => q.blocks[i]);
+
+      if (userArr.length < q.answer.length) {
+        const msg = "仲有積木未放上去呀，擺晒四舊先再檢查啦！";
+        hintEl.textContent = "💡 " + msg;
+        hintEl.classList.remove("hidden");
+        speak(msg, 0.82, null, false);
+        return;
+      }
+
+      const isRight = userArr.every((w, i) => w === q.answer[i]);
+      if (isRight) {
+        lockClick = true;
+        hintEl.classList.add("hidden");
+        const praise = `🎉 好犀利呀！拼啱晒：${q.spoken}`;
+        document.getElementById("teacherText").textContent = praise;
+        speak(`好犀利呀！拼啱晒：${q.spoken}`, 0.82, () => {
+          lockClick = false;
+          if (s2Idx < stage2Data.length - 1) {
+            s2Idx++;
+            renderStage2(true, false);
+          } else {
+            stats.s2Done = true;
+            goToStage(3, true);
+          }
+        }, false);
+      } else {
+        stats.s2NeedHint = true;
+        hintEl.textContent = q.screenHint;
+        hintEl.classList.remove("hidden");
+        document.getElementById("teacherText").textContent =
+          "🌟 次序爭少少咋！聽多一次再重新擺過啦！";
+        speak(q.spokenHint, 0.74, null, false);
+      }
+    }
+
+    // ========= 第 3 關：兒歌逐句點讀 =========
+    function renderStage3(shouldSpeak = true) {
+      const tabsEl = document.getElementById("rhymeTabs");
+      tabsEl.innerHTML = "";
+      rhymesData.forEach((r, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "rhyme-tab" + (idx === s3Tab ? " active" : "");
+        btn.textContent = r.title;
+        btn.onclick = () => {
+          stopAllSpeech();
+          s3Tab = idx;
+          renderStage3(false);
+        };
+        tabsEl.appendChild(btn);
+      });
+
+      const linesEl = document.getElementById("rhymeLines");
+      linesEl.innerHTML = "";
+      const curRhyme = rhymesData[s3Tab];
+      curRhyme.lines.forEach((line, lIdx) => {
+        const row = document.createElement("div");
+        row.className = "rhyme-row";
+        row.id = "rhyme-row-" + lIdx;
+
+        const span = document.createElement("span");
+        span.className = "rhyme-line-text";
+        span.textContent = line;
+
+        const btn = document.createElement("button");
+        btn.className = "line-speak-btn";
+        btn.textContent = "🔊 聽呢句";
+        btn.onclick = () => {
+          stopAllSpeech();
+          row.classList.add("playing");
+          speak(line, 0.78, () => row.classList.remove("playing"), false);
+        };
+
+        row.appendChild(span);
+        row.appendChild(btn);
+        linesEl.appendChild(row);
+      });
+
+      const msg = "第三關，兒歌金曲點唱機！玲玲可以撳右邊喇叭逐句跟讀，或者撳上面聽全首呀！";
+      document.getElementById("teacherText").textContent = msg;
+      currentQuestionAudio = msg;
+      currentQuestionRate = 0.82;
+      if (shouldSpeak) speak(msg, 0.82, null, false);
+    }
+
+    function playFullRhyme() {
+      stopAllSpeech();
+      fullRhymeAbort = false;
+      const lines = rhymesData[s3Tab].lines;
+      let i = 0;
+
+      function nextLine() {
+        if (fullRhymeAbort || i >= lines.length) {
+          document.querySelectorAll(".rhyme-row.playing").forEach(el => el.classList.remove("playing"));
+          return;
+        }
+        document.querySelectorAll(".rhyme-row.playing").forEach(el => el.classList.remove("playing"));
+        const row = document.getElementById("rhyme-row-" + i);
+        if (row) row.classList.add("playing");
+        const text = lines[i];
+        i++;
+        speak(text, 0.78, () => {
+          if (!fullRhymeAbort) nextLine();
+        }, false);
+      }
+      nextLine();
+    }
+
+    function finishStage3() {
+      stats.s3Done = true;
+      goToStage(4, true);
+    }
+
+    // ========= 第 4 關：靜音紅圈自讀（絕對零發聲） =========
+    function renderStage4(shouldSpeak = true) {
+      const grid = document.getElementById("wallGrid");
+      grid.innerHTML = "";
+
+      wallChars.forEach(ch => {
+        const cell = document.createElement("button");
+        cell.className = "char-cell" + (circledSet.has(ch) ? " circled" : "");
+        cell.textContent = ch;
+        cell.onclick = () => {
+          // 絕對靜音：只畫上或取消紅圈，嚴禁讀出該字
+          if (circledSet.has(ch)) {
+            circledSet.delete(ch);
+            cell.classList.remove("circled");
+          } else {
+            circledSet.add(ch);
+            cell.classList.add("circled");
+          }
+          document.getElementById("s4Count").textContent = `已圈出：${circledSet.size} 字`;
+        };
+        grid.appendChild(cell);
+      });
+
+      document.getElementById("s4Count").textContent = `已圈出：${circledSet.size} 字`;
+      const msg = "最後一關，靜音紅圈尋寶！邊隻字你識讀，就自己大聲讀出嚟再撳一下畫紅圈，呢關唔會出聲提示㗎！";
+      document.getElementById("teacherText").textContent = msg;
+      currentQuestionAudio = msg;
+      currentQuestionRate = 0.82;
+      if (shouldSpeak) speak(msg, 0.82, null, false);
+    }
+
+    function finishLesson() {
+      stats.s4Done = true;
+      goToStage(5, true);
+    }
+
+    // ========= 第 5 幕：畢業結算與雲端自動同步 =========
+    function renderSummary() {
+      const s1Status = stats.s1NeedHint ? "需提示" : "1次答對";
+      const s2Status = stats.s2NeedHint ? "需提示" : "1次答對";
+      const circledArr = wallChars.filter(c => circledSet.has(c));
+      const circledStr = circledArr.length > 0 ? circledArr.join("、") : "無";
+
+      const tbody = document.getElementById("summaryBody");
+      tbody.innerHTML = `
+        <tr><td>1. 純字詞語聽音</td><td>${s1Status}</td><td>${stats.s1Sec}s</td></tr>
+        <tr><td>2. 聽音句式積木</td><td>${s2Status}</td><td>${stats.s2Sec}s</td></tr>
+        <tr><td>3. 兒歌逐句重溫</td><td>已完成</td><td>${stats.s3Sec}s</td></tr>
+        <tr><td>4. 靜音紅圈自讀</td><td>圈出 ${circledArr.length} / ${wallChars.length} 字</td><td>${stats.s4Sec}s</td></tr>
+      `;
+
+      document.getElementById("summaryCircled").textContent = `⭕ 今課自讀圈出字（${circledArr.length}字）：${circledStr}`;
+
+      generatedReportText = `【中文課堂回報】P.21-25 Day 10 (cn-p21-p25-d10.html) | 詞語聽音: ${stats.s1Sec}s(${s1Status}) | 句式積木: ${stats.s2Sec}s(${s2Status}) | 兒歌重溫: ${stats.s3Sec}s | 靜音圈字: ${stats.s4Sec}s(圈出${circledArr.length}字) | 圈出識字清單: ${circledStr}`;
+
+      if (!hasSavedReport) {
+        hasSavedReport = true;
+        if (window.LinglingReport && typeof window.LinglingReport.save === "function") {
+          window.LinglingReport.save("中文AI課堂", "P.21-25 Day 10", generatedReportText);
+        }
+      }
+
+      const msg = `太棒喇！恭喜玲玲完成《我要謝謝你》全單元畢業總結，總共自己讀出咗 ${circledArr.length} 隻字呀！`;
+      document.getElementById("teacherText").textContent = msg;
+      currentQuestionAudio = msg;
+      currentQuestionRate = 0.82;
+      speak(msg, 0.82, null, false);
+    }
+
+    function copyReport() {
+      const fb = document.getElementById("copyFeedback");
+      if (!generatedReportText) return;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(generatedReportText).then(() => {
+          fb.textContent = "✅ 進度暗號已複製！可直接貼給 Elsa 或中文老師。";
+        }).catch(() => fallbackCopy(fb));
+      } else {
+        fallbackCopy(fb);
+      }
+    }
+
+    function fallbackCopy(fb) {
+      const ta = document.createElement("textarea");
+      ta.value = generatedReportText;
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand("copy");
+        fb.textContent = "✅ 進度暗號已複製！可直接貼給 Elsa 或中文老師。";
+      } catch (e) {
+        fb.textContent = "請長按上方戰報文字手動複製。";
+      }
+      document.body.removeChild(ta);
+    }
+
+    function restartAll() {
+      stopAllSpeech();
+      s1Idx = 0;
+      s2Idx = 0;
+      s3Tab = 0;
+      selectedBlocks = [];
+      circledSet.clear();
+      hasSavedReport = false;
+      stats.s1Sec = 0; stats.s1NeedHint = false; stats.s1Done = false;
+      stats.s2Sec = 0; stats.s2NeedHint = false; stats.s2Done = false;
+      stats.s3Sec = 0; stats.s3Done = false;
+      stats.s4Sec = 0; stats.s4Done = false;
+      document.getElementById("copyFeedback").textContent = "";
+      goToStage(1, true);
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      renderStage1(true, true);
+    });
+  </script>
+</body>
+</html>
