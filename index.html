@@ -336,6 +336,8 @@
                 <h3 class="unit-name">P.21-25 我要謝謝你</h3>
                 <p class="unit-desc">點擊展開 Test 1-3 列表</p>
             </a>
+             <a href="javascript:void(0)" onclick="openModal('modal-cn-p1')" class="unit-card card-cn-quiz"><span class="unit-card-icon">🎒</span><span class="unit-tag">單元闖關</span><h3 class="unit-name">P.1-4 適應週</h3><p class="unit-desc">點擊展開 Test 1-3 列表</p></a>
+
         </div>
     </section>
 
@@ -477,6 +479,19 @@
                 <span class="text-xl mr-2">🔒</span> Test 3：全單元錯字特訓 (預留)
             </a>
         </div>
+        <!-- 中文闖關：P.1-4 適應週子欄目彈窗 -->
+<div id="modal-cn-p1" class="modal-overlay" onclick="closeModal('modal-cn-p1')">
+    <div class="modal-content" style="border-color: #6EE7B7; border-bottom-color: #10B981;" onclick="event.stopPropagation()">
+        <button class="modal-close" onclick="closeModal('modal-cn-p1')">✖</button>
+        <h2 class="modal-title">🎒 P.1-4 適應週闖關</h2>
+        <div class="modal-list">
+            <a href="cn-p1-p4-test1.html?v=1" class="modal-item unlocked"><span class="text-xl mr-2">🏆</span> Test 1：校園詞語與兒歌盲測</a>
+            <a href="cn-p1-p4-test2.html" class="modal-item locked"><span class="text-xl mr-2">🔒</span> Test 2：進階綜合盲測 (預留)</a>
+            <a href="cn-p1-p4-test3.html" class="modal-item locked"><span class="text-xl mr-2">🔒</span> Test 3：全單元錯字特訓 (預留)</a>
+        </div>
+    </div>
+</div>
+
     </div>
 </div>
 
