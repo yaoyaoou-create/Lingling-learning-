@@ -1,0 +1,1617 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>中文 3D 魔法盲測 · P.1-4 適應週 Test 1</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@700;800;900&family=Noto+Sans+TC:wght@700;900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="theme.css?v=1" />
+  <script src="report-hub.js?v=2"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100dvh;
+      overflow: hidden;
+      font-family: "M PLUS Rounded 1c", "Noto Sans TC", "PingFang HK", sans-serif;
+      background: linear-gradient(135deg, #dbeafe 0%, #fef3c7 52%, #dcfce7 100%);
+      color: #1e293b;
+    }
+
+    /* 背景浮動 SVG 裝飾 */
+    .bg-deco {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .float-shape {
+      position: absolute;
+      opacity: 0.25;
+      animation: floatSlow 7s ease-in-out infinite;
+    }
+
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-12px) rotate(6deg); }
+    }
+
+    .app-shell {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 1040px;
+      height: 100dvh;
+      margin: 0 auto;
+      padding: 8px 12px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      overflow: hidden;
+    }
+
+    /* 3D 實體積木按鈕 */
+    .btn-3d {
+      border-radius: 18px;
+      border-width: 3px;
+      border-style: solid;
+      font-weight: 900;
+      cursor: pointer;
+      transition: transform 0.08s ease, box-shadow 0.08s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn-3d:active {
+      transform: translateY(4px);
+    }
+
+    .btn-amber {
+      background: linear-gradient(180deg, #fef08a 0%, #facc15 100%);
+      border-color: #eab308;
+      color: #713f12;
+      box-shadow: 0 5px 0 #ca8a04;
+    }
+    .btn-amber:active { box-shadow: 0 1px 0 #ca8a04; }
+
+    .btn-green {
+      background: linear-gradient(180deg, #4ade80 0%, #22c55e 100%);
+      border-color: #16a34a;
+      color: #ffffff;
+      box-shadow: 0 5px 0 #15803d;
+    }
+    .btn-green:active { box-shadow: 0 1px 0 #15803d; }
+
+    .btn-blue {
+      background: linear-gradient(180deg, #38bdf8 0%, #0ea5e9 100%);
+      border-color: #0284c7;
+      color: #ffffff;
+      box-shadow: 0 5px 0 #0369a1;
+    }
+    .btn-blue:active { box-shadow: 0 1px 0 #0369a1; }
+
+    .btn-purple {
+      background: linear-gradient(180deg, #c084fc 0%, #a855f7 100%);
+      border-color: #9333ea;
+      color: #ffffff;
+      box-shadow: 0 5px 0 #7e22ce;
+    }
+    .btn-purple:active { box-shadow: 0 1px 0 #7e22ce; }
+
+    .btn-white {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+      border-color: #cbd5e1;
+      color: #334155;
+      box-shadow: 0 5px 0 #94a3b8;
+    }
+    .btn-white:active { box-shadow: 0 1px 0 #94a3b8; }
+
+    /* 頂部橫向進度導航列 (Breadcrumb) */
+    .top-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      padding: 6px 10px;
+      background: rgba(255, 255, 255, 0.92);
+      border-radius: 20px;
+      border: 3px solid #fde68a;
+      box-shadow: 0 4px 0 #fcd34d;
+      flex-shrink: 0;
+    }
+
+    .breadcrumb-strip {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding: 2px 0;
+    }
+    .breadcrumb-strip::-webkit-scrollbar { display: none; }
+
+    .crumb-btn {
+      padding: 4px 8px;
+      border-radius: 12px;
+      border: 2px solid transparent;
+      background: transparent;
+      color: #64748b;
+      font-size: clamp(12px, 1.55vw, 15px);
+      font-weight: 800;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: transform 0.12s ease, color 0.12s ease;
+    }
+
+    .crumb-btn.active {
+      background: #ffedd5;
+      border-color: #fb923c;
+      color: #ea580c;
+      transform: scale(1.08);
+      font-weight: 900;
+    }
+
+    .crumb-btn.done {
+      color: #16a34a;
+    }
+
+    .crumb-arrow {
+      color: #cbd5e1;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    /* 導師語音列 */
+    .coach-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 8px 12px;
+      background: #ffffff;
+      border-radius: 18px;
+      border: 3px solid #93c5fd;
+      box-shadow: 0 4px 0 #60a5fa;
+      flex-shrink: 0;
+    }
+
+    .coach-text {
+      font-size: clamp(15px, 2vw, 20px);
+      font-weight: 900;
+      color: #1e3a8a;
+      line-height: 1.25;
+    }
+
+    /* 主舞台卡片 (.stage-card 暖奶油立體底座) */
+    .stage-card {
+      flex: 1;
+      min-height: 0;
+      background: linear-gradient(180deg, #fffdf7 0%, #fff7e6 100%);
+      border-radius: 28px;
+      border: 4px solid #fbbf24;
+      border-bottom-width: 9px;
+      border-bottom-color: #d97706;
+      box-shadow: 0 10px 22px rgba(180, 83, 9, 0.12);
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+
+    .level-view {
+      display: none;
+      width: 100%;
+      height: 100%;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 8px;
+      min-height: 0;
+    }
+
+    .level-view.active {
+      display: flex;
+    }
+
+    /* 預習大廳網格 */
+    .preview-grid {
+      flex: 1;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    @media (max-width: 640px) {
+      .preview-grid {
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(4, 1fr);
+      }
+    }
+
+    .preview-tile {
+      border-radius: 18px;
+      border: 3px solid #fdba74;
+      background: linear-gradient(180deg, #ffffff 0%, #fffbeb 100%);
+      box-shadow: 0 4px 0 #f59e0b;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    .preview-tile:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 #f59e0b;
+    }
+
+    .preview-word {
+      font-size: clamp(20px, 2.8vw, 30px);
+      font-weight: 900;
+      color: #431407;
+      line-height: 1.15;
+      text-align: center;
+    }
+
+    .preview-word.long-word {
+      font-size: clamp(14px, 1.9vw, 20px);
+    }
+
+    /* Level 1: 魔法蛋與純字閃卡 */
+    .egg-stage {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .magic-egg {
+      width: clamp(150px, 24dvh, 210px);
+      height: clamp(180px, 28dvh, 240px);
+      border-radius: 50% 50% 45% 45% / 60% 60% 40% 40%;
+      background: radial-gradient(circle at 35% 30%, #ffffff 0%, #fde68a 45%, #f59e0b 100%);
+      border: 5px solid #d97706;
+      box-shadow: 0 10px 0 #b45309, 0 16px 24px rgba(180, 83, 9, 0.25);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      animation: eggWobble 2s ease-in-out infinite;
+    }
+
+    @keyframes eggWobble {
+      0%, 100% { transform: rotate(-2deg); }
+      50% { transform: rotate(2deg); }
+    }
+
+    .flash-card {
+      width: min(520px, 92%);
+      min-height: clamp(150px, 28dvh, 230px);
+      border-radius: 28px;
+      background: #ffffff;
+      border: 5px solid #38bdf8;
+      box-shadow: 0 9px 0 #0284c7;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 16px;
+    }
+
+    .flash-word {
+      font-size: clamp(54px, 9vw, 88px);
+      font-weight: 900;
+      color: #0f172a;
+      letter-spacing: 6px;
+      line-height: 1.1;
+    }
+
+    .timer-track {
+      width: min(460px, 90%);
+      height: 16px;
+      border-radius: 999px;
+      background: #e2e8f0;
+      overflow: hidden;
+      border: 2px solid #cbd5e1;
+    }
+
+    .timer-fill {
+      height: 100%;
+      width: 100%;
+      background: linear-gradient(90deg, #22c55e 0%, #facc15 65%, #f97316 100%);
+      transition: width 0.2s linear;
+    }
+
+    /* Level 2: 無圖聽音選字 */
+    .choice-grid {
+      flex: 1;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      align-content: center;
+      padding: 6px 8px;
+    }
+
+    .choice-card {
+      min-height: clamp(88px, 16dvh, 130px);
+      border-radius: 24px;
+      border: 4px solid #60a5fa;
+      background: linear-gradient(180deg, #ffffff 0%, #eff6ff 100%);
+      box-shadow: 0 7px 0 #2563eb;
+      color: #1e293b;
+      font-size: clamp(32px, 5.2vw, 54px);
+      font-weight: 900;
+      letter-spacing: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .choice-card:active {
+      transform: translateY(4px);
+      box-shadow: 0 3px 0 #2563eb;
+    }
+
+    /* Level 3: 雙字詞語小火車 */
+    .train-track {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 10px;
+      border-radius: 22px;
+      background: #ecfeff;
+      border: 3px dashed #22d3ee;
+      flex-shrink: 0;
+    }
+
+    .train-head {
+      font-size: clamp(40px, 6.5dvh, 62px);
+      line-height: 1;
+    }
+
+    .train-car {
+      width: clamp(82px, 15vw, 122px);
+      height: clamp(82px, 14dvh, 114px);
+      border-radius: 20px;
+      border: 4px dashed #f59e0b;
+      background: #ffffff;
+      color: #92400e;
+      font-size: clamp(40px, 6vw, 58px);
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 5px 0 #fcd34d;
+    }
+
+    .train-car.filled {
+      border-style: solid;
+      background: #fef08a;
+      border-color: #eab308;
+      box-shadow: 0 5px 0 #ca8a04;
+    }
+
+    .tile-bank-6 {
+      flex: 1;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      align-content: center;
+      padding: 4px 10px;
+    }
+
+    .char-tile {
+      min-height: clamp(72px, 13dvh, 104px);
+      border-radius: 20px;
+      border: 4px solid #c084fc;
+      background: linear-gradient(180deg, #ffffff 0%, #faf5ff 100%);
+      box-shadow: 0 6px 0 #9333ea;
+      color: #3b0764;
+      font-size: clamp(34px, 5vw, 50px);
+      font-weight: 900;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .char-tile:active {
+      transform: translateY(3px);
+      box-shadow: 0 2px 0 #9333ea;
+    }
+
+    .char-tile.used {
+      opacity: 0.25;
+      pointer-events: none;
+      box-shadow: none;
+    }
+
+    /* Level 4: 4x4 全字庫語境尋寶 */
+    .grid-4x4 {
+      flex: 1;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(4, 1fr);
+      gap: 8px;
+      padding: 2px 6px;
+    }
+
+    .treasure-cell {
+      border-radius: 18px;
+      border: 3px solid #6ee7b7;
+      background: linear-gradient(180deg, #ffffff 0%, #ecfdf5 100%);
+      box-shadow: 0 5px 0 #10b981;
+      color: #064e3b;
+      font-size: clamp(28px, 4.4vw, 44px);
+      font-weight: 900;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .treasure-cell:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 #10b981;
+    }
+
+    /* Level 5: 句式積木重組 ＋ 親子朗讀打卡 */
+    .sentence-slots {
+      min-height: clamp(68px, 11.5dvh, 92px);
+      padding: 8px 12px;
+      border-radius: 20px;
+      background: #fffbeb;
+      border: 3px dashed #fb923c;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .sentence-bank {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 4px;
+    }
+
+    .sent-block {
+      padding: 12px 18px;
+      border-radius: 18px;
+      border: 3px solid #38bdf8;
+      background: linear-gradient(180deg, #ffffff 0%, #e0f2fe 100%);
+      box-shadow: 0 5px 0 #0284c7;
+      color: #0c4a6e;
+      font-size: clamp(20px, 3vw, 30px);
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .sent-block.placed {
+      background: linear-gradient(180deg, #fef08a 0%, #fde047 100%);
+      border-color: #eab308;
+      box-shadow: 0 4px 0 #ca8a04;
+      color: #713f12;
+    }
+
+    .sent-block.used {
+      opacity: 0.25;
+      pointer-events: none;
+      box-shadow: none;
+    }
+
+    /* 親子打卡卡片 */
+    .reading-card {
+      flex: 1;
+      min-height: 0;
+      background: #ffffff;
+      border-radius: 22px;
+      border: 3px solid #f9a8d4;
+      box-shadow: 0 6px 0 #f472b6;
+      padding: 14px 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 10px;
+      text-align: center;
+    }
+
+    /* 正確／錯誤動畫特效 */
+    .correct-pop {
+      background: #dcfce7 !important;
+      border-color: #22c55e !important;
+      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.35), 0 6px 0 #16a34a !important;
+      color: #14532d !important;
+      animation: bouncePop 0.35s ease;
+    }
+
+    .wrong-shake {
+      background: #fee2e2 !important;
+      border-color: #ef4444 !important;
+      box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.28), 0 4px 0 #dc2626 !important;
+      animation: wrongShake 0.4s ease;
+    }
+
+    @keyframes bouncePop {
+      0% { transform: scale(1); }
+      45% { transform: scale(1.08); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes wrongShake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-8px); }
+      40% { transform: translateX(8px); }
+      60% { transform: translateX(-6px); }
+      80% { transform: translateX(6px); }
+    }
+
+    /* 全螢幕星星粒子 */
+    #starLayer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 999;
+      overflow: hidden;
+    }
+
+    .star-particle {
+      position: absolute;
+      font-size: 28px;
+      animation: starBurst 0.9s ease-out forwards;
+    }
+
+    @keyframes starBurst {
+      0% { transform: translate(0, 0) scale(0.4) rotate(0deg); opacity: 1; }
+      100% { transform: translate(var(--tx), var(--ty)) scale(1.3) rotate(220deg); opacity: 0; }
+    }
+
+    .feedback-bar {
+      min-height: 34px;
+      padding: 5px 12px;
+      border-radius: 14px;
+      background: #fef9c3;
+      border: 2px dashed #eab308;
+      color: #854d0e;
+      font-size: clamp(14px, 1.9vw, 18px);
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      flex-shrink: 0;
+    }
+    .feedback-bar.hidden-vis { visibility: hidden; }
+  </style>
+</head>
+<body>
+  <!-- 浮動 SVG 卡通裝飾 -->
+  <div class="bg-deco" aria-hidden="true">
+    <svg class="float-shape" style="top: 6%; left: 4%; width: 70px;" viewBox="0 0 100 100">
+      <polygon points="50,5 63,36 96,38 71,59 79,92 50,74 21,92 29,59 4,38 37,36" fill="#f59e0b" />
+    </svg>
+    <svg class="float-shape" style="bottom: 8%; right: 5%; width: 84px; animation-delay: 1.6s;" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="40" fill="#38bdf8" />
+    </svg>
+    <svg class="float-shape" style="top: 48%; right: 2%; width: 58px; animation-delay: 3s;" viewBox="0 0 100 100">
+      <rect x="16" y="16" width="68" height="68" rx="18" fill="#4ade80" />
+    </svg>
+  </div>
+
+  <div id="starLayer"></div>
+
+  <div class="app-shell">
+    <!-- 頂部橫向導航列 (Breadcrumb) -->
+    <div class="top-nav">
+      <a href="index.html" class="btn-3d btn-white px-3 py-1.5 text-sm md:text-base whitespace-nowrap" onclick="stopAllSpeech()">🏠 返回</a>
+
+      <div class="breadcrumb-strip" id="breadcrumbStrip">
+        <button class="crumb-btn" id="crumb-1" onclick="renderLevel(1)">1.閃卡</button>
+        <span class="crumb-arrow">➔</span>
+        <button class="crumb-btn" id="crumb-2" onclick="renderLevel(2)">2.聽音</button>
+        <span class="crumb-arrow">➔</span>
+        <button class="crumb-btn" id="crumb-3" onclick="renderLevel(3)">3.火車</button>
+        <span class="crumb-arrow">➔</span>
+        <button class="crumb-btn" id="crumb-4" onclick="renderLevel(4)">4.尋寶</button>
+        <span class="crumb-arrow">➔</span>
+        <button class="crumb-btn" id="crumb-5" onclick="renderLevel(5)">5.句式</button>
+        <span class="crumb-arrow">➔</span>
+        <button class="crumb-btn" id="crumb-6" onclick="renderLevel(6)">結算</button>
+      </div>
+
+      <div class="flex items-center gap-1.5 flex-shrink-0">
+        <button class="btn-3d btn-amber px-2.5 py-1.5 text-xs md:text-sm whitespace-nowrap" onclick="renderLevel(0)">首頁</button>
+        <button class="btn-3d btn-purple px-2.5 py-1.5 text-xs md:text-sm whitespace-nowrap" onclick="shuffleAndRestart()">🎲 洗牌</button>
+      </div>
+    </div>
+
+    <!-- Anna 老師導航列（嚴格零劇透） -->
+    <div class="coach-bar">
+      <div class="flex items-center gap-2 min-w-0">
+        <span class="text-2xl md:text-3xl flex-shrink-0">👩‍🏫</span>
+        <div class="coach-text" id="coachText">🎒 歡迎來到《P.1–4 適應週》3D 魔法盲測大廳！點字卡預習，準備好就開波！</div>
+      </div>
+      <button class="btn-3d btn-blue px-3.5 py-2 text-sm md:text-base whitespace-nowrap flex-shrink-0" onclick="replayCurrentQuestion()">🔊 聽題目</button>
+    </div>
+
+    <!-- 主舞台卡片 -->
+    <div class="stage-card">
+      <!-- Level 0: 預習大廳 -->
+      <section class="level-view active" id="level-0">
+        <div class="flex items-center justify-between">
+          <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-800 font-black text-sm md:text-base">🎒 預習大廳 · P.1–4 適應週核心詞語</span>
+          <span class="text-xs md:text-sm font-extrabold text-amber-700">點擊字卡聽廣東話發音</span>
+        </div>
+        <div class="preview-grid" id="previewGrid"></div>
+        <div class="flex justify-center">
+          <button class="btn-3d btn-green px-7 py-2.5 text-lg md:text-xl" onclick="startQuizFromLobby()">🚀 開始 5 關魔法盲測！</button>
+        </div>
+      </section>
+
+      <!-- Level 1: 孵魔法蛋 + 10秒限時純字閃卡 -->
+      <section class="level-view" id="level-1">
+        <div class="flex items-center justify-between">
+          <span class="px-3 py-1 rounded-full bg-orange-100 text-orange-700 font-black text-sm md:text-base">🥚 Level 1：孵魔法蛋 · 10 秒純字閃卡</span>
+          <span class="font-black text-orange-800 text-sm md:text-base" id="l1Progress">第 1 / 8 張</span>
+        </div>
+        <div class="egg-stage" id="l1Stage"></div>
+        <div class="flex items-center justify-center gap-3" id="l1Controls"></div>
+      </section>
+
+      <!-- Level 2: 無圖純文字聽音選字 -->
+      <section class="level-view" id="level-2">
+        <div class="flex items-center justify-between">
+          <span class="px-3 py-1 rounded-full bg-sky-100 text-sky-800 font-black text-sm md:text-base">👂 Level 2：無圖純字聽音選詞</span>
+          <span class="font-black text-sky-800 text-sm md:text-base" id="l2Progress">第 1 / 6 題</span>
+        </div>
+        <div class="choice-grid" id="l2Grid"></div>
+        <div class="feedback-bar hidden-vis" id="l2Feedback"></div>
+      </section>
+
+      <!-- Level 3: 組裝雙字詞語小火車 -->
+      <section class="level-view" id="level-3">
+        <div class="flex items-center justify-between">
+          <span class="px-3 py-1 rounded-full bg-purple-100 text-purple-800 font-black text-sm md:text-base">🚂 Level 3：雙字詞語小火車</span>
+          <span class="font-black text-purple-800 text-sm md:text-base" id="l3Progress">第 1 / 5 班車</span>
+        </div>
+        <div class="train-track">
+          <span class="train-head">🚂</span>
+          <button class="train-car" id="car-0" onclick="removeTrainCar(0)">?</button>
+          <span class="text-2xl font-black text-cyan-600">➕</span>
+          <button class="train-car" id="car-1" onclick="removeTrainCar(1)">?</button>
+        </div>
+        <div class="tile-bank-6" id="l3Bank"></div>
+        <div class="feedback-bar hidden-vis" id="l3Feedback"></div>
+      </section>
+
+      <!-- Level 4: 4x4 全字庫語境尋寶 -->
+      <section class="level-view" id="level-4">
+        <div class="flex items-center justify-between">
+          <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 font-black text-sm md:text-base">🔍 Level 4：全字庫 4×4 語境尋寶</span>
+          <span class="font-black text-emerald-800 text-sm md:text-base" id="l4Progress">第 1 / 6 題</span>
+        </div>
+        <div class="grid-4x4" id="l4Grid"></div>
+        <div class="feedback-bar hidden-vis" id="l4Feedback"></div>
+      </section>
+
+      <!-- Level 5: 句式積木重組 + 親子朗讀打卡 -->
+      <section class="level-view" id="level-5">
+        <div class="flex items-center justify-between">
+          <span class="px-3 py-1 rounded-full bg-pink-100 text-pink-800 font-black text-sm md:text-base" id="l5Tag">🧱 Level 5：聽音句式積木重組</span>
+          <span class="font-black text-pink-800 text-sm md:text-base" id="l5Progress">第 1 / 4 句</span>
+        </div>
+
+        <!-- 拼句區 -->
+        <div id="l5PuzzleWrap" class="flex-1 min-h-0 flex flex-col justify-between gap-2">
+          <div class="sentence-slots" id="l5Slots"></div>
+          <div class="sentence-bank" id="l5Bank"></div>
+          <div class="feedback-bar hidden-vis" id="l5Feedback"></div>
+          <div class="flex items-center justify-center gap-3">
+            <button class="btn-3d btn-white px-5 py-2 text-base md:text-lg" onclick="resetL5Blocks()">🔄 重排</button>
+            <button class="btn-3d btn-green px-6 py-2 text-base md:text-lg" onclick="checkL5Sentence()">✅ 檢查句子</button>
+          </div>
+        </div>
+
+        <!-- 親子朗讀打卡區 -->
+        <div id="l5ReadingWrap" class="hidden flex-1 min-h-0 flex-col justify-between gap-2">
+          <div class="reading-card">
+            <div class="text-lg md:text-2xl font-black text-pink-700">🎤 親子口語朗讀打卡（P.2 句式 ＋ P.4《歡樂時光》）</div>
+            <div class="text-base md:text-xl font-black text-slate-800 bg-amber-50 rounded-2xl p-2.5 border-2 border-amber-200">
+              1️⃣ 我是（班別名稱）班學生。<br />
+              2️⃣ 我在深培中英文幼稚園上學。
+            </div>
+            <div class="text-lg md:text-2xl font-black text-emerald-900 bg-emerald-50 rounded-2xl p-3 border-2 border-emerald-200 leading-relaxed">
+              《歡樂時光》<br />
+              學校生活樂趣多，老師同學在一起，天天快樂笑呵呵。
+            </div>
+          </div>
+          <div class="flex items-center justify-center gap-3">
+            <button class="btn-3d btn-blue px-5 py-2.5 text-base md:text-lg" onclick="playReadingDemo()">🔊 聽兒歌示範</button>
+            <button class="btn-3d btn-green px-6 py-2.5 text-base md:text-xl" onclick="finishLevel5Reading()">🏆 讀完打卡！去睇成績</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Level 6: 結算與家長錯題診斷報告 -->
+      <section class="level-view" id="level-6">
+        <div class="flex flex-col items-center justify-between h-full gap-2 text-center">
+          <div class="text-2xl md:text-3xl font-black text-amber-700">🏆 恭喜玲玲完成 P.1–4《適應週》Test 1 盲測！</div>
+          <div class="px-4 py-1 rounded-full bg-green-100 border-2 border-green-500 text-green-800 font-black text-sm md:text-base">
+            ☁️ 戰報已自動同步至家長戰報箱
+          </div>
+
+          <div class="w-full flex-1 min-h-0 overflow-y-auto bg-white rounded-2xl border-2 border-amber-200 p-3 text-left flex flex-col gap-2">
+            <div class="font-black text-base md:text-lg text-slate-800" id="summaryStats"></div>
+            <div class="p-3 rounded-xl bg-rose-50 border-2 border-rose-200 text-rose-900 font-extrabold text-sm md:text-base" id="summaryErrors"></div>
+            <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-600 font-bold text-xs md:text-sm break-all" id="summaryCodePreview"></div>
+          </div>
+
+          <div class="flex items-center justify-center gap-3 flex-wrap">
+            <button class="btn-3d btn-green px-6 py-2.5 text-base md:text-lg" onclick="copyReport()">📋 一鍵複製測驗暗號</button>
+            <button class="btn-3d btn-purple px-5 py-2.5 text-base md:text-lg" onclick="shuffleAndRestart()">🎲 隨機洗牌再測</button>
+          </div>
+          <div class="text-sm font-black text-emerald-700 min-h-[20px]" id="copyFeedback"></div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    // ========= 1. 全字庫 ALL_LEARNED_WORDS（對齊《玲玲K2_中文學習總庫》） =========
+    const ALL_LEARNED_WORDS = [
+      "我","你","爸","媽","哥","姐","朋","友","人","家","庭","子",
+      "眼","耳","口","鼻","手","唱","歌","玩","出","遊",
+      "米","飯","牛","奶","肉","蛋","菜","豆","水","果","香","甜","蜜","糖","紅","白","蔬","食","物","蝸",
+      "一","二","三","四","大","小","多","少","上","下","中","不","的","和",
+      "學","校","室","課","書","圖","畫","愛","好","樂","電",
+      "老","師","同","男","女","孩","開","心","平","靜","天","快","笑"
+    ];
+
+    // ========= 2. iPad Safari 廣東話防吞聲安全引擎 =========
+    window.utterancePool = [];
+    let speakTimer = null;
+    let flashInterval = null;
+    let autoNextTimer = null;
+    let currentQuestionSpeech = "";
+    let currentQuestionRate = 0.80;
+
+    function getCantoneseVoice() {
+      const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+      return (
+        voices.find(v => v.lang === "zh-HK" && /sinji|tracy|ting|female/i.test(v.name)) ||
+        voices.find(v => v.lang === "zh-HK") ||
+        voices.find(v => v.lang && v.lang.toLowerCase().includes("hk")) ||
+        voices.find(v => v.lang && v.lang.toLowerCase().includes("zh")) ||
+        null
+      );
+    }
+
+    function stopAllSpeech() {
+      if (speakTimer) { clearTimeout(speakTimer); speakTimer = null; }
+      if (flashInterval) { clearInterval(flashInterval); flashInterval = null; }
+      if (autoNextTimer) { clearTimeout(autoNextTimer); autoNextTimer = null; }
+      if (window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+      }
+    }
+
+    function speak(text, rate = 0.80, onEnd = null) {
+      if (speakTimer) { clearTimeout(speakTimer); speakTimer = null; }
+      if (window.speechSynthesis) window.speechSynthesis.cancel();
+      if (!window.speechSynthesis || !text) return;
+
+      speakTimer = setTimeout(() => {
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = "zh-HK";
+        u.rate = rate;
+        u.pitch = 1.05;
+        const v = getCantoneseVoice();
+        if (v) u.voice = v;
+
+        u.onend = () => {
+          const idx = window.utterancePool.indexOf(u);
+          if (idx > -1) window.utterancePool.splice(idx, 1);
+          if (typeof onEnd === "function") onEnd();
+        };
+        u.onerror = () => {
+          const idx = window.utterancePool.indexOf(u);
+          if (idx > -1) window.utterancePool.splice(idx, 1);
+        };
+
+        window.utterancePool.push(u);
+        window.speechSynthesis.speak(u);
+      }, 45);
+    }
+
+    function replayCurrentQuestion() {
+      if (currentQuestionSpeech) {
+        speak(currentQuestionSpeech, currentQuestionRate);
+      }
+    }
+
+    window.addEventListener("pagehide", stopAllSpeech);
+    window.addEventListener("beforeunload", stopAllSpeech);
+    if (window.speechSynthesis) {
+      window.speechSynthesis.onvoiceschanged = () => getCantoneseVoice();
+    }
+
+    // ========= 3. 特效與工具函式 =========
+    function shuffleArray(arr) {
+      const a = arr.slice();
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function pickDistractors(excludeChars, count) {
+      const pool = shuffleArray(ALL_LEARNED_WORDS.filter(ch => !excludeChars.includes(ch)));
+      return pool.slice(0, count);
+    }
+
+    function spawnStars() {
+      const layer = document.getElementById("starLayer");
+      const icons = ["⭐", "🌟", "✨", "🎉"];
+      for (let i = 0; i < 16; i++) {
+        const el = document.createElement("div");
+        el.className = "star-particle";
+        el.textContent = icons[i % icons.length];
+        el.style.left = (20 + Math.random() * 60) + "vw";
+        el.style.top = (25 + Math.random() * 45) + "vh";
+        el.style.setProperty("--tx", ((Math.random() - 0.5) * 260) + "px");
+        el.style.setProperty("--ty", (-80 - Math.random() * 180) + "px");
+        layer.appendChild(el);
+        setTimeout(() => el.remove(), 950);
+      }
+    }
+
+    // ========= 4. 題庫資料（完全取材自 P.1–P.4《適應週》） =========
+    const previewWords = [
+      { word: "老師", emoji: "👩‍🏫" },
+      { word: "同學", emoji: "👧👦" },
+      { word: "學校", emoji: "🏫" },
+      { word: "男孩子", emoji: "👦" },
+      { word: "女孩子", emoji: "👧" },
+      { word: "深培中英文幼稚園", emoji: "☀️", long: true },
+      { word: "開心", emoji: "😄" },
+      { word: "平靜", emoji: "😐" },
+      { word: "疲倦", emoji: "😴" },
+      { word: "難過", emoji: "😢" },
+      { word: "天天", emoji: "📆" },
+      { word: "快樂", emoji: "🎈" }
+    ];
+
+    const baseL1 = ["老師", "同學", "學校", "男孩子", "女孩子", "開心", "快樂", "天天"];
+
+    const baseL2 = [
+      { target: "老師", options: ["老師", "同學", "學校", "朋友"], audio: "請玲玲聽清楚，搵出教書嘅「老師」！" },
+      { target: "學校", options: ["學校", "學生", "課室", "家庭"], audio: "請玲玲聽清楚，搵出返學嘅地方「學校」！" },
+      { target: "同學", options: ["同學", "老師", "書包", "爸爸"], audio: "請玲玲聽清楚，搵出一齊上堂嘅「同學」！" },
+      { target: "男孩子", options: ["男孩子", "女孩子", "好朋友", "小朋友"], audio: "請玲玲聽清楚，搵出「男孩子」！" },
+      { target: "女孩子", options: ["女孩子", "男孩子", "好朋友", "大姐姐"], audio: "請玲玲聽清楚，搵出「女孩子」！" },
+      { target: "開心", options: ["開心", "平靜", "疲倦", "難過"], audio: "請玲玲聽清楚，搵出笑得好燦爛嘅「開心」！" }
+    ];
+
+    const baseL3 = [
+      { word: "老師", chars: ["老", "師"], audio: "請玲玲拼出雙字小火車：「老師」！" },
+      { word: "同學", chars: ["同", "學"], audio: "請玲玲拼出雙字小火車：「同學」！" },
+      { word: "學校", chars: ["學", "校"], audio: "請玲玲拼出雙字小火車：「學校」！" },
+      { word: "開心", chars: ["開", "心"], audio: "請玲玲拼出雙字小火車：「開心」！" },
+      { word: "快樂", chars: ["快", "樂"], audio: "請玲玲拼出雙字小火車：「快樂」！" }
+    ];
+
+    const baseL4 = [
+      { target: "老", label: "尋寶:老師(老)", audio: "請喺下面 16 個字寶寶入面，搵出「老師」嘅「老」字！" },
+      { target: "校", label: "尋寶:學校(校)", audio: "請喺下面 16 個字寶寶入面，搵出「學校」嘅「校」字！" },
+      { target: "同", label: "尋寶:同學(同)", audio: "請喺下面 16 個字寶寶入面，搵出「同學」嘅「同」字！" },
+      { target: "開", label: "尋寶:開心(開)", audio: "請喺下面 16 個字寶寶入面，搵出「開心」嘅「開」字！" },
+      { target: "天", label: "尋寶:天天(天)", audio: "請喺下面 16 個字寶寶入面，搵出「天天快樂」嘅「天」字！" },
+      { target: "樂", label: "尋寶:快樂(樂)", audio: "請喺下面 16 個字寶寶入面，搵出「快樂」嘅「樂」字！" }
+    ];
+
+    const baseL5 = [
+      {
+        answer: ["我", "在", "深培中英文幼稚園", "上學。"],
+        spoken: "我在深培中英文幼稚園上學。",
+        audio: "請玲玲聽清楚，按次序拼出呢句：我在深培中英文幼稚園上學。"
+      },
+      {
+        answer: ["學校", "生活", "樂趣", "多，"],
+        spoken: "學校生活樂趣多，",
+        audio: "請玲玲聽清楚，按次序拼出兒歌第一句：學校生活樂趣多。"
+      },
+      {
+        answer: ["老師", "同學", "在", "一起，"],
+        spoken: "老師同學在一起，",
+        audio: "請玲玲聽清楚，按次序拼出兒歌第二句：老師同學在一起。"
+      },
+      {
+        answer: ["天天", "快樂", "笑", "呵呵。"],
+        spoken: "天天快樂笑呵呵。",
+        audio: "最後一句！請玲玲拼出兒歌第三句：天天快樂笑呵呵。"
+      }
+    ];
+
+    // ========= 5. 遊戲狀態與嚴格錯題記錄 =========
+    let currentLevel = 0;
+    let quizStartTs = Date.now();
+    let hasSavedReport = false;
+    let generatedReportText = "";
+    let lockInput = false;
+
+    const doneLevels = { 1: false, 2: false, 3: false, 4: false, 5: false };
+    let errorMap = {};
+
+    let l1List = [];
+    let l1Idx = 0;
+    let l1Hatched = false;
+
+    let l2List = [];
+    let l2Idx = 0;
+
+    let l3List = [];
+    let l3Idx = 0;
+    let l3BankChars = [];
+    let l3Picked = [];
+
+    let l4List = [];
+    let l4Idx = 0;
+
+    let l5List = [];
+    let l5Idx = 0;
+    let l5Blocks = [];
+    let l5Picked = [];
+    let l5InReading = false;
+
+    function recordError(itemLabel) {
+      if (!itemLabel) return;
+      errorMap[itemLabel] = (errorMap[itemLabel] || 0) + 1;
+    }
+
+    function initDecks(doShuffle = false) {
+      l1List = doShuffle ? shuffleArray(baseL1) : baseL1.slice();
+      l2List = (doShuffle ? shuffleArray(baseL2) : baseL2.slice()).map(q => ({
+        ...q,
+        options: shuffleArray(q.options)
+      }));
+      l3List = doShuffle ? shuffleArray(baseL3) : baseL3.slice();
+      l4List = doShuffle ? shuffleArray(baseL4) : baseL4.slice();
+      l5List = doShuffle ? shuffleArray(baseL5) : baseL5.slice();
+
+      l1Idx = 0; l1Hatched = false;
+      l2Idx = 0;
+      l3Idx = 0; l3Picked = [];
+      l4Idx = 0;
+      l5Idx = 0; l5Picked = []; l5InReading = false;
+      errorMap = {};
+      hasSavedReport = false;
+      quizStartTs = Date.now();
+      for (let i = 1; i <= 5; i++) doneLevels[i] = false;
+    }
+
+    function updateBreadcrumbs() {
+      for (let i = 1; i <= 6; i++) {
+        const el = document.getElementById("crumb-" + i);
+        if (!el) continue;
+        el.classList.remove("active", "done");
+        if (currentLevel === i) el.classList.add("active");
+        else if (doneLevels[i]) el.classList.add("done");
+      }
+    }
+
+    function renderLevel(levelIndex) {
+      stopAllSpeech();
+      lockInput = false;
+      currentLevel = levelIndex;
+
+      document.querySelectorAll(".level-view").forEach(v => v.classList.remove("active"));
+      const targetView = document.getElementById("level-" + levelIndex);
+      if (targetView) targetView.classList.add("active");
+      updateBreadcrumbs();
+
+      if (levelIndex === 0) renderLobby();
+      if (levelIndex === 1) renderLevel1(true);
+      if (levelIndex === 2) renderLevel2(true);
+      if (levelIndex === 3) renderLevel3(true);
+      if (levelIndex === 4) renderLevel4(true);
+      if (levelIndex === 5) renderLevel5(true);
+      if (levelIndex === 6) renderLevel6();
+    }
+
+    function startQuizFromLobby() {
+      quizStartTs = Date.now();
+      renderLevel(1);
+    }
+
+    function shuffleAndRestart() {
+      stopAllSpeech();
+      initDecks(true);
+      renderLevel(1);
+    }
+
+    // ========= Level 0: 預習大廳 =========
+    function renderLobby() {
+      const grid = document.getElementById("previewGrid");
+      grid.innerHTML = "";
+      previewWords.forEach(item => {
+        const btn = document.createElement("button");
+        btn.className = "preview-tile";
+        btn.innerHTML = `
+          <span class="text-2xl md:text-3xl leading-none">${item.emoji}</span>
+          <span class="preview-word ${item.long ? "long-word" : ""}">${item.word}</span>
+        `;
+        btn.onclick = () => {
+          speak(item.word, 0.78);
+        };
+        grid.appendChild(btn);
+      });
+
+      const msg = "歡迎來到適應週預習大廳！玲玲可以點下面字卡聽讀音，準備好就撳綠色掣開始 5 關魔法盲測！";
+      document.getElementById("coachText").textContent = "🎒 歡迎來到《P.1–4 適應週》預習大廳！點字卡預習，準備好就開波！";
+      currentQuestionSpeech = msg;
+      currentQuestionRate = 0.82;
+    }
+
+    // ========= Level 1: 孵魔法蛋 + 10秒限時純字閃卡 =========
+    function renderLevel1(isEntry = false) {
+      if (flashInterval) { clearInterval(flashInterval); flashInterval = null; }
+      const word = l1List[l1Idx];
+      document.getElementById("l1Progress").textContent = `第 ${l1Idx + 1} / ${l1List.length} 張`;
+
+      const stage = document.getElementById("l1Stage");
+      const controls = document.getElementById("l1Controls");
+      stage.innerHTML = "";
+      controls.innerHTML = "";
+
+      if (!l1Hatched) {
+        const egg = document.createElement("button");
+        egg.className = "magic-egg";
+        egg.innerHTML = `<span class="text-5xl md:text-6xl">🥚</span><span class="mt-2 font-black text-amber-900 text-lg md:text-xl">點我孵蛋！</span>`;
+        egg.onclick = () => {
+          l1Hatched = true;
+          renderLevel1(false);
+        };
+        stage.appendChild(egg);
+
+        const msg = isEntry && l1Idx === 0
+          ? "第一關，孵魔法蛋純字閃卡！撳一下大金蛋，10 秒內大聲讀出字寶寶俾媽媽聽！"
+          : "點一下魔法蛋，睇下今次孵出邊個字寶寶！";
+        document.getElementById("coachText").textContent = "🥚 點一下中間隻魔法蛋，孵出純字閃卡大聲讀俾媽媽聽！";
+        currentQuestionSpeech = msg;
+        currentQuestionRate = 0.82;
+        speak(msg, 0.82);
+      } else {
+        const card = document.createElement("div");
+        card.className = "flash-card";
+        card.innerHTML = `<div class="flash-word">${word}</div>`;
+        stage.appendChild(card);
+
+        const track = document.createElement("div");
+        track.className = "timer-track";
+        const fill = document.createElement("div");
+        fill.className = "timer-fill";
+        track.appendChild(fill);
+        stage.appendChild(track);
+
+        const timerLabel = document.createElement("div");
+        timerLabel.className = "font-black text-amber-700 text-base md:text-lg";
+        timerLabel.textContent = "⏱️ 剩餘 10 秒：請大聲讀出嚟！";
+        stage.appendChild(timerLabel);
+
+        let secLeft = 10;
+        flashInterval = setInterval(() => {
+          secLeft -= 0.2;
+          if (secLeft <= 0) {
+            secLeft = 0;
+            clearInterval(flashInterval);
+            flashInterval = null;
+            timerLabel.textContent = "🌟 時間到喇！可以撳下面聽讀音再跟讀一次！";
+          } else {
+            timerLabel.textContent = `⏱️ 剩餘 ${Math.ceil(secLeft)} 秒：請大聲讀出嚟！`;
+          }
+          fill.style.width = ((secLeft / 10) * 100) + "%";
+        }, 200);
+
+        const btnOk = document.createElement("button");
+        btnOk.className = "btn-3d btn-green px-6 py-2.5 text-lg md:text-xl";
+        btnOk.textContent = "✅ 識讀！下一隻蛋";
+        btnOk.onclick = () => {
+          if (lockInput) return;
+          lockInput = true;
+          if (flashInterval) { clearInterval(flashInterval); flashInterval = null; }
+          card.classList.add("correct-pop");
+          spawnStars();
+          speak("讀得好標準呀！好叻！", 0.84, () => {
+            lockInput = false;
+            nextL1Card();
+          });
+        };
+
+        const btnHelp = document.createElement("button");
+        btnHelp.className = "btn-3d btn-amber px-5 py-2.5 text-base md:text-lg";
+        btnHelp.textContent = "🔊 唔記得，聽讀音";
+        btnHelp.onclick = () => {
+          recordError("閃卡:" + word);
+          speak(`呢個係「${word}」，跟住讀一次：${word}！`, 0.76);
+          timerLabel.textContent = "💡 跟 Anna 老師讀完一次，就可以撳綠色掣繼續！";
+        };
+
+        controls.appendChild(btnHelp);
+        controls.appendChild(btnOk);
+
+        document.getElementById("coachText").textContent = "⏱️ 10 秒限時閃卡！大聲讀出畫面上嘅字寶寶俾媽媽聽！";
+        currentQuestionSpeech = "請玲玲睇住張閃卡，大聲讀出嚟俾媽媽聽！";
+        currentQuestionRate = 0.82;
+      }
+    }
+
+    function nextL1Card() {
+      if (l1Idx < l1List.length - 1) {
+        l1Idx++;
+        l1Hatched = false;
+        renderLevel1(false);
+      } else {
+        doneLevels[1] = true;
+        renderLevel(2);
+      }
+    }
+
+    // ========= Level 2: 無圖純文字聽音選字（零劇透） =========
+    function renderLevel2(isEntry = false) {
+      const q = l2List[l2Idx];
+      document.getElementById("l2Progress").textContent = `第 ${l2Idx + 1} / ${l2List.length} 題`;
+      const fb = document.getElementById("l2Feedback");
+      fb.classList.add("hidden-vis");
+      fb.textContent = "";
+
+      const grid = document.getElementById("l2Grid");
+      grid.innerHTML = "";
+      q.options.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.className = "choice-card";
+        btn.textContent = opt;
+        btn.onclick = () => handleL2Pick(btn, opt);
+        grid.appendChild(btn);
+      });
+
+      document.getElementById("coachText").textContent =
+        "👂 聽清楚 Anna 老師讀邊個詞語，再撳下面嘅字卡！（唔確定可以撳「🔊 聽題目」）";
+
+      currentQuestionSpeech = q.audio;
+      currentQuestionRate = 0.80;
+      const speechText = isEntry && l2Idx === 0 ? `第二關，聽音選字盲測！${q.audio}` : q.audio;
+      speak(speechText, 0.80);
+    }
+
+    function handleL2Pick(btn, opt) {
+      if (lockInput) return;
+      const q = l2List[l2Idx];
+      const fb = document.getElementById("l2Feedback");
+
+      if (opt === q.target) {
+        lockInput = true;
+        btn.classList.add("correct-pop");
+        spawnStars();
+        fb.classList.add("hidden-vis");
+        document.getElementById("coachText").textContent = `🎉 答啱喇！呢個就係「${q.target}」，玲玲好犀利！`;
+        speak(`答啱喇！呢個就係「${q.target}」！`, 0.84, () => {
+          lockInput = false;
+          if (l2Idx < l2List.length - 1) {
+            l2Idx++;
+            renderLevel2(false);
+          } else {
+            doneLevels[2] = true;
+            renderLevel(3);
+          }
+        });
+      } else {
+        recordError("聽音:" + q.target);
+        btn.classList.remove("wrong-shake");
+        void btn.offsetWidth;
+        btn.classList.add("wrong-shake");
+        fb.textContent = "🌟 唔緊要呀，撳右上角「🔊 聽題目」再細心聽多次！";
+        fb.classList.remove("hidden-vis");
+        speak("唔緊要呀，再細心聽多次，搵出啱嗰張字卡！", 0.80);
+      }
+    }
+
+    // ========= Level 3: 雙字詞語小火車（干擾字抽自 ALL_LEARNED_WORDS，零劇透） =========
+    function renderLevel3(isEntry = false) {
+      const q = l3List[l3Idx];
+      l3Picked = [];
+      const distractors = pickDistractors(q.chars, 4);
+      l3BankChars = shuffleArray([...q.chars, ...distractors]);
+
+      document.getElementById("l3Progress").textContent = `第 ${l3Idx + 1} / ${l3List.length} 班車`;
+      const fb = document.getElementById("l3Feedback");
+      fb.classList.add("hidden-vis");
+      fb.textContent = "";
+
+      renderL3UI();
+
+      document.getElementById("coachText").textContent =
+        "🚂 聽清楚 Anna 老師讀邊個雙字詞語，按次序揀兩個字寶寶上火車！";
+
+      currentQuestionSpeech = q.audio;
+      currentQuestionRate = 0.80;
+      const speechText = isEntry && l3Idx === 0 ? `第三關，組裝雙字詞語小火車！${q.audio}` : q.audio;
+      speak(speechText, 0.80);
+    }
+
+    function renderL3UI() {
+      for (let i = 0; i < 2; i++) {
+        const car = document.getElementById("car-" + i);
+        car.classList.remove("filled", "correct-pop", "wrong-shake");
+        if (l3Picked[i] !== undefined) {
+          car.textContent = l3BankChars[l3Picked[i]];
+          car.classList.add("filled");
+        } else {
+          car.textContent = "?";
+        }
+      }
+
+      const bank = document.getElementById("l3Bank");
+      bank.innerHTML = "";
+      l3BankChars.forEach((ch, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "char-tile" + (l3Picked.includes(idx) ? " used" : "");
+        btn.textContent = ch;
+        btn.onclick = () => pickTrainChar(idx);
+        bank.appendChild(btn);
+      });
+    }
+
+    function removeTrainCar(pos) {
+      if (lockInput || l3Picked[pos] === undefined) return;
+      l3Picked.splice(pos, 1);
+      renderL3UI();
+    }
+
+    function pickTrainChar(idx) {
+      if (lockInput || l3Picked.includes(idx) || l3Picked.length >= 2) return;
+      l3Picked.push(idx);
+      renderL3UI();
+
+      if (l3Picked.length === 2) {
+        const q = l3List[l3Idx];
+        const formed = l3BankChars[l3Picked[0]] + l3BankChars[l3Picked[1]];
+        const car0 = document.getElementById("car-0");
+        const car1 = document.getElementById("car-1");
+        const fb = document.getElementById("l3Feedback");
+
+        if (formed === q.word) {
+          lockInput = true;
+          car0.classList.add("correct-pop");
+          car1.classList.add("correct-pop");
+          spawnStars();
+          fb.classList.add("hidden-vis");
+          document.getElementById("coachText").textContent = `🎉 嗚嗚～開車喇！「${q.word}」小火車拼啱晒！`;
+          speak(`嗚嗚，開車喇！拼啱晒「${q.word}」，玲玲好叻呀！`, 0.84, () => {
+            lockInput = false;
+            if (l3Idx < l3List.length - 1) {
+              l3Idx++;
+              renderLevel3(false);
+            } else {
+              doneLevels[3] = true;
+              renderLevel(4);
+            }
+          });
+        } else {
+          recordError("火車:" + q.word);
+          car0.classList.add("wrong-shake");
+          car1.classList.add("wrong-shake");
+          fb.textContent = "🌟 車廂排錯咗少少呀，聽清楚邊隻字行先再重新上車！";
+          fb.classList.remove("hidden-vis");
+          speak("車廂差少少咋！聽多一次再揀邊隻字排第一呀！", 0.80);
+          autoNextTimer = setTimeout(() => {
+            l3Picked = [];
+            renderL3UI();
+          }, 650);
+        }
+      }
+    }
+
+    // ========= Level 4: 全字庫 4×4 語境尋寶（16格，零劇透） =========
+    function renderLevel4(isEntry = false) {
+      const q = l4List[l4Idx];
+      document.getElementById("l4Progress").textContent = `第 ${l4Idx + 1} / ${l4List.length} 題`;
+      const fb = document.getElementById("l4Feedback");
+      fb.classList.add("hidden-vis");
+      fb.textContent = "";
+
+      const distractors = pickDistractors([q.target], 15);
+      const cells = shuffleArray([q.target, ...distractors]);
+
+      const grid = document.getElementById("l4Grid");
+      grid.innerHTML = "";
+      cells.forEach(ch => {
+        const btn = document.createElement("button");
+        btn.className = "treasure-cell";
+        btn.textContent = ch;
+        btn.onclick = () => handleL4Pick(btn, ch);
+        grid.appendChild(btn);
+      });
+
+      document.getElementById("coachText").textContent =
+        "🔍 聽清楚語音提示，喺 4×4 字寶寶陣列入面搵出正確嗰隻字！（可撳「🔊 聽題目」）";
+
+      currentQuestionSpeech = q.audio;
+      currentQuestionRate = 0.80;
+      const speechText = isEntry && l4Idx === 0 ? `第四關，全字庫大陣列語境尋寶！${q.audio}` : q.audio;
+      speak(speechText, 0.80);
+    }
+
+    function handleL4Pick(btn, ch) {
+      if (lockInput) return;
+      const q = l4List[l4Idx];
+      const fb = document.getElementById("l4Feedback");
+
+      if (ch === q.target) {
+        lockInput = true;
+        btn.classList.add("correct-pop");
+        spawnStars();
+        fb.classList.add("hidden-vis");
+        document.getElementById("coachText").textContent = `🎉 搵到寶藏喇！就係「${q.target}」字，鷹眼玲玲好犀利！`;
+        speak(`搵到寶藏喇！呢隻就係「${q.target}」字！`, 0.84, () => {
+          lockInput = false;
+          if (l4Idx < l4List.length - 1) {
+            l4Idx++;
+            renderLevel4(false);
+          } else {
+            doneLevels[4] = true;
+            renderLevel(5);
+          }
+        });
+      } else {
+        recordError(q.label);
+        btn.classList.remove("wrong-shake");
+        void btn.offsetWidth;
+        btn.classList.add("wrong-shake");
+        fb.textContent = "🌟 呢隻唔係呀，再細心掃瞄下其他方格，或者撳「🔊 聽題目」！";
+        fb.classList.remove("hidden-vis");
+        speak("呢隻唔係呀，再慢慢搵下，你可以撳重聽掣聽多一次！", 0.80);
+      }
+    }
+
+    // ========= Level 5: 句式積木重組（零劇透）+ 親子朗讀打卡 =========
+    function renderLevel5(isEntry = false) {
+      const puzzleWrap = document.getElementById("l5PuzzleWrap");
+      const readingWrap = document.getElementById("l5ReadingWrap");
+
+      if (l5InReading) {
+        puzzleWrap.classList.add("hidden");
+        readingWrap.classList.remove("hidden");
+        readingWrap.classList.add("flex");
+        document.getElementById("l5Tag").textContent = "🎤 Level 5：親子朗讀打卡";
+        document.getElementById("l5Progress").textContent = "最後一步！";
+        document.getElementById("coachText").textContent = "🎤 積木全部拼啱晒！而家同媽媽一齊大聲讀出句式同兒歌就完成大滿貫喇！";
+        const demo = "全部句式拼啱晒！而家請玲玲同媽媽一齊大聲讀出班別句式同埋兒歌歡樂時光，讀完就撳綠色掣拎獎杯！";
+        currentQuestionSpeech = demo;
+        currentQuestionRate = 0.80;
+        speak(demo, 0.80);
+        return;
+      }
+
+      puzzleWrap.classList.remove("hidden");
+      readingWrap.classList.add("hidden");
+      readingWrap.classList.remove("flex");
+
+      const q = l5List[l5Idx];
+      l5Picked = [];
+      l5Blocks = shuffleArray(q.answer);
+      // 避免剛好洗到原本完全一樣的次序
+      if (l5Blocks.every((b, i) => b === q.answer[i])) {
+        l5Blocks.reverse();
+      }
+
+      document.getElementById("l5Tag").textContent = "🧱 Level 5：聽音句式積木重組";
+      document.getElementById("l5Progress").textContent = `第 ${l5Idx + 1} / ${l5List.length} 句`;
+      const fb = document.getElementById("l5Feedback");
+      fb.classList.add("hidden-vis");
+      fb.textContent = "";
+
+      renderL5UI();
+
+      document.getElementById("coachText").textContent =
+        "👂 聽清楚 Anna 老師讀嘅句子，按次序點選下面嘅積木拼成完整句子！（可撳「🔊 聽題目」）";
+
+      currentQuestionSpeech = q.audio;
+      currentQuestionRate = 0.78;
+      const speechText = isEntry && l5Idx === 0 ? `第五關，課文句式積木重組！${q.audio}` : q.audio;
+      speak(speechText, 0.78);
+    }
+
+    function renderL5UI() {
+      const slotsEl = document.getElementById("l5Slots");
+      const bankEl = document.getElementById("l5Bank");
+
+      slotsEl.innerHTML = "";
+      if (l5Picked.length === 0) {
+        slotsEl.innerHTML = `<span class="text-amber-700/60 font-extrabold text-base md:text-lg">按語音次序點選下方積木放上嚟</span>`;
+      } else {
+        l5Picked.forEach((bIdx, pos) => {
+          const btn = document.createElement("button");
+          btn.className = "sent-block placed";
+          btn.textContent = l5Blocks[bIdx];
+          btn.onclick = () => {
+            if (lockInput) return;
+            l5Picked.splice(pos, 1);
+            renderL5UI();
+          };
+          slotsEl.appendChild(btn);
+        });
+      }
+
+      bankEl.innerHTML = "";
+      l5Blocks.forEach((txt, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "sent-block" + (l5Picked.includes(idx) ? " used" : "");
+        btn.textContent = txt;
+        btn.onclick = () => {
+          if (lockInput || l5Picked.includes(idx)) return;
+          l5Picked.push(idx);
+          renderL5UI();
+        };
+        bankEl.appendChild(btn);
+      });
+    }
+
+    function resetL5Blocks() {
+      if (lockInput) return;
+      l5Picked = [];
+      renderL5UI();
+    }
+
+    function checkL5Sentence() {
+      if (lockInput) return;
+      const q = l5List[l5Idx];
+      const fb = document.getElementById("l5Feedback");
+      const userArr = l5Picked.map(i => l5Blocks[i]);
+
+      if (userArr.length < q.answer.length) {
+        fb.textContent = "💡 仲有積木未放上去呀，擺晒全部積木先再檢查！";
+        fb.classList.remove("hidden-vis");
+        speak("仲有積木未放上去呀，擺晒上去先再檢查啦！", 0.82);
+        return;
+      }
+
+      const isRight = userArr.every((w, i) => w === q.answer[i]);
+      if (isRight) {
+        lockInput = true;
+        fb.classList.add("hidden-vis");
+        spawnStars();
+        document.getElementById("coachText").textContent = `🎉 拼啱晒：${q.spoken}`;
+        speak(`好犀利呀！拼啱晒：${q.spoken}`, 0.82, () => {
+          lockInput = false;
+          if (l5Idx < l5List.length - 1) {
+            l5Idx++;
+            renderLevel5(false);
+          } else {
+            l5InReading = true;
+            renderLevel5(false);
+          }
+        });
+      } else {
+        recordError("句式:" + q.spoken);
+        fb.textContent = "🌟 次序爭少少咋！撳右上角「🔊 聽題目」再聽清楚先重排！";
+        fb.classList.remove("hidden-vis");
+        speak("次序爭少少咋！再聽多一次，諗下邊舊積木擺最前面呀！", 0.78);
+      }
+    }
+
+    function playReadingDemo() {
+      speak("歡樂時光。學校生活樂趣多，老師同學在一起，天天快樂笑呵呵。", 0.76);
+    }
+
+    function finishLevel5Reading() {
+      doneLevels[5] = true;
+      renderLevel(6);
+    }
+
+    // ========= Level 6: 結算與家長錯題診斷報告 =========
+    function renderLevel6() {
+      const totalSec = Math.max(1, Math.round((Date.now() - quizStartTs) / 1000));
+      const errEntries = Object.entries(errorMap);
+      const errListStr = errEntries.length > 0
+        ? errEntries.map(([k, v]) => (v > 1 ? `${k}(${v}次)` : k)).join(", ")
+        : "無（全部一次過關！）";
+
+      const perfStr = errEntries.length === 0 ? "🌟 完美全對通關" : `待加強項目共 ${errEntries.length} 項`;
+
+      document.getElementById("summaryStats").textContent =
+        `⏱️ 總闖關耗時：${totalSec} 秒 ｜ 表現評級：${perfStr}`;
+      document.getElementById("summaryErrors").textContent =
+        `📋 家長錯題診斷清單：${errListStr}`;
+
+      generatedReportText = `【中文盲測回報】P.1-4 Test 1 (cn-p1-p4-test1.html) | 總耗時: ${totalSec}s | 表現: ${perfStr} | 錯誤字詞: ${errListStr}`;
+      document.getElementById("summaryCodePreview").textContent = generatedReportText;
+
+      if (!hasSavedReport) {
+        hasSavedReport = true;
+        if (window.LinglingReport && typeof window.LinglingReport.save === "function") {
+          window.LinglingReport.save("中文闖關測驗", "P.1-4 Test 1", generatedReportText);
+        }
+      }
+
+      const endMsg = errEntries.length === 0
+        ? "恭喜玲玲！P.1 至 P.4 適應週 Test 1 全部一次答對大滿貫過關，太犀利喇！"
+        : "恭喜玲玲完成適應週 Test 1 全部五關！戰報已經自動同步俾媽媽喇！";
+      document.getElementById("coachText").textContent = "🏆 " + endMsg;
+      currentQuestionSpeech = endMsg;
+      currentQuestionRate = 0.82;
+      spawnStars();
+      speak(endMsg, 0.82);
+    }
+
+    function copyReport() {
+      const fb = document.getElementById("copyFeedback");
+      if (!generatedReportText) return;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(generatedReportText).then(() => {
+          fb.textContent = "✅ 測驗暗號已複製！可直接貼給 Elsa 或中文測試題老師。";
+        }).catch(() => fallbackCopy(fb));
+      } else {
+        fallbackCopy(fb);
+      }
+    }
+
+    function fallbackCopy(fb) {
+      const ta = document.createElement("textarea");
+      ta.value = generatedReportText;
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand("copy");
+        fb.textContent = "✅ 測驗暗號已複製！可直接貼給 Elsa 或中文測試題老師。";
+      } catch (e) {
+        fb.textContent = "請長按上方戰報文字手動複製。";
+      }
+      document.body.removeChild(ta);
+    }
+
+    // 啟動初始化
+    window.addEventListener("DOMContentLoaded", () => {
+      initDecks(false);
+      renderLevel(0);
+    });
+  </script>
+</body>
+</html>
