@@ -4,9 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Unit 9 Day 3 - An Ice Cream Birthday (上集) | 玲玲學習樂園</title>
+  <link rel="stylesheet" href="theme.css" />
   <script src="report-hub.js?v=2"></script>
   <style>
-    /* iPad 終極防護與全螢幕沉浸排版 */
+    /* iPad 終極防護與單屏沉浸排版 */
     * {
       box-sizing: border-box;
       touch-action: manipulation;
@@ -29,459 +30,527 @@
 
     #fireworksCanvas {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
       pointer-events: none;
       z-index: 9999;
     }
 
-    /* 頂部導航列 */
+    /* 頂部極簡 3D 導航列 */
     .top-nav {
-      background: rgba(255, 255, 255, 0.92);
+      background: rgba(255, 255, 255, 0.94);
       backdrop-filter: blur(10px);
-      padding: 12px 20px;
+      padding: 8px 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      box-shadow: 0 4px 20px rgba(2, 132, 199, 0.15);
+      gap: 10px;
+      box-shadow: 0 4px 18px rgba(2, 132, 199, 0.16);
       position: sticky;
       top: 0;
-      z-index: 100;
-      border-bottom: 2px solid #38BDF8;
+      z-index: 200;
+      border-bottom: 3px solid #38BDF8;
     }
 
     .btn-home {
+      border: none;
       background: #F59E0B;
       color: #FFF;
-      text-decoration: none;
       font-weight: 900;
-      font-size: 16px;
-      padding: 8px 16px;
-      border-radius: 20px;
+      font-size: 15px;
+      padding: 8px 15px;
+      border-radius: 18px;
       box-shadow: 0 4px 0 #B45309;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: transform 0.12s;
+    }
+    .btn-home:active { transform: translateY(3px) scale(0.96); box-shadow: 0 1px 0 #B45309; }
+
+    .nav-center {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .step-pill {
+      border: 2px solid transparent;
+      background: #E0F2FE;
+      color: #0284C7;
+      font-weight: 900;
+      font-size: 13px;
+      padding: 6px 12px;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+    .step-pill.active {
+      background: #FACC15;
+      color: #713F12;
+      border-color: #FDE047;
+      box-shadow: 0 3px 0 #CA8A04;
+      transform: scale(1.04);
+    }
+    .step-pill.done {
+      background: #34D399;
+      color: #064E3B;
+    }
+
+    /* 🍦 雪糕筒進度條 */
+    .cone-tracker {
       display: inline-flex;
       align-items: center;
       gap: 6px;
+      background: #FFF1F2;
+      border: 2.5px solid #FDA4AF;
+      border-radius: 20px;
+      padding: 5px 12px;
+      box-shadow: 0 3px 0 #FB7185;
     }
-    .btn-home:active { transform: translateY(3px); box-shadow: 0 1px 0 #B45309; }
-
-    .nav-title {
-      font-size: 19px;
-      font-weight: 900;
-      color: #0284C7;
-      letter-spacing: 0.5px;
-    }
-
-    .act-map { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
-    .act-pill {
-      padding: 6px 12px;
-      border-radius: 16px;
-      font-size: 14px;
-      font-weight: 900;
-      background: #E0F2FE;
-      color: #0284C7;
-      border: 2px solid transparent;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .act-pill.active {
-      background: #FACC15;
-      color: #854D0E;
-      border-color: #FDE047;
-      box-shadow: 0 4px 0 #CA8A04;
-      transform: scale(1.05);
-    }
-    .act-pill.done { background: #34D399; color: #064E3B; }
-
-    .container { max-width: 880px; margin: 0 auto; padding: 20px 16px 50px; }
-
-    /* Anna 老師常駐橫幅 */
-    .teacher-banner {
-      background: #FFFBEB;
-      border: 3px solid #F59E0B;
-      border-radius: 24px;
-      padding: 14px 20px;
-      margin-bottom: 22px;
+    .scoop-slot {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px dashed #FDA4AF;
+      background: #FFFFFF;
       display: flex;
       align-items: center;
-      gap: 16px;
-      box-shadow: 0 8px 24px rgba(245, 158, 11, 0.15);
+      justify-content: center;
+      font-size: 15px;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .scoop-slot.filled {
+      border-style: solid;
+      transform: scale(1.12);
+      animation: scoopDrop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .scoop-slot.s1.filled { background: #F9A8D4; border-color: #DB2777; }
+    .scoop-slot.s2.filled { background: #FDE047; border-color: #CA8A04; }
+    .scoop-slot.s3.filled { background: #93C5FD; border-color: #2563EB; }
+    @keyframes scoopDrop {
+      0% { transform: translateY(-22px) scale(0.5); opacity: 0; }
+      100% { transform: translateY(0) scale(1.12); opacity: 1; }
+    }
+    .cone-label {
+      font-size: 13px;
+      font-weight: 900;
+      color: #BE185D;
+    }
+
+    /* 主容器：專為 iPad 單屏不滾動優化 */
+    .app-shell {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 10px 14px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* 緊湊型 Anna 老師引導橫幅 */
+    .teacher-bar {
+      width: 100%;
+      max-width: 780px;
+      background: #FFFBEB;
+      border: 3px solid #F59E0B;
+      border-radius: 20px;
+      padding: 8px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 5px 0 #FCD34D;
       cursor: pointer;
       transition: transform 0.1s;
     }
-    .teacher-banner:active { transform: scale(0.98); }
+    .teacher-bar:active { transform: scale(0.98); }
 
-    .teacher-avatar {
-      width: 64px; height: 64px;
+    .teacher-face {
+      width: 44px; height: 44px;
       border-radius: 50%;
       background: #FEF08A;
-      border: 3px solid #F59E0B;
+      border: 2.5px solid #F59E0B;
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
-      box-shadow: 0 4px 0 #D97706;
     }
-
-    .teacher-msg {
+    .teacher-text {
       flex: 1;
-      font-size: 18px;
+      font-size: 16px;
       font-weight: 800;
       color: #1E293B;
-      line-height: 1.45;
+      line-height: 1.35;
     }
-
-    .replay-btn {
+    .teacher-replay {
       background: #FEF3C7;
       color: #B45309;
-      padding: 10px 14px;
-      border-radius: 16px;
-      font-weight: 900;
-      font-size: 15px;
       border: 2px solid #FCD34D;
+      border-radius: 14px;
+      padding: 6px 10px;
+      font-size: 13px;
+      font-weight: 900;
       white-space: nowrap;
     }
 
-    /* 主舞台 */
-    .stage-card {
-      background: rgba(255, 255, 255, 0.96);
-      backdrop-filter: blur(10px);
-      border-radius: 36px;
-      padding: 28px 20px;
-      box-shadow: 0 16px 40px rgba(2, 132, 199, 0.15);
+    /* 繪本主舞台 */
+    .book-stage {
+      width: 100%;
+      max-width: 780px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* 課本原圖定位容器（座標 100% 鎖定原圖比例，並自動裁走底部水印） */
+    .page-wrapper {
+      position: relative;
+      display: inline-block;
+      line-height: 0;
+      border-radius: 26px;
+      box-shadow: 0 14px 34px rgba(2, 132, 199, 0.25), 0 0 0 5px #FFFFFF;
+      background: #FFFFFF;
+      overflow: hidden;
+    }
+
+    .img-stage {
+      position: relative;
+      display: inline-block;
+      line-height: 0;
+      /* 精準裁走最底 6.5% 拍攝水印，同時保持百分比座標對準原圖 */
+      clip-path: inset(0 0 6.5% 0 round 22px);
+      -webkit-clip-path: inset(0 0 6.5% 0 round 22px);
+      margin-bottom: -6.5%;
+    }
+
+    .story-img {
+      display: block;
+      max-height: calc(100vh - 235px);
+      max-width: min(92vw, 660px);
+      width: auto;
+      height: auto;
+      border-radius: 22px;
+      pointer-events: none;
+    }
+
+    /* 3D 浮動大喇叭（右上角） */
+    .float-speaker {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 62px;
+      height: 62px;
+      border-radius: 50%;
       border: 4px solid #FFFFFF;
+      background: linear-gradient(180deg, #38BDF8 0%, #0284C7 100%);
+      color: #FFFFFF;
+      font-size: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 0 #0369A1, 0 10px 20px rgba(2, 132, 199, 0.35);
+      cursor: pointer;
+      z-index: 30;
+      transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .float-speaker:active {
+      transform: scale(0.9) translateY(4px);
+      box-shadow: 0 2px 0 #0369A1;
+    }
+    .float-speaker.playing {
+      background: linear-gradient(180deg, #F472B6 0%, #DB2777 100%);
+      box-shadow: 0 6px 0 #9D174D, 0 0 0 8px rgba(244, 114, 182, 0.35);
+      animation: speakerPulse 1.1s infinite ease-in-out;
+    }
+    @keyframes speakerPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+
+    /* 課本原圖點讀熱區（柔和呼吸光點） */
+    .hotspot {
+      position: absolute;
+      border-radius: 999px;
+      cursor: pointer;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .hotspot:active { transform: scale(1.12); }
+
+    /* 點讀模式下的可愛光圈提示 */
+    .hotspot.explore-dot {
+      border: 3px dashed rgba(255, 255, 255, 0.92);
+      background: rgba(250, 204, 21, 0.18);
+      box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.65);
+      animation: softBreath 2.2s infinite;
+    }
+    .hotspot.explore-dot.visited {
+      border-color: #4ADE80;
+      background: rgba(74, 222, 128, 0.18);
+      animation: none;
+    }
+    .hotspot-badge {
+      background: rgba(255, 255, 255, 0.94);
+      border: 2.5px solid #F59E0B;
+      color: #B45309;
+      border-radius: 999px;
+      padding: 3px 10px;
+      font-size: 14px;
+      font-weight: 900;
+      line-height: 1.2;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.18);
+      pointer-events: none;
+    }
+    .hotspot.visited .hotspot-badge {
+      border-color: #10B981;
+      color: #047857;
+    }
+
+    /* 實景尋寶模式：完全隱形無文字劇透熱區 */
+    .hotspot.ispy-zone {
+      border: 3px solid transparent;
+      background: transparent;
+      border-radius: 22px;
+    }
+    .hotspot.ispy-zone.found-ok {
+      border-color: #22C55E;
+      background: rgba(34, 197, 94, 0.25);
+      box-shadow: 0 0 24px rgba(34, 197, 94, 0.8);
+      animation: popFound 0.45s ease;
+    }
+    .hotspot.ispy-zone.wrong-tap {
+      border-color: #F59E0B;
+      background: rgba(251, 191, 36, 0.25);
+      animation: gentleWiggle 0.35s ease;
+    }
+
+    @keyframes softBreath {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.65); }
+      50% { box-shadow: 0 0 0 12px rgba(250, 204, 21, 0); }
+    }
+    @keyframes popFound {
+      0% { transform: scale(0.85); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    @keyframes gentleWiggle {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-6px); }
+      75% { transform: translateX(6px); }
+    }
+
+    /* 配音劇場：精準疊喺課本「I like eggs.」對話氣泡上嘅金光框 */
+    .pat-bubble-glow {
+      position: absolute;
+      left: 7%;
+      top: 24.5%;
+      width: 42%;
+      height: 14.5%;
+      border-radius: 999px;
+      border: 5px solid #FACC15;
+      background: rgba(254, 240, 138, 0.22);
+      box-shadow: 0 0 28px rgba(250, 204, 21, 0.95), inset 0 0 14px rgba(255, 255, 255, 0.65);
+      z-index: 25;
+      cursor: pointer;
+      display: none;
+      animation: goldPulse 1.1s infinite ease-in-out;
+    }
+    .pat-bubble-glow.active { display: block; }
+    @keyframes goldPulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 18px rgba(250, 204, 21, 0.85); }
+      50% { transform: scale(1.06); box-shadow: 0 0 36px rgba(250, 204, 21, 1); }
+    }
+
+    /* 配音停頓時彈出嘅浮動演戲提示條（疊喺圖底邊內側，不撐開高度） */
+    .theater-overlay-bar {
+      position: absolute;
+      left: 50%;
+      bottom: 8.5%;
+      transform: translateX(-50%);
+      width: 92%;
+      background: rgba(255, 255, 255, 0.96);
+      border: 3.5px solid #EC4899;
+      border-radius: 22px;
+      padding: 10px 14px;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 10px 28px rgba(190, 24, 93, 0.35);
+      z-index: 35;
+      line-height: 1.3;
+    }
+    .theater-overlay-bar.active { display: flex; animation: slideUpPop 0.28s ease; }
+    @keyframes slideUpPop {
+      0% { transform: translate(-50%, 16px) scale(0.95); opacity: 0; }
+      100% { transform: translate(-50%, 0) scale(1); opacity: 1; }
+    }
+    .theater-cue-text {
+      font-size: 16px;
+      font-weight: 900;
+      color: #BE185D;
       text-align: center;
     }
 
-    .stage-badge {
-      display: inline-block;
-      background: #FEF3C7;
-      color: #B45309;
-      font-size: 16px;
-      font-weight: 900;
-      padding: 8px 20px;
-      border-radius: 999px;
-      margin-bottom: 14px;
-      border: 2px solid #FDE68A;
-    }
-
-    /* 第一幕：熱身大圖卡 */
-    .flashcard-3d {
-      background: #FFFFFF;
-      border: 4px solid #BAE6FD;
-      border-radius: 32px;
-      padding: 26px 20px;
-      margin: 10px auto 20px;
-      max-width: 480px;
-      box-shadow: 0 12px 0 #7DD3FC;
-      cursor: pointer;
-      position: relative;
-      transition: all 0.15s ease;
-    }
-    .flashcard-3d:active, .flashcard-3d.pop {
-      transform: scale(0.97) translateY(8px);
-      box-shadow: 0 4px 0 #7DD3FC;
-    }
-
-    .pulse-ring {
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      width: 100%; height: 100%;
-      border-radius: 32px;
-      box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.4);
-      animation: pulseAnim 2s infinite;
-      pointer-events: none;
-    }
-    @keyframes pulseAnim {
-      0% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.6); }
-      70% { box-shadow: 0 0 0 18px rgba(56, 189, 248, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); }
-    }
-
-    .illustration-wrap {
-      width: 170px; height: 170px;
-      margin: 0 auto 12px;
-      display: flex; align-items: center; justify-content: center;
-    }
-
-    .word-en {
-      font-size: 52px;
-      font-weight: 900;
-      color: #0F172A;
-      letter-spacing: 2px;
-    }
-    .hl-orange { color: #EA580C; background: #FFEDD5; padding: 0 6px; border-radius: 12px; }
-    .hl-amber { color: #D97706; background: #FEF3C7; padding: 0 6px; border-radius: 12px; }
-    .hl-purple { color: #7C3AED; background: #EDE9FE; padding: 0 6px; border-radius: 12px; }
-
-    .mnemonic-pill {
-      display: inline-block;
-      margin-top: 12px;
-      background: #F0FDF4;
-      border: 2px dashed #4ADE80;
-      color: #166534;
-      font-size: 16px;
-      font-weight: 800;
-      padding: 8px 16px;
-      border-radius: 18px;
-      line-height: 1.4;
-    }
-
-    .hint-text {
-      font-size: 15px;
-      font-weight: 900;
-      color: #94A3B8;
-      margin-top: 10px;
-    }
-
-    /* 第二幕：繪本電影院 */
-    .story-frame {
-      background: linear-gradient(180deg, #FFF7ED 0%, #FFFFFF 100%);
-      border: 4px solid #FDBA74;
-      border-radius: 32px;
-      padding: 20px;
-      margin: 8px auto 18px;
-      max-width: 660px;
-      box-shadow: 0 10px 0 #FB923C;
-    }
-    .story-svg-box {
+    /* 底部 3D 控制列 */
+    .bottom-dock {
       width: 100%;
-      max-width: 460px;
-      height: 230px;
-      margin: 0 auto 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .story-caption-en {
-      font-size: 20px;
-      font-weight: 900;
-      color: #1E3A8A;
-      background: #EFF6FF;
-      border: 2px solid #BFDBFE;
-      border-radius: 20px;
-      padding: 12px 18px;
-      line-height: 1.5;
-      margin-top: 8px;
-    }
-    .story-caption-en .pat-line {
-      color: #DB2777;
-      background: #FCE7F3;
-      padding: 2px 8px;
-      border-radius: 10px;
-      display: inline-block;
-      margin: 4px 0;
-    }
-
-    /* 方案 B 播放器控制列 */
-    .player-controls {
+      max-width: 780px;
+      background: rgba(255, 255, 255, 0.94);
+      border: 3px solid #FFFFFF;
+      border-radius: 24px;
+      padding: 10px 14px;
+      box-shadow: 0 8px 22px rgba(2, 132, 199, 0.14);
       display: flex;
       flex-wrap: wrap;
-      justify-content: center;
       align-items: center;
-      gap: 12px;
-      margin-top: 16px;
+      justify-content: space-between;
+      gap: 10px;
     }
-    .speed-toggle {
+
+    .speed-group {
       display: inline-flex;
-      background: #E2E8F0;
-      border-radius: 18px;
+      background: #E0F2FE;
       padding: 4px;
+      border-radius: 16px;
       gap: 4px;
     }
     .speed-btn {
       border: none;
-      border-radius: 14px;
-      padding: 10px 16px;
-      font-size: 16px;
-      font-weight: 900;
       background: transparent;
-      color: #475569;
+      color: #0369A1;
+      font-size: 14px;
+      font-weight: 900;
+      padding: 7px 11px;
+      border-radius: 12px;
       cursor: pointer;
       transition: all 0.15s;
     }
     .speed-btn.active {
       background: #FFFFFF;
       color: #0284C7;
-      box-shadow: 0 3px 8px rgba(2, 132, 199, 0.2);
+      box-shadow: 0 3px 0 #7DD3FC;
     }
 
-    /* 第三幕：雙角色配音小劇場 */
-    .theater-grid {
-      display: grid;
-      grid-template-columns: 1fr 1.15fr;
-      gap: 18px;
-      max-width: 720px;
-      margin: 14px auto 18px;
-      align-items: stretch;
-    }
-    .role-box {
-      background: #F8FAFC;
-      border: 4px solid #CBD5E1;
-      border-radius: 28px;
-      padding: 18px 16px;
-      display: flex;
-      flex-direction: column;
+    /* 家長微調停頓秒數小膠囊 */
+    .tweak-group {
+      display: inline-flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
-    .role-box.pat-box {
-      background: #FFF1F2;
-      border-color: #FDA4AF;
-      box-shadow: 0 10px 0 #FB7185;
-      position: relative;
-      animation: patGlow 2.2s infinite ease-in-out;
-    }
-    @keyframes patGlow {
-      0%, 100% { box-shadow: 0 10px 0 #FB7185, 0 0 0 0 rgba(251, 113, 133, 0.45); }
-      50% { box-shadow: 0 10px 0 #FB7185, 0 0 0 14px rgba(251, 113, 133, 0); }
-    }
-    .role-tag {
-      font-size: 15px;
-      font-weight: 900;
-      padding: 6px 14px;
-      border-radius: 999px;
-      background: #E0F2FE;
-      color: #0369A1;
-    }
-    .pat-box .role-tag {
-      background: #FCE7F3;
-      color: #BE185D;
-    }
-    .pat-bubble {
-      background: #FFFFFF;
-      border: 3px solid #F472B6;
-      border-radius: 24px;
-      padding: 16px 14px;
-      font-size: 26px;
-      font-weight: 900;
-      color: #BE185D;
-      line-height: 1.35;
-      width: 100%;
-    }
-    .action-tip {
-      font-size: 15px;
-      font-weight: 800;
-      color: #9D174D;
-      background: #FFE4E6;
-      padding: 8px 12px;
+      gap: 5px;
+      background: #F1F5F9;
+      border: 2px solid #CBD5E1;
       border-radius: 14px;
-      width: 100%;
+      padding: 4px 8px;
+      font-size: 12px;
+      font-weight: 800;
+      color: #475569;
     }
-
-    /* 3D 通用按鈕 */
-    .btn-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin-top: 22px; }
-    .btn-3d {
-      border: none; border-radius: 20px;
-      padding: 14px 24px;
-      font-size: 19px; font-weight: 900;
+    .tweak-btn {
+      border: none;
+      background: #FFFFFF;
+      color: #0F172A;
+      font-weight: 900;
+      font-size: 13px;
+      padding: 3px 7px;
+      border-radius: 8px;
+      box-shadow: 0 2px 0 #CBD5E1;
       cursor: pointer;
-      display: inline-flex; align-items: center; gap: 8px;
-      transition: transform 0.1s;
     }
-    .btn-3d:active { transform: translateY(4px); }
-    .btn-green { background: #10B981; color: #FFF; box-shadow: 0 6px 0 #047857; }
+    .tweak-btn:active { transform: translateY(2px); box-shadow: none; }
+
+    /* 3D 積木按鈕 */
+    .btn-3d {
+      border: none;
+      border-radius: 18px;
+      padding: 10px 18px;
+      font-size: 16px;
+      font-weight: 900;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .btn-3d:active { transform: translateY(3px) scale(0.96); }
+    .btn-green { background: #10B981; color: #FFF; box-shadow: 0 5px 0 #047857; }
     .btn-green:active { box-shadow: 0 2px 0 #047857; }
-    .btn-purple { background: #8B5CF6; color: #FFF; box-shadow: 0 6px 0 #6D28D9; }
-    .btn-purple:active { box-shadow: 0 2px 0 #6D28D9; }
-    .btn-amber { background: #F59E0B; color: #FFF; box-shadow: 0 6px 0 #B45309; }
-    .btn-amber:active { box-shadow: 0 2px 0 #B45309; }
-    .btn-pink { background: #EC4899; color: #FFF; box-shadow: 0 6px 0 #BE185D; }
+    .btn-pink { background: #EC4899; color: #FFF; box-shadow: 0 5px 0 #BE185D; }
     .btn-pink:active { box-shadow: 0 2px 0 #BE185D; }
-    .btn-blue { background: #0284C7; color: #FFF; box-shadow: 0 6px 0 #0369A1; }
+    .btn-purple { background: #8B5CF6; color: #FFF; box-shadow: 0 5px 0 #6D28D9; }
+    .btn-purple:active { box-shadow: 0 2px 0 #6D28D9; }
+    .btn-amber { background: #F59E0B; color: #FFF; box-shadow: 0 5px 0 #B45309; }
+    .btn-amber:active { box-shadow: 0 2px 0 #B45309; }
+    .btn-blue { background: #0284C7; color: #FFF; box-shadow: 0 5px 0 #0369A1; }
     .btn-blue:active { box-shadow: 0 2px 0 #0369A1; }
 
-    /* 第四幕：零劇透無字盲聽選圖 */
-    .quiz-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 20px;
-      max-width: 520px;
-      margin: 16px auto 0;
+    /* 結算大派對卡片 */
+    .party-card {
+      width: 100%;
+      max-width: 640px;
+      background: rgba(255, 255, 255, 0.96);
+      border: 4px solid #FFFFFF;
+      border-radius: 34px;
+      padding: 28px 20px;
+      text-align: center;
+      box-shadow: 0 16px 40px rgba(2, 132, 199, 0.2);
     }
-    .quiz-card {
-      background: #FFF;
-      border: 4px solid #BAE6FD;
-      border-radius: 28px;
-      padding: 22px 12px;
-      box-shadow: 0 8px 0 #7DD3FC;
-      cursor: pointer;
-      transition: all 0.15s;
+    .big-cone-svg {
+      width: 140px;
+      height: 165px;
+      margin: 0 auto 8px;
     }
-    .quiz-card:active { transform: translateY(4px); box-shadow: 0 4px 0 #7DD3FC; }
-    .quiz-card.correct {
-      background: #DCFCE7;
-      border-color: #22C55E;
-      box-shadow: 0 4px 0 #15803D;
-      transform: scale(1.04);
-    }
-    .quiz-card.wrong-try {
-      background: #FEF3C7;
-      border-color: #F59E0B;
-      box-shadow: 0 8px 0 #D97706;
-      animation: gentleWiggle 0.4s ease;
-    }
-    @keyframes gentleWiggle {
-      0%, 100% { transform: rotate(0deg); }
-      25% { transform: rotate(-4deg); }
-      75% { transform: rotate(4deg); }
-    }
-
-    .gentle-hint-banner {
-      min-height: 48px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 19px; font-weight: 900;
-      color: #B45309; background: #FEF3C7;
-      border-radius: 20px; padding: 10px 20px;
-      margin: 18px auto 0; max-width: 500px;
-    }
-    .gentle-hint-banner.success { color: #065F46; background: #D1FAE5; }
-
-    /* 點狀進度條 */
-    .dots-row { display: flex; justify-content: center; gap: 8px; margin-bottom: 14px; }
-    .dot { width: 14px; height: 14px; border-radius: 50%; background: #E2E8F0; transition: all 0.2s; }
-    .dot.active { width: 32px; border-radius: 8px; background: #3B82F6; }
-    .dot.completed { background: #10B981; }
-
-    /* 結算與雲端同步提示 */
     .sync-badge {
       display: inline-block;
       background: #ECFDF5;
       border: 2px solid #34D399;
       color: #065F46;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 900;
-      padding: 8px 18px;
+      padding: 7px 16px;
       border-radius: 999px;
-      margin: 6px 0 12px;
+      margin: 8px 0 12px;
     }
-
-    .secret-code-box {
+    .secret-box {
       background: #F1F5F9;
       border: 3px dashed #64748B;
-      border-radius: 20px;
-      padding: 16px;
-      margin: 16px auto;
-      max-width: 560px;
-      font-size: 15px;
+      border-radius: 18px;
+      padding: 14px;
+      margin: 12px auto;
+      font-size: 14px;
       font-weight: 700;
       color: #334155;
-      line-height: 1.5;
       text-align: left;
+      line-height: 1.5;
       user-select: text;
       -webkit-user-select: text;
     }
 
-    @media (max-width: 680px) {
-      .nav-title { font-size: 15px; }
-      .act-pill { padding: 5px 8px; font-size: 12px; }
-      .theater-grid { grid-template-columns: 1fr; }
-      .word-en { font-size: 42px; }
-      .pat-bubble { font-size: 22px; }
-      .story-svg-box { height: 190px; }
-      .stage-card { padding: 20px 12px; }
+    /* 飛星小動畫 */
+    .star-burst {
+      position: fixed;
+      font-size: 34px;
+      pointer-events: none;
+      z-index: 9998;
+      animation: starFly 0.75s ease-out forwards;
+    }
+    @keyframes starFly {
+      0% { transform: translate(-50%, -50%) scale(0.4); opacity: 1; }
+      60% { transform: translate(-50%, -95px) scale(1.3); opacity: 1; }
+      100% { transform: translate(-50%, -130px) scale(0.9); opacity: 0; }
+    }
+
+    @media (max-width: 640px) {
+      .story-img { max-height: calc(100vh - 260px); }
+      .step-pill { padding: 5px 8px; font-size: 12px; }
+      .teacher-text { font-size: 14px; }
+      .float-speaker { width: 52px; height: 52px; font-size: 24px; }
+      .bottom-dock { justify-content: center; }
     }
   </style>
 </head>
@@ -489,104 +558,159 @@
 
 <canvas id="fireworksCanvas"></canvas>
 
-<!-- 頂部導航列 -->
+<!-- 頂部極簡導航列 ＋ 雪糕球進度條 -->
 <nav class="top-nav">
-  <a href="en-unit9.html" class="btn-home">🏠 返回</a>
-  <div class="nav-title">Unit 9 · Day 3</div>
-  <div class="act-map" id="actMap">
-    <button class="act-pill active" onclick="jumpToAct(0)">1. 熱身重溫</button>
-    <button class="act-pill" onclick="jumpToAct(1)">2. 故事上集</button>
-    <button class="act-pill" onclick="jumpToAct(2)">3. 扮演 Pat</button>
-    <button class="act-pill" onclick="jumpToAct(3)">4. 聽音尋寶</button>
+  <button class="btn-home" onclick="safeGoHome()">🏠 返回</button>
+  <div class="nav-center" id="stepNav">
+    <button class="step-pill active" onclick="goStep(0)">1. 圖1點讀</button>
+    <button class="step-pill" onclick="goStep(1)">2. 圖2點讀</button>
+    <button class="step-pill" onclick="goStep(2)">3. 扮演Pat</button>
+    <button class="step-pill" onclick="goStep(3)">4. 實景尋寶</button>
+  </div>
+  <div class="cone-tracker" title="儲齊 3 球雪糕解鎖派對">
+    <div class="scoop-slot s1" id="scoop1"></div>
+    <div class="scoop-slot s2" id="scoop2"></div>
+    <div class="scoop-slot s3" id="scoop3"></div>
+    <span class="cone-label" id="scoopCount">🍦 0/3</span>
   </div>
 </nav>
 
-<div class="container">
-  <!-- Anna 老師常駐引導橫幅 -->
-  <div class="teacher-banner" onclick="replayGuide()">
-    <div class="teacher-avatar" aria-hidden="true">
-      <svg viewBox="0 0 80 80" width="50" height="50">
+<main class="app-shell">
+  <!-- Anna 老師緊湊引導橫幅 -->
+  <div class="teacher-bar" onclick="replayGuide()">
+    <div class="teacher-face" aria-hidden="true">
+      <svg viewBox="0 0 80 80" width="36" height="36">
         <circle cx="40" cy="40" r="36" fill="#FDE68A"/>
         <path d="M18 38 C18 18, 62 18, 62 38 L64 56 C64 60, 56 60, 56 54 L56 42 L24 42 L24 54 C24 60, 16 60, 16 56 Z" fill="#78350F"/>
         <circle cx="40" cy="42" r="18" fill="#FED7AA"/>
         <path d="M22 36 Q40 22 58 36" fill="#78350F"/>
         <circle cx="34" cy="41" r="2.5" fill="#1E293B"/>
         <circle cx="46" cy="41" r="2.5" fill="#1E293B"/>
-        <circle cx="29" cy="46" r="3" fill="#FCA5A5" opacity="0.7"/>
-        <circle cx="51" cy="46" r="3" fill="#FCA5A5" opacity="0.7"/>
         <path d="M35 48 Q40 53 45 48" stroke="#DC2626" stroke-width="2.5" fill="none" stroke-linecap="round"/>
       </svg>
     </div>
-    <div class="teacher-msg" id="teacherMsg">今日一齊聽繪本故事《An Ice Cream Birthday》上集！先熱身一下啦！</div>
-    <div class="replay-btn">🔊 老師講咩</div>
+    <div class="teacher-text" id="teacherText">歡迎嚟到繪本《An Ice Cream Birthday》上集！儲齊 3 球雪糕就可以開派對喇！</div>
+    <div class="teacher-replay">🔊 重聽</div>
   </div>
 
-  <!-- 主互動舞台 -->
-  <main class="stage-card" id="stageContainer"></main>
-</div>
+  <!-- 繪本互動主舞台 -->
+  <section class="book-stage" id="bookStage"></section>
+</main>
 
 <script>
   // =========================================================================
-  // 1. 中英雙軌 (Hybrid Voice) 排隊防撞聲 + 方案 B 故事播放器引擎
+  // 1. 狀態與雪糕球獎勵系統
+  // =========================================================================
+  let currentStep = 0; // 0: 圖1點讀, 1: 圖2點讀, 2: 全屏自動停頓配音, 3: 原圖實景尋寶, 4: 3球雪糕大派對
+  let scoops = { s1: false, s2: false, s3: false };
+  let exploredDots = {};
+  let storyRate = 0.8;
+  let reportSent = false;
+
+  // 配音劇場自動停頓秒數（支援家長 ±0.5s 微調並自動記憶）
+  let patPauseTime = parseFloat(localStorage.getItem('u9_d3_pause_t') || '3.2');
+  let theaterState = 'idle'; // idle | playing_pre | paused_for_pat | playing_post | done
+  let theaterWatchTimer = null;
+
+  // 實景尋寶（I Spy）狀態 — 嚴格零劇透純聽力
+  const ISPY_QUESTIONS = [
+    { target: 'eggs', audio: 'en-eggs.mp3', guide: '留心聽英文，喺餐枱幅圖入面搵出嚟篤一篤佢！' },
+    { target: 'bread', audio: 'en-bread.mp3', guide: '好叻呀！再聽清楚英文，喺幅圖入面搵出嚟篤一篤佢！' }
+  ];
+  let ispyIdx = 0;
+  let ispySolved = false;
+  let ispyWrong = null;
+
+  // 圖片大小楷自動容錯（支援 image/ 與 Image/）
+  function handleImgError(imgEl, filename) {
+    const tries = parseInt(imgEl.dataset.try || '0', 10);
+    if (tries === 0) {
+      imgEl.dataset.try = '1';
+      imgEl.src = 'Image/' + filename;
+    } else if (tries === 1) {
+      imgEl.dataset.try = '2';
+      imgEl.src = 'images/' + filename;
+    }
+  }
+
+  // iPad Safari 專屬雙重斷音返回鎖
+  function safeGoHome() {
+    stopAllAudio();
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    setTimeout(() => {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      window.location.href = 'en-unit9.html';
+    }, 120);
+  }
+
+  // =========================================================================
+  // 2. 中英雙軌 (Hybrid Voice) + Web Audio 放大 + 方案 B 繪本播放器
   // =========================================================================
   window.utterancePool = [];
   let audioQueueId = 0;
-  let activeAudioElement = null;
+  let activeWordAudio = null;
+  let storyAudio = null;
+  let storyFileNow = null;
+  let storyPlaying = false;
   let audioCtx = null;
 
-  // 方案 B 繪本原聲專屬控制器
-  let storyAudio = null;
-  let storyFileCurrent = null;
-  let storyIsPlaying = false;
-  let storySpeed = 0.8; // 預設 0.8x 慢速，方便 4.5 歲聽清
-
-  function ensureAudioContext() {
+  function ensureAudioCtx() {
     if (!audioCtx) {
-      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-      if (AudioContextClass) audioCtx = new AudioContextClass();
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (AC) audioCtx = new AC();
     }
     if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume().catch(() => {});
   }
 
-  function stopStoryAudio() {
+  function clearTheaterWatcher() {
+    if (theaterWatchTimer) {
+      clearInterval(theaterWatchTimer);
+      theaterWatchTimer = null;
+    }
+  }
+
+  function stopStoryOnly() {
+    clearTheaterWatcher();
     if (storyAudio) {
       try {
+        storyAudio.onended = null;
+        storyAudio.onerror = null;
         storyAudio.pause();
         storyAudio.currentTime = 0;
       } catch (e) {}
     }
-    storyIsPlaying = false;
-    updateStoryPlayButtonUI();
+    storyPlaying = false;
+    updateSpeakerUI();
   }
 
   function stopAllAudio() {
     audioQueueId++;
     if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-    if (activeAudioElement) {
+    if (activeWordAudio) {
       try {
-        activeAudioElement.onended = null;
-        activeAudioElement.onerror = null;
-        activeAudioElement.pause();
-        activeAudioElement.currentTime = 0;
+        activeWordAudio.onended = null;
+        activeWordAudio.onerror = null;
+        activeWordAudio.pause();
+        activeWordAudio.currentTime = 0;
       } catch (e) {}
-      activeAudioElement = null;
+      activeWordAudio = null;
     }
-    stopStoryAudio();
+    stopStoryOnly();
   }
 
-  function playSingleMp3(file, boostGain = 2.2, onDone) {
-    ensureAudioContext();
+  function playMp3File(file, boost = 2.2, onDone) {
+    ensureAudioCtx();
     const audio = new Audio('audio/' + file);
     audio.crossOrigin = 'anonymous';
-    activeAudioElement = audio;
+    activeWordAudio = audio;
 
     if (audioCtx) {
       try {
-        const source = audioCtx.createMediaElementSource(audio);
-        const gainNode = audioCtx.createGain();
-        gainNode.gain.value = boostGain;
-        source.connect(gainNode);
-        gainNode.connect(audioCtx.destination);
+        const src = audioCtx.createMediaElementSource(audio);
+        const gain = audioCtx.createGain();
+        gain.gain.value = boost;
+        src.connect(gain);
+        gain.connect(audioCtx.destination);
       } catch (e) {
         audio.volume = 1.0;
       }
@@ -594,10 +718,10 @@
       audio.volume = 1.0;
     }
 
-    let finished = false;
+    let doneCalled = false;
     const finish = () => {
-      if (!finished) {
-        finished = true;
+      if (!doneCalled) {
+        doneCalled = true;
         if (onDone) onDone();
       }
     };
@@ -609,619 +733,598 @@
   function playHybridQueue(steps) {
     stopAllAudio();
     if (!steps || !steps.length) return;
-    const myQueueId = audioQueueId;
-    let idx = 0;
+    const qid = audioQueueId;
+    let i = 0;
 
-    function nextStep() {
-      if (myQueueId !== audioQueueId || idx >= steps.length) return;
-      const step = steps[idx++];
+    function next() {
+      if (qid !== audioQueueId || i >= steps.length) return;
+      const step = steps[i++];
 
       if (step.type === 'zh') {
-        if (!('speechSynthesis' in window) || !step.text) {
-          nextStep();
-          return;
-        }
+        if (!('speechSynthesis' in window) || !step.text) { next(); return; }
         const u = new SpeechSynthesisUtterance(step.text);
         window.utterancePool.push(u);
         u.lang = 'zh-HK';
         u.pitch = 1.05;
-        u.rate = 0.92;
+        u.rate = 0.94;
         u.volume = 0.68;
-        let advanced = false;
+        let adv = false;
         const done = () => {
-          if (!advanced && myQueueId === audioQueueId) {
-            advanced = true;
-            setTimeout(() => nextStep(), 150);
+          if (!adv && qid === audioQueueId) {
+            adv = true;
+            setTimeout(next, 140);
           }
         };
         u.onend = done;
         u.onerror = done;
-        setTimeout(() => {
-          if (myQueueId === audioQueueId) window.speechSynthesis.speak(u);
-        }, 50);
+        setTimeout(() => { if (qid === audioQueueId) window.speechSynthesis.speak(u); }, 40);
       } else if (step.type === 'mp3') {
-        playSingleMp3(step.file, step.boost || 2.2, () => {
-          if (myQueueId === audioQueueId) setTimeout(() => nextStep(), 150);
+        playMp3File(step.file, step.boost || 2.2, () => {
+          if (qid === audioQueueId) setTimeout(next, 140);
         });
       }
     }
-    nextStep();
+    next();
   }
 
-  // 方案 B：支援暫停／繼續與 0.8x / 1.0x 變速嘅故事原聲播放器
-  function toggleStoryPlay(file) {
-    // 停止其他排隊語音（但不重置目前 storyAudio 進度）
+  function createStoryElement(file) {
+    ensureAudioCtx();
+    const audio = new Audio('audio/' + file);
+    audio.crossOrigin = 'anonymous';
+    audio.playbackRate = storyRate;
+    if (audioCtx) {
+      try {
+        const src = audioCtx.createMediaElementSource(audio);
+        const gain = audioCtx.createGain();
+        gain.gain.value = 1.85;
+        src.connect(gain);
+        gain.connect(audioCtx.destination);
+      } catch (e) {
+        audio.volume = 1.0;
+      }
+    } else {
+      audio.volume = 1.0;
+    }
+    return audio;
+  }
+
+  // 模式 1（圖 1 / 圖 2 點讀）：點擊浮動大喇叭播/停原聲故事
+  function togglePageStory(file, onFinishCallback) {
+    // 停止其他語音
     audioQueueId++;
     if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-    if (activeAudioElement) {
-      try { activeAudioElement.pause(); activeAudioElement.currentTime = 0; } catch (e) {}
-      activeAudioElement = null;
+    if (activeWordAudio) {
+      try { activeWordAudio.pause(); activeWordAudio.currentTime = 0; } catch (e) {}
+      activeWordAudio = null;
     }
 
-    ensureAudioContext();
-
-    if (storyAudio && storyFileCurrent === file) {
-      if (storyIsPlaying) {
+    if (storyAudio && storyFileNow === file) {
+      if (storyPlaying) {
         storyAudio.pause();
-        storyIsPlaying = false;
-        updateStoryPlayButtonUI();
+        storyPlaying = false;
+        updateSpeakerUI();
       } else {
-        storyAudio.playbackRate = storySpeed;
-        storyIsPlaying = true;
-        updateStoryPlayButtonUI();
-        storyAudio.play().catch(() => {
-          storyIsPlaying = false;
-          updateStoryPlayButtonUI();
-        });
+        storyAudio.playbackRate = storyRate;
+        storyPlaying = true;
+        updateSpeakerUI();
+        storyAudio.play().catch(() => { storyPlaying = false; updateSpeakerUI(); });
       }
       return;
     }
 
-    // 載入新故事音檔
-    stopStoryAudio();
-    storyFileCurrent = file;
-    storyAudio = new Audio('audio/' + file);
-    storyAudio.crossOrigin = 'anonymous';
-    storyAudio.playbackRate = storySpeed;
-
-    if (audioCtx) {
-      try {
-        const src = audioCtx.createMediaElementSource(storyAudio);
-        const gain = audioCtx.createGain();
-        gain.gain.value = 2.0;
-        src.connect(gain);
-        gain.connect(audioCtx.destination);
-      } catch (e) {
-        storyAudio.volume = 1.0;
-      }
-    } else {
-      storyAudio.volume = 1.0;
-    }
-
+    stopStoryOnly();
+    storyFileNow = file;
+    storyAudio = createStoryElement(file);
     storyAudio.onended = () => {
-      storyIsPlaying = false;
+      storyPlaying = false;
       storyAudio.currentTime = 0;
-      updateStoryPlayButtonUI();
+      updateSpeakerUI();
+      if (onFinishCallback) onFinishCallback();
     };
     storyAudio.onerror = () => {
-      storyIsPlaying = false;
-      updateStoryPlayButtonUI();
+      storyPlaying = false;
+      updateSpeakerUI();
+    };
+    storyPlaying = true;
+    updateSpeakerUI();
+    storyAudio.play().catch(() => { storyPlaying = false; updateSpeakerUI(); });
+  }
+
+  function setRate(r) {
+    storyRate = r;
+    if (storyAudio) storyAudio.playbackRate = r;
+    document.querySelectorAll('.speed-btn').forEach(b => {
+      b.classList.toggle('active', parseFloat(b.dataset.rate) === r);
+    });
+  }
+
+  function updateSpeakerUI() {
+    const sp = document.getElementById('floatSpeakerBtn');
+    if (!sp) return;
+    sp.classList.toggle('playing', storyPlaying);
+    sp.textContent = storyPlaying ? '⏸️' : '🔊';
+  }
+
+  // =========================================================================
+  // 3. 模式 2：全屏自動停頓配音劇場邏輯（圖 2 扮演 Pat）
+  // =========================================================================
+  function adjustPauseTime(delta) {
+    patPauseTime = Math.max(0.5, Math.min(12, Math.round((patPauseTime + delta) * 10) / 10));
+    localStorage.setItem('u9_d3_pause_t', String(patPauseTime));
+    const el = document.getElementById('pauseTimeVal');
+    if (el) el.textContent = patPauseTime.toFixed(1) + 's';
+  }
+
+  function startAutoPauseTheater() {
+    stopAllAudio();
+    theaterState = 'playing_pre';
+    updateTheaterUI();
+
+    storyFileNow = 'en-u9-story2.mp3';
+    storyAudio = createStoryElement('en-u9-story2.mp3');
+    storyAudio.currentTime = 0;
+    storyPlaying = true;
+    updateSpeakerUI();
+
+    storyAudio.onended = () => {
+      clearTheaterWatcher();
+      storyPlaying = false;
+      theaterState = 'done';
+      updateSpeakerUI();
+      updateTheaterUI();
+      awardScoop('s2', '🎉 玲玲演 Pat 演得超棒！獲得第 2 球雪糕！');
     };
 
-    storyIsPlaying = true;
-    updateStoryPlayButtonUI();
     storyAudio.play().catch(() => {
-      storyIsPlaying = false;
-      updateStoryPlayButtonUI();
+      storyPlaying = false;
+      updateSpeakerUI();
     });
+
+    // 精準監測停頓時間點，自動留白並點亮「I like eggs.」對話氣泡
+    clearTheaterWatcher();
+    theaterWatchTimer = setInterval(() => {
+      if (theaterState === 'playing_pre' && storyAudio && storyAudio.currentTime >= patPauseTime) {
+        triggerPatPause();
+      }
+    }, 80);
   }
 
-  function replayStoryFromStart(file) {
-    stopStoryAudio();
-    storyFileCurrent = null;
-    toggleStoryPlay(file);
+  function triggerPatPause() {
+    clearTheaterWatcher();
+    if (storyAudio && !storyAudio.paused) {
+      storyAudio.pause();
+    }
+    storyPlaying = false;
+    theaterState = 'paused_for_pat';
+    updateSpeakerUI();
+    updateTheaterUI();
   }
 
-  function setStorySpeed(rate) {
-    storySpeed = rate;
-    if (storyAudio) storyAudio.playbackRate = rate;
-    document.querySelectorAll('.speed-btn').forEach(btn => {
-      btn.classList.toggle('active', parseFloat(btn.dataset.rate) === rate);
-    });
+  function finishPatLineAndResume() {
+    if (theaterState !== 'paused_for_pat') return;
+    launchFireworks();
+    theaterState = 'playing_post';
+    updateTheaterUI();
+
+    // 播完鼓勵煙花短暫停頓後，自動接續原聲故事
+    setTimeout(() => {
+      if (currentStep !== 2 || !storyAudio) return;
+      storyAudio.playbackRate = storyRate;
+      storyPlaying = true;
+      updateSpeakerUI();
+      storyAudio.play().catch(() => {
+        storyPlaying = false;
+        theaterState = 'done';
+        updateTheaterUI();
+        awardScoop('s2', '🎉 玲玲演得好叻女！獲得第 2 球雪糕！');
+      });
+    }, 550);
   }
 
-  function updateStoryPlayButtonUI() {
-    const btn = document.getElementById('storyPlayBtn');
-    if (!btn) return;
-    btn.innerHTML = storyIsPlaying ? '⏸️ 暫停故事' : '▶️ 播放原聲故事';
+  function peekPatHint() {
+    // 偷聽提示：播 eggs 單字原聲，唔打亂 storyAudio 暫停進度
+    audioQueueId++;
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    playMp3File('en-eggs.mp3', 2.2);
   }
 
-  function getWordAudioStep(id) {
-    const map = {
-      eggs: 'en-eggs.mp3',
-      bread: 'en-bread.mp3',
-      rice: 'en-rice.mp3',
-      meat: 'en-meat.mp3',
-      fish: 'en-fish.mp3'
-    };
-    const boost = id === 'meat' ? 2.5 : 2.2;
-    return { type: 'mp3', file: map[id], boost };
+  function updateTheaterUI() {
+    const glow = document.getElementById('patBubbleGlow');
+    const bar = document.getElementById('theaterOverlay');
+    const startBtn = document.getElementById('theaterStartBtn');
+    const manualPauseBtn = document.getElementById('manualPauseBtn');
+
+    if (glow) glow.classList.toggle('active', theaterState === 'paused_for_pat');
+    if (bar) bar.classList.toggle('active', theaterState === 'paused_for_pat');
+    if (startBtn) {
+      startBtn.innerHTML = theaterState === 'done' ? '🔁 再演一次 Pat' : '🎭 開始配音劇場';
+    }
+    if (manualPauseBtn) {
+      manualPauseBtn.style.display = theaterState === 'playing_pre' ? 'inline-flex' : 'none';
+    }
   }
 
-  let currentGuideCantonese = "";
-  function setGuide(zhText, autoSpeak = true) {
-    currentGuideCantonese = zhText;
-    document.getElementById('teacherMsg').textContent = zhText;
-    if (autoSpeak) replayGuide();
+  // =========================================================================
+  // 4. 引導語音、飛星與雪糕球獎勵
+  // =========================================================================
+  let currentGuideZh = '';
+  function setGuide(text, speak = true) {
+    currentGuideZh = text;
+    document.getElementById('teacherText').textContent = text;
+    if (speak) replayGuide();
   }
   function replayGuide() {
-    playHybridQueue([{ type: 'zh', text: currentGuideCantonese }]);
+    playHybridQueue([{ type: 'zh', text: currentGuideZh }]);
   }
 
-  // ==========================================
-  // 2. 可愛童趣 SVG 插畫庫（食物 ＋ 繪本圖 1 & 圖 2）
-  // ==========================================
-  const ILLUSTRATIONS = {
-    eggs: `
-      <svg viewBox="0 0 180 180" width="100%" height="100%">
-        <ellipse cx="90" cy="126" rx="74" ry="38" fill="#E0F2FE" stroke="#38BDF8" stroke-width="5"/>
-        <ellipse cx="90" cy="122" rx="60" ry="28" fill="#FFFFFF"/>
-        <path d="M42 108 C36 92, 54 78, 72 84 C84 88, 92 98, 86 114 C80 128, 50 128, 42 108 Z" fill="#FFFBEB" stroke="#CBD5E1" stroke-width="3"/>
-        <circle cx="66" cy="104" r="15" fill="#FACC15" stroke="#F59E0B" stroke-width="3"/>
-        <circle cx="61" cy="99" r="4" fill="#FEF9C3"/>
-        <path d="M92 114 C88 96, 108 82, 128 88 C142 94, 146 112, 136 124 C126 136, 98 132, 92 114 Z" fill="#FFFBEB" stroke="#CBD5E1" stroke-width="3"/>
-        <circle cx="116" cy="108" r="15" fill="#FACC15" stroke="#F59E0B" stroke-width="3"/>
-        <circle cx="111" cy="103" r="4" fill="#FEF9C3"/>
-      </svg>
-    `,
-    bread: `
-      <svg viewBox="0 0 180 180" width="100%" height="100%">
-        <ellipse cx="90" cy="148" rx="68" ry="14" fill="#DBEAFE"/>
-        <path d="M36 74 C28 46, 56 32, 90 32 C124 32, 152 46, 144 74 L140 134 C140 142, 132 146, 122 146 L58 146 C48 146, 40 142, 40 134 Z" fill="#D97706" stroke="#92400E" stroke-width="6" stroke-linejoin="round"/>
-        <path d="M46 76 C40 54, 62 42, 90 42 C118 42, 140 54, 134 76 L130 130 C130 135, 125 138, 118 138 L62 138 C55 138, 50 135, 50 130 Z" fill="#FEF3C7"/>
-        <circle cx="72" cy="86" r="5" fill="#1E293B"/>
-        <circle cx="108" cy="86" r="5" fill="#1E293B"/>
-        <path d="M82 96 Q90 106 98 96" stroke="#92400E" stroke-width="4" fill="none" stroke-linecap="round"/>
-      </svg>
-    `,
-    rice: `
-      <svg viewBox="0 0 180 180" width="100%" height="100%">
-        <line x1="110" y1="30" x2="156" y2="66" stroke="#D97706" stroke-width="7" stroke-linecap="round"/>
-        <line x1="102" y1="42" x2="152" y2="78" stroke="#F59E0B" stroke-width="7" stroke-linecap="round"/>
-        <path d="M36 96 C38 56, 64 44, 90 44 C116 44, 142 56, 144 96 Z" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="5"/>
-        <path d="M28 94 L152 94 C148 134, 122 148, 90 148 C58 148, 32 134, 28 94 Z" fill="#38BDF8" stroke="#0284C7" stroke-width="6" stroke-linejoin="round"/>
-        <rect x="64" y="146" width="52" height="10" rx="5" fill="#0284C7"/>
-        <circle cx="72" cy="116" r="4.5" fill="#FFFFFF"/>
-        <circle cx="108" cy="116" r="4.5" fill="#FFFFFF"/>
-        <path d="M82 124 Q90 132 98 124" stroke="#FFFFFF" stroke-width="4" fill="none" stroke-linecap="round"/>
-      </svg>
-    `,
-    meat: `
-      <svg viewBox="0 0 180 180" width="100%" height="100%">
-        <g transform="rotate(-25 90 90)">
-          <rect x="96" y="78" width="52" height="24" rx="10" fill="#FFFBEB" stroke="#D97706" stroke-width="5"/>
-          <circle cx="148" cy="78" r="13" fill="#FFFBEB" stroke="#D97706" stroke-width="5"/>
-          <circle cx="148" cy="102" r="13" fill="#FFFBEB" stroke="#D97706" stroke-width="5"/>
-          <ellipse cx="76" cy="90" rx="52" ry="38" fill="#F97316" stroke="#C2410C" stroke-width="6"/>
-          <ellipse cx="70" cy="82" rx="34" ry="20" fill="#FB923C"/>
-        </g>
-      </svg>
-    `,
-    story1: `
-      <svg viewBox="0 0 420 220" width="100%" height="100%">
-        <!-- 夜空背景 -->
-        <rect x="6" y="6" width="408" height="208" rx="26" fill="#1E3A8A" stroke="#60A5FA" stroke-width="5"/>
-        <!-- 月亮與星星 -->
-        <path d="M52 32 A22 22 0 1 0 74 62 A16 16 0 1 1 52 32 Z" fill="#FDE047"/>
-        <circle cx="96" cy="36" r="3.5" fill="#FEF08A"/>
-        <circle cx="126" cy="54" r="2.5" fill="#FEF08A"/>
-        <circle cx="38" cy="84" r="3" fill="#FEF08A"/>
-        <!-- 小床與被子 -->
-        <rect x="28" y="142" width="176" height="54" rx="16" fill="#F472B6" stroke="#DB2777" stroke-width="4"/>
-        <rect x="34" y="128" width="54" height="28" rx="12" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="3"/>
-        <!-- 瞓覺嘅 Pat -->
-        <circle cx="72" cy="134" r="24" fill="#FED7AA" stroke="#EA580C" stroke-width="3"/>
-        <path d="M48 134 C48 108, 96 108, 96 134 C88 122, 56 122, 48 134 Z" fill="#78350F"/>
-        <path d="M62 134 Q66 138 70 134" stroke="#1E293B" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-        <path d="M76 134 Q80 138 84 134" stroke="#1E293B" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-        <path d="M69 144 Q73 148 77 144" stroke="#DC2626" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-        <text x="114" y="122" font-size="22" font-weight="900" fill="#BAE6FD">Zzz...</text>
-        <!-- 發夢泡泡 -->
-        <circle cx="144" cy="96" r="8" fill="#FFFFFF" opacity="0.9"/>
-        <circle cx="168" cy="82" r="12" fill="#FFFFFF" opacity="0.95"/>
-        <ellipse cx="290" cy="100" rx="100" ry="74" fill="#FFFFFF" stroke="#F9A8D4" stroke-width="5"/>
-        <!-- 夢境入面嘅大雪糕 -->
-        <polygon points="270,114 310,114 290,162" fill="#F59E0B" stroke="#B45309" stroke-width="4" stroke-linejoin="round"/>
-        <circle cx="276" cy="102" r="20" fill="#F9A8D4" stroke="#EC4899" stroke-width="3"/>
-        <circle cx="304" cy="102" r="20" fill="#FDE047" stroke="#EAB308" stroke-width="3"/>
-        <circle cx="290" cy="80" r="22" fill="#93C5FD" stroke="#3B82F6" stroke-width="3"/>
-        <circle cx="290" cy="54" r="7" fill="#EF4444"/>
-        <text x="234" y="64" font-size="22">✨</text>
-        <text x="336" y="70" font-size="22">🎂</text>
-      </svg>
-    `,
-    story2: `
-      <svg viewBox="0 0 420 220" width="100%" height="100%">
-        <!-- 清晨客廳背景 -->
-        <rect x="6" y="6" width="408" height="208" rx="26" fill="#FEF9C3" stroke="#FACC15" stroke-width="5"/>
-        <!-- 太陽窗戶 -->
-        <rect x="26" y="24" width="76" height="68" rx="12" fill="#BAE6FD" stroke="#38BDF8" stroke-width="4"/>
-        <circle cx="64" cy="58" r="18" fill="#FACC15" stroke="#F59E0B" stroke-width="3"/>
-        <!-- Pat 開心坐喺餐桌前 -->
-        <circle cx="176" cy="90" r="32" fill="#FED7AA" stroke="#EA580C" stroke-width="3.5"/>
-        <path d="M144 90 C144 52, 208 52, 208 90 C196 72, 156 72, 144 90 Z" fill="#78350F"/>
-        <circle cx="166" cy="88" r="3.5" fill="#1E293B"/>
-        <circle cx="186" cy="88" r="3.5" fill="#1E293B"/>
-        <ellipse cx="156" cy="96" rx="5" ry="3" fill="#FDA4AF"/>
-        <ellipse cx="196" cy="96" rx="5" ry="3" fill="#FDA4AF"/>
-        <path d="M168 102 Q176 110 184 102" stroke="#DC2626" stroke-width="3" fill="none" stroke-linecap="round"/>
-        <!-- 餐桌 -->
-        <rect x="24" y="132" width="372" height="72" rx="18" fill="#FDBA74" stroke="#EA580C" stroke-width="4"/>
-        <!-- 早餐：麵包、煎蛋、果汁 -->
-        <rect x="52" y="146" width="52" height="44" rx="10" fill="#FEF3C7" stroke="#B45309" stroke-width="3.5"/>
-        <ellipse cx="176" cy="168" rx="50" ry="24" fill="#FFFFFF" stroke="#38BDF8" stroke-width="3.5"/>
-        <circle cx="162" cy="168" r="10" fill="#FACC15"/>
-        <circle cx="190" cy="168" r="10" fill="#FACC15"/>
-        <rect x="244" y="142" width="32" height="46" rx="8" fill="#FB923C" stroke="#C2410C" stroke-width="3.5"/>
-        <!-- 心入面掛住嘅雪糕泡泡 -->
-        <circle cx="236" cy="82" r="6" fill="#FFFFFF"/>
-        <ellipse cx="326" cy="70" rx="64" ry="46" fill="#FFFFFF" stroke="#F472B6" stroke-width="4"/>
-        <polygon points="312,76 340,76 326,106" fill="#F59E0B" stroke="#B45309" stroke-width="3"/>
-        <circle cx="326" cy="64" r="17" fill="#F9A8D4" stroke="#EC4899" stroke-width="3"/>
-        <circle cx="326" cy="46" r="5" fill="#EF4444"/>
-      </svg>
-    `
-  };
-
-  // ==========================================
-  // 3. 課程資料（Unit 9 Day 3：繪本故事上集）
-  // ==========================================
-  const ACT1_WARMUP = [
-    {
-      id: 'eggs',
-      badge: '🔁 極速熱身 1 / 3',
-      enHtml: `e<span class="hl-amber">gg</span>s`,
-      mnemonic: '👀 仲記唔記得？兩個圓碌碌嘅 g 就係圓雞蛋！',
-      guideZh: '聽故事之前先熱身！點擊圖卡聽下雞蛋嘅英文！'
-    },
-    {
-      id: 'bread',
-      badge: '🔁 極速熱身 2 / 3',
-      enHtml: `<span class="hl-orange">b</span>rea<span class="hl-orange">d</span>`,
-      mnemonic: '👀 前面大肚腩 b，後面大肚腩 d，兩塊厚多士！',
-      guideZh: '跟住重溫麵包！點擊圖卡聽下英文發音！'
-    },
-    {
-      id: 'rice',
-      badge: '🔁 極速熱身 3 / 3',
-      enHtml: `ri<span class="hl-purple">ce</span>`,
-      mnemonic: '👀 扮揸筷子扒飯，尾音輕輕蛇仔聲！',
-      guideZh: '最後重溫白飯！點擊聽完我哋就入故事電影院喇！'
+  function awardScoop(key, praiseZh) {
+    if (!scoops[key]) {
+      scoops[key] = true;
+      updateScoopTracker();
+      launchFireworks();
+      if (praiseZh) playHybridQueue([{ type: 'zh', text: praiseZh }]);
     }
-  ];
+  }
 
-  const ACT2_STORY = [
-    {
-      sceneId: 'story1',
-      audioFile: 'en-u9-story1.mp3',
-      badge: '📖 圖 1：發夢食雪糕 (P.38)',
-      captionHtml: `Tomorrow is Pat's birthday. She is dreaming about her birthday. In her dream, she eats <span class="pat-line">ice cream</span> all day!`,
-      guideZh: '故事上集第一幅圖！Pat 聽日生日，佢瞓覺發夢成日都喺度食雪糕！撳下面播放掣，先用慢速聽一次原聲故事啦！'
-    },
-    {
-      sceneId: 'story2',
-      audioFile: 'en-u9-story2.mp3',
-      badge: '📖 圖 2：朝早食早餐 (P.38)',
-      captionHtml: `The next morning, <span class="pat-line">"Yum! I like eggs, but..."</span> says Pat. Bread, eggs, and juice are yummy, but Pat wants to eat ice cream.`,
-      guideZh: '第二朝早，枱面有麵包、雞蛋同果汁。Pat 讚雞蛋好好味，但心入面其實想食雪糕！撳播放掣聽下 Pat 點講！'
-    }
-  ];
+  function updateScoopTracker() {
+    const s1 = document.getElementById('scoop1');
+    const s2 = document.getElementById('scoop2');
+    const s3 = document.getElementById('scoop3');
+    if (scoops.s1) { s1.classList.add('filled'); s1.textContent = '🍓'; }
+    if (scoops.s2) { s2.classList.add('filled'); s2.textContent = '🍋'; }
+    if (scoops.s3) { s3.classList.add('filled'); s3.textContent = '🫐'; }
+    const count = (scoops.s1 ? 1 : 0) + (scoops.s2 ? 1 : 0) + (scoops.s3 ? 1 : 0);
+    document.getElementById('scoopCount').textContent = `🍦 ${count}/3`;
+  }
 
-  const ACT3_THEATER = [
-    {
-      sceneId: 'story1',
-      audioFile: 'en-u9-story1.mp3',
-      badge: '🎭 配音小劇場 1：發夢食雪糕',
-      patBubble: '😴 Zzz... 🍦<br>Ice cream!',
-      actionTip: '🎬 演技指引：合埋眼扮瞓覺發夢，聽到 ice cream 就扮舔雪糕！',
-      hintWord: null,
-      guideZh: '輪到玲玲做小演員！先播故事，玲玲合埋眼扮 Pat 發夢食雪糕，演完撳粉紅色掣放煙花！'
-    },
-    {
-      sceneId: 'story2',
-      audioFile: 'en-u9-story2.mp3',
-      badge: '🎭 配音小劇場 2：玲玲扮演 Pat！',
-      patBubble: '🍳 "Yum! I like eggs, but..." 🍦',
-      actionTip: '🎬 演技指引：播到 The next morning 撳暫停 ➔ 玲玲摸肚仔笑住講 Yum! I like eggs ➔ 托腮嘆氣講 but...！',
-      hintWord: 'eggs',
-      guideZh: '重頭戲嚟喇！媽媽喺左邊播原聲，講完朝早嗰句就撳暫停，輪到玲玲扮演 Pat 大聲演繹！'
-    }
-  ];
+  function popStar(evt, emoji = '⭐') {
+    if (!evt) return;
+    const el = document.createElement('div');
+    el.className = 'star-burst';
+    el.textContent = emoji;
+    el.style.left = evt.clientX + 'px';
+    el.style.top = evt.clientY + 'px';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 800);
+  }
 
-  // ⚠️ 第四幕嚴格執行【零劇透最高鐵律】：廣東話指引絕不提及食物中文或特徵！
-  const ACT4_QUIZ = [
-    {
-      badge: '🎧 聽音尋寶 1 / 3',
-      questionZh: '留心聽下英文聲音，揀出啱嘅圖卡啦！',
-      audioId: 'eggs',
-      correctId: 'eggs',
-      wrongId: 'bread'
-    },
-    {
-      badge: '🎧 聽音尋寶 2 / 3',
-      questionZh: '聽清楚老師講咩英文，搵出對應嘅圖卡！',
-      audioId: 'bread',
-      correctId: 'bread',
-      wrongId: 'rice'
-    },
-    {
-      badge: '🎧 聽音尋寶 3 / 3',
-      questionZh: '最後一題！再聽清楚英文，揀出啱嘅圖卡啦！',
-      audioId: 'meat',
-      correctId: 'meat',
-      wrongId: 'eggs'
-    }
-  ];
-
-  // ==========================================
-  // 4. 渲染引擎
-  // ==========================================
-  let currentAct = 0;
-  let subIndex = 0;
-  let quizSolved = false;
-  let quizWrongPicked = null;
-  let reportSent = false;
-
-  function updateActNav() {
-    document.querySelectorAll('.act-pill').forEach((p, idx) => {
-      p.className = `act-pill ${currentAct === 4 || idx < currentAct ? 'done' : (idx === currentAct ? 'active' : '')}`;
+  // =========================================================================
+  // 5. 繪本舞台渲染引擎
+  // =========================================================================
+  function updateNavPills() {
+    document.querySelectorAll('.step-pill').forEach((p, idx) => {
+      p.className = `step-pill ${currentStep === 4 || idx < currentStep ? 'done' : (idx === currentStep ? 'active' : '')}`;
     });
   }
 
-  function jumpToAct(idx) {
+  function goStep(stepIdx) {
     stopAllAudio();
-    currentAct = idx;
-    subIndex = 0;
-    quizSolved = false;
-    quizWrongPicked = null;
-    updateActNav();
-    renderStage(true);
+    currentStep = stepIdx;
+    theaterState = 'idle';
+    if (stepIdx === 3) {
+      ispyIdx = 0;
+      ispySolved = false;
+      ispyWrong = null;
+    }
+    updateNavPills();
+    renderBookStage(true);
   }
 
-  function renderStage(shouldSpeak = true) {
-    const container = document.getElementById('stageContainer');
-    updateActNav();
+  function renderSpeedDockHtml() {
+    return `
+      <div class="speed-group">
+        <button class="speed-btn ${storyRate === 0.65 ? 'active' : ''}" data-rate="0.65" onclick="setRate(0.65)">🐢 0.65x</button>
+        <button class="speed-btn ${storyRate === 0.8 ? 'active' : ''}" data-rate="0.8" onclick="setRate(0.8)">🚶 0.8x</button>
+        <button class="speed-btn ${storyRate === 1.0 ? 'active' : ''}" data-rate="1.0" onclick="setRate(1.0)">🐇 1.0x</button>
+      </div>
+    `;
+  }
 
-    // --- Act 1: 極速熱身 ---
-    if (currentAct === 0) {
-      const c = ACT1_WARMUP[subIndex];
-      setGuide(c.guideZh, shouldSpeak);
+  function renderBookStage(shouldSpeak = true) {
+    const stage = document.getElementById('bookStage');
+    updateNavPills();
 
-      container.innerHTML = `
-        <div class="dots-row">${ACT1_WARMUP.map((_, i) => `<span class="dot ${i === subIndex ? 'active' : (i < subIndex ? 'completed' : '')}"></span>`).join('')}</div>
-        <div class="stage-badge">${c.badge}</div>
-        <div class="flashcard-3d" id="meaningCard" onclick="playWarmupAudio('${c.id}')">
-          <div class="pulse-ring"></div>
-          <div class="illustration-wrap">${ILLUSTRATIONS[c.id]}</div>
-          <div class="word-en">${c.enHtml}</div>
-          <div class="mnemonic-pill">${c.mnemonic}</div>
-          <div class="hint-text">👆 點擊圖卡聽純正英文</div>
-        </div>
-        <div class="btn-row">
-          ${subIndex > 0 ? `<button class="btn-3d btn-purple" onclick="stopAllAudio(); subIndex--; renderStage(true);">⬅️ 上一個</button>` : ''}
-          <button class="btn-3d btn-green" onclick="stopAllAudio(); if(subIndex < ACT1_WARMUP.length - 1){ subIndex++; renderStage(true); } else jumpToAct(1);">
-            ${subIndex < ACT1_WARMUP.length - 1 ? '下一個 ➡️' : '入故事電影院 📖'}
-          </button>
-        </div>
-      `;
-    }
+    // --- Step 0: 圖 1 課本原圖點讀（發夢食雪糕） ---
+    if (currentStep === 0) {
+      setGuide('圖 1：Pat 聽日生日，發夢成日都食雪糕！篤下右上角喇叭聽故事，再篤下佢發夢個大雪糕啦！', shouldSpeak);
 
-    // --- Act 2: 故事電影院（方案 B 原聲＋變速＋暫停） ---
-    else if (currentAct === 1) {
-      const s = ACT2_STORY[subIndex];
-      setGuide(s.guideZh, shouldSpeak);
+      stage.innerHTML = `
+        <div class="page-wrapper">
+          <div class="img-stage">
+            <img class="story-img" src="image/u9-story1.jpg" alt="Story 1" onerror="handleImgError(this, 'u9-story1.jpg')" />
+            <button class="float-speaker" id="floatSpeakerBtn" onclick="togglePageStory('en-u9-story1.mp3', () => { launchFireworks(); })">🔊</button>
 
-      container.innerHTML = `
-        <div class="dots-row">${ACT2_STORY.map((_, i) => `<span class="dot ${i === subIndex ? 'active' : (i < subIndex ? 'completed' : '')}"></span>`).join('')}</div>
-        <div class="stage-badge">${s.badge}</div>
+            <!-- 熱區 1：左上角三球雪糕筒 -->
+            <div class="hotspot explore-dot ${exploredDots.s1_cone ? 'visited' : ''}"
+                 style="left: 26%; top: 8%; width: 25%; height: 20%;"
+                 onclick="tapStory1Hotspot(event, 's1_cone', '🍦', '嘩！Pat 發夢拎住三球大雪糕！')">
+              <span class="hotspot-badge">🍦</span>
+            </div>
 
-        <div class="story-frame">
-          <div class="story-svg-box">${ILLUSTRATIONS[s.sceneId]}</div>
-          <div class="story-caption-en">${s.captionHtml}</div>
+            <!-- 熱區 2：右中食雪糕碗 -->
+            <div class="hotspot explore-dot ${exploredDots.s1_bowl ? 'visited' : ''}"
+                 style="left: 55%; top: 30%; width: 32%; height: 18%;"
+                 onclick="tapStory1Hotspot(event, 's1_bowl', '✨', '夢入面成日都喺度食雪糕，好開心呀！')">
+              <span class="hotspot-badge">🍧</span>
+            </div>
 
-          <div class="player-controls">
-            <button class="btn-3d btn-blue" id="storyPlayBtn" onclick="toggleStoryPlay('${s.audioFile}')">▶️ 播放原聲故事</button>
-            <button class="btn-3d btn-purple" onclick="replayStoryFromStart('${s.audioFile}')">🔁 由頭重播</button>
-            <div class="speed-toggle">
-              <button class="speed-btn ${storySpeed === 0.8 ? 'active' : ''}" data-rate="0.8" onclick="setStorySpeed(0.8)">🐢 慢速 0.8x</button>
-              <button class="speed-btn ${storySpeed === 1.0 ? 'active' : ''}" data-rate="1.0" onclick="setStorySpeed(1.0)">🐇 原速 1.0x</button>
+            <!-- 熱區 3：瞓覺嘅 Pat -->
+            <div class="hotspot explore-dot ${exploredDots.s1_pat ? 'visited' : ''}"
+                 style="left: 28%; top: 59%; width: 44%; height: 15%;"
+                 onclick="tapStory1Hotspot(event, 's1_pat', '💤', '噓！Pat 瞓得好香甜，發緊生日夢呀！')">
+              <span class="hotspot-badge">😴 Pat</span>
             </div>
           </div>
         </div>
 
-        <div class="btn-row">
-          ${subIndex > 0 ? `<button class="btn-3d btn-purple" onclick="stopAllAudio(); subIndex--; renderStage(true);">⬅️ 上一幅圖</button>` : ''}
-          <button class="btn-3d btn-green" onclick="stopAllAudio(); if(subIndex < ACT2_STORY.length - 1){ subIndex++; renderStage(true); } else jumpToAct(2);">
-            ${subIndex < ACT2_STORY.length - 1 ? '睇圖 2：食早餐 ➡️' : '去配音小劇場 🎭'}
-          </button>
+        <div class="bottom-dock">
+          ${renderSpeedDockHtml()}
+          <button class="btn-3d btn-green" onclick="goStep(1)">翻去圖 2：食早餐 ➡️</button>
         </div>
       `;
     }
 
-    // --- Act 3: 配音小劇場（方案 B 暫停接力扮演 Pat） ---
-    else if (currentAct === 2) {
-      const t = ACT3_THEATER[subIndex];
-      setGuide(t.guideZh, shouldSpeak);
+    // --- Step 1: 圖 2 課本原圖點讀（朝早食早餐 ＋ 儲第 1 球雪糕） ---
+    else if (currentStep === 1) {
+      setGuide('圖 2：第二朝早！篤下餐枱上面嘅食物點讀英文，再撳右上角喇叭聽故事，儲第 1 球雪糕！', shouldSpeak);
 
-      container.innerHTML = `
-        <div class="dots-row">${ACT3_THEATER.map((_, i) => `<span class="dot ${i === subIndex ? 'active' : (i < subIndex ? 'completed' : '')}"></span>`).join('')}</div>
-        <div class="stage-badge">${t.badge}</div>
+      stage.innerHTML = `
+        <div class="page-wrapper">
+          <div class="img-stage">
+            <img class="story-img" src="image/u9-story2.jpg" alt="Story 2" onerror="handleImgError(this, 'u9-story2.jpg')" />
+            <button class="float-speaker" id="floatSpeakerBtn" onclick="togglePageStory('en-u9-story2.mp3', () => { awardScoop('s1', '聽完圖 1 同圖 2 故事喇！獲得第 1 球雪糕！'); })">🔊</button>
 
-        <div class="theater-grid">
-          <!-- 左邊：原聲旁白控制區 -->
-          <div class="role-box">
-            <div class="role-tag">🎧 原聲旁白（隨時暫停）</div>
-            <div style="width: 100%; height: 120px;">${ILLUSTRATIONS[t.sceneId]}</div>
-            <button class="btn-3d btn-blue" id="storyPlayBtn" style="width:100%; justify-content:center;" onclick="toggleStoryPlay('${t.audioFile}')">▶️ 播放／暫停</button>
-            <div class="speed-toggle">
-              <button class="speed-btn ${storySpeed === 0.8 ? 'active' : ''}" data-rate="0.8" onclick="setStorySpeed(0.8)">🐢 0.8x</button>
-              <button class="speed-btn ${storySpeed === 1.0 ? 'active' : ''}" data-rate="1.0" onclick="setStorySpeed(1.0)">🐇 1.0x</button>
+            <!-- 熱區：紫色碟煎蛋（播 en-eggs.mp3） -->
+            <div class="hotspot explore-dot ${exploredDots.s2_eggs ? 'visited' : ''}"
+                 style="left: 19%; top: 71%; width: 34%; height: 8%;"
+                 onclick="tapStory2Food(event, 's2_eggs', 'en-eggs.mp3', '🍳')">
+              <span class="hotspot-badge">🔊 eggs</span>
             </div>
-          </div>
 
-          <!-- 右邊：玲玲扮演 Pat 區 -->
-          <div class="role-box pat-box">
-            <div class="role-tag">🌟 玲玲主角區：Pat</div>
-            <div class="pat-bubble">${t.patBubble}</div>
-            <div class="action-tip">${t.actionTip}</div>
-            <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center; width:100%;">
-              ${t.hintWord ? `<button class="btn-3d btn-amber" style="font-size:16px; padding:10px 16px;" onclick="playHybridQueue([getWordAudioStep('${t.hintWord}')])">👂 聽單字提示</button>` : ''}
-              <button class="btn-3d btn-pink" style="flex:1; justify-content:center;" onclick="launchFireworks(); playHybridQueue([{type:'zh', text:'玲玲演得超投入！好叻女！'}]);">🎤 我演完喇！放煙花</button>
+            <!-- 熱區：碟前多士（播 en-bread.mp3） -->
+            <div class="hotspot explore-dot ${exploredDots.s2_bread ? 'visited' : ''}"
+                 style="left: 28%; top: 79.5%; width: 19%; height: 8%;"
+                 onclick="tapStory2Food(event, 's2_bread', 'en-bread.mp3', '🍞')">
+              <span class="hotspot-badge">🔊 bread</span>
+            </div>
+
+            <!-- 熱區：粉紅雪糕諗法泡泡 -->
+            <div class="hotspot explore-dot ${exploredDots.s2_ice ? 'visited' : ''}"
+                 style="left: 38%; top: 37%; width: 34%; height: 20%;"
+                 onclick="tapStory2Ice(event)">
+              <span class="hotspot-badge">🍦</span>
             </div>
           </div>
         </div>
 
-        <div class="btn-row">
-          ${subIndex > 0 ? `<button class="btn-3d btn-purple" onclick="stopAllAudio(); subIndex--; renderStage(true);">⬅️ 上一場戲</button>` : ''}
-          <button class="btn-3d btn-green" onclick="stopAllAudio(); if(subIndex < ACT3_THEATER.length - 1){ subIndex++; renderStage(true); } else jumpToAct(3);">
-            ${subIndex < ACT3_THEATER.length - 1 ? '下一場：早餐配音 ➡️' : '去聽音尋寶 🎧'}
-          </button>
+        <div class="bottom-dock">
+          ${renderSpeedDockHtml()}
+          <div style="display:flex; gap:8px;">
+            <button class="btn-3d btn-purple" onclick="goStep(0)">⬅️ 圖 1</button>
+            <button class="btn-3d btn-pink" onclick="goStep(2)">去扮演 Pat 🎭</button>
+          </div>
         </div>
       `;
     }
 
-    // --- Act 4: 零劇透無字盲聽挑戰 ---
-    else if (currentAct === 3) {
-      const q = ACT4_QUIZ[subIndex];
-      setGuide(q.questionZh, false);
+    // --- Step 2: 全屏自動停頓配音劇場（儲第 2 球雪糕） ---
+    else if (currentStep === 2) {
+      setGuide('配音小劇場！撳下面粉紅色掣播故事，停低亮金光嗰陣，就輪到玲玲扮 Pat 講「Yum! I like eggs, but...」！', shouldSpeak);
+
+      stage.innerHTML = `
+        <div class="page-wrapper">
+          <div class="img-stage">
+            <img class="story-img" src="image/u9-story2.jpg" alt="Theater Story 2" onerror="handleImgError(this, 'u9-story2.jpg')" />
+            <button class="float-speaker" id="floatSpeakerBtn" onclick="startAutoPauseTheater()">🎭</button>
+
+            <!-- 精準疊喺原圖藍色對話氣泡上嘅金光呼吸框 -->
+            <div class="pat-bubble-glow" id="patBubbleGlow" onclick="finishPatLineAndResume()"></div>
+
+            <!-- 停頓時彈出嘅演戲操作條 -->
+            <div class="theater-overlay-bar" id="theaterOverlay">
+              <div class="theater-cue-text">🌟 輪到玲玲演 Pat：摸肚仔 ➔ 托腮嘆氣講<br>「Yum! I like eggs, but...」</div>
+              <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center;">
+                <button class="btn-3d btn-amber" style="padding:8px 14px; font-size:15px;" onclick="peekPatHint()">👂 偷聽單字</button>
+                <button class="btn-3d btn-green" style="padding:8px 18px; font-size:16px;" onclick="finishPatLineAndResume()">🎤 我演完喇！繼續故事</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bottom-dock">
+          <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center; justify-content:center;">
+            <button class="btn-3d btn-pink" id="theaterStartBtn" onclick="startAutoPauseTheater()">🎭 開始配音劇場</button>
+            <button class="btn-3d btn-amber" id="manualPauseBtn" style="display:none;" onclick="triggerPatPause()">⏸️ 立即停頓讓玲玲講</button>
+            ${renderSpeedDockHtml()}
+          </div>
+          <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; justify-content:center;">
+            <div class="tweak-group" title="家長微調自動停頓秒數">
+              <span>⏱️停頓</span>
+              <button class="tweak-btn" onclick="adjustPauseTime(-0.5)">-</button>
+              <span id="pauseTimeVal">${patPauseTime.toFixed(1)}s</span>
+              <button class="tweak-btn" onclick="adjustPauseTime(0.5)">+</button>
+            </div>
+            <button class="btn-3d btn-green" onclick="goStep(3)">去原圖尋寶 🔍</button>
+          </div>
+        </div>
+      `;
+      updateTheaterUI();
+    }
+
+    // --- Step 3: 原圖實景尋寶 I Spy（嚴格零劇透盲聽 ＋ 儲第 3 球雪糕） ---
+    else if (currentStep === 3) {
+      const q = ISPY_QUESTIONS[ispyIdx];
+      setGuide(q.guide, false);
       if (shouldSpeak) {
         playHybridQueue([
-          { type: 'zh', text: q.questionZh },
-          getWordAudioStep(q.audioId)
+          { type: 'zh', text: q.guide },
+          { type: 'mp3', file: q.audio, boost: 2.2 }
         ]);
       }
 
-      const cards = subIndex % 2 === 0
-        ? [q.correctId, q.wrongId]
-        : [q.wrongId, q.correctId];
+      stage.innerHTML = `
+        <div class="page-wrapper">
+          <div class="img-stage">
+            <img class="story-img" src="image/u9-story2.jpg" alt="I Spy Story 2" onerror="handleImgError(this, 'u9-story2.jpg')" />
+            <button class="float-speaker" id="floatSpeakerBtn" onclick="playHybridQueue([{type:'mp3', file:'${q.audio}', boost:2.2}])">🔊</button>
 
-      container.innerHTML = `
-        <div class="dots-row">${ACT4_QUIZ.map((_, i) => `<span class="dot ${i === subIndex ? 'active' : (i < subIndex ? 'completed' : '')}"></span>`).join('')}</div>
-        <div class="stage-badge">${q.badge}</div>
-        <div style="margin-bottom: 14px;">
-          <button class="btn-3d btn-purple" onclick="playHybridQueue([getWordAudioStep('${q.audioId}')])">🔊 再聽一次英文</button>
+            <!-- 實景隱形尋寶區 1：煎蛋（無文字、零劇透） -->
+            <div class="hotspot ispy-zone ${ispySolved && q.target === 'eggs' ? 'found-ok' : ''} ${!ispySolved && ispyWrong === 'eggs' ? 'wrong-tap' : ''}"
+                 style="left: 19%; top: 70%; width: 35%; height: 9.2%;"
+                 onclick="pickIspy(event, 'eggs')"></div>
+
+            <!-- 實景隱形尋寶區 2：麵包多士（無文字、零劇透） -->
+            <div class="hotspot ispy-zone ${ispySolved && q.target === 'bread' ? 'found-ok' : ''} ${!ispySolved && ispyWrong === 'bread' ? 'wrong-tap' : ''}"
+                 style="left: 27%; top: 79.2%; width: 20%; height: 9.5%;"
+                 onclick="pickIspy(event, 'bread')"></div>
+          </div>
         </div>
 
-        <div class="quiz-grid">
-          ${cards.map(cid => `
-            <div class="quiz-card ${quizSolved && cid === q.correctId ? 'correct' : ''} ${!quizSolved && quizWrongPicked === cid ? 'wrong-try' : ''}" onclick="pickQuiz('${cid}')">
-              <div style="width: 135px; height: 135px; margin: 0 auto;">${ILLUSTRATIONS[cid]}</div>
-            </div>
-          `).join('')}
+        <div class="bottom-dock">
+          <button class="btn-3d btn-purple" onclick="playHybridQueue([{type:'mp3', file:'${q.audio}', boost:2.2}])">🔊 再聽一次英文 (${ispyIdx + 1}/${ISPY_QUESTIONS.length})</button>
+          ${ispySolved
+            ? `<button class="btn-3d btn-green" onclick="nextIspy()">${ispyIdx < ISPY_QUESTIONS.length - 1 ? '下一題尋寶 ➡️' : '領取第 3 球雪糕 🍦'}</button>`
+            : `<span style="font-size:15px; font-weight:900; color:#0284C7;">👆 聽完英文，直接喺餐枱上面篤中佢！</span>`
+          }
         </div>
-
-        ${quizSolved
-          ? `<div class="gentle-hint-banner success">🎉 玲玲好叻呀！一聽就揀啱！</div>
-             <div class="btn-row"><button class="btn-3d btn-green" onclick="stopAllAudio(); if(subIndex < ACT4_QUIZ.length - 1){ subIndex++; quizSolved=false; quizWrongPicked=null; renderStage(true); } else jumpToAct(4);">${subIndex < ACT4_QUIZ.length - 1 ? '下一題 ➡️' : '領取獎盃 🏆'}</button></div>`
-          : (quizWrongPicked ? `<div class="gentle-hint-banner">💛 試吓隔離嗰張圖卡啦！</div>` : '')
-        }
       `;
     }
 
-    // --- Summary: 結算 ＋ 自動戰報同步 ＋ 備用暗號 ---
-    else if (currentAct === 4) {
-      setGuide("恭喜玲玲完成 Unit 9 Day 3 繪本故事上集！你演 Pat 演得超可愛！", shouldSpeak);
+    // --- Step 4: 儲齊 3 球雪糕大派對 ＋ 自動戰報同步 ---
+    else if (currentStep === 4) {
+      scoops = { s1: true, s2: true, s3: true };
+      updateScoopTracker();
+      setGuide('嘩！儲齊 3 球大雪糕喇！恭喜玲玲完成繪本故事上集！', shouldSpeak);
       if (shouldSpeak) {
         launchFireworks();
-        setTimeout(launchFireworks, 800);
+        setTimeout(launchFireworks, 750);
       }
 
-      const secretCode = `【玲玲英文課堂進度暗號】單元：Unit 9 Day 3 (en-unit9-day3.html)｜學習內容：繪本故事《An Ice Cream Birthday》上集 圖 1–2 (方案 B 原聲慢速＋Pat 配音演繹 Yum! I like eggs, but... ＋ 零劇透盲聽)｜完成狀態：✅ 全課順利完成｜請 Anna 老師更新雲端英文總庫，並準備 Unit 9 Day 4 繪本故事下集！`;
+      const secretCode = `【玲玲英文課堂進度暗號】單元：Unit 9 Day 3 (en-unit9-day3.html)｜學習內容：繪本《An Ice Cream Birthday》上集三合一互動版（課本原圖點讀＋自動停頓扮演 Pat＋原圖零劇透實景尋寶，儲齊 3 球雪糕）｜完成狀態：✅ 全課順利完成｜請 Anna 老師更新雲端英文總庫，並準備 Unit 9 Day 4 繪本下集！`;
 
-      // 全自動雲端戰報同步
       if (window.LinglingReport && !reportSent) {
         reportSent = true;
         window.LinglingReport.save('英文AI課堂', 'Unit 9 Day 3', secretCode);
       }
 
-      container.innerHTML = `
-        <div style="font-size: 72px;">🏆</div>
-        <h1 style="color: #0284C7; margin: 8px 0;">繪本故事上集大成功！</h1>
-        <div class="sync-badge">☁️ 戰報已自動同步至家長戰報箱</div>
-        <div class="btn-row" style="margin-top: 12px;">
-          <button class="btn-3d btn-green" id="copySecretBtn" onclick="copyProgressSecret()">📋 一鍵複製進度暗號（備用）</button>
-        </div>
-        <div class="secret-code-box" id="secretCodeText">${secretCode}</div>
-        <div class="btn-row">
-          <a href="en-unit9.html" class="btn-3d btn-amber" style="text-decoration:none;">🏠 返回單元目錄</a>
+      stage.innerHTML = `
+        <div class="party-card">
+          <svg class="big-cone-svg" viewBox="0 0 160 190">
+            <polygon points="48,108 112,108 80,182" fill="#F59E0B" stroke="#B45309" stroke-width="5" stroke-linejoin="round"/>
+            <line x1="60" y1="128" x2="100" y2="128" stroke="#D97706" stroke-width="3"/>
+            <line x1="68" y1="148" x2="92" y2="148" stroke="#D97706" stroke-width="3"/>
+            <circle cx="58" cy="94" r="28" fill="#F9A8D4" stroke="#DB2777" stroke-width="4"/>
+            <circle cx="102" cy="94" r="28" fill="#FDE047" stroke="#CA8A04" stroke-width="4"/>
+            <circle cx="80" cy="60" r="30" fill="#93C5FD" stroke="#2563EB" stroke-width="4"/>
+            <circle cx="80" cy="24" r="10" fill="#EF4444" stroke="#B91C1C" stroke-width="3"/>
+          </svg>
+          <h1 style="margin:4px 0; color:#DB2777; font-size:28px;">🍦 儲齊 3 球雪糕！大成功！</h1>
+          <div class="sync-badge">☁️ 戰報已自動同步至家長戰報箱</div>
+          <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:10px;">
+            <button class="btn-3d btn-green" id="copyBtn" onclick="copySecret()">📋 一鍵複製暗號（備用）</button>
+            <button class="btn-3d btn-amber" onclick="safeGoHome()">🏠 返回單元目錄</button>
+          </div>
+          <div class="secret-box" id="secretText">${secretCode}</div>
         </div>
       `;
     }
   }
 
-  // ==========================================
-  // 5. 互動邏輯
-  // ==========================================
-  function playWarmupAudio(wordId) {
-    const el = document.getElementById('meaningCard');
-    if (el) {
-      el.classList.remove('pop');
-      void el.offsetWidth;
-      el.classList.add('pop');
-    }
-    playHybridQueue([getWordAudioStep(wordId)]);
+  // =========================================================================
+  // 6. 熱區與尋寶互動處理
+  // =========================================================================
+  function tapStory1Hotspot(evt, id, emoji, zhText) {
+    exploredDots[id] = true;
+    popStar(evt, emoji);
+    playHybridQueue([{ type: 'zh', text: zhText }]);
+    renderBookStage(false);
   }
 
-  function pickQuiz(picked) {
-    if (quizSolved) return;
-    const q = ACT4_QUIZ[subIndex];
-    if (picked === q.correctId) {
-      quizSolved = true;
-      quizWrongPicked = null;
-      renderStage(false);
+  function tapStory2Food(evt, id, mp3File, emoji) {
+    exploredDots[id] = true;
+    popStar(evt, emoji);
+    playHybridQueue([{ type: 'mp3', file: mp3File, boost: 2.2 }]);
+    checkStep1Scoop();
+    renderBookStage(false);
+  }
+
+  function tapStory2Ice(evt) {
+    exploredDots.s2_ice = true;
+    popStar(evt, '🍦');
+    playHybridQueue([{ type: 'zh', text: 'Pat 心入面一直好想食粉紅雪糕呀！' }]);
+    checkStep1Scoop();
+    renderBookStage(false);
+  }
+
+  function checkStep1Scoop() {
+    if (exploredDots.s2_eggs && exploredDots.s2_bread) {
+      setTimeout(() => {
+        awardScoop('s1', '搵晒餐枱上面嘅食物喇！獲得第 1 球士多啤梨雪糕！');
+      }, 950);
+    }
+  }
+
+  function pickIspy(evt, picked) {
+    if (ispySolved) return;
+    const q = ISPY_QUESTIONS[ispyIdx];
+    if (picked === q.target) {
+      ispySolved = true;
+      ispyWrong = null;
+      popStar(evt, '🌟');
       launchFireworks();
-      playHybridQueue([getWordAudioStep(q.audioId), { type: 'zh', text: '答啱喇！' }]);
+      renderBookStage(false);
+      playHybridQueue([
+        { type: 'mp3', file: q.audio, boost: 2.2 },
+        { type: 'zh', text: '搵到喇！好叻女！' }
+      ]);
     } else {
-      quizWrongPicked = picked;
-      renderStage(false);
-      playHybridQueue([{ type: 'zh', text: '試吓隔離嗰張圖卡啦！' }]);
+      ispyWrong = picked;
+      renderBookStage(false);
+      playHybridQueue([{ type: 'zh', text: '試吓篤隔離嗰樣食物啦！' }]);
     }
   }
 
-  function copyProgressSecret() {
-    const text = document.getElementById('secretCodeText').innerText;
-    const btn = document.getElementById('copySecretBtn');
-    function onCopied() {
+  function nextIspy() {
+    if (ispyIdx < ISPY_QUESTIONS.length - 1) {
+      ispyIdx++;
+      ispySolved = false;
+      ispyWrong = null;
+      renderBookStage(true);
+    } else {
+      awardScoop('s3', '');
+      goStep(4);
+    }
+  }
+
+  function copySecret() {
+    const text = document.getElementById('secretText').innerText;
+    const btn = document.getElementById('copyBtn');
+    const done = () => {
       btn.textContent = '✅ 已複製暗號！';
       playHybridQueue([{ type: 'zh', text: '已複製暗號！' }]);
-    }
+    };
     if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text).then(onCopied).catch(() => fallbackCopy(text, onCopied));
+      navigator.clipboard.writeText(text).then(done).catch(() => fallbackCopy(text, done));
     } else {
-      fallbackCopy(text, onCopied);
+      fallbackCopy(text, done);
     }
   }
 
-  function fallbackCopy(text, callback) {
+  function fallbackCopy(text, cb) {
     const ta = document.createElement('textarea');
-    ta.value = text;
-    ta.style.position = 'fixed';
-    ta.style.opacity = '0';
-    document.body.appendChild(ta);
-    ta.focus();
-    ta.select();
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.focus(); ta.select();
     try { document.execCommand('copy'); } catch (e) {}
-    document.body.removeChild(ta);
-    callback();
+    document.body.removeChild(ta); cb();
   }
 
-  // ==========================================
-  // 6. 煙花引擎
-  // ==========================================
+  // =========================================================================
+  // 7. 煙花特效引擎
+  // =========================================================================
   const canvas = document.getElementById('fireworksCanvas');
   const ctx = canvas.getContext('2d');
   let particles = [];
-  let animRunning = false;
+  let animOn = false;
 
   function resizeCanvas() {
     canvas.width = window.innerWidth;
@@ -1232,12 +1335,12 @@
 
   function launchFireworks() {
     const colors = ['#F43F5E', '#FACC15', '#34D399', '#38BDF8', '#A855F7'];
-    for (let burst = 0; burst < 3; burst++) {
-      const cx = canvas.width * (0.3 + Math.random() * 0.4);
-      const cy = canvas.height * (0.2 + Math.random() * 0.3);
-      for (let i = 0; i < 30; i++) {
-        const a = (Math.PI * 2 * i) / 30;
-        const s = 2 + Math.random() * 4;
+    for (let b = 0; b < 3; b++) {
+      const cx = canvas.width * (0.25 + Math.random() * 0.5);
+      const cy = canvas.height * (0.18 + Math.random() * 0.32);
+      for (let i = 0; i < 28; i++) {
+        const a = (Math.PI * 2 * i) / 28;
+        const s = 2.2 + Math.random() * 4.2;
         particles.push({
           x: cx, y: cy,
           vx: Math.cos(a) * s, vy: Math.sin(a) * s,
@@ -1247,20 +1350,17 @@
         });
       }
     }
-    if (!animRunning) {
-      animRunning = true;
-      requestAnimationFrame(animateParticles);
+    if (!animOn) {
+      animOn = true;
+      requestAnimationFrame(tickFireworks);
     }
   }
 
-  function animateParticles() {
+  function tickFireworks() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     for (let i = particles.length - 1; i >= 0; i--) {
       const p = particles[i];
-      p.x += p.vx;
-      p.y += p.vy;
-      p.vy += 0.1;
-      p.alpha -= 0.02;
+      p.x += p.vx; p.y += p.vy; p.vy += 0.1; p.alpha -= 0.02;
       if (p.alpha <= 0) particles.splice(i, 1);
       else {
         ctx.globalAlpha = p.alpha;
@@ -1271,11 +1371,11 @@
       }
     }
     ctx.globalAlpha = 1;
-    if (particles.length > 0) requestAnimationFrame(animateParticles);
-    else animRunning = false;
+    if (particles.length > 0) requestAnimationFrame(tickFireworks);
+    else animOn = false;
   }
 
-  renderStage(false);
+  renderBookStage(false);
 </script>
 </body>
 </html>
