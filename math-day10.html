@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>中文 AI 課堂 · P.21-25 Day 10 全單元總結</title>
+  <title>數學探索島 · Maths Day 10 數學小博士總考</title>
   <link rel="stylesheet" href="theme.css?v=1" />
   <script src="report-hub.js?v=2"></script>
   <style>
@@ -22,8 +22,8 @@
       height: 100dvh;
       overflow: hidden;
       font-family: "PingFang HK", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
-      background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 50%, #fef3c7 100%);
-      color: #431407;
+      background: linear-gradient(135deg, #ecfdf5 0%, #fef9c3 55%, #e0f2fe 100%);
+      color: #1e293b;
     }
 
     .app-shell {
@@ -38,12 +38,12 @@
       overflow: hidden;
     }
 
-    /* 頂部導覽列 */
+    /* 頂部導覽與進度圓點 */
     .top-bar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 8px;
+      gap: 10px;
       flex-shrink: 0;
     }
 
@@ -54,56 +54,60 @@
       padding: 8px 14px;
       border-radius: 16px;
       background: #ffffff;
-      color: #c2410c;
-      font-weight: 800;
+      color: #0f766e;
+      font-weight: 900;
       font-size: clamp(14px, 2vw, 17px);
       text-decoration: none;
-      border: 2px solid #fdba74;
-      box-shadow: 0 4px 0 #fb923c;
+      border: 2px solid #5eead4;
+      box-shadow: 0 4px 0 #14b8a6;
       white-space: nowrap;
     }
 
     .back-btn:active {
       transform: translateY(3px);
-      box-shadow: 0 1px 0 #fb923c;
+      box-shadow: 0 1px 0 #14b8a6;
     }
 
-    .stage-nav {
+    .step-dots {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 7px;
       flex-wrap: nowrap;
-      overflow-x: auto;
     }
 
-    .stage-pill {
-      padding: 7px 12px;
+    .step-dot {
+      width: clamp(16px, 2.6vw, 24px);
+      height: clamp(16px, 2.6vw, 24px);
+      border-radius: 50%;
+      background: #e2e8f0;
+      border: 2px solid #cbd5e1;
+      transition: transform 0.15s ease, background 0.15s ease;
+    }
+
+    .step-dot.active {
+      background: #f59e0b;
+      border-color: #d97706;
+      transform: scale(1.2);
+      box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.25);
+    }
+
+    .step-dot.done {
+      background: #10b981;
+      border-color: #059669;
+    }
+
+    .day-badge {
+      padding: 6px 12px;
       border-radius: 14px;
-      border: 2px solid #fed7aa;
-      background: #fffbeb;
-      color: #9a3412;
-      font-weight: 800;
+      background: #fef3c7;
+      border: 2px solid #fbbf24;
+      color: #92400e;
+      font-weight: 900;
       font-size: clamp(13px, 1.8vw, 16px);
-      cursor: pointer;
-      box-shadow: 0 3px 0 #fdba74;
       white-space: nowrap;
     }
 
-    .stage-pill.active {
-      background: #f97316;
-      color: #ffffff;
-      border-color: #ea580c;
-      box-shadow: 0 3px 0 #c2410c;
-    }
-
-    .stage-pill.done {
-      background: #22c55e;
-      color: #ffffff;
-      border-color: #16a34a;
-      box-shadow: 0 3px 0 #15803d;
-    }
-
-    /* Anna 老師提示橫幅（嚴格零劇透） */
+    /* Anna 老師常駐橫幅 */
     .teacher-bar {
       display: flex;
       align-items: center;
@@ -112,8 +116,8 @@
       padding: 10px 14px;
       background: #ffffff;
       border-radius: 20px;
-      border: 3px solid #fdba74;
-      box-shadow: 0 5px 0 #fed7aa;
+      border: 3px solid #6ee7b7;
+      box-shadow: 0 5px 0 #a7f3d0;
       flex-shrink: 0;
     }
 
@@ -132,8 +136,8 @@
 
     .teacher-text {
       font-size: clamp(16px, 2.2vw, 22px);
-      font-weight: 800;
-      color: #7c2d12;
+      font-weight: 900;
+      color: #0f5132;
       line-height: 1.3;
     }
 
@@ -144,7 +148,7 @@
       background: #0ea5e9;
       color: #ffffff;
       font-size: clamp(15px, 2vw, 18px);
-      font-weight: 800;
+      font-weight: 900;
       cursor: pointer;
       box-shadow: 0 4px 0 #0284c7;
       white-space: nowrap;
@@ -156,14 +160,14 @@
       box-shadow: 0 1px 0 #0284c7;
     }
 
-    /* 主互動舞台：嚴格單屏無捲動 */
-    .stage-card {
+    /* 主舞台：嚴格單屏無捲動 */
+    .quiz-card {
       flex: 1;
       min-height: 0;
-      background: rgba(255, 255, 255, 0.94);
-      border-radius: 26px;
-      border: 3px solid #fed7aa;
-      box-shadow: 0 8px 0 #fdba74;
+      background: rgba(255, 255, 255, 0.96);
+      border-radius: 28px;
+      border: 4px solid #fcd34d;
+      box-shadow: 0 8px 0 #f59e0b;
       padding: 14px 16px;
       display: flex;
       flex-direction: column;
@@ -171,21 +175,21 @@
       overflow: hidden;
     }
 
-    .stage-panel {
-      display: none;
-      width: 100%;
-      height: 100%;
+    .quiz-view {
+      display: flex;
       flex-direction: column;
       justify-content: space-between;
-      gap: 10px;
+      height: 100%;
+      gap: 8px;
       min-height: 0;
     }
 
-    .stage-panel.active {
-      display: flex;
+    .quiz-view.hidden,
+    .summary-view.hidden {
+      display: none;
     }
 
-    .sub-header {
+    .q-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -193,75 +197,278 @@
       flex-shrink: 0;
     }
 
-    .badge-title {
-      font-size: clamp(16px, 2.2vw, 21px);
-      font-weight: 900;
-      color: #ea580c;
-      background: #ffedd5;
+    .q-tag {
       padding: 6px 14px;
+      border-radius: 999px;
+      background: #d1fae5;
+      color: #065f46;
+      font-size: clamp(15px, 2vw, 19px);
+      font-weight: 900;
+    }
+
+    .q-counter {
+      font-size: clamp(15px, 2vw, 19px);
+      font-weight: 900;
+      color: #b45309;
+    }
+
+    /* 視覺展示區 */
+    .visual-stage {
+      flex: 1;
+      min-height: 0;
+      background: linear-gradient(180deg, #fffbeb 0%, #f0fdf4 100%);
+      border-radius: 22px;
+      border: 3px dashed #93c5fd;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      overflow: hidden;
+    }
+
+    .tap-guide {
+      font-size: clamp(14px, 1.8vw, 17px);
+      font-weight: 800;
+      color: #0369a1;
+      background: #e0f2fe;
+      padding: 4px 12px;
       border-radius: 999px;
     }
 
-    .progress-text {
-      font-size: clamp(15px, 2vw, 19px);
-      font-weight: 800;
-      color: #9a3412;
-    }
-
-    /* 第 1 關：純字詞語聽音盲測 */
-    .vocab-grid {
-      flex: 1;
-      min-height: 0;
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 14px;
-      align-content: center;
-      padding: 6px 10px;
-    }
-
-    .word-btn {
-      min-height: clamp(86px, 16dvh, 130px);
-      border-radius: 24px;
-      border: 4px solid #fcd34d;
-      background: linear-gradient(180deg, #ffffff 0%, #fefce8 100%);
-      color: #431407;
-      font-size: clamp(32px, 5vw, 52px);
-      font-weight: 900;
-      letter-spacing: 3px;
-      cursor: pointer;
-      box-shadow: 0 7px 0 #f59e0b;
+    /* 數字順序卡 */
+    .seq-row {
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: transform 0.1s ease;
+      flex-wrap: nowrap;
+      gap: clamp(6px, 1.4vw, 14px);
     }
 
-    .word-btn:active {
-      transform: translateY(4px);
-      box-shadow: 0 3px 0 #f59e0b;
+    .seq-box {
+      width: clamp(58px, 11vw, 96px);
+      height: clamp(72px, 13dvh, 108px);
+      border-radius: 20px;
+      background: #ffffff;
+      border: 4px solid #38bdf8;
+      box-shadow: 0 5px 0 #0284c7;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
     }
 
-    .word-btn.correct {
-      background: #dcfce7;
-      border-color: #22c55e;
-      color: #14532d;
-      box-shadow: 0 7px 0 #16a34a;
+    .seq-num {
+      font-size: clamp(32px, 5vw, 50px);
+      font-weight: 900;
+      color: #0c4a6e;
+      line-height: 1;
     }
 
-    .word-btn.shake {
-      animation: wrongShake 0.4s ease;
-      background: #fef2f2;
-      border-color: #fca5a5;
+    .seq-dots {
+      font-size: clamp(10px, 1.3vw, 13px);
+      color: #f59e0b;
+      letter-spacing: 1px;
+      line-height: 1;
     }
 
-    .hint-box {
-      min-height: 44px;
-      padding: 8px 14px;
+    .seq-box.missing {
+      background: #fef3c7;
+      border: 4px dashed #f59e0b;
+      box-shadow: 0 5px 0 #d97706;
+    }
+
+    .seq-box.missing .seq-num {
+      color: #d97706;
+    }
+
+    .seq-arrow {
+      font-size: clamp(20px, 3vw, 30px);
+      font-weight: 900;
+      color: #10b981;
+    }
+
+    /* 前後方位排隊區 */
+    .pos-stage {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(12px, 2.6vw, 28px);
+    }
+
+    .podium-goal {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px 16px;
+      border-radius: 20px;
+      background: #fef08a;
+      border: 3px solid #eab308;
+      box-shadow: 0 5px 0 #ca8a04;
+    }
+
+    .podium-icon {
+      font-size: clamp(42px, 6.5dvh, 64px);
+      line-height: 1;
+    }
+
+    .podium-label {
+      font-size: clamp(14px, 1.8vw, 17px);
+      font-weight: 900;
+      color: #854d0e;
+      margin-top: 4px;
+    }
+
+    .line-arrow {
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 900;
+      color: #ef4444;
+    }
+
+    .animal-card {
+      width: clamp(76px, 13vw, 118px);
+      height: clamp(84px, 14dvh, 118px);
+      border-radius: 22px;
+      background: #ffffff;
+      border: 4px solid #a7f3d0;
+      box-shadow: 0 5px 0 #34d399;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(46px, 7dvh, 68px);
+    }
+
+    /* ABC 三組循環框 */
+    .pattern-groups {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: clamp(8px, 1.8vw, 16px);
+    }
+
+    .pattern-group {
+      display: flex;
+      align-items: center;
+      gap: clamp(6px, 1.2vw, 10px);
+      padding: 10px 12px;
+      border-radius: 20px;
+      background: #ffffff;
+      border: 3px dashed #818cf8;
+      box-shadow: 0 4px 0 #c7d2fe;
+    }
+
+    .pattern-item {
+      width: clamp(44px, 7.2vw, 68px);
+      height: clamp(48px, 8.5dvh, 68px);
+      border-radius: 14px;
+      background: #f8fafc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(30px, 4.8dvh, 46px);
+    }
+
+    .pattern-item.blank {
+      background: #fef3c7;
+      border: 3px dashed #f59e0b;
+      color: #d97706;
+      font-weight: 900;
+      font-size: clamp(28px, 4.4dvh, 40px);
+    }
+
+    /* 加法與減法實物點數盤（嚴格靜音、零數字角標） */
+    .math-groups-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(10px, 2.2vw, 22px);
+      flex-wrap: wrap;
+    }
+
+    .plate-box {
+      padding: 12px 16px;
+      border-radius: 22px;
+      background: #ffffff;
+      border: 4px solid #93c5fd;
+      box-shadow: 0 5px 0 #60a5fa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(8px, 1.8vw, 16px);
+      min-height: clamp(92px, 16dvh, 130px);
+    }
+
+    .plate-box.right-plate {
+      border-color: #f9a8d4;
+      box-shadow: 0 5px 0 #f472b6;
+    }
+
+    .math-symbol {
+      font-size: clamp(34px, 5vw, 52px);
+      font-weight: 900;
+      color: #f97316;
+    }
+
+    .count-item {
+      position: relative;
+      width: clamp(58px, 9.5vw, 84px);
+      height: clamp(58px, 9.5vw, 84px);
+      border-radius: 20px;
+      border: 3px solid transparent;
+      background: #fffbeb;
+      font-size: clamp(38px, 6dvh, 56px);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.14s ease, background 0.14s ease, border-color 0.14s ease;
+    }
+
+    .count-item.counted {
+      background: #fef08a;
+      border-color: #f59e0b;
+      transform: scale(1.1);
+      box-shadow: 0 0 14px rgba(245, 158, 11, 0.55);
+    }
+
+    .count-item.counted::after {
+      content: "✨";
+      position: absolute;
+      top: -10px;
+      right: -8px;
+      font-size: clamp(18px, 2.4vw, 24px);
+      pointer-events: none;
+    }
+
+    .count-item.taken {
+      background: #f1f5f9;
+      border: 3px dashed #cbd5e1;
+      opacity: 0.35;
+      pointer-events: none;
+      transform: scale(0.88);
+    }
+
+    .count-item.taken::after {
+      content: "🐻";
+      position: absolute;
+      top: -12px;
+      right: -10px;
+      font-size: clamp(20px, 2.6vw, 26px);
+      opacity: 1;
+    }
+
+    /* 溫柔提示框（嚴禁 ❌ 與洩露答案） */
+    .gentle-hint-box {
+      min-height: 40px;
+      padding: 6px 14px;
       border-radius: 16px;
       background: #fef9c3;
       border: 2px dashed #eab308;
       color: #854d0e;
-      font-size: clamp(16px, 2.2vw, 20px);
+      font-size: clamp(15px, 2.1vw, 19px);
       font-weight: 800;
       text-align: center;
       display: flex;
@@ -270,115 +477,143 @@
       flex-shrink: 0;
     }
 
-    .hint-box.hidden {
+    .gentle-hint-box.hidden {
       visibility: hidden;
     }
 
-    /* 第 2 關：純聽音句式積木 */
-    .sentence-scene {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: clamp(44px, 7dvh, 66px);
-      line-height: 1;
+    /* 選項按鈕區 */
+    .options-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
       flex-shrink: 0;
     }
 
-    .sentence-slots {
-      min-height: clamp(72px, 12dvh, 96px);
-      padding: 10px 14px;
+    .opt-btn {
+      min-height: clamp(72px, 12.5dvh, 102px);
       border-radius: 22px;
-      background: #fff7ed;
-      border: 3px dashed #fb923c;
+      border: 4px solid #34d399;
+      background: linear-gradient(180deg, #ffffff 0%, #ecfdf5 100%);
+      color: #064e3b;
+      font-size: clamp(34px, 5.2vw, 52px);
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 7px 0 #10b981;
       display: flex;
       align-items: center;
       justify-content: center;
-      flex-wrap: wrap;
-      gap: 10px;
-      flex-shrink: 0;
+      transition: transform 0.1s ease;
     }
 
-    .slot-placeholder {
-      color: #c2410c;
-      opacity: 0.6;
-      font-size: clamp(18px, 2.4vw, 24px);
+    .opt-btn:active {
+      transform: translateY(4px);
+      box-shadow: 0 3px 0 #10b981;
+    }
+
+    .opt-btn.correct {
+      background: #dcfce7;
+      border-color: #22c55e;
+      box-shadow: 0 7px 0 #16a34a;
+      transform: scale(1.03);
+    }
+
+    .opt-btn.wrong-shake {
+      animation: wrongShake 0.4s ease;
+      background: #fff7ed;
+      border-color: #fdba74;
+    }
+
+    /* 結算畫面 */
+    .summary-view {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      height: 100%;
+      gap: 8px;
+      min-height: 0;
+    }
+
+    .trophy-title {
+      font-size: clamp(22px, 3.2vw, 32px);
+      font-weight: 900;
+      color: #b45309;
+      text-align: center;
+    }
+
+    .sync-badge {
+      padding: 5px 14px;
+      border-radius: 999px;
+      background: #dcfce7;
+      border: 2px solid #22c55e;
+      color: #166534;
+      font-size: clamp(13px, 1.8vw, 16px);
+      font-weight: 900;
+    }
+
+    .result-table-wrap {
+      width: 100%;
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      border-radius: 16px;
+      border: 2px solid #fde68a;
+      background: #fffbeb;
+    }
+
+    .result-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: clamp(13px, 1.8vw, 16px);
+    }
+
+    .result-table th, .result-table td {
+      padding: 6px 10px;
+      border-bottom: 1px solid #fde68a;
+      text-align: left;
       font-weight: 800;
     }
 
-    .block-bank {
-      flex: 1;
-      min-height: 0;
+    .result-table th {
+      background: #fef3c7;
+      color: #92400e;
+      position: sticky;
+      top: 0;
+    }
+
+    .summary-actions {
       display: flex;
       align-items: center;
       justify-content: center;
+      gap: 12px;
       flex-wrap: wrap;
-      gap: 12px;
-      padding: 6px;
-    }
-
-    .block-btn {
-      padding: 14px 22px;
-      border-radius: 20px;
-      border: 3px solid #38bdf8;
-      background: linear-gradient(180deg, #ffffff 0%, #e0f2fe 100%);
-      color: #0c4a6e;
-      font-size: clamp(24px, 3.6vw, 36px);
-      font-weight: 900;
-      cursor: pointer;
-      box-shadow: 0 6px 0 #0284c7;
-    }
-
-    .block-btn:active {
-      transform: translateY(3px);
-      box-shadow: 0 2px 0 #0284c7;
-    }
-
-    .block-btn.placed {
-      background: linear-gradient(180deg, #fef08a 0%, #fde047 100%);
-      border-color: #eab308;
-      color: #713f12;
-      box-shadow: 0 5px 0 #ca8a04;
-    }
-
-    .block-btn.used {
-      opacity: 0.28;
-      pointer-events: none;
-      box-shadow: none;
-      transform: translateY(3px);
-    }
-
-    .action-row {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
       flex-shrink: 0;
     }
 
     .primary-btn {
-      padding: 12px 26px;
+      padding: 11px 22px;
       border-radius: 18px;
       border: none;
-      background: #22c55e;
+      background: #10b981;
       color: #ffffff;
-      font-size: clamp(18px, 2.4vw, 22px);
+      font-size: clamp(16px, 2.2vw, 20px);
       font-weight: 900;
       cursor: pointer;
-      box-shadow: 0 5px 0 #15803d;
+      box-shadow: 0 5px 0 #047857;
     }
 
     .primary-btn:active {
       transform: translateY(3px);
-      box-shadow: 0 2px 0 #15803d;
+      box-shadow: 0 2px 0 #047857;
     }
 
     .secondary-btn {
-      padding: 12px 20px;
+      padding: 11px 18px;
       border-radius: 18px;
       border: 2px solid #cbd5e1;
       background: #f8fafc;
       color: #475569;
-      font-size: clamp(16px, 2.2vw, 20px);
+      font-size: clamp(15px, 2vw, 18px);
       font-weight: 800;
       cursor: pointer;
       box-shadow: 0 4px 0 #94a3b8;
@@ -389,210 +624,11 @@
       box-shadow: 0 1px 0 #94a3b8;
     }
 
-    /* 第 3 關：兒歌金曲點唱機（逐句獨立喇叭） */
-    .rhyme-tabs {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      flex-wrap: wrap;
-      flex-shrink: 0;
-    }
-
-    .rhyme-tab {
-      padding: 8px 14px;
-      border-radius: 14px;
-      border: 2px solid #f9a8d4;
-      background: #fdf2f8;
-      color: #9d174d;
-      font-size: clamp(15px, 2vw, 18px);
-      font-weight: 800;
-      cursor: pointer;
-      box-shadow: 0 3px 0 #f472b6;
-    }
-
-    .rhyme-tab.active {
-      background: #ec4899;
-      color: #ffffff;
-      border-color: #db2777;
-      box-shadow: 0 3px 0 #be185d;
-    }
-
-    .rhyme-lines {
-      flex: 1;
-      min-height: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: 10px;
-    }
-
-    .rhyme-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 10px 16px;
-      border-radius: 18px;
-      background: #fffbeb;
-      border: 2px solid #fde68a;
-      box-shadow: 0 3px 0 #fcd34d;
-    }
-
-    .rhyme-row.playing {
-      background: #fef08a;
-      border-color: #f59e0b;
-    }
-
-    .rhyme-line-text {
-      font-size: clamp(22px, 3.2vw, 34px);
-      font-weight: 900;
-      color: #451a03;
-      letter-spacing: 2px;
-    }
-
-    .line-speak-btn {
-      padding: 8px 14px;
-      border-radius: 14px;
-      border: none;
-      background: #f97316;
-      color: #ffffff;
-      font-size: clamp(15px, 2vw, 18px);
-      font-weight: 800;
-      cursor: pointer;
-      box-shadow: 0 4px 0 #c2410c;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-
-    .line-speak-btn:active {
-      transform: translateY(3px);
-      box-shadow: 0 1px 0 #c2410c;
-    }
-
-    /* 第 4 關：靜音紅圈方格字牆 */
-    .wall-grid {
-      flex: 1;
-      min-height: 0;
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      grid-template-rows: repeat(4, 1fr);
-      gap: 8px;
-      padding: 4px;
-    }
-
-    @media (max-width: 640px) {
-      .wall-grid {
-        grid-template-columns: repeat(4, 1fr);
-        grid-template-rows: repeat(6, 1fr);
-      }
-    }
-
-    .char-cell {
-      position: relative;
-      border-radius: 18px;
-      border: 3px solid #fed7aa;
-      background: #ffffff;
-      color: #1e293b;
-      font-size: clamp(28px, 4.2vw, 44px);
-      font-weight: 900;
-      cursor: pointer;
-      box-shadow: 0 4px 0 #fdba74;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: transform 0.1s ease;
-    }
-
-    .char-cell:active {
-      transform: scale(0.95);
-    }
-
-    .char-cell.circled {
-      background: #fff1f2;
-      border-color: #fb7185;
-      color: #9f1239;
-    }
-
-    .char-cell.circled::after {
-      content: "";
-      position: absolute;
-      width: 78%;
-      height: 78%;
-      border: 5px solid #ef4444;
-      border-radius: 50%;
-      pointer-events: none;
-      box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.15);
-    }
-
-    /* 第 5 幕：畢業結算畫面 */
-    .summary-wrap {
-      flex: 1;
-      min-height: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      text-align: center;
-    }
-
-    .trophy-banner {
-      font-size: clamp(24px, 3.6vw, 36px);
-      font-weight: 900;
-      color: #c2410c;
-    }
-
-    .sync-badge {
-      display: inline-block;
-      padding: 6px 14px;
-      border-radius: 999px;
-      background: #dcfce7;
-      border: 2px solid #22c55e;
-      color: #166534;
-      font-size: clamp(14px, 1.9vw, 17px);
-      font-weight: 800;
-    }
-
-    .summary-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: clamp(14px, 1.9vw, 17px);
-      background: #fffbeb;
-      border-radius: 14px;
-      overflow: hidden;
-      border: 2px solid #fde68a;
-    }
-
-    .summary-table th, .summary-table td {
-      padding: 7px 10px;
-      border-bottom: 1px solid #fde68a;
-      text-align: left;
-      font-weight: 700;
-    }
-
-    .summary-table th {
-      background: #fef3c7;
-      color: #92400e;
-    }
-
-    .circled-box {
-      width: 100%;
-      padding: 8px 12px;
-      border-radius: 14px;
-      background: #fff1f2;
-      border: 2px solid #fda4af;
-      color: #9f1239;
-      font-size: clamp(15px, 2vw, 18px);
-      font-weight: 800;
-      line-height: 1.4;
-    }
-
     .copy-feedback {
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 800;
-      color: #15803d;
-      min-height: 22px;
+      color: #047857;
+      min-height: 20px;
     }
 
     @keyframes wrongShake {
@@ -605,114 +641,71 @@
 </head>
 <body>
   <div class="app-shell">
-    <!-- 頂部導覽 -->
+    <!-- 頂部導覽列 -->
     <div class="top-bar">
-      <a href="cn-thankyou.html?v=3" class="back-btn" onclick="stopAllSpeech()">⬅️ 返回目錄</a>
-      <div class="stage-nav">
-        <button class="stage-pill active" id="nav-1" onclick="goToStage(1)">1. 詞語</button>
-        <button class="stage-pill" id="nav-2" onclick="goToStage(2)">2. 句式</button>
-        <button class="stage-pill" id="nav-3" onclick="goToStage(3)">3. 兒歌</button>
-        <button class="stage-pill" id="nav-4" onclick="goToStage(4)">4. 圈字</button>
-      </div>
+      <a href="index.html" class="back-btn" onclick="stopAllSpeech()">⬅️ 返回主頁</a>
+      <div class="step-dots" id="stepDots"></div>
+      <div class="day-badge">🏆 Maths Day 10</div>
     </div>
 
-    <!-- Anna 老師導航橫幅（只顯示無劇透指引，題目由語音讀出） -->
+    <!-- Anna 老師常駐橫幅 -->
     <div class="teacher-bar">
       <div class="teacher-left">
         <div class="teacher-avatar">👩‍🏫</div>
-        <div class="teacher-text" id="teacherText">👂 聽清楚 Anna 老師讀邊個詞語，再撳下面嘅字卡！</div>
+        <div class="teacher-text" id="teacherText">歡迎來到數學小博士總考！準備好就開始第 1 題喇！</div>
       </div>
-      <button class="speak-btn" id="repeatBtn" onclick="replayCurrentPrompt()">🔊 聽題目</button>
+      <button class="speak-btn" onclick="replayCurrentQuestion()">🔊 聽題目</button>
     </div>
 
-    <!-- 主舞台 -->
-    <div class="stage-card">
-      <!-- 第 1 關：純字詞語聽音盲測 -->
-      <section class="stage-panel active" id="stage-1">
-        <div class="sub-header">
-          <span class="badge-title">⭐ 第 1 關：純字聽音熱身</span>
-          <span class="progress-text" id="s1Progress">第 1 / 4 題</span>
+    <!-- 主互動舞台 -->
+    <div class="quiz-card">
+      <!-- 答題區 -->
+      <div class="quiz-view" id="quizView">
+        <div class="q-header">
+          <span class="q-tag" id="qTag">數字順序</span>
+          <span class="q-counter" id="qCounter">第 1 / 8 題</span>
         </div>
-        <div class="vocab-grid" id="vocabGrid"></div>
-        <div class="hint-box hidden" id="s1Hint"></div>
-      </section>
 
-      <!-- 第 2 關：純聽音句式積木 -->
-      <section class="stage-panel" id="stage-2">
-        <div class="sub-header">
-          <span class="badge-title">🧱 第 2 關：聽音拼句大挑戰</span>
-          <span class="progress-text" id="s2Progress">第 1 / 3 題</span>
-        </div>
-        <div class="sentence-scene" id="s2Scene"></div>
-        <div class="sentence-slots" id="s2Slots">
-          <span class="slot-placeholder">按語音次序點選下方積木拼出完整句子</span>
-        </div>
-        <div class="block-bank" id="s2Bank"></div>
-        <div class="hint-box hidden" id="s2Hint"></div>
-        <div class="action-row">
-          <button class="secondary-btn" onclick="resetSentenceBlocks()">🔄 重排</button>
-          <button class="primary-btn" onclick="checkSentence()">✅ 檢查句子</button>
-        </div>
-      </section>
+        <div class="visual-stage" id="visualStage"></div>
 
-      <!-- 第 3 關：三首兒歌逐句點讀 -->
-      <section class="stage-panel" id="stage-3">
-        <div class="sub-header">
-          <span class="badge-title">🎵 第 3 關：兒歌金曲點唱機</span>
-          <button class="speak-btn" onclick="playFullRhyme()">🎵 聽全首</button>
-        </div>
-        <div class="rhyme-tabs" id="rhymeTabs"></div>
-        <div class="rhyme-lines" id="rhymeLines"></div>
-        <div class="action-row">
-          <button class="primary-btn" onclick="finishStage3()">讀完喇！去第 4 關尋寶 ➡️</button>
-        </div>
-      </section>
+        <div class="gentle-hint-box hidden" id="hintBox"></div>
 
-      <!-- 第 4 關：靜音紅圈方格字牆 -->
-      <section class="stage-panel" id="stage-4">
-        <div class="sub-header">
-          <span class="badge-title">⭕ 第 4 關：靜音紅圈自讀挑戰（零提示）</span>
-          <span class="progress-text" id="s4Count">已圈出：0 字</span>
-        </div>
-        <div class="wall-grid" id="wallGrid"></div>
-        <div class="action-row">
-          <button class="primary-btn" onclick="finishLesson()">🏆 完成畢業總結，拎大獎杯！</button>
-        </div>
-      </section>
+        <div class="options-row" id="optionsRow"></div>
+      </div>
 
-      <!-- 第 5 幕：畢業結算畫面 -->
-      <section class="stage-panel" id="stage-5">
-        <div class="summary-wrap">
-          <div class="trophy-banner">🏆 恭喜玲玲完成《我要謝謝你》全單元畢業！</div>
-          <div class="sync-badge">☁️ 戰報已自動同步至家長戰報箱</div>
-          <table class="summary-table">
+      <!-- 結算區 -->
+      <div class="summary-view hidden" id="summaryView">
+        <div class="trophy-title">🎓 恭喜玲玲成為 K2 數學小博士！🏆</div>
+        <div class="sync-badge">☁️ 戰報已自動同步至家長戰報箱</div>
+
+        <div class="result-table-wrap">
+          <table class="result-table">
             <thead>
               <tr>
-                <th>關卡</th>
-                <th>表現</th>
+                <th>題目</th>
+                <th>狀態</th>
                 <th>耗時</th>
               </tr>
             </thead>
             <tbody id="summaryBody"></tbody>
           </table>
-          <div class="circled-box" id="summaryCircled"></div>
-          <div class="action-row">
-            <button class="primary-btn" onclick="copyReport()">📋 一鍵複製進度暗號</button>
-            <button class="secondary-btn" onclick="restartAll()">🔁 再玩一次</button>
-          </div>
-          <div class="copy-feedback" id="copyFeedback"></div>
         </div>
-      </section>
+
+        <div class="summary-actions">
+          <button class="primary-btn" onclick="copyReport()">📋 一鍵複製進度暗號俾 Anna 老師</button>
+          <button class="secondary-btn" onclick="restartQuiz()">🔁 再玩一次</button>
+        </div>
+        <div class="copy-feedback" id="copyFeedback"></div>
+      </div>
     </div>
   </div>
 
   <script>
-    // ========= iOS Safari 廣東話防吞聲安全引擎 =========
+    // ========= iPad Safari 廣東話安全語音引擎 (Anti-GC, zh-HK, rate=0.72) =========
     window.utterancePool = [];
     let speakTimer = null;
-    let currentQuestionAudio = "";
-    let currentQuestionRate = 0.82;
-    let fullRhymeAbort = false;
+    let currentQuestionSpeech = "";
+    let audioCtx = null;
 
     function getCantoneseVoice() {
       const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
@@ -726,7 +719,6 @@
     }
 
     function stopAllSpeech() {
-      fullRhymeAbort = true;
       if (speakTimer) {
         clearTimeout(speakTimer);
         speakTimer = null;
@@ -734,21 +726,15 @@
       if (window.speechSynthesis) {
         window.speechSynthesis.cancel();
       }
-      document.querySelectorAll(".rhyme-row.playing").forEach(el => el.classList.remove("playing"));
     }
 
-    function speak(text, rate = 0.82, onEnd = null, saveAsQuestion = false) {
+    function speak(text, onEnd = null) {
       stopAllSpeech();
       if (!window.speechSynthesis || !text) return;
-      if (saveAsQuestion) {
-        currentQuestionAudio = text;
-        currentQuestionRate = rate;
-      }
-
       speakTimer = setTimeout(() => {
         const u = new SpeechSynthesisUtterance(text);
         u.lang = "zh-HK";
-        u.rate = rate;
+        u.rate = 0.72;
         u.pitch = 1.05;
         const v = getCantoneseVoice();
         if (v) u.voice = v;
@@ -765,13 +751,34 @@
 
         window.utterancePool.push(u);
         window.speechSynthesis.speak(u);
-      }, 45);
+      }, 40);
     }
 
-    function replayCurrentPrompt() {
-      if (currentQuestionAudio) {
-        speak(currentQuestionAudio, currentQuestionRate, null, false);
+    function replayCurrentQuestion() {
+      if (currentQuestionSpeech) {
+        speak(currentQuestionSpeech);
       }
+    }
+
+    // 輕快短音效（僅用於實物自主點數的觸覺回饋，絕不報數）
+    function playTapPop() {
+      try {
+        const Ctx = window.AudioContext || window.webkitAudioContext;
+        if (!Ctx) return;
+        if (!audioCtx) audioCtx = new Ctx();
+        if (audioCtx.state === "suspended") audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(660, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(920, audioCtx.currentTime + 0.08);
+        gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.09);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.09);
+      } catch (e) {}
     }
 
     window.addEventListener("pagehide", stopAllSpeech);
@@ -780,487 +787,395 @@
       window.speechSynthesis.onvoiceschanged = () => getCantoneseVoice();
     }
 
-    // ========= 課程數據（畫面指引與語音題目完全分離，嚴禁畫面出現答案） =========
-    const stage1Data = [
+    // ========= 數據驅動題庫（根據 Day 9 耗時數據動態調適，全廣東話零劇透） =========
+    const quizData = [
       {
-        target: "蜜糖",
-        options: ["蜜糖", "蛋糕", "白飯", "麵包"],
-        spokenPrompt: "請玲玲聽清楚，搵出甜甜嘅「蜜糖」！",
-        spokenHint: "唔緊要呀，再試下！第一隻字下面有隻小昆蟲「虫」字呀！",
-        screenHint: "💡 小提示：第一隻字下面有隻小昆「虫」字呀！"
+        id: "Q1",
+        label: "數字順序(1-5)",
+        tag: "🔢 數字順序 (1–5)",
+        type: "sequence",
+        items: [1, 2, 3, "?", 5],
+        showDots: true,
+        options: ["3", "4", "5"],
+        answer: "4",
+        screenText: "🏅 幫小博士獎章排隊！問號嗰格應該係邊個數字呀？",
+        spokenQuestion: "第一題，幫小博士獎章排隊！一、二、三、問號、五。中間問號嗰格應該係邊個數字呀？",
+        hintText: "🌟 由左面慢慢數過去：一、二、三……跟住係邊個數字呢？",
+        spokenHint: "唔緊要呀，試下由左面慢慢數過去：一、二、三，跟住係邊個數字呢？",
+        praise: "答啱喇！一、二、三、四、五，係四呀！好叻！"
       },
       {
-        target: "翠綠的",
-        options: ["香香的", "翠綠的", "甜甜的", "新鮮的"],
-        spokenPrompt: "請玲玲聽清楚，搵出形容蔬菜顏色嘅「翠綠的」！",
-        spokenHint: "唔緊要呀，再試下！係形容綠色蔬菜嘅「翠綠的」呀！",
-        screenHint: "💡 小提示：形容綠色蔬菜嗰個詞語！再撳「🔊 聽題目」聽多次！"
+        id: "Q2",
+        label: "數字順序(6-10)",
+        tag: "🚀 數字順序 (6–10)",
+        type: "sequence",
+        items: [6, 7, "?", 9, 10],
+        showDots: false,
+        options: ["7", "8", "9"],
+        answer: "8",
+        screenText: "🚀 火箭起飛排隊！中間問號嗰格係邊個數字呀？",
+        spokenQuestion: "第二題，火箭準備起飛喇！六、七、問號、九、十。中間問號嗰格應該係邊個數字呀？",
+        hintText: "🌟 試下由六慢慢數：六、七……跟住落嚟係邊個數字呀？",
+        spokenHint: "唔緊要呀，再由六慢慢數一次：六、七，跟住落嚟係邊個數字呀？",
+        praise: "好犀利呀！六、七、八、九、十，係八呀！"
       },
       {
-        target: "新鮮的",
-        options: ["新鮮的", "香香的", "紅蘿蔔", "電飯鍋"],
-        spokenPrompt: "請玲玲聽清楚，搵出好好味嘅「新鮮的」！",
-        spokenHint: "唔緊要呀，再試下！第二隻字左邊係條魚、右邊係隻羊呀！",
-        screenHint: "💡 小提示：第二隻字左邊係「魚」、右邊係「羊」呀！"
+        id: "Q3",
+        label: "前後方位(最前面)",
+        tag: "🏆 前後方位",
+        type: "position",
+        goalEmoji: "🏆",
+        goalLabel: "頒獎台",
+        lineup: ["🐰", "🐻", "🦊"],
+        options: ["🐰", "🐻", "🦊"],
+        answer: "🐰",
+        screenText: "🏆 小動物面向頒獎台排隊拎獎，邊隻排喺「最前面」呀？",
+        spokenQuestion: "第三題，三隻小動物排隊去前面頒獎台拎大獎杯！邊一隻小動物排喺最前面呀？",
+        hintText: "🌟 望清楚邊隻企得最接近左邊嘅大獎杯🏆呀！",
+        spokenHint: "唔緊要呀，望清楚邊一隻小動物企得最貼近大獎杯呢？",
+        praise: "答啱喇！兔仔排喺最前面第一個拎獎杯，玲玲好醒目！"
       },
       {
-        target: "蝸牛",
-        options: ["牛奶", "牛肉", "蝸牛", "米飯"],
-        spokenPrompt: "最後一題！請玲玲聽清楚，搵出背住屋仔慢慢行嘅「蝸牛」！",
-        spokenHint: "唔緊要呀，再試下！第一隻字左邊有隻小昆「虫」字呀！",
-        screenHint: "💡 小提示：第一隻字左邊有隻小昆「虫」字呀！"
+        id: "Q4",
+        label: "邏輯規律(ABC)",
+        tag: "🎨 邏輯規律 (ABC)",
+        type: "pattern",
+        groups: [
+          ["⭐", "🎈", "👑"],
+          ["⭐", "🎈", "👑"],
+          ["⭐", "🎈", "?"]
+        ],
+        options: ["⭐", "🎈", "👑"],
+        answer: "👑",
+        screenText: "🎉 望下每一組嘅排列規律，最後問號應該放邊一個圖案呀？",
+        spokenQuestion: "第四題，頒獎禮佈置彩帶！睇下虛線框入面每一組點排：星星、氣球、皇冠；星星、氣球、皇冠；星星、氣球，最後問號應該放邊個呀？",
+        hintText: "🌟 望清楚前面兩組虛線框，氣球後面跟住邊個圖案呀？",
+        spokenHint: "唔緊要呀，望下前面兩組，每次氣球後面都係跟住邊一個圖案呢？",
+        praise: "好叻呀！星星、氣球、皇冠，答啱晒！"
+      },
+      {
+        id: "Q5",
+        label: "基礎加法(2+1)",
+        tag: "🍓 實物加法",
+        type: "addition",
+        emoji: "🍓",
+        leftCount: 2,
+        rightCount: 1,
+        options: ["2", "3", "4"],
+        answer: "3",
+        screenText: "🍓 用手指逐粒點下士多啤梨自己數，合埋一共有幾多粒呀？",
+        spokenQuestion: "第五題，左邊有兩粒士多啤梨，右邊有一粒士多啤梨。玲玲用手指逐粒點住數下，合埋一共有幾多粒士多啤梨呀？",
+        hintText: "🌟 用手指一粒一粒點亮所有士多啤梨，自己大聲數一次！",
+        spokenHint: "慢慢嚟呀，用手指一粒一粒點住啲士多啤梨，自己大聲數下合埋有幾多粒！",
+        praise: "答啱喇！二加一等於三，一共有三粒士多啤梨！"
+      },
+      {
+        id: "Q6",
+        label: "基礎加法(2+2)",
+        tag: "🍬 實物加法",
+        type: "addition",
+        emoji: "🍬",
+        leftCount: 2,
+        rightCount: 2,
+        options: ["3", "4", "5"],
+        answer: "4",
+        screenText: "🍬 用手指逐粒點亮糖果自己數，合埋一共有幾多粒呀？",
+        spokenQuestion: "第六題，左邊盒有兩粒糖果，右邊盒都有兩粒糖果。玲玲用手指逐粒點住數下，合埋一共有幾多粒糖果呀？",
+        hintText: "🌟 先點亮左邊盒，再繼續點亮右邊盒，一粒一粒自己數落去！",
+        spokenHint: "唔緊要呀，用手指先點左邊，再連續數去右邊，睇下合埋有幾多粒糖果！",
+        praise: "好犀利呀！二加二等於四，一共有四粒糖果！"
+      },
+      {
+        id: "Q7",
+        label: "基礎加法(3+1)",
+        tag: "🍎 實物加法",
+        type: "addition",
+        emoji: "🍎",
+        leftCount: 3,
+        rightCount: 1,
+        options: ["3", "4", "5"],
+        answer: "4",
+        screenText: "🍎 用手指逐個點亮蘋果自己數，合埋一共有幾多個呀？",
+        spokenQuestion: "第七題，左邊籃有三個蘋果，右邊籃有一個蘋果。玲玲用手指逐個點住數下，合埋一共有幾多個蘋果呀？",
+        hintText: "🌟 用手指由左邊第一個蘋果開始點亮，一直數到最右邊嗰個！",
+        spokenHint: "慢慢數呀，用手指由左邊開始逐個點亮啲蘋果，睇下總共有幾多個！",
+        praise: "太棒喇！三加一等於四，一共有四個蘋果！"
+      },
+      {
+        id: "Q8",
+        label: "動態減法(5-2)",
+        tag: "🍰 慶功減法",
+        type: "subtraction",
+        emoji: "🍰",
+        totalCount: 5,
+        takeCount: 2,
+        options: ["2", "3", "4"],
+        answer: "3",
+        screenText: "🍰 本來有 5 件慶功蛋糕，小熊拎走咗 2 件，仲剩低幾多件呀？",
+        spokenQuestion: "最後一題喇！慶功派對本來有五件蛋糕，小熊拎走咗兩件，玲玲數下仲剩低幾多件蛋糕呀？",
+        hintText: "🌟 淨係用手指點亮仲未俾小熊拎走嘅蛋糕，數下有幾多件！",
+        spokenHint: "唔緊要呀，淨係點住仲喺度、無被小熊拎走嘅蛋糕，自己數下有幾多件！",
+        praise: "全部過關喇！五減二等於三，恭喜玲玲成為數學小博士！"
       }
     ];
 
-    const stage2Data = [
-      {
-        sceneEmoji: "🥕",
-        answer: ["紅蘿蔔", "是", "蔬菜類", "的食物。"],
-        blocks: ["蔬菜類", "紅蘿蔔", "的食物。", "是"],
-        spoken: "紅蘿蔔是蔬菜類的食物。",
-        spokenPrompt: "請玲玲聽清楚，按次序拼出呢句：紅蘿蔔是蔬菜類的食物。",
-        spokenHint: "次序爭少少咋，再聽慢啲一次：紅蘿蔔、是、蔬菜類、的食物。",
-        screenHint: "💡 次序爭少少咋！撳右上角「🔊 聽題目」再聽清楚邊舊積木排先！"
-      },
-      {
-        sceneEmoji: "🥦",
-        answer: ["少吃", "零食", "多吃", "菜。"],
-        blocks: ["多吃", "少吃", "菜。", "零食"],
-        spoken: "少吃零食多吃菜。",
-        spokenPrompt: "請玲玲聽清楚，按次序拼出兒歌呢句：少吃零食多吃菜。",
-        spokenHint: "次序爭少少咋，再聽慢啲一次：少吃、零食、多吃、菜。",
-        screenHint: "💡 次序爭少少咋！撳右上角「🔊 聽題目」再聽清楚邊舊積木排先！"
-      },
-      {
-        sceneEmoji: "🍚",
-        answer: ["白飯", "是", "五穀類", "的食物。"],
-        blocks: ["的食物。", "是", "白飯", "五穀類"],
-        spoken: "白飯是五穀類的食物。",
-        spokenPrompt: "最後一句！請玲玲聽清楚，拼出呢句：白飯是五穀類的食物。",
-        spokenHint: "次序爭少少咋，再聽慢啲一次：白飯、是、五穀類、的食物。",
-        screenHint: "💡 次序爭少少咋！撳右上角「🔊 聽題目」再聽清楚邊舊積木排先！"
-      }
-    ];
-
-    const rhymesData = [
-      {
-        title: "P.23 均衡飲食",
-        lines: [
-          "米飯牛奶肉和蛋，",
-          "一日三餐要均衡，",
-          "少吃零食多吃菜，",
-          "還有水果不可減。"
-        ]
-      },
-      {
-        title: "P.24 米飯哪裏來？",
-        lines: [
-          "電飯鍋，一打開，",
-          "米飯香氣飄過來。",
-          "究竟米飯哪裏來？",
-          "飯鍋先生變出來？"
-        ]
-      },
-      {
-        title: "P.25 蝸牛",
-        lines: [
-          "蝸牛、蝸牛，",
-          "喜歡神造的樣貌，",
-          "背着房子也不愁，",
-          "喜歡慢慢四處遊。"
-        ]
-      }
-    ];
-
-    // 24 個全單元重點與熟字方格牆（靜音紅圈自讀）
-    const wallChars = [
-      "香", "甜", "蜜", "糖", "翠", "綠",
-      "蔬", "菜", "新", "鮮", "食", "物",
-      "豆", "肉", "米", "飯", "牛", "奶",
-      "蛋", "水", "果", "電", "蝸", "遊"
-    ];
-
-    // ========= 狀態與計時器 =========
-    let currentStage = 1;
-    let s1Idx = 0;
-    let s2Idx = 0;
-    let s3Tab = 0;
-    let selectedBlocks = [];
-    let circledSet = new Set();
-    let stageStartTs = Date.now();
-    let hasSavedReport = false;
+    // ========= 狀態變數 =========
+    let currentIdx = 0;
+    let questionStartTs = Date.now();
+    let currentNeedHint = false;
+    let isLocked = false;
+    let results = [];
     let generatedReportText = "";
-    let lockClick = false;
+    let hasSavedReport = false;
 
-    const stats = {
-      s1Sec: 0, s1NeedHint: false, s1Done: false,
-      s2Sec: 0, s2NeedHint: false, s2Done: false,
-      s3Sec: 0, s3Done: false,
-      s4Sec: 0, s4Done: false
-    };
-
-    function recordStageElapsed(stageNum) {
-      const delta = Math.max(1, Math.round((Date.now() - stageStartTs) / 1000));
-      if (stageNum === 1) stats.s1Sec += delta;
-      if (stageNum === 2) stats.s2Sec += delta;
-      if (stageNum === 3) stats.s3Sec += delta;
-      if (stageNum === 4) stats.s4Sec += delta;
+    function renderDots() {
+      const wrap = document.getElementById("stepDots");
+      wrap.innerHTML = "";
+      quizData.forEach((_, idx) => {
+        const d = document.createElement("div");
+        d.className = "step-dot" + (idx < currentIdx ? " done" : idx === currentIdx ? " active" : "");
+        wrap.appendChild(d);
+      });
     }
 
-    function updateNavPills() {
-      for (let i = 1; i <= 4; i++) {
-        const btn = document.getElementById("nav-" + i);
-        btn.classList.remove("active", "done");
-        if (i === currentStage) btn.classList.add("active");
-        else if (
-          (i === 1 && stats.s1Done) ||
-          (i === 2 && stats.s2Done) ||
-          (i === 3 && stats.s3Done) ||
-          (i === 4 && stats.s4Done)
-        ) {
-          btn.classList.add("done");
-        }
-      }
-    }
-
-    function goToStage(num, autoSpeak = true) {
+    function renderQuestion() {
       stopAllSpeech();
-      if (currentStage >= 1 && currentStage <= 4 && currentStage !== num) {
-        recordStageElapsed(currentStage);
-      }
-      currentStage = num;
-      stageStartTs = Date.now();
-      lockClick = false;
+      isLocked = false;
+      currentNeedHint = false;
+      questionStartTs = Date.now();
 
-      document.querySelectorAll(".stage-panel").forEach(p => p.classList.remove("active"));
-      document.getElementById("stage-" + num).classList.add("active");
-      updateNavPills();
+      const q = quizData[currentIdx];
+      renderDots();
 
-      if (num === 1) renderStage1(autoSpeak, true);
-      if (num === 2) renderStage2(autoSpeak, true);
-      if (num === 3) renderStage3(autoSpeak);
-      if (num === 4) renderStage4(autoSpeak);
-      if (num === 5) renderSummary();
-    }
+      document.getElementById("qTag").textContent = q.tag;
+      document.getElementById("qCounter").textContent = `第 ${currentIdx + 1} / ${quizData.length} 題`;
+      document.getElementById("teacherText").textContent = q.screenText;
 
-    // ========= 第 1 關：純字詞語聽音盲測（零劇透） =========
-    function renderStage1(shouldSpeak = true, isStageEntry = false) {
-      const q = stage1Data[s1Idx];
-      document.getElementById("s1Progress").textContent = `第 ${s1Idx + 1} / ${stage1Data.length} 題`;
-      const hintEl = document.getElementById("s1Hint");
+      const hintEl = document.getElementById("hintBox");
       hintEl.classList.add("hidden");
       hintEl.textContent = "";
 
-      const grid = document.getElementById("vocabGrid");
-      grid.innerHTML = "";
-      q.options.forEach(word => {
+      const stage = document.getElementById("visualStage");
+      stage.innerHTML = "";
+
+      if (q.type === "sequence") {
+        const row = document.createElement("div");
+        row.className = "seq-row";
+        q.items.forEach((val, idx) => {
+          const box = document.createElement("div");
+          box.className = "seq-box" + (val === "?" ? " missing" : "");
+          const num = document.createElement("div");
+          num.className = "seq-num";
+          num.textContent = val;
+          box.appendChild(num);
+
+          if (q.showDots && typeof val === "number") {
+            const dots = document.createElement("div");
+            dots.className = "seq-dots";
+            dots.textContent = "●".repeat(val);
+            box.appendChild(dots);
+          }
+          row.appendChild(box);
+
+          if (idx < q.items.length - 1) {
+            const arrow = document.createElement("div");
+            arrow.className = "seq-arrow";
+            arrow.textContent = "➜";
+            row.appendChild(arrow);
+          }
+        });
+        stage.appendChild(row);
+      } else if (q.type === "position") {
+        const pos = document.createElement("div");
+        pos.className = "pos-stage";
+
+        const goal = document.createElement("div");
+        goal.className = "podium-goal";
+        goal.innerHTML = `<div class="podium-icon">${q.goalEmoji}</div><div class="podium-label">${q.goalLabel}</div>`;
+        pos.appendChild(goal);
+
+        const arrow = document.createElement("div");
+        arrow.className = "line-arrow";
+        arrow.textContent = "⬅️";
+        pos.appendChild(arrow);
+
+        q.lineup.forEach(emoji => {
+          const card = document.createElement("div");
+          card.className = "animal-card";
+          card.textContent = emoji;
+          pos.appendChild(card);
+        });
+        stage.appendChild(pos);
+      } else if (q.type === "pattern") {
+        const groupsWrap = document.createElement("div");
+        groupsWrap.className = "pattern-groups";
+        q.groups.forEach(group => {
+          const gBox = document.createElement("div");
+          gBox.className = "pattern-group";
+          group.forEach(sym => {
+            const item = document.createElement("div");
+            item.className = "pattern-item" + (sym === "?" ? " blank" : "");
+            item.textContent = sym;
+            gBox.appendChild(item);
+          });
+          groupsWrap.appendChild(gBox);
+        });
+        stage.appendChild(groupsWrap);
+      } else if (q.type === "addition") {
+        const guide = document.createElement("div");
+        guide.className = "tap-guide";
+        guide.textContent = "👆 可以逐粒點亮實物幫自己數數（靜音自主數數）";
+        stage.appendChild(guide);
+
+        const row = document.createElement("div");
+        row.className = "math-groups-row";
+
+        const leftPlate = document.createElement("div");
+        leftPlate.className = "plate-box";
+        for (let i = 0; i < q.leftCount; i++) {
+          leftPlate.appendChild(createSilentCountButton(q.emoji));
+        }
+
+        const plus = document.createElement("div");
+        plus.className = "math-symbol";
+        plus.textContent = "+";
+
+        const rightPlate = document.createElement("div");
+        rightPlate.className = "plate-box right-plate";
+        for (let i = 0; i < q.rightCount; i++) {
+          rightPlate.appendChild(createSilentCountButton(q.emoji));
+        }
+
+        row.appendChild(leftPlate);
+        row.appendChild(plus);
+        row.appendChild(rightPlate);
+        stage.appendChild(row);
+      } else if (q.type === "subtraction") {
+        const guide = document.createElement("div");
+        guide.className = "tap-guide";
+        guide.textContent = "👆 點亮仲喺度嘅蛋糕自己數數（虛線係小熊拎走咗）";
+        stage.appendChild(guide);
+
+        const plate = document.createElement("div");
+        plate.className = "plate-box";
+        const remainCount = q.totalCount - q.takeCount;
+        for (let i = 0; i < q.totalCount; i++) {
+          const btn = createSilentCountButton(q.emoji);
+          if (i >= remainCount) {
+            btn.classList.add("taken");
+            btn.onclick = null;
+          }
+          plate.appendChild(btn);
+        }
+        stage.appendChild(plate);
+      }
+
+      // 渲染 3 個大選項掣
+      const optsRow = document.getElementById("optionsRow");
+      optsRow.innerHTML = "";
+      q.options.forEach(opt => {
         const btn = document.createElement("button");
-        btn.className = "word-btn";
-        btn.textContent = word;
-        btn.onclick = () => handleStage1Pick(btn, word);
-        grid.appendChild(btn);
+        btn.className = "opt-btn";
+        btn.textContent = opt;
+        btn.onclick = () => handleAnswer(btn, opt);
+        optsRow.appendChild(btn);
       });
 
-      // 畫面只顯示通用指引，嚴禁出現答案字詞
-      document.getElementById("teacherText").textContent =
-        "👂 聽清楚 Anna 老師讀邊個詞語，再撳下面嘅字卡！（唔確定可以撳右邊「🔊 聽題目」）";
-
-      // 語音讀出題目，並把純題目存入重聽鍵
-      currentQuestionAudio = q.spokenPrompt;
-      currentQuestionRate = 0.82;
-      const entryVoice = isStageEntry && s1Idx === 0
-        ? `第一關，純字聽音熱身！${q.spokenPrompt}`
-        : q.spokenPrompt;
-      if (shouldSpeak) speak(entryVoice, 0.82, null, false);
+      // 獨立保存題目原音，重聽鍵永不被提示語覆蓋
+      currentQuestionSpeech = q.spokenQuestion;
+      speak(q.spokenQuestion);
     }
 
-    function handleStage1Pick(btn, word) {
-      if (lockClick) return;
-      const q = stage1Data[s1Idx];
-      const hintEl = document.getElementById("s1Hint");
+    // 靜音實物點數按鈕：只播放輕快點擊音效與發光✨，嚴禁語音報數或顯示數字角標
+    function createSilentCountButton(emoji) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "count-item";
+      btn.textContent = emoji;
+      btn.onclick = () => {
+        if (isLocked) return;
+        playTapPop();
+        btn.classList.toggle("counted");
+      };
+      return btn;
+    }
 
-      if (word === q.target) {
-        lockClick = true;
+    function handleAnswer(btn, selected) {
+      if (isLocked) return;
+      const q = quizData[currentIdx];
+      const hintEl = document.getElementById("hintBox");
+
+      if (selected === q.answer) {
+        isLocked = true;
+        const elapsed = Math.max(1, Math.round((Date.now() - questionStartTs) / 1000));
+        results.push({
+          id: q.id,
+          label: q.label,
+          sec: elapsed,
+          needHint: currentNeedHint
+        });
+
         btn.classList.add("correct");
         hintEl.classList.add("hidden");
-        const praise = `🎉 答啱喇！呢個就係「${q.target}」，玲玲好叻呀！`;
-        document.getElementById("teacherText").textContent = praise;
-        speak(`答啱喇！呢個就係「${q.target}」，玲玲好叻呀！`, 0.84, () => {
-          lockClick = false;
-          if (s1Idx < stage1Data.length - 1) {
-            s1Idx++;
-            renderStage1(true, false);
+        document.getElementById("teacherText").textContent = "🎉 " + q.praise;
+
+        speak(q.praise, () => {
+          if (currentIdx < quizData.length - 1) {
+            currentIdx++;
+            renderQuestion();
           } else {
-            stats.s1Done = true;
-            goToStage(2, true);
+            showSummary();
           }
-        }, false);
-      } else {
-        stats.s1NeedHint = true;
-        btn.classList.remove("shake");
-        void btn.offsetWidth;
-        btn.classList.add("shake");
-        hintEl.textContent = q.screenHint;
-        hintEl.classList.remove("hidden");
-        document.getElementById("teacherText").textContent =
-          "🌟 唔緊要呀，聽下小提示再搵一次！（想再聽題目可以撳「🔊 聽題目」）";
-        speak(q.spokenHint, 0.80, null, false);
-      }
-    }
-
-    // ========= 第 2 關：純聽音句式積木（零劇透） =========
-    function renderStage2(shouldSpeak = true, isStageEntry = false) {
-      const q = stage2Data[s2Idx];
-      selectedBlocks = [];
-      document.getElementById("s2Progress").textContent = `第 ${s2Idx + 1} / ${stage2Data.length} 題`;
-      document.getElementById("s2Scene").textContent = q.sceneEmoji;
-      const hintEl = document.getElementById("s2Hint");
-      hintEl.classList.add("hidden");
-      hintEl.textContent = "";
-
-      renderSentenceUI();
-
-      // 畫面嚴禁印出目標句子
-      document.getElementById("teacherText").textContent =
-        "👂 聽清楚 Anna 老師讀嘅句子，按次序撳下面嘅積木拼出嚟！（可隨時撳「🔊 聽題目」）";
-
-      currentQuestionAudio = q.spokenPrompt;
-      currentQuestionRate = 0.78;
-      const entryVoice = isStageEntry && s2Idx === 0
-        ? `第二關，聽音拼句大挑戰！${q.spokenPrompt}`
-        : q.spokenPrompt;
-      if (shouldSpeak) speak(entryVoice, 0.78, null, false);
-    }
-
-    function renderSentenceUI() {
-      const q = stage2Data[s2Idx];
-      const slotsEl = document.getElementById("s2Slots");
-      const bankEl = document.getElementById("s2Bank");
-
-      slotsEl.innerHTML = "";
-      if (selectedBlocks.length === 0) {
-        const ph = document.createElement("span");
-        ph.className = "slot-placeholder";
-        ph.textContent = "按語音次序點選下方積木拼出完整句子";
-        slotsEl.appendChild(ph);
-      } else {
-        selectedBlocks.forEach((bIdx, pos) => {
-          const btn = document.createElement("button");
-          btn.className = "block-btn placed";
-          btn.textContent = q.blocks[bIdx];
-          btn.onclick = () => {
-            if (lockClick) return;
-            selectedBlocks.splice(pos, 1);
-            renderSentenceUI();
-          };
-          slotsEl.appendChild(btn);
         });
-      }
-
-      bankEl.innerHTML = "";
-      q.blocks.forEach((txt, idx) => {
-        const btn = document.createElement("button");
-        btn.className = "block-btn" + (selectedBlocks.includes(idx) ? " used" : "");
-        btn.textContent = txt;
-        btn.onclick = () => {
-          if (lockClick || selectedBlocks.includes(idx)) return;
-          selectedBlocks.push(idx);
-          renderSentenceUI();
-        };
-        bankEl.appendChild(btn);
-      });
-    }
-
-    function resetSentenceBlocks() {
-      if (lockClick) return;
-      selectedBlocks = [];
-      renderSentenceUI();
-    }
-
-    function checkSentence() {
-      if (lockClick) return;
-      const q = stage2Data[s2Idx];
-      const hintEl = document.getElementById("s2Hint");
-      const userArr = selectedBlocks.map(i => q.blocks[i]);
-
-      if (userArr.length < q.answer.length) {
-        const msg = "仲有積木未放上去呀，擺晒四舊先再檢查啦！";
-        hintEl.textContent = "💡 " + msg;
-        hintEl.classList.remove("hidden");
-        speak(msg, 0.82, null, false);
-        return;
-      }
-
-      const isRight = userArr.every((w, i) => w === q.answer[i]);
-      if (isRight) {
-        lockClick = true;
-        hintEl.classList.add("hidden");
-        const praise = `🎉 好犀利呀！拼啱晒：${q.spoken}`;
-        document.getElementById("teacherText").textContent = praise;
-        speak(`好犀利呀！拼啱晒：${q.spoken}`, 0.82, () => {
-          lockClick = false;
-          if (s2Idx < stage2Data.length - 1) {
-            s2Idx++;
-            renderStage2(true, false);
-          } else {
-            stats.s2Done = true;
-            goToStage(3, true);
-          }
-        }, false);
       } else {
-        stats.s2NeedHint = true;
-        hintEl.textContent = q.screenHint;
+        currentNeedHint = true;
+        btn.classList.remove("wrong-shake");
+        void btn.offsetWidth;
+        btn.classList.add("wrong-shake");
+        hintEl.textContent = q.hintText;
         hintEl.classList.remove("hidden");
-        document.getElementById("teacherText").textContent =
-          "🌟 次序爭少少咋！聽多一次再重新擺過啦！";
-        speak(q.spokenHint, 0.74, null, false);
+        speak(q.spokenHint);
       }
     }
 
-    // ========= 第 3 關：兒歌逐句點讀 =========
-    function renderStage3(shouldSpeak = true) {
-      const tabsEl = document.getElementById("rhymeTabs");
-      tabsEl.innerHTML = "";
-      rhymesData.forEach((r, idx) => {
-        const btn = document.createElement("button");
-        btn.className = "rhyme-tab" + (idx === s3Tab ? " active" : "");
-        btn.textContent = r.title;
-        btn.onclick = () => {
-          stopAllSpeech();
-          s3Tab = idx;
-          renderStage3(false);
-        };
-        tabsEl.appendChild(btn);
-      });
-
-      const linesEl = document.getElementById("rhymeLines");
-      linesEl.innerHTML = "";
-      const curRhyme = rhymesData[s3Tab];
-      curRhyme.lines.forEach((line, lIdx) => {
-        const row = document.createElement("div");
-        row.className = "rhyme-row";
-        row.id = "rhyme-row-" + lIdx;
-
-        const span = document.createElement("span");
-        span.className = "rhyme-line-text";
-        span.textContent = line;
-
-        const btn = document.createElement("button");
-        btn.className = "line-speak-btn";
-        btn.textContent = "🔊 聽呢句";
-        btn.onclick = () => {
-          stopAllSpeech();
-          row.classList.add("playing");
-          speak(line, 0.78, () => row.classList.remove("playing"), false);
-        };
-
-        row.appendChild(span);
-        row.appendChild(btn);
-        linesEl.appendChild(row);
-      });
-
-      const msg = "第三關，兒歌金曲點唱機！玲玲可以撳右邊喇叭逐句跟讀，或者撳上面聽全首呀！";
-      document.getElementById("teacherText").textContent = msg;
-      currentQuestionAudio = msg;
-      currentQuestionRate = 0.82;
-      if (shouldSpeak) speak(msg, 0.82, null, false);
-    }
-
-    function playFullRhyme() {
+    function showSummary() {
       stopAllSpeech();
-      fullRhymeAbort = false;
-      const lines = rhymesData[s3Tab].lines;
-      let i = 0;
+      document.getElementById("quizView").classList.add("hidden");
+      document.getElementById("summaryView").classList.remove("hidden");
 
-      function nextLine() {
-        if (fullRhymeAbort || i >= lines.length) {
-          document.querySelectorAll(".rhyme-row.playing").forEach(el => el.classList.remove("playing"));
-          return;
-        }
-        document.querySelectorAll(".rhyme-row.playing").forEach(el => el.classList.remove("playing"));
-        const row = document.getElementById("rhyme-row-" + i);
-        if (row) row.classList.add("playing");
-        const text = lines[i];
-        i++;
-        speak(text, 0.78, () => {
-          if (!fullRhymeAbort) nextLine();
-        }, false);
-      }
-      nextLine();
-    }
-
-    function finishStage3() {
-      stats.s3Done = true;
-      goToStage(4, true);
-    }
-
-    // ========= 第 4 關：靜音紅圈自讀（絕對零發聲） =========
-    function renderStage4(shouldSpeak = true) {
-      const grid = document.getElementById("wallGrid");
-      grid.innerHTML = "";
-
-      wallChars.forEach(ch => {
-        const cell = document.createElement("button");
-        cell.className = "char-cell" + (circledSet.has(ch) ? " circled" : "");
-        cell.textContent = ch;
-        cell.onclick = () => {
-          // 絕對靜音：只畫上或取消紅圈，嚴禁讀出該字
-          if (circledSet.has(ch)) {
-            circledSet.delete(ch);
-            cell.classList.remove("circled");
-          } else {
-            circledSet.add(ch);
-            cell.classList.add("circled");
-          }
-          document.getElementById("s4Count").textContent = `已圈出：${circledSet.size} 字`;
-        };
-        grid.appendChild(cell);
+      // 全部圓點亮綠燈
+      document.querySelectorAll(".step-dot").forEach(d => {
+        d.classList.remove("active");
+        d.classList.add("done");
       });
-
-      document.getElementById("s4Count").textContent = `已圈出：${circledSet.size} 字`;
-      const msg = "最後一關，靜音紅圈尋寶！邊隻字你識讀，就自己大聲讀出嚟再撳一下畫紅圈，呢關唔會出聲提示㗎！";
-      document.getElementById("teacherText").textContent = msg;
-      currentQuestionAudio = msg;
-      currentQuestionRate = 0.82;
-      if (shouldSpeak) speak(msg, 0.82, null, false);
-    }
-
-    function finishLesson() {
-      stats.s4Done = true;
-      goToStage(5, true);
-    }
-
-    // ========= 第 5 幕：畢業結算與雲端自動同步 =========
-    function renderSummary() {
-      const s1Status = stats.s1NeedHint ? "需提示" : "1次答對";
-      const s2Status = stats.s2NeedHint ? "需提示" : "1次答對";
-      const circledArr = wallChars.filter(c => circledSet.has(c));
-      const circledStr = circledArr.length > 0 ? circledArr.join("、") : "無";
 
       const tbody = document.getElementById("summaryBody");
-      tbody.innerHTML = `
-        <tr><td>1. 純字詞語聽音</td><td>${s1Status}</td><td>${stats.s1Sec}s</td></tr>
-        <tr><td>2. 聽音句式積木</td><td>${s2Status}</td><td>${stats.s2Sec}s</td></tr>
-        <tr><td>3. 兒歌逐句重溫</td><td>已完成</td><td>${stats.s3Sec}s</td></tr>
-        <tr><td>4. 靜音紅圈自讀</td><td>圈出 ${circledArr.length} / ${wallChars.length} 字</td><td>${stats.s4Sec}s</td></tr>
-      `;
+      tbody.innerHTML = "";
+      const reportParts = [];
 
-      document.getElementById("summaryCircled").textContent = `⭕ 今課自讀圈出字（${circledArr.length}字）：${circledStr}`;
+      results.forEach(r => {
+        const statusText = r.needHint ? "🌟 需提示" : "✅ 1次答對";
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td>${r.id} ${r.label}</td><td>${statusText}</td><td>${r.sec} 秒</td>`;
+        tbody.appendChild(tr);
 
-      generatedReportText = `【中文課堂回報】P.21-25 Day 10 (cn-p21-p25-d10.html) | 詞語聽音: ${stats.s1Sec}s(${s1Status}) | 句式積木: ${stats.s2Sec}s(${s2Status}) | 兒歌重溫: ${stats.s3Sec}s | 靜音圈字: ${stats.s4Sec}s(圈出${circledArr.length}字) | 圈出識字清單: ${circledStr}`;
+        const codeStatus = r.needHint ? "(需提示)" : "(1次答對)";
+        reportParts.push(`${r.id} ${r.label}: ${r.sec}s${codeStatus}`);
+      });
+
+      generatedReportText = `【數學測驗回報】Day 10（數學小博士總考） | ${reportParts.join(" | ")}`;
 
       if (!hasSavedReport) {
         hasSavedReport = true;
         if (window.LinglingReport && typeof window.LinglingReport.save === "function") {
-          window.LinglingReport.save("中文AI課堂", "P.21-25 Day 10", generatedReportText);
+          window.LinglingReport.save("數學探索島", "Maths Day 10（數學小博士總考）", generatedReportText);
         }
       }
 
-      const msg = `太棒喇！恭喜玲玲完成《我要謝謝你》全單元畢業總結，總共自己讀出咗 ${circledArr.length} 隻字呀！`;
-      document.getElementById("teacherText").textContent = msg;
-      currentQuestionAudio = msg;
-      currentQuestionRate = 0.82;
-      speak(msg, 0.82, null, false);
+      const finalMsg = "恭喜玲玲順利完成 Maths Day 10 數學小博士總考！你已經係真正嘅 K2 數學小博士喇！";
+      document.getElementById("teacherText").textContent = "🏆 " + finalMsg;
+      currentQuestionSpeech = finalMsg;
+      speak(finalMsg);
     }
 
     function copyReport() {
@@ -1268,7 +1183,7 @@
       if (!generatedReportText) return;
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(generatedReportText).then(() => {
-          fb.textContent = "✅ 進度暗號已複製！可直接貼給 Elsa 或中文老師。";
+          fb.textContent = "✅ 進度暗號已複製！貼給 Elsa 或數學老師即可記錄耗時。";
         }).catch(() => fallbackCopy(fb));
       } else {
         fallbackCopy(fb);
@@ -1282,31 +1197,26 @@
       ta.select();
       try {
         document.execCommand("copy");
-        fb.textContent = "✅ 進度暗號已複製！可直接貼給 Elsa 或中文老師。";
+        fb.textContent = "✅ 進度暗號已複製！貼給 Elsa 或數學老師即可記錄耗時。";
       } catch (e) {
-        fb.textContent = "請長按上方戰報文字手動複製。";
+        fb.textContent = "請手動複製戰報文字。";
       }
       document.body.removeChild(ta);
     }
 
-    function restartAll() {
+    function restartQuiz() {
       stopAllSpeech();
-      s1Idx = 0;
-      s2Idx = 0;
-      s3Tab = 0;
-      selectedBlocks = [];
-      circledSet.clear();
+      currentIdx = 0;
+      results = [];
       hasSavedReport = false;
-      stats.s1Sec = 0; stats.s1NeedHint = false; stats.s1Done = false;
-      stats.s2Sec = 0; stats.s2NeedHint = false; stats.s2Done = false;
-      stats.s3Sec = 0; stats.s3Done = false;
-      stats.s4Sec = 0; stats.s4Done = false;
       document.getElementById("copyFeedback").textContent = "";
-      goToStage(1, true);
+      document.getElementById("summaryView").classList.add("hidden");
+      document.getElementById("quizView").classList.remove("hidden");
+      renderQuestion();
     }
 
     window.addEventListener("DOMContentLoaded", () => {
-      renderStage1(true, true);
+      renderQuestion();
     });
   </script>
 </body>
