@@ -1,0 +1,1452 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>數學探索島 · Maths Day 11 太空站奇遇記</title>
+  <link rel="stylesheet" href="theme.css?v=1" />
+  <script src="report-hub.js?v=2"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100dvh;
+      overflow: hidden;
+      font-family: "PingFang HK", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      background: linear-gradient(135deg, #e0e7ff 0%, #ede9fe 48%, #dbeafe 100%);
+      color: #1e293b;
+    }
+
+    .app-shell {
+      width: 100%;
+      max-width: 1024px;
+      height: 100dvh;
+      margin: 0 auto;
+      padding: 10px 14px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      overflow: hidden;
+    }
+
+    /* 頂部導覽與進度圓點 */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: 16px;
+      background: #ffffff;
+      color: #4338ca;
+      font-weight: 900;
+      font-size: clamp(14px, 2vw, 17px);
+      text-decoration: none;
+      border: 2px solid #a5b4fc;
+      box-shadow: 0 4px 0 #6366f1;
+      white-space: nowrap;
+    }
+
+    .back-btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 #6366f1;
+    }
+
+    .step-dots {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      flex-wrap: nowrap;
+    }
+
+    .step-dot {
+      width: clamp(16px, 2.5vw, 24px);
+      height: clamp(16px, 2.5vw, 24px);
+      border-radius: 50%;
+      background: #e2e8f0;
+      border: 2px solid #cbd5e1;
+      transition: transform 0.15s ease, background 0.15s ease;
+    }
+
+    .step-dot.active {
+      background: #8b5cf6;
+      border-color: #6d28d9;
+      transform: scale(1.22);
+      box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.25);
+    }
+
+    .step-dot.done {
+      background: #10b981;
+      border-color: #059669;
+    }
+
+    .day-badge {
+      padding: 6px 12px;
+      border-radius: 14px;
+      background: #ede9fe;
+      border: 2px solid #c4b5fd;
+      color: #5b21b6;
+      font-weight: 900;
+      font-size: clamp(13px, 1.8vw, 16px);
+      white-space: nowrap;
+    }
+
+    /* Anna 老師常駐橫幅 */
+    .teacher-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 14px;
+      background: #ffffff;
+      border-radius: 20px;
+      border: 3px solid #a5b4fc;
+      box-shadow: 0 5px 0 #c7d2fe;
+      flex-shrink: 0;
+    }
+
+    .teacher-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .teacher-avatar {
+      font-size: clamp(28px, 4vw, 38px);
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .teacher-text {
+      font-size: clamp(16px, 2.15vw, 21px);
+      font-weight: 900;
+      color: #312e81;
+      line-height: 1.3;
+    }
+
+    .speak-btn {
+      padding: 10px 16px;
+      border-radius: 16px;
+      border: none;
+      background: #0ea5e9;
+      color: #ffffff;
+      font-size: clamp(15px, 2vw, 18px);
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 4px 0 #0284c7;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .speak-btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 #0284c7;
+    }
+
+    /* 主舞台：嚴格單屏無捲動 */
+    .quiz-card {
+      flex: 1;
+      min-height: 0;
+      background: rgba(255, 255, 255, 0.96);
+      border-radius: 28px;
+      border: 4px solid #818cf8;
+      box-shadow: 0 8px 0 #6366f1;
+      padding: 12px 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+
+    .quiz-view {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+      gap: 8px;
+      min-height: 0;
+    }
+
+    .quiz-view.hidden,
+    .summary-view.hidden {
+      display: none;
+    }
+
+    .q-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .q-tag {
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: #ede9fe;
+      color: #5b21b6;
+      font-size: clamp(15px, 2vw, 19px);
+      font-weight: 900;
+    }
+
+    .q-counter {
+      font-size: clamp(15px, 2vw, 19px);
+      font-weight: 900;
+      color: #4338ca;
+    }
+
+    /* 視覺展示區 */
+    .visual-stage {
+      flex: 1;
+      min-height: 0;
+      background: linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+      border-radius: 22px;
+      border: 3px dashed #93c5fd;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      overflow: hidden;
+    }
+
+    .tap-guide {
+      font-size: clamp(13px, 1.75vw, 16px);
+      font-weight: 800;
+      color: #0369a1;
+      background: #e0f2fe;
+      padding: 4px 12px;
+      border-radius: 999px;
+      flex-shrink: 0;
+    }
+
+    /* Q1 & Q2: 倒數與 11-20 數序 */
+    .seq-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: nowrap;
+      gap: clamp(5px, 1.3vw, 12px);
+    }
+
+    .seq-box {
+      width: clamp(56px, 10.5vw, 96px);
+      height: clamp(72px, 13.5dvh, 108px);
+      border-radius: 20px;
+      background: #ffffff;
+      border: 4px solid #38bdf8;
+      box-shadow: 0 5px 0 #0284c7;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .seq-box.countdown {
+      border-color: #a855f7;
+      box-shadow: 0 5px 0 #7e22ce;
+    }
+
+    .seq-num {
+      font-size: clamp(28px, 4.6vw, 48px);
+      font-weight: 900;
+      color: #1e293b;
+      line-height: 1;
+    }
+
+    .seq-box.missing {
+      background: #fef3c7;
+      border: 4px dashed #f59e0b;
+      box-shadow: 0 5px 0 #d97706;
+    }
+
+    .seq-box.missing .seq-num {
+      color: #d97706;
+    }
+
+    .seq-arrow {
+      font-size: clamp(18px, 2.8vw, 28px);
+      font-weight: 900;
+      color: #6366f1;
+    }
+
+    /* Q3: 序數排隊（左起第 3 個，靜音點亮輔助數次序） */
+    .ordinal-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(6px, 1.5vw, 14px);
+      flex-wrap: nowrap;
+    }
+
+    .rocket-front {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 18px;
+      background: #fef08a;
+      border: 3px solid #eab308;
+      box-shadow: 0 4px 0 #ca8a04;
+      flex-shrink: 0;
+    }
+
+    .rocket-icon {
+      font-size: clamp(32px, 5.5dvh, 52px);
+      line-height: 1;
+    }
+
+    .rocket-label {
+      font-size: clamp(12px, 1.6vw, 15px);
+      font-weight: 900;
+      color: #854d0e;
+      margin-top: 2px;
+      white-space: nowrap;
+    }
+
+    .animal-slot {
+      position: relative;
+      width: clamp(58px, 10.5vw, 94px);
+      height: clamp(68px, 12.5dvh, 98px);
+      border-radius: 20px;
+      background: #ffffff;
+      border: 4px solid #a5b4fc;
+      box-shadow: 0 5px 0 #6366f1;
+      font-size: clamp(34px, 5.8dvh, 54px);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.12s ease, background 0.12s ease;
+    }
+
+    .animal-slot.counted {
+      background: #fef08a;
+      border-color: #f59e0b;
+      transform: translateY(-4px) scale(1.06);
+    }
+
+    .animal-slot.counted::after {
+      content: "✨";
+      position: absolute;
+      top: -10px;
+      right: -8px;
+      font-size: clamp(16px, 2.2vw, 22px);
+    }
+
+    /* Q4: 3x3 太空櫃（上下左右 2D 空間） */
+    .shelf-grid {
+      display: grid;
+      grid-template-columns: repeat(3, clamp(72px, 12.5dvh, 104px));
+      grid-template-rows: repeat(3, clamp(54px, 8.8dvh, 76px));
+      gap: 8px;
+      padding: 10px;
+      border-radius: 22px;
+      background: #e0e7ff;
+      border: 4px solid #818cf8;
+      box-shadow: 0 5px 0 #6366f1;
+    }
+
+    .shelf-cell {
+      border-radius: 14px;
+      background: #ffffff;
+      border: 3px solid #c7d2fe;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(30px, 5dvh, 44px);
+    }
+
+    .shelf-cell.anchor-cell {
+      background: #fef9c3;
+      border: 3px dashed #f59e0b;
+      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.25);
+    }
+
+    /* Q5: 天平輕重推理 */
+    .scales-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(14px, 3vw, 34px);
+      width: 100%;
+      flex-wrap: nowrap;
+    }
+
+    .scale-card {
+      flex: 1;
+      max-width: 340px;
+      background: #ffffff;
+      border-radius: 22px;
+      border: 3px solid #c7d2fe;
+      box-shadow: 0 5px 0 #a5b4fc;
+      padding: 10px 12px 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .scale-caption {
+      font-size: clamp(13px, 1.75vw, 16px);
+      font-weight: 900;
+      color: #4338ca;
+      background: #eef2ff;
+      padding: 3px 10px;
+      border-radius: 999px;
+    }
+
+    .scale-scene {
+      position: relative;
+      width: 100%;
+      height: clamp(104px, 17dvh, 138px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    .scale-beam {
+      position: relative;
+      width: 84%;
+      height: 10px;
+      background: #64748b;
+      border-radius: 999px;
+      transform: rotate(-11deg);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .scale-pan {
+      position: relative;
+      width: clamp(54px, 8.5vw, 76px);
+      height: clamp(54px, 8.5vw, 76px);
+      border-radius: 18px;
+      background: #fef9c3;
+      border: 3px solid #f59e0b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(32px, 5dvh, 46px);
+      transform: rotate(11deg) translateY(-34px);
+      box-shadow: 0 4px 0 #d97706;
+    }
+
+    .scale-pan.heavy-pan {
+      background: #fee2e2;
+      border-color: #ef4444;
+      box-shadow: 0 4px 0 #dc2626;
+    }
+
+    .scale-fulcrum {
+      width: 0;
+      height: 0;
+      border-left: 18px solid transparent;
+      border-right: 18px solid transparent;
+      border-bottom: 28px solid #475569;
+      margin-top: -26px;
+    }
+
+    .scale-note {
+      font-size: clamp(12px, 1.6vw, 15px);
+      font-weight: 800;
+      color: #64748b;
+    }
+
+    /* Q6: 接著數加法（數字卡 + 實物） */
+    .math-groups-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(10px, 2.2vw, 22px);
+      flex-wrap: wrap;
+    }
+
+    .bag-card {
+      padding: 12px 22px;
+      border-radius: 22px;
+      background: linear-gradient(180deg, #e0f2fe 0%, #bae6fd 100%);
+      border: 4px solid #0284c7;
+      box-shadow: 0 6px 0 #0369a1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-width: clamp(110px, 16vw, 150px);
+      min-height: clamp(92px, 16dvh, 130px);
+    }
+
+    .bag-num {
+      font-size: clamp(44px, 7dvh, 66px);
+      font-weight: 900;
+      color: #0c4a6e;
+      line-height: 1;
+    }
+
+    .bag-sub {
+      font-size: clamp(13px, 1.7vw, 16px);
+      font-weight: 900;
+      color: #0369a1;
+      margin-top: 4px;
+    }
+
+    .plate-box {
+      padding: 12px 16px;
+      border-radius: 22px;
+      background: #ffffff;
+      border: 4px solid #f472b6;
+      box-shadow: 0 5px 0 #db2777;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(8px, 1.6vw, 14px);
+      flex-wrap: wrap;
+      min-height: clamp(92px, 16dvh, 130px);
+    }
+
+    .plate-box.space-plate {
+      border-color: #818cf8;
+      box-shadow: 0 5px 0 #6366f1;
+    }
+
+    .math-symbol {
+      font-size: clamp(34px, 5vw, 52px);
+      font-weight: 900;
+      color: #f97316;
+    }
+
+    /* Q7: 能量盒湊數（6 格電池盒） */
+    .battery-box-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .battery-title {
+      font-size: clamp(16px, 2.2vw, 20px);
+      font-weight: 900;
+      color: #0f766e;
+      background: #ccfbf1;
+      padding: 4px 14px;
+      border-radius: 999px;
+      border: 2px solid #5eead4;
+    }
+
+    .battery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, clamp(68px, 12vw, 96px));
+      grid-template-rows: repeat(2, clamp(62px, 10.5dvh, 84px));
+      gap: 10px;
+      padding: 12px;
+      border-radius: 22px;
+      background: #ffffff;
+      border: 4px solid #14b8a6;
+      box-shadow: 0 6px 0 #0d9488;
+    }
+
+    .battery-slot {
+      position: relative;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(34px, 5.5dvh, 48px);
+      cursor: pointer;
+      transition: transform 0.12s ease, background 0.12s ease;
+    }
+
+    .battery-slot.filled {
+      background: #dcfce7;
+      border: 3px solid #22c55e;
+    }
+
+    .battery-slot.empty {
+      background: #fef9c3;
+      border: 3px dashed #f59e0b;
+      color: #d97706;
+      font-size: clamp(28px, 4.4dvh, 38px);
+      font-weight: 900;
+    }
+
+    .battery-slot.counted {
+      background: #fde047;
+      border-color: #ca8a04;
+      transform: scale(1.07);
+    }
+
+    .battery-slot.counted::after {
+      content: "✨";
+      position: absolute;
+      top: -10px;
+      right: -8px;
+      font-size: 20px;
+    }
+
+    /* 靜音自主點數按鈕（嚴禁報數與數字角標） */
+    .count-item {
+      position: relative;
+      width: clamp(54px, 8.8vw, 78px);
+      height: clamp(54px, 8.8vw, 78px);
+      border-radius: 18px;
+      border: 3px solid transparent;
+      background: #fffbeb;
+      font-size: clamp(34px, 5.5dvh, 52px);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.14s ease, background 0.14s ease, border-color 0.14s ease;
+    }
+
+    .count-item.counted {
+      background: #fef08a;
+      border-color: #f59e0b;
+      transform: scale(1.1);
+      box-shadow: 0 0 14px rgba(245, 158, 11, 0.55);
+    }
+
+    .count-item.counted::after {
+      content: "✨";
+      position: absolute;
+      top: -10px;
+      right: -8px;
+      font-size: clamp(16px, 2.2vw, 22px);
+      pointer-events: none;
+    }
+
+    .count-item.taken {
+      background: #f1f5f9;
+      border: 3px dashed #cbd5e1;
+      opacity: 0.35;
+      pointer-events: none;
+      transform: scale(0.88);
+    }
+
+    .count-item.taken::after {
+      content: "🚀";
+      position: absolute;
+      top: -12px;
+      right: -10px;
+      font-size: clamp(18px, 2.4vw, 24px);
+      opacity: 1;
+    }
+
+    /* 溫柔提示框（嚴禁 ❌ 與洩露答案） */
+    .gentle-hint-box {
+      min-height: 38px;
+      padding: 6px 14px;
+      border-radius: 16px;
+      background: #fef9c3;
+      border: 2px dashed #eab308;
+      color: #854d0e;
+      font-size: clamp(15px, 2vw, 18px);
+      font-weight: 800;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .gentle-hint-box.hidden {
+      visibility: hidden;
+    }
+
+    /* 選項按鈕區 */
+    .options-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      flex-shrink: 0;
+    }
+
+    .opt-btn {
+      min-height: clamp(68px, 12dvh, 98px);
+      border-radius: 22px;
+      border: 4px solid #6366f1;
+      background: linear-gradient(180deg, #ffffff 0%, #eef2ff 100%);
+      color: #312e81;
+      font-size: clamp(32px, 5vw, 50px);
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 7px 0 #4f46e5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.1s ease;
+    }
+
+    .opt-btn:active {
+      transform: translateY(4px);
+      box-shadow: 0 3px 0 #4f46e5;
+    }
+
+    .opt-btn.correct {
+      background: #dcfce7;
+      border-color: #22c55e;
+      color: #14532d;
+      box-shadow: 0 7px 0 #16a34a;
+      transform: scale(1.03);
+    }
+
+    .opt-btn.wrong-shake {
+      animation: wrongShake 0.4s ease;
+      background: #fff7ed;
+      border-color: #fdba74;
+    }
+
+    /* 結算畫面 */
+    .summary-view {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      height: 100%;
+      gap: 8px;
+      min-height: 0;
+    }
+
+    .trophy-title {
+      font-size: clamp(20px, 3vw, 30px);
+      font-weight: 900;
+      color: #4338ca;
+      text-align: center;
+    }
+
+    .sync-badge {
+      padding: 5px 14px;
+      border-radius: 999px;
+      background: #dcfce7;
+      border: 2px solid #22c55e;
+      color: #166534;
+      font-size: clamp(13px, 1.8vw, 16px);
+      font-weight: 900;
+    }
+
+    .result-table-wrap {
+      width: 100%;
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      border-radius: 16px;
+      border: 2px solid #c7d2fe;
+      background: #f8fafc;
+    }
+
+    .result-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: clamp(13px, 1.8vw, 16px);
+    }
+
+    .result-table th, .result-table td {
+      padding: 6px 10px;
+      border-bottom: 1px solid #e2e8f0;
+      text-align: left;
+      font-weight: 800;
+    }
+
+    .result-table th {
+      background: #e0e7ff;
+      color: #3730a3;
+      position: sticky;
+      top: 0;
+    }
+
+    .summary-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      flex-shrink: 0;
+    }
+
+    .primary-btn {
+      padding: 11px 22px;
+      border-radius: 18px;
+      border: none;
+      background: #10b981;
+      color: #ffffff;
+      font-size: clamp(15px, 2.1vw, 19px);
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 5px 0 #047857;
+    }
+
+    .primary-btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 2px 0 #047857;
+    }
+
+    .secondary-btn {
+      padding: 11px 18px;
+      border-radius: 18px;
+      border: 2px solid #cbd5e1;
+      background: #f8fafc;
+      color: #475569;
+      font-size: clamp(15px, 2vw, 18px);
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 4px 0 #94a3b8;
+    }
+
+    .secondary-btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 #94a3b8;
+    }
+
+    .copy-feedback {
+      font-size: 14px;
+      font-weight: 800;
+      color: #047857;
+      min-height: 20px;
+    }
+
+    @keyframes wrongShake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-8px); }
+      50% { transform: translateX(8px); }
+      75% { transform: translateX(-6px); }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <!-- 頂部導覽列 -->
+    <div class="top-bar">
+      <a href="index.html" class="back-btn" onclick="stopAllSpeech()">⬅️ 返回主頁</a>
+      <div class="step-dots" id="stepDots"></div>
+      <div class="day-badge">🌌 Maths Day 11</div>
+    </div>
+
+    <!-- Anna 老師常駐橫幅 -->
+    <div class="teacher-bar">
+      <div class="teacher-left">
+        <div class="teacher-avatar">👩‍🚀</div>
+        <div class="teacher-text" id="teacherText">歡迎來到第二期《太空站奇遇記》！準備好出發喇！</div>
+      </div>
+      <button class="speak-btn" onclick="replayCurrentQuestion()">🔊 聽題目</button>
+    </div>
+
+    <!-- 主互動舞台 -->
+    <div class="quiz-card">
+      <!-- 答題區 -->
+      <div class="quiz-view" id="quizView">
+        <div class="q-header">
+          <span class="q-tag" id="qTag">倒數序列</span>
+          <span class="q-counter" id="qCounter">第 1 / 8 題</span>
+        </div>
+
+        <div class="visual-stage" id="visualStage"></div>
+
+        <div class="gentle-hint-box hidden" id="hintBox"></div>
+
+        <div class="options-row" id="optionsRow"></div>
+      </div>
+
+      <!-- 結算區 -->
+      <div class="summary-view hidden" id="summaryView">
+        <div class="trophy-title">🌌 恭喜玲玲完成《太空站奇遇記》升級大挑戰！🏆</div>
+        <div class="sync-badge">☁️ 戰報已自動同步至家長戰報箱</div>
+
+        <div class="result-table-wrap">
+          <table class="result-table">
+            <thead>
+              <tr>
+                <th>題目</th>
+                <th>狀態</th>
+                <th>耗時</th>
+              </tr>
+            </thead>
+            <tbody id="summaryBody"></tbody>
+          </table>
+        </div>
+
+        <div class="summary-actions">
+          <button class="primary-btn" onclick="copyReport()">📋 一鍵複製進度暗號俾 Anna 老師</button>
+          <button class="secondary-btn" onclick="restartQuiz()">🔁 再玩一次</button>
+        </div>
+        <div class="copy-feedback" id="copyFeedback"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ========= iPad Safari 廣東話安全語音引擎 (Anti-GC, zh-HK, rate=0.72) =========
+    window.utterancePool = [];
+    let speakTimer = null;
+    let currentQuestionSpeech = "";
+    let audioCtx = null;
+
+    function getCantoneseVoice() {
+      const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+      return (
+        voices.find(v => v.lang === "zh-HK" && /sinji|tracy|ting|female/i.test(v.name)) ||
+        voices.find(v => v.lang === "zh-HK") ||
+        voices.find(v => v.lang && v.lang.toLowerCase().includes("hk")) ||
+        voices.find(v => v.lang && v.lang.toLowerCase().includes("zh")) ||
+        null
+      );
+    }
+
+    function stopAllSpeech() {
+      if (speakTimer) {
+        clearTimeout(speakTimer);
+        speakTimer = null;
+      }
+      if (window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+      }
+    }
+
+    function speak(text, onEnd = null) {
+      stopAllSpeech();
+      if (!window.speechSynthesis || !text) return;
+      speakTimer = setTimeout(() => {
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = "zh-HK";
+        u.rate = 0.72;
+        u.pitch = 1.05;
+        const v = getCantoneseVoice();
+        if (v) u.voice = v;
+
+        u.onend = () => {
+          const idx = window.utterancePool.indexOf(u);
+          if (idx > -1) window.utterancePool.splice(idx, 1);
+          if (typeof onEnd === "function") onEnd();
+        };
+        u.onerror = () => {
+          const idx = window.utterancePool.indexOf(u);
+          if (idx > -1) window.utterancePool.splice(idx, 1);
+        };
+
+        window.utterancePool.push(u);
+        window.speechSynthesis.speak(u);
+      }, 40);
+    }
+
+    function replayCurrentQuestion() {
+      if (currentQuestionSpeech) {
+        speak(currentQuestionSpeech);
+      }
+    }
+
+    // 輕快短音效（僅用於實物自主點數的觸覺回饋，嚴禁報數）
+    function playTapPop() {
+      try {
+        const Ctx = window.AudioContext || window.webkitAudioContext;
+        if (!Ctx) return;
+        if (!audioCtx) audioCtx = new Ctx();
+        if (audioCtx.state === "suspended") audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(660, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(920, audioCtx.currentTime + 0.08);
+        gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.09);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.09);
+      } catch (e) {}
+    }
+
+    window.addEventListener("pagehide", stopAllSpeech);
+    window.addEventListener("beforeunload", stopAllSpeech);
+    if (window.speechSynthesis) {
+      window.speechSynthesis.onvoiceschanged = () => getCantoneseVoice();
+    }
+
+    // ========= 第二期全面升級首發試水題庫（全廣東話零劇透） =========
+    const quizData = [
+      {
+        id: "Q1",
+        label: "倒數序列(10-6)",
+        tag: "🚀 火箭倒數 (10→6)",
+        type: "sequence",
+        isCountdown: true,
+        items: [10, 9, "?", 7, 6],
+        options: ["7", "8", "9"],
+        answer: "8",
+        screenText: "🚀 火箭準備發射倒數喇！問號嗰格應該係邊個數字呀？",
+        spokenQuestion: "第一題，太空火箭發射要由大數到細倒數！十、九、問號、七、六。中間問號嗰格應該係邊個數字呀？",
+        hintText: "🌟 由左面大數字向後倒數：十、九……跟住細一格係邊個數呢？",
+        spokenHint: "唔緊要呀，試下由十開始向後倒數：十、九，跟住落嚟係邊個數字呀？",
+        praise: "答啱喇！十、九、八、七、六，係八呀！火箭升空！"
+      },
+      {
+        id: "Q2",
+        label: "11-20數序",
+        tag: "🛸 太空艙編號 (11–15)",
+        type: "sequence",
+        isCountdown: false,
+        items: [11, 12, 13, "?", 15],
+        options: ["13", "14", "16"],
+        answer: "14",
+        screenText: "🛸 幫太空艙順住排編號！問號嗰格係邊個數字呀？",
+        spokenQuestion: "第二題，幫太空艙按次序貼編號！十一、十二、十三、問號、十五。問號嗰格應該係邊個數字呀？",
+        hintText: "🌟 由十一順住數落去：十一、十二、十三……跟住係邊個呢？",
+        spokenHint: "唔緊要呀，慢慢由十一順住數落去：十一、十二、十三，跟住落嚟係邊個數字呀？",
+        praise: "好醒目呀！十一、十二、十三、十四、十五，係十四！"
+      },
+      {
+        id: "Q3",
+        label: "序數方位(第3個)",
+        tag: "🐾 序數排隊（第 3 隻）",
+        type: "ordinal",
+        lineup: ["🐰", "🐻", "🦊", "🐱", "🐼"],
+        options: ["🐻", "🦊", "🐱"],
+        answer: "🦊",
+        screenText: "🚀 小動物排隊上火箭，由最前面（左邊）數起「第 3 隻」係邊隻呀？",
+        spokenQuestion: "第三題，五隻太空小動物排隊上火箭！請玲玲由最前面貼住火箭嗰邊數起，第一、第二、第三，排喺第三個嘅係邊隻小動物呀？",
+        hintText: "🌟 可以用手指由最貼近火箭🚀嗰隻開始，逐隻點住自己數一、二、三！",
+        spokenHint: "唔緊要呀，用手指由最貼近火箭左邊嗰隻開始，自己數一、二、三，睇下數到邊隻小動物！",
+        praise: "答啱喇！由最前面數起第三隻係狐狸仔，玲玲好叻！"
+      },
+      {
+        id: "Q4",
+        label: "空間方位(下面)",
+        tag: "📦 3×3 太空櫃（下面）",
+        type: "grid3x3",
+        anchorIndex: 1,
+        cells: ["🚀", "⭐", "🌙", "🛸", "🤖", "🪐", "☄️", "🛰️", "🌍"],
+        options: ["🌙", "🤖", "🛸"],
+        answer: "🤖",
+        screenText: "📦 望下太空櫃，喺星星 ⭐「正下面」嗰格係乜嘢呀？",
+        spokenQuestion: "第四題，太空站有個三乘三儲物櫃！先搵出黃色虛線框住嘅星星，再睇下喺星星正下面嗰一格擺咗乜嘢呀？",
+        hintText: "🌟 先用手指指住星星⭐，再垂直向下移一格，睇下係乜嘢！",
+        spokenHint: "唔緊要呀，先指住上面粒星星，再將手指垂直向下滑一格，睇下遇到邊個呀？",
+        praise: "好犀利呀！星星正下面嗰格就係機械人，方位感超強！"
+      },
+      {
+        id: "Q5",
+        label: "天平輕重推理",
+        tag: "⚖️ 天平輕重推理",
+        type: "scales",
+        scales: [
+          { title: "天平一", heavy: "🪨", light: "⭐", note: "跌低嗰邊比較重" },
+          { title: "天平二", heavy: "☀️", light: "🪨", note: "跌低嗰邊比較重" }
+        ],
+        options: ["⭐", "🪨", "☀️"],
+        answer: "☀️",
+        screenText: "⚖️ 望清楚兩個天平（跌低嗰邊重啲），三樣嘢入面邊一樣「最重」呀？",
+        spokenQuestion: "第五題，小偵探推理時間！第一個天平見到月球石重過星星；第二個天平見到太陽又重過月球石。咁呢三樣嘢入面，邊一樣係最重嘅呀？",
+        hintText: "🌟 月球石贏咗星星，但係太陽又重過月球石，咁邊個係最重冠軍呢？",
+        spokenHint: "慢慢諗呀，月球石已經重過星星，但係喺第二個天平，太陽仲重過月球石喎！咁邊樣係最重呢？",
+        praise: "太棒喇！太陽重過月球石，月球石又重過星星，所以太陽最重！"
+      },
+      {
+        id: "Q6",
+        label: "接著數加法(5+2)",
+        tag: "🍬 接著數加法 (5 + 2)",
+        type: "countOn",
+        baseNum: 5,
+        addEmoji: "🍬",
+        addCount: 2,
+        options: ["6", "7", "8"],
+        answer: "7",
+        screenText: "🍬 魔法袋已經有 5 粒糖，加埋右邊 2 粒，由 5 接著數落去一共有幾多粒呀？",
+        spokenQuestion: "第六題，左邊藍色魔法袋已經裝住五粒太空糖，右邊碟仲有兩粒糖。玲玲試下心入面記住五，再點住右邊啲糖接著數落去，合埋一共有幾多粒糖呀？",
+        hintText: "🌟 袋入面已經有 5，指住右邊第一粒糖接著數落去，再數下一粒！",
+        spokenHint: "慢慢嚟呀，左邊已經係五，用手指點住右邊啲糖由五後面接著數落去，睇下總共有幾多粒！",
+        praise: "好叻呀！由五接著數六、七，五加二等於七！"
+      },
+      {
+        id: "Q7",
+        label: "湊數缺數(4+?=6)",
+        tag: "🔋 能量盒湊數 (4 + ? = 6)",
+        type: "missingAddend",
+        targetTotal: 6,
+        filledCount: 4,
+        options: ["1", "2", "3"],
+        answer: "2",
+        screenText: "🔋 能量盒要裝滿 6 粒電池，已經有 4 粒，仲差幾多粒先裝滿呀？",
+        spokenQuestion: "第七題，太空船嘅能量盒要裝滿六粒電池先開到船！而家入面已經裝咗四粒電池，你數下仲有幾多個空位，仲要補多幾多粒電池先裝滿呀？",
+        hintText: "🌟 用手指點亮能量盒入面有問號嘅黃色空格，自己數下有幾多格未裝滿！",
+        spokenHint: "唔緊要呀，用手指逐格點一下能量盒入面黃色虛線空格，自己數下仲差幾多粒電池！",
+        praise: "答啱喇！四粒加多兩粒就裝滿六粒電池，太空船充滿電喇！"
+      },
+      {
+        id: "Q8",
+        label: "動態減法(7-3)",
+        tag: "☄️ 太空減法 (7 - 3)",
+        type: "subtraction",
+        emoji: "☄️",
+        totalCount: 7,
+        takeCount: 3,
+        options: ["3", "4", "5"],
+        answer: "4",
+        screenText: "☄️ 本來有 7 粒隕石，太空船射走咗 3 粒，仲剩低幾多粒隕石呀？",
+        spokenQuestion: "最後一題喇！太空站外面本來有七粒隕石，太空船好勇敢咁射走咗三粒。玲玲用手指點住仲留喺度嘅隕石，數下仲剩低幾多粒呀？",
+        hintText: "🌟 淨係用手指點亮仲喺度、無俾火箭射走嘅隕石，自己大聲數一次！",
+        spokenHint: "慢慢數呀，淨係點住仲清楚喺度、未俾火箭射走嘅隕石，數下仲剩低幾多粒！",
+        praise: "全部過關喇！七減三等於四，恭喜玲玲成功征服太空站奇遇記！"
+      }
+    ];
+
+    // ========= 狀態變數 =========
+    let currentIdx = 0;
+    let questionStartTs = Date.now();
+    let currentNeedHint = false;
+    let isLocked = false;
+    let results = [];
+    let generatedReportText = "";
+    let hasSavedReport = false;
+
+    function renderDots() {
+      const wrap = document.getElementById("stepDots");
+      wrap.innerHTML = "";
+      quizData.forEach((_, idx) => {
+        const d = document.createElement("div");
+        d.className = "step-dot" + (idx < currentIdx ? " done" : idx === currentIdx ? " active" : "");
+        wrap.appendChild(d);
+      });
+    }
+
+    function renderQuestion() {
+      stopAllSpeech();
+      isLocked = false;
+      currentNeedHint = false;
+      questionStartTs = Date.now();
+
+      const q = quizData[currentIdx];
+      renderDots();
+
+      document.getElementById("qTag").textContent = q.tag;
+      document.getElementById("qCounter").textContent = `第 ${currentIdx + 1} / ${quizData.length} 題`;
+      document.getElementById("teacherText").textContent = q.screenText;
+
+      const hintEl = document.getElementById("hintBox");
+      hintEl.classList.add("hidden");
+      hintEl.textContent = "";
+
+      const stage = document.getElementById("visualStage");
+      stage.innerHTML = "";
+
+      if (q.type === "sequence") {
+        const row = document.createElement("div");
+        row.className = "seq-row";
+        q.items.forEach((val, idx) => {
+          const box = document.createElement("div");
+          box.className = "seq-box" + (q.isCountdown ? " countdown" : "") + (val === "?" ? " missing" : "");
+          const num = document.createElement("div");
+          num.className = "seq-num";
+          num.textContent = val;
+          box.appendChild(num);
+          row.appendChild(box);
+
+          if (idx < q.items.length - 1) {
+            const arrow = document.createElement("div");
+            arrow.className = "seq-arrow";
+            arrow.textContent = "➜";
+            row.appendChild(arrow);
+          }
+        });
+        stage.appendChild(row);
+      } else if (q.type === "ordinal") {
+        const guide = document.createElement("div");
+        guide.className = "tap-guide";
+        guide.textContent = "👆 可以由最貼近火箭嗰隻開始，逐隻點亮自己數次序（靜音自主數）";
+        stage.appendChild(guide);
+
+        const row = document.createElement("div");
+        row.className = "ordinal-row";
+
+        const front = document.createElement("div");
+        front.className = "rocket-front";
+        front.innerHTML = `<div class="rocket-icon">🚀</div><div class="rocket-label">最前面</div>`;
+        row.appendChild(front);
+
+        q.lineup.forEach(emoji => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "animal-slot";
+          btn.textContent = emoji;
+          btn.onclick = () => {
+            if (isLocked) return;
+            playTapPop();
+            btn.classList.toggle("counted");
+          };
+          row.appendChild(btn);
+        });
+        stage.appendChild(row);
+      } else if (q.type === "grid3x3") {
+        const grid = document.createElement("div");
+        grid.className = "shelf-grid";
+        q.cells.forEach((icon, idx) => {
+          const cell = document.createElement("div");
+          cell.className = "shelf-cell" + (idx === q.anchorIndex ? " anchor-cell" : "");
+          cell.textContent = icon;
+          grid.appendChild(cell);
+        });
+        stage.appendChild(grid);
+      } else if (q.type === "scales") {
+        const wrap = document.createElement("div");
+        wrap.className = "scales-wrap";
+        q.scales.forEach(s => {
+          const card = document.createElement("div");
+          card.className = "scale-card";
+          card.innerHTML = `
+            <div class="scale-caption">${s.title}</div>
+            <div class="scale-scene">
+              <div class="scale-beam">
+                <div class="scale-pan heavy-pan">${s.heavy}</div>
+                <div class="scale-pan">${s.light}</div>
+              </div>
+              <div class="scale-fulcrum"></div>
+            </div>
+            <div class="scale-note">⬇️ ${s.note}</div>
+          `;
+          wrap.appendChild(card);
+        });
+        stage.appendChild(wrap);
+      } else if (q.type === "countOn") {
+        const guide = document.createElement("div");
+        guide.className = "tap-guide";
+        guide.textContent = "👆 記住左邊數字，點亮右邊太空糖接著數落去（靜音自主數）";
+        stage.appendChild(guide);
+
+        const row = document.createElement("div");
+        row.className = "math-groups-row";
+
+        const bag = document.createElement("div");
+        bag.className = "bag-card";
+        bag.innerHTML = `<div class="bag-num">${q.baseNum}</div><div class="bag-sub">袋入面已有 ${q.baseNum} 粒</div>`;
+
+        const plus = document.createElement("div");
+        plus.className = "math-symbol";
+        plus.textContent = "+";
+
+        const plate = document.createElement("div");
+        plate.className = "plate-box";
+        for (let i = 0; i < q.addCount; i++) {
+          plate.appendChild(createSilentCountButton(q.addEmoji));
+        }
+
+        row.appendChild(bag);
+        row.appendChild(plus);
+        row.appendChild(plate);
+        stage.appendChild(row);
+      } else if (q.type === "missingAddend") {
+        const wrap = document.createElement("div");
+        wrap.className = "battery-box-wrap";
+
+        const title = document.createElement("div");
+        title.className = "battery-title";
+        title.textContent = `⚡ 能量盒目標：裝滿 ${q.targetTotal} 粒電池（點空格數下仲差幾多粒）`;
+        wrap.appendChild(title);
+
+        const grid = document.createElement("div");
+        grid.className = "battery-grid";
+        for (let i = 0; i < q.targetTotal; i++) {
+          const slot = document.createElement("button");
+          slot.type = "button";
+          if (i < q.filledCount) {
+            slot.className = "battery-slot filled";
+            slot.textContent = "🔋";
+          } else {
+            slot.className = "battery-slot empty";
+            slot.textContent = "?";
+          }
+          slot.onclick = () => {
+            if (isLocked) return;
+            playTapPop();
+            slot.classList.toggle("counted");
+          };
+          grid.appendChild(slot);
+        }
+        wrap.appendChild(grid);
+        stage.appendChild(wrap);
+      } else if (q.type === "subtraction") {
+        const guide = document.createElement("div");
+        guide.className = "tap-guide";
+        guide.textContent = "👆 點亮仲喺度嘅隕石自己數數（虛線係太空船射走咗）";
+        stage.appendChild(guide);
+
+        const plate = document.createElement("div");
+        plate.className = "plate-box space-plate";
+        const remainCount = q.totalCount - q.takeCount;
+        for (let i = 0; i < q.totalCount; i++) {
+          const btn = createSilentCountButton(q.emoji);
+          if (i >= remainCount) {
+            btn.classList.add("taken");
+            btn.onclick = null;
+          }
+          plate.appendChild(btn);
+        }
+        stage.appendChild(plate);
+      }
+
+      // 渲染 3 個大選項掣
+      const optsRow = document.getElementById("optionsRow");
+      optsRow.innerHTML = "";
+      q.options.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.className = "opt-btn";
+        btn.textContent = opt;
+        btn.onclick = () => handleAnswer(btn, opt);
+        optsRow.appendChild(btn);
+      });
+
+      // 獨立保存題目原音，重聽鍵永不被提示語覆蓋
+      currentQuestionSpeech = q.spokenQuestion;
+      speak(q.spokenQuestion);
+    }
+
+    // 靜音實物點數按鈕：只播放輕快點擊音效與發光✨，嚴禁語音報數或顯示數字角標
+    function createSilentCountButton(emoji) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "count-item";
+      btn.textContent = emoji;
+      btn.onclick = () => {
+        if (isLocked) return;
+        playTapPop();
+        btn.classList.toggle("counted");
+      };
+      return btn;
+    }
+
+    function handleAnswer(btn, selected) {
+      if (isLocked) return;
+      const q = quizData[currentIdx];
+      const hintEl = document.getElementById("hintBox");
+
+      if (selected === q.answer) {
+        isLocked = true;
+        const elapsed = Math.max(1, Math.round((Date.now() - questionStartTs) / 1000));
+        results.push({
+          id: q.id,
+          label: q.label,
+          sec: elapsed,
+          needHint: currentNeedHint
+        });
+
+        btn.classList.add("correct");
+        hintEl.classList.add("hidden");
+        document.getElementById("teacherText").textContent = "🎉 " + q.praise;
+
+        speak(q.praise, () => {
+          if (currentIdx < quizData.length - 1) {
+            currentIdx++;
+            renderQuestion();
+          } else {
+            showSummary();
+          }
+        });
+      } else {
+        currentNeedHint = true;
+        btn.classList.remove("wrong-shake");
+        void btn.offsetWidth;
+        btn.classList.add("wrong-shake");
+        hintEl.textContent = q.hintText;
+        hintEl.classList.remove("hidden");
+        speak(q.spokenHint);
+      }
+    }
+
+    function showSummary() {
+      stopAllSpeech();
+      document.getElementById("quizView").classList.add("hidden");
+      document.getElementById("summaryView").classList.remove("hidden");
+
+      document.querySelectorAll(".step-dot").forEach(d => {
+        d.classList.remove("active");
+        d.classList.add("done");
+      });
+
+      const tbody = document.getElementById("summaryBody");
+      tbody.innerHTML = "";
+      const reportParts = [];
+
+      results.forEach(r => {
+        const statusText = r.needHint ? "🌟 需提示" : "✅ 1次答對";
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td>${r.id} ${r.label}</td><td>${statusText}</td><td>${r.sec} 秒</td>`;
+        tbody.appendChild(tr);
+
+        const codeStatus = r.needHint ? "(需提示)" : "(1次答對)";
+        reportParts.push(`${r.id} ${r.label}: ${r.sec}s${codeStatus}`);
+      });
+
+      generatedReportText = `【數學測驗回報】Day 11（太空站奇遇記） | ${reportParts.join(" | ")}`;
+
+      if (!hasSavedReport) {
+        hasSavedReport = true;
+        if (window.LinglingReport && typeof window.LinglingReport.save === "function") {
+          window.LinglingReport.save("數學探索島", "Maths Day 11（太空站奇遇記）", generatedReportText);
+        }
+      }
+
+      const finalMsg = "恭喜玲玲完成第二期首發太空站奇遇記！你真係好勇敢挑戰升級題目呀！";
+      document.getElementById("teacherText").textContent = "🌌 " + finalMsg;
+      currentQuestionSpeech = finalMsg;
+      speak(finalMsg);
+    }
+
+    function copyReport() {
+      const fb = document.getElementById("copyFeedback");
+      if (!generatedReportText) return;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(generatedReportText).then(() => {
+          fb.textContent = "✅ 進度暗號已複製！貼給 Elsa 即可根據耗時微調 Day 12。";
+        }).catch(() => fallbackCopy(fb));
+      } else {
+        fallbackCopy(fb);
+      }
+    }
+
+    function fallbackCopy(fb) {
+      const ta = document.createElement("textarea");
+      ta.value = generatedReportText;
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand("copy");
+        fb.textContent = "✅ 進度暗號已複製！貼給 Elsa 即可根據耗時微調 Day 12。";
+      } catch (e) {
+        fb.textContent = "請手動複製戰報文字。";
+      }
+      document.body.removeChild(ta);
+    }
+
+    function restartQuiz() {
+      stopAllSpeech();
+      currentIdx = 0;
+      results = [];
+      hasSavedReport = false;
+      document.getElementById("copyFeedback").textContent = "";
+      document.getElementById("summaryView").classList.add("hidden");
+      document.getElementById("quizView").classList.remove("hidden");
+      renderQuestion();
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      renderQuestion();
+    });
+  </script>
+</body>
+</html>
