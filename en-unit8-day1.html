@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Unit 8 Day 1：Love at Home 寵物字形特訓</title>
+  <link rel="stylesheet" href="theme.css?v=2" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="report-hub.js?v=2"></script>
+  <style>
+    * {
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      box-sizing: border-box;
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: "PingFang HK", "Noto Sans TC", "Comic Sans MS", sans-serif;
+    }
+    body {
+      display: block !important;
+      background: linear-gradient(180deg, #38bdf8 0%, #7dd3fc 45%, #e0f2fe 100%);
+    }
+    .app-shell {
+      display: flex;
+      flex-direction: column;
+      height: 100dvh;
+      max-width: 1024px;
+      margin: 0 auto;
+      padding: 10px 16px 14px;
+      gap: 10px;
+    }
+    /* 3D 積木按鈕樣式 */
+    .btn-3d {
+      border-radius: 22px;
+      font-weight: 800;
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+      cursor: pointer;
+      user-select: none;
+    }
+    .btn-3d:active {
+      transform: translateY(4px);
+    }
+    .btn-blue {
+      background: #2563eb;
+      color: #fff;
+      box-shadow: 0 6px 0 #1d4ed8;
+    }
+    .btn-blue:active { box-shadow: 0 2px 0 #1d4ed8; }
+    .btn-green {
+      background: #22c55e;
+      color: #fff;
+      box-shadow: 0 6px 0 #15803d;
+    }
+    .btn-green:active { box-shadow: 0 2px 0 #15803d; }
+    .btn-amber {
+      background: #f59e0b;
+      color: #fff;
+      box-shadow: 0 6px 0 #b45309;
+    }
+    .btn-amber:active { box-shadow: 0 2px 0 #b45309; }
+    .btn-pink {
+      background: #ec4899;
+      color: #fff;
+      box-shadow: 0 6px 0 #be185d;
+    }
+    .btn-pink:active { box-shadow: 0 2px 0 #be185d; }
+    .btn-slate {
+      background: #e2e8f0;
+      color: #334155;
+      box-shadow: 0 5px 0 #94a3b8;
+    }
+    .btn-slate:active { box-shadow: 0 1px 0 #94a3b8; }
+
+    /* 3D 卡片 */
+    .card-3d {
+      background: #ffffff;
+      border: 4px solid #bae6fd;
+      border-radius: 28px;
+      box-shadow: 0 10px 0 #0284c7, 0 16px 24px rgba(2, 132, 199, 0.18);
+    }
+    /* 字母積木 */
+    .tile-3d {
+      min-width: 66px;
+      height: 76px;
+      padding: 0 14px;
+      border-radius: 20px;
+      font-size: 2.5rem;
+      font-weight: 900;
+      background: #ffffff;
+      color: #1e3a8a;
+      border: 4px solid #60a5fa;
+      box-shadow: 0 7px 0 #2563eb;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.12s ease, background 0.15s ease;
+    }
+    .tile-3d:active {
+      transform: translateY(4px);
+      box-shadow: 0 3px 0 #2563eb;
+    }
+    .tile-3d.tile-focus {
+      border-color: #f97316;
+      background: #fff7ed;
+      color: #c2410c;
+      box-shadow: 0 7px 0 #ea580c;
+    }
+    .tile-3d.tile-done {
+      background: #4ade80 !important;
+      color: #ffffff !important;
+      border-color: #16a34a !important;
+      box-shadow: 0 7px 0 #15803d !important;
+      transform: scale(1.06);
+    }
+
+    /* 導航步點 */
+    .step-pill {
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      font-weight: 800;
+      background: rgba(255, 255, 255, 0.2);
+      color: #e0f2fe;
+      border: 2px solid transparent;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .step-pill.active {
+      background: #facc15;
+      color: #1e3a8a;
+      border-color: #ffffff;
+      box-shadow: 0 3px 0 #ca8a04;
+    }
+    .step-pill.done {
+      background: #4ade80;
+      color: #14532d;
+    }
+
+    /* 尋寶題卡 */
+    .quiz-card {
+      background: #ffffff;
+      border: 5px solid #7dd3fc;
+      border-radius: 28px;
+      box-shadow: 0 8px 0 #0284c7;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.12s ease, border-color 0.15s ease;
+    }
+    .quiz-card:active {
+      transform: translateY(4px);
+      box-shadow: 0 4px 0 #0284c7;
+    }
+    .quiz-card.correct {
+      background: #dcfce7;
+      border-color: #22c55e;
+      box-shadow: 0 8px 0 #15803d;
+    }
+    .quiz-card.wrong {
+      background: #fee2e2;
+      border-color: #f87171;
+      box-shadow: 0 8px 0 #dc2626;
+      animation: shake 0.35s ease;
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-8px); }
+      75% { transform: translateX(8px); }
+    }
+    @keyframes popIn {
+      0% { transform: scale(0.85); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .pop-in { animation: popIn 0.25s ease-out; }
+
+    /* 煙花層 */
+    #fx-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 999;
+      overflow: hidden;
+    }
+    .spark {
+      position: absolute;
+      font-size: 2.2rem;
+      animation: flyUp 0.9s ease-out forwards;
+    }
+    @keyframes flyUp {
+      0% { transform: translate(-50%, 0) scale(0.6); opacity: 1; }
+      100% { transform: translate(var(--dx), var(--dy)) scale(1.3); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div id="fx-layer"></div>
+
+  <div class="app-shell">
+    <!-- 頂部深藍導航列 -->
+    <header class="flex items-center justify-between gap-2 bg-[#1e3a8a] text-white px-4 py-2.5 rounded-2xl shadow-lg shrink-0">
+      <button onclick="goHome()" class="btn-3d bg-sky-500 hover:bg-sky-400 text-white px-3.5 py-1.5 text-base shadow-[0_4px_0_#0369a1]">
+        🏠 返回
+      </button>
+      <div class="flex items-center gap-1.5 overflow-x-auto">
+        <button id="pill-1" onclick="jumpStage(1)" class="step-pill active">1. 字形認知</button>
+        <button id="pill-2" onclick="jumpStage(2)" class="step-pill">2. 拆字積木</button>
+        <button id="pill-3" onclick="jumpStage(3)" class="step-pill">3. 開口跟讀</button>
+        <button id="pill-4" onclick="jumpStage(4)" class="step-pill">4. 盲聽尋寶</button>
+      </div>
+      <div class="text-sm font-extrabold text-amber-300 shrink-0 hidden sm:block">
+        Unit 8 · Day 1
+      </div>
+    </header>
+
+    <!-- Anna 老師黃色常駐橫幅（點擊重聽） -->
+    <section onclick="replayBanner()" class="flex items-center gap-3 bg-[#fef08a] border-4 border-[#eab308] rounded-2xl px-4 py-2.5 shadow-[0_5px_0_#ca8a04] cursor-pointer shrink-0 active:translate-y-0.5">
+      <div class="w-12 h-12 rounded-full bg-white border-3 border-amber-400 flex items-center justify-center text-3xl shrink-0 shadow">
+        👩‍🏫
+      </div>
+      <div class="flex-1 min-w-0">
+        <div class="text-xs font-black text-amber-800 tracking-wide">Anna 老師指引（點擊重聽）</div>
+        <div id="banner-text" class="text-lg sm:text-xl font-extrabold text-slate-900 leading-snug truncate-none">
+          準備好同可愛寵物玩字形遊戲未呀？點一下大圖卡聽純正英文！
+        </div>
+      </div>
+      <div class="text-2xl shrink-0">🔊</div>
+    </section>
+
+    <!-- 主互動舞台（單屏自適應，無須捲動） -->
+    <main id="stage-area" class="flex-1 min-h-0 flex flex-col justify-center"></main>
+  </div>
+
+  <script>
+    /* ============================================================
+       1. 課程資料（100% 重用《玲玲K2_英文學習總庫》現有 MP3）
+       ============================================================ */
+    const WORDS = [
+      {
+        id: 'cat',
+        word: 'cat',
+        emoji: '🐱',
+        audio: 'audio/en-cat.mp3',
+        sentence: 'I love my cat.',
+        sentenceAudio: 'audio/en-I-love-my-cat.mp3',
+        isFocus: false,
+        focusLetterIndex: -1,
+        mnemonicText: '開頭嘅 c 彎彎哋，好似小貓咪捲埋瞓覺嘅身體！',
+        mnemonicVoice: '睇下呢隻小貓！開頭嘅 c 彎彎哋，好似小貓咪捲埋瞓覺嘅身體，一齊聽下英文點讀！'
+      },
+      {
+        id: 'dog',
+        word: 'dog',
+        emoji: '🐶',
+        audio: 'audio/en-dog.mp3',
+        sentence: null,
+        sentenceAudio: null,
+        isFocus: false,
+        focusLetterIndex: -1,
+        mnemonicText: '開頭 d 似小狗長耳仔，尾字 g 似小狗搖搖吓嘅尾巴！',
+        mnemonicVoice: '呢隻係小狗！開頭嘅 d 似佢豎起隻耳仔，尾字 g 似佢搖搖吓嘅尾巴，聽下英文點讀！'
+      },
+      {
+        id: 'rabbit',
+        word: 'rabbit',
+        emoji: '🐰',
+        audio: 'audio/en-rabbit.mp3',
+        sentence: 'I love my rabbit.',
+        sentenceAudio: 'audio/en-I-love-my-rabbit.mp3',
+        isFocus: true,
+        focusLetterIndex: 5, // 尾字 t
+        mnemonicText: '⭐ 重點字形：中間兩個 bb 似肥嘟嘟兔仔身，最尾嘅 t 似兔仔豎起隻長耳仔！',
+        mnemonicVoice: '今日重點特訓白兔仔！中間兩個 b 似肥嘟嘟嘅身，最尾嘅 t 似兔仔豎到高一高嘅長耳仔，記住 t 企喺最後面呀！'
+      },
+      {
+        id: 'hamster',
+        word: 'hamster',
+        emoji: '🐹',
+        audio: 'audio/en-hamster.mp3',
+        sentence: null,
+        sentenceAudio: null,
+        isFocus: true,
+        focusLetterIndex: 4, // 中間 t (h-a-m-s-t-e-r)
+        mnemonicText: '⭐ 重點字形：分開記 ham - s - t - er，隻 t 企喺 s 後面，好似倉鼠企起身食瓜子！',
+        mnemonicVoice: '仲有可愛嘅倉鼠！我哋分節記，ham，s，t，er，隻 t 企喺 s 後面，好似倉鼠企起身食瓜子咁，聽下英文點讀！'
+      }
+    ];
+
+    const SPEAKING_ITEMS = [
+      { label: 'cat', emoji: '🐱', audio: 'audio/en-cat.mp3', tag: '單字重溫' },
+      { label: 'dog', emoji: '🐶', audio: 'audio/en-dog.mp3', tag: '單字重溫' },
+      { label: 'rabbit', emoji: '🐰', audio: 'audio/en-rabbit.mp3', tag: '⭐ 重點單字' },
+      { label: 'hamster', emoji: '🐹', audio: 'audio/en-hamster.mp3', tag: '⭐ 重點單字' },
+      { label: 'I love my cat.', emoji: '👧❤️🐱', audio: 'audio/en-I-love-my-cat.mp3', tag: '核心句型' },
+      { label: 'I love my rabbit.', emoji: '👧❤️🐰', audio: 'audio/en-I-love-my-rabbit.mp3', tag: '核心句型' }
+    ];
+
+    const QUIZ_BANK = [
+      { key: 'cat', answerText: 'cat', emoji: '🐱', audio: 'audio/en-cat.mp3', type: 'word' },
+      { key: 'dog', answerText: 'dog', emoji: '🐶', audio: 'audio/en-dog.mp3', type: 'word' },
+      { key: 'rabbit', answerText: 'rabbit', emoji: '🐰', audio: 'audio/en-rabbit.mp3', type: 'word' },
+      { key: 'hamster', answerText: 'hamster', emoji: '🐹', audio: 'audio/en-hamster.mp3', type: 'word' },
+      { key: 'I love my cat', answerText: 'I love my cat.', emoji: '👧❤️🐱', audio: 'audio/en-I-love-my-cat.mp3', type: 'sentence' },
+      { key: 'I love my rabbit', answerText: 'I love my rabbit.', emoji: '👧❤️🐰', audio: 'audio/en-I-love-my-rabbit.mp3', type: 'sentence' }
+    ];
+
+    /* ============================================================
+       2. 中英雙軌 (Hybrid Voice) 引擎
+          - 中文 TTS 音量 0.68
+          - ElevenLabs MP3 經 Web Audio GainNode 放大 2.2 倍
+          - 嚴格 onend / onended 排隊，絕不用 setTimeout 盲猜
+          - 切關／返回強制 stopAllAudio() 防重疊
+       ============================================================ */
+    let audioCtx = null;
+    let activeAudioEl = null;
+    let playSession = 0;
+    let currentBannerSpeech = '';
+    let currentBannerEnAudio = null;
+    let hkVoice = null;
+
+    function loadVoices() {
+      const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+      hkVoice =
+        voices.find(v => v.lang === 'zh-HK' && /Sin-ji|Tracy|HiuGaai|HiuMaan|Google/i.test(v.name)) ||
+        voices.find(v => v.lang === 'zh-HK') ||
+        voices.find(v => v.lang.toLowerCase().includes('hk')) ||
+        null;
+    }
+    if (window.speechSynthesis) {
+      loadVoices();
+      window.speechSynthesis.onvoiceschanged = loadVoices;
+    }
+
+    function ensureAudioCtx() {
+      if (!audioCtx) {
+        const Ctx = window.AudioContext || window.webkitAudioContext;
+        if (Ctx) audioCtx = new Ctx();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume().catch(() => {});
+      }
+      return audioCtx;
+    }
+
+    function stopAllAudio() {
+      playSession++;
+      if (window.speechSynthesis) {
+        try { window.speechSynthesis.cancel(); } catch (e) {}
+      }
+      if (activeAudioEl) {
+        try {
+          activeAudioEl.onended = null;
+          activeAudioEl.onerror = null;
+          activeAudioEl.pause();
+          activeAudioEl.currentTime = 0;
+        } catch (e) {}
+        activeAudioEl = null;
+      }
+    }
+
+    function playCantonese(text, session) {
+      return new Promise(resolve => {
+        if (session !== playSession || !text || !window.speechSynthesis) {
+          resolve();
+          return;
+        }
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = 'zh-HK';
+        if (hkVoice) u.voice = hkVoice;
+        u.rate = 0.95;
+        u.pitch = 1.05;
+        u.volume = 0.68;
+        u.onend = () => resolve();
+        u.onerror = () => resolve();
+        window.speechSynthesis.speak(u);
+      });
+    }
+
+    function playMp3(src, session) {
+      return new Promise(resolve => {
+        if (session !== playSession || !src) {
+          resolve();
+          return;
+        }
+        const el = new Audio(src);
+        el.crossOrigin = 'anonymous';
+        activeAudioEl = el;
+
+        // 透過 Web Audio API GainNode 放大 2.2 倍
+        try {
+          const ctx = ensureAudioCtx();
+          if (ctx) {
+            const source = ctx.createMediaElementSource(el);
+            const gainNode = ctx.createGain();
+            gainNode.gain.value = 2.2;
+            source.connect(gainNode);
+            gainNode.connect(ctx.destination);
+          }
+        } catch (e) {
+          el.volume = 1.0;
+        }
+
+        el.onended = () => {
+          if (activeAudioEl === el) activeAudioEl = null;
+          resolve();
+        };
+        el.onerror = () => {
+          if (activeAudioEl === el) activeAudioEl = null;
+          resolve();
+        };
+        el.play().catch(() => {
+          if (activeAudioEl === el) activeAudioEl = null;
+          resolve();
+        });
+      });
+    }
+
+    async function playHybrid(zhText, enSrc) {
+      stopAllAudio();
+      const s = playSession;
+      if (zhText) await playCantonese(zhText, s);
+      if (s !== playSession) return;
+      if (enSrc) await playMp3(enSrc, s);
+    }
+
+    async function playOnlyMp3(enSrc) {
+      stopAllAudio();
+      const s = playSession;
+      await playMp3(enSrc, s);
+    }
+
+    function setBanner(displayText, voiceText, enSrc = null, autoSpeak = true) {
+      document.getElementById('banner-text').textContent = displayText;
+      currentBannerSpeech = voiceText || displayText;
+      currentBannerEnAudio = enSrc;
+      if (autoSpeak) {
+        playHybrid(currentBannerSpeech, currentBannerEnAudio);
+      }
+    }
+
+    function replayBanner() {
+      if (state.stage === 4 && currentQuizAudio) {
+        // 第4幕重聽：獨立保存原音，永不被錯誤提示覆蓋
+        playHybrid('留心聽吓英文聲音，揀出啱嘅圖卡啦！', currentQuizAudio);
+      } else {
+        playHybrid(currentBannerSpeech, currentBannerEnAudio);
+      }
+    }
+
+    /* ============================================================
+       3. 慶祝煙花與狀態管理
+       ============================================================ */
+    function launchFireworks() {
+      const layer = document.getElementById('fx-layer');
+      const icons = ['🌟', '✨', '🎉', '🐾', '💛', '🎈'];
+      for (let i = 0; i < 16; i++) {
+        const span = document.createElement('span');
+        span.className = 'spark';
+        span.textContent = icons[i % icons.length];
+        span.style.left = (25 + Math.random() * 50) + '%';
+        span.style.top = (45 + Math.random() * 20) + '%';
+        span.style.setProperty('--dx', (Math.random() * 260 - 130) + 'px');
+        span.style.setProperty('--dy', (-120 - Math.random() * 180) + 'px');
+        layer.appendChild(span);
+        setTimeout(() => span.remove(), 950);
+      }
+    }
+
+    const state = {
+      stage: 1, // 1: Meaning, 2: Phonics, 3: Speaking, 4: Quiz, 5: Summary
+      meaningIdx: 0,
+      phonicsIdx: 0,
+      phonicsClicked: new Set(),
+      speakingIdx: 0,
+      quizList: [],
+      quizIdx: 0,
+      quizLocked: false,
+      quizMistakes: [], // 記錄錯題
+      quizWrongCount: 0,
+      startTime: Date.now(),
+      reportSynced: false
+    };
+
+    let currentQuizAudio = null;
+
+    function shuffle(arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function updateNavPills() {
+      for (let i = 1; i <= 4; i++) {
+        const el = document.getElementById('pill-' + i);
+        el.classList.remove('active', 'done');
+        if (state.stage === i) el.classList.add('active');
+        else if (state.stage > i) el.classList.add('done');
+      }
+    }
+
+    function jumpStage(num) {
+      stopAllAudio();
+      state.stage = num;
+      if (num === 2) {
+        state.phonicsIdx = 0;
+        state.phonicsClicked = new Set();
+      } else if (num === 3) {
+        state.speakingIdx = 0;
+      } else if (num === 4) {
+        initQuiz();
+      }
+      render();
+    }
+
+    function goHome() {
+      stopAllAudio();
+      window.location.href = 'index.html';
+    }
+
+    /* ============================================================
+       4. 第一幕：Meaning（沉浸認知 ＋ 視覺字形圖像口訣）
+       ============================================================ */
+    function renderMeaning() {
+      const item = WORDS[state.meaningIdx];
+      const highlightedWord = item.word.split('').map((ch, idx) => {
+        if (idx === item.focusLetterIndex) {
+          return `<span class="text-orange-600 underline decoration-4 decoration-orange-400">${ch}</span>`;
+        }
+        return ch;
+      }).join('');
+
+      setBanner(
+        item.mnemonicText,
+        item.mnemonicVoice,
+        item.audio,
+        true
+      );
+
+      document.getElementById('stage-area').innerHTML = `
+        <div class="pop-in flex flex-col items-center justify-between h-full py-1 gap-3">
+          <div class="text-base font-extrabold text-sky-900 bg-white/80 px-4 py-1 rounded-full shadow-sm">
+            第一幕：字形認知（${state.meaningIdx + 1} / ${WORDS.length}）
+          </div>
+
+          <div onclick="playOnlyMp3('${item.audio}')" class="card-3d w-full max-w-xl flex-1 max-h-[370px] flex flex-col items-center justify-center p-5 cursor-pointer active:scale-[0.98] transition">
+            ${item.isFocus ? '<span class="mb-1 px-3 py-1 rounded-full bg-orange-100 text-orange-700 font-black text-sm border-2 border-orange-300">⭐ 弱點字形特訓</span>' : ''}
+            <div class="text-[6.5rem] leading-none select-none mb-2">${item.emoji}</div>
+            <div class="text-6xl font-black tracking-wide text-slate-800 mb-2">${highlightedWord}</div>
+            <div class="text-base font-bold text-sky-600 flex items-center gap-1.5">
+              <span>🔊 點一下圖卡再聽純正英文</span>
+            </div>
+
+            ${item.sentence ? `
+              <button onclick="event.stopPropagation(); playOnlyMp3('${item.sentenceAudio}')" class="mt-3 btn-3d btn-pink px-5 py-2 text-xl flex items-center gap-2">
+                <span>💬 ${item.sentence}</span>
+                <span>🔊</span>
+              </button>
+            ` : ''}
+          </div>
+
+          <div class="flex items-center justify-center gap-4 w-full max-w-xl shrink-0">
+            <button onclick="prevMeaning()" ${state.meaningIdx === 0 ? 'disabled' : ''} class="btn-3d btn-slate px-6 py-3 text-xl ${state.meaningIdx === 0 ? 'opacity-40' : ''}">
+              ⬅️ 上一張
+            </button>
+            <button onclick="nextMeaning()" class="btn-3d btn-green flex-1 py-3 text-2xl">
+              ${state.meaningIdx < WORDS.length - 1 ? '下一隻寵物 ➡️' : '進入第二幕：拆字積木 🧱'}
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function prevMeaning() {
+      if (state.meaningIdx > 0) {
+        stopAllAudio();
+        state.meaningIdx--;
+        render();
+      }
+    }
+    function nextMeaning() {
+      stopAllAudio();
+      if (state.meaningIdx < WORDS.length - 1) {
+        state.meaningIdx++;
+        render();
+      } else {
+        jumpStage(2);
+      }
+    }
+
+    /* ============================================================
+       5. 第二幕：Phonics（字母積木逐粒點讀，特別鎖實 t 嘅位置）
+       ============================================================ */
+    function renderPhonics() {
+      const item = WORDS[state.phonicsIdx];
+      const letters = item.word.split('');
+      const allDone = state.phonicsClicked.size === letters.length;
+
+      const tipDisplay = item.isFocus
+        ? `逐粒點亮字母積木！特別留意橙色嘅「t」企喺邊個位呀！`
+        : `由左到右逐粒點亮字母積木，聽下每個字母嘅發音！`;
+      const tipVoice = item.isFocus
+        ? `一齊玩拆字積木！由左到右逐粒撳，特別留意橙色嗰粒 t 企喺邊個位呀！`
+        : `一齊玩拆字積木！由左到右逐粒撳落去，聽下每個字母點讀！`;
+
+      if (state.phonicsClicked.size === 0) {
+        setBanner(tipDisplay, tipVoice, null, true);
+      }
+
+      const tilesHtml = letters.map((ch, idx) => {
+        const isDone = state.phonicsClicked.has(idx);
+        const isFocus = idx === item.focusLetterIndex;
+        return `
+          <button onclick="clickTile(${idx}, '${ch}')" class="tile-3d ${isFocus ? 'tile-focus' : ''} ${isDone ? 'tile-done' : ''}">
+            ${ch}
+          </button>
+        `;
+      }).join('');
+
+      document.getElementById('stage-area').innerHTML = `
+        <div class="pop-in flex flex-col items-center justify-between h-full py-1 gap-3">
+          <div class="text-base font-extrabold text-sky-900 bg-white/80 px-4 py-1 rounded-full shadow-sm">
+            第二幕：拆字積木特訓（${state.phonicsIdx + 1} / ${WORDS.length}）
+          </div>
+
+          <div class="card-3d w-full max-w-2xl flex-1 max-h-[370px] flex flex-col items-center justify-center p-5 gap-4">
+            <div onclick="playOnlyMp3('${item.audio}')" class="flex items-center gap-4 cursor-pointer active:scale-95 transition">
+              <span class="text-7xl">${item.emoji}</span>
+              <span class="btn-3d btn-amber px-4 py-2 text-lg">🔊 聽成個字</span>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-center gap-2.5 my-2">
+              ${tilesHtml}
+            </div>
+
+            <div class="text-base font-extrabold ${allDone ? 'text-green-600' : 'text-slate-500'}">
+              ${allDone ? '🎉 全部積木點亮晒喇！好叻呀！' : `已經點亮 ${state.phonicsClicked.size} / ${letters.length} 粒積木`}
+            </div>
+          </div>
+
+          <div class="flex items-center justify-center gap-4 w-full max-w-2xl shrink-0">
+            <button onclick="resetPhonicsTiles()" class="btn-3d btn-slate px-5 py-3 text-xl">
+              🔄 再玩一次
+            </button>
+            <button onclick="nextPhonics()" class="btn-3d btn-green flex-1 py-3 text-2xl">
+              ${state.phonicsIdx < WORDS.length - 1 ? '下一個拆字 ➡️' : '進入第三幕：開口跟讀 🎤'}
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    async function clickTile(idx, ch) {
+      const item = WORDS[state.phonicsIdx];
+      state.phonicsClicked.add(idx);
+      const allDone = state.phonicsClicked.size === item.word.length;
+      renderPhonics();
+
+      stopAllAudio();
+      const s = playSession;
+      await playMp3(`audio/en-${ch.toLowerCase()}.mp3`, s);
+      if (s !== playSession) return;
+
+      if (allDone) {
+        launchFireworks();
+        await playMp3(item.audio, s);
+      }
+    }
+
+    function resetPhonicsTiles() {
+      stopAllAudio();
+      state.phonicsClicked = new Set();
+      renderPhonics();
+    }
+
+    function nextPhonics() {
+      stopAllAudio();
+      if (state.phonicsIdx < WORDS.length - 1) {
+        state.phonicsIdx++;
+        state.phonicsClicked = new Set();
+        renderPhonics();
+      } else {
+        jumpStage(3);
+      }
+    }
+
+    /* ============================================================
+       6. 第三幕：Speaking（開口大聲讀，媽媽親手點擊過關放煙花）
+       ============================================================ */
+    function renderSpeaking() {
+      const item = SPEAKING_ITEMS[state.speakingIdx];
+      setBanner(
+        '聽完純正英文示範，請玲玲大聲跟住讀一次，讀完媽媽撳綠色掣放煙花！',
+        '而家輪到玲玲做小老師！聽完示範之後大聲讀出嚟呀！',
+        item.audio,
+        true
+      );
+
+      document.getElementById('stage-area').innerHTML = `
+        <div class="pop-in flex flex-col items-center justify-between h-full py-1 gap-3">
+          <div class="text-base font-extrabold text-sky-900 bg-white/80 px-4 py-1 rounded-full shadow-sm">
+            第三幕：開口跟讀（${state.speakingIdx + 1} / ${SPEAKING_ITEMS.length}）
+          </div>
+
+          <div onclick="playOnlyMp3('${item.audio}')" class="card-3d w-full max-w-xl flex-1 max-h-[360px] flex flex-col items-center justify-center p-5 cursor-pointer active:scale-[0.98]">
+            <span class="mb-2 px-3 py-1 rounded-full bg-sky-100 text-sky-800 font-black text-sm">${item.tag}</span>
+            <div class="text-[5.5rem] leading-none mb-3">${item.emoji}</div>
+            <div class="text-4xl sm:text-5xl font-black text-slate-800 text-center mb-3">${item.label}</div>
+            <div class="btn-3d btn-amber px-5 py-2 text-lg">🔊 再聽一次示範</div>
+          </div>
+
+          <div class="flex items-center justify-center gap-4 w-full max-w-xl shrink-0">
+            <button onclick="passSpeaking()" class="btn-3d btn-green w-full py-3.5 text-2xl">
+              🌟 玲玲讀得好叻！放煙花過關
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function passSpeaking() {
+      stopAllAudio();
+      launchFireworks();
+      if (state.speakingIdx < SPEAKING_ITEMS.length - 1) {
+        state.speakingIdx++;
+        setTimeout(() => render(), 450);
+      } else {
+        setTimeout(() => jumpStage(4), 500);
+      }
+    }
+
+    /* ============================================================
+       7. 第四幕：Gentle Review 盲聽尋寶（嚴格零劇透鐵律）
+          - 頂部橫幅及題卡嚴禁出現答案文字或中文暗示
+          - 獨立保存 currentQuizAudio，答錯提示絕不覆蓋重聽鍵
+       ============================================================ */
+    function initQuiz() {
+      state.quizList = shuffle(QUIZ_BANK);
+      state.quizIdx = 0;
+      state.quizLocked = false;
+      state.quizMistakes = [];
+      state.quizWrongCount = 0;
+    }
+
+    function buildQuizOptions(target) {
+      // 同類型優先配對干擾項，確保 3 張純圖卡無文字劇透
+      const samePool = QUIZ_BANK.filter(x => x.key !== target.key && x.type === target.type);
+      const otherPool = QUIZ_BANK.filter(x => x.key !== target.key && x.type !== target.type);
+      const distractors = [...shuffle(samePool), ...shuffle(otherPool)].slice(0, 2);
+      return shuffle([target, ...distractors]);
+    }
+
+    function renderQuiz() {
+      const target = state.quizList[state.quizIdx];
+      currentQuizAudio = target.audio;
+      const options = buildQuizOptions(target);
+      state.quizLocked = false;
+
+      // 嚴格中性零劇透指引
+      setBanner(
+        '留心聽吓英文聲音，揀出啱嘅圖卡啦！',
+        '留心聽吓英文聲音，揀出啱嘅圖卡啦！',
+        currentQuizAudio,
+        true
+      );
+
+      const cardsHtml = options.map((opt, i) => `
+        <button id="qcard-${i}" onclick="selectQuizOption(${i}, '${opt.key}')" class="quiz-card h-44 sm:h-52 p-3">
+          <div class="text-[4.8rem] sm:text-[5.5rem] leading-none select-none">${opt.emoji}</div>
+          <div id="qreveal-${i}" class="mt-2 text-2xl font-black text-green-700 hidden">${opt.answerText}</div>
+        </button>
+      `).join('');
+
+      document.getElementById('stage-area').innerHTML = `
+        <div class="pop-in flex flex-col items-center justify-between h-full py-1 gap-3">
+          <div class="flex items-center gap-3">
+            <span class="text-base font-extrabold text-sky-900 bg-white/80 px-4 py-1 rounded-full shadow-sm">
+              第四幕：盲聽尋寶（第 ${state.quizIdx + 1} / ${state.quizList.length} 題）
+            </span>
+            <button onclick="replayQuizAudio()" class="btn-3d btn-amber px-4 py-1.5 text-lg">
+              🔊 重聽英文
+            </button>
+          </div>
+
+          <div class="grid grid-cols-3 gap-4 w-full max-w-3xl my-auto">
+            ${cardsHtml}
+          </div>
+
+          <div id="quiz-feedback" class="h-10 flex items-center justify-center text-xl font-black text-sky-900">
+            👂 用耳仔留心聽，再點一張圖卡！
+          </div>
+        </div>
+      `;
+    }
+
+    function replayQuizAudio() {
+      if (currentQuizAudio) {
+        playOnlyMp3(currentQuizAudio);
+      }
+    }
+
+    async function selectQuizOption(cardIndex, pickedKey) {
+      if (state.quizLocked) return;
+      const target = state.quizList[state.quizIdx];
+      const cardEl = document.getElementById('qcard-' + cardIndex);
+      const fbEl = document.getElementById('quiz-feedback');
+
+      if (pickedKey === target.key) {
+        state.quizLocked = true;
+        cardEl.classList.add('correct');
+        // 僅於答對後揭曉英文答案作正向強化
+        const revEl = document.getElementById('qreveal-' + cardIndex);
+        if (revEl) revEl.classList.remove('hidden');
+        fbEl.textContent = `🎉 答啱喇！係 ${target.answerText}！`;
+        fbEl.className = 'h-10 flex items-center justify-center text-2xl font-black text-green-700';
+        launchFireworks();
+
+        stopAllAudio();
+        const s = playSession;
+        await playMp3(target.audio, s);
+        if (s !== playSession) return;
+
+        setTimeout(() => {
+          if (state.quizIdx < state.quizList.length - 1) {
+            state.quizIdx++;
+            renderQuiz();
+          } else {
+            state.stage = 5;
+            render();
+          }
+        }, 650);
+      } else {
+        state.quizWrongCount++;
+        if (!state.quizMistakes.includes(target.key)) {
+          state.quizMistakes.push(target.key);
+        }
+        cardEl.classList.remove('wrong');
+        void cardEl.offsetWidth;
+        cardEl.classList.add('wrong');
+        fbEl.textContent = '💡 試吓隔離嗰張圖卡啦！可以再撳「重聽英文」～';
+        fbEl.className = 'h-10 flex items-center justify-center text-xl font-black text-orange-700';
+        // 溫和提示語，絕不覆蓋 currentQuizAudio
+        playHybrid('試吓隔離嗰張圖卡啦', null);
+      }
+    }
+
+    /* ============================================================
+       8. 最終結算畫面 ＋ 自動上報雲端戰報箱
+       ============================================================ */
+    function buildReportText() {
+      const elapsedSec = Math.max(1, Math.round((Date.now() - state.startTime) / 1000));
+      const mistakeStr = state.quizMistakes.length > 0
+        ? `盲聽試錯詞彙：${state.quizMistakes.join(', ')}（共誤按 ${state.quizWrongCount} 次）`
+        : '盲聽尋寶 6/6 一次全對！';
+      return `【英文AI課堂｜Unit 8 Day 1 完成戰報】寵物字形特訓（cat, dog, rabbit, hamster ＋ I love my cat/rabbit）全部完成！${mistakeStr}｜總用時：${elapsedSec}秒。`;
+    }
+
+    function renderSummary() {
+      const reportText = buildReportText();
+      currentQuizAudio = null;
+
+      setBanner(
+        '恭喜玲玲完成 Unit 8 Day 1 寵物字形特訓！你真係好叻呀！',
+        '恭喜玲玲完成今日嘅英文課堂！你記實晒兔仔同倉鼠嘅字形，真係好叻呀！',
+        null,
+        true
+      );
+      launchFireworks();
+
+      // 全自動雲端戰報同步
+      if (!state.reportSynced && window.LinglingReport) {
+        state.reportSynced = true;
+        try {
+          window.LinglingReport.save('英文AI課堂', 'Unit 8 Day 1', reportText);
+        } catch (e) {}
+      }
+
+      document.getElementById('stage-area').innerHTML = `
+        <div class="pop-in card-3d w-full max-w-2xl mx-auto p-6 flex flex-col items-center text-center gap-3">
+          <div class="text-6xl">🏆🎉🐾</div>
+          <h1 class="text-3xl font-black text-blue-900">Unit 8 Day 1 順利過關！</h1>
+          <div class="text-base font-bold text-emerald-700 bg-emerald-50 border-2 border-emerald-300 px-4 py-1.5 rounded-full">
+            ☁️ 戰報已自動同步至家長戰報箱
+          </div>
+          <div class="w-full bg-sky-50 border-2 border-sky-200 rounded-2xl p-3 text-left text-sm font-bold text-slate-700 select-all">
+            ${reportText}
+          </div>
+          <div class="flex flex-wrap items-center justify-center gap-3 w-full mt-1">
+            <button onclick="copyReport()" id="copy-btn" class="btn-3d btn-amber px-6 py-3 text-xl">
+              📋 一鍵複製進度暗號
+            </button>
+            <button onclick="restartAll()" class="btn-3d btn-blue px-6 py-3 text-xl">
+              🔄 再玩一次
+            </button>
+            <button onclick="goHome()" class="btn-3d btn-green px-6 py-3 text-xl">
+              🏠 返回主頁
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function copyReport() {
+      const text = buildReportText();
+      const btn = document.getElementById('copy-btn');
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          btn.textContent = '✅ 已複製暗號！';
+        }).catch(() => fallbackCopy(text, btn));
+      } else {
+        fallbackCopy(text, btn);
+      }
+    }
+
+    function fallbackCopy(text, btn) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); } catch (e) {}
+      ta.remove();
+      btn.textContent = '✅ 已複製暗號！';
+    }
+
+    function restartAll() {
+      stopAllAudio();
+      state.stage = 1;
+      state.meaningIdx = 0;
+      state.phonicsIdx = 0;
+      state.phonicsClicked = new Set();
+      state.speakingIdx = 0;
+      state.reportSynced = false;
+      state.startTime = Date.now();
+      render();
+    }
+
+    function render() {
+      updateNavPills();
+      if (state.stage === 1) renderMeaning();
+      else if (state.stage === 2) renderPhonics();
+      else if (state.stage === 3) renderSpeaking();
+      else if (state.stage === 4) renderQuiz();
+      else renderSummary();
+    }
+
+    window.addEventListener('beforeunload', stopAllAudio);
+    render();
+  </script>
+</body>
+</html>
