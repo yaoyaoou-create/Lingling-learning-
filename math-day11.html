@@ -774,6 +774,17 @@
       top: 0;
     }
 
+    .skill-pill {
+      display: inline-block;
+      margin-left: 6px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: #ede9fe;
+      color: #5b21b6;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
     .summary-actions {
       display: flex;
       align-items: center;
@@ -869,13 +880,13 @@
       <!-- 結算區 -->
       <div class="summary-view hidden" id="summaryView">
         <div class="trophy-title">🌌 恭喜玲玲完成《太空站奇遇記》升級大挑戰！🏆</div>
-        <div class="sync-badge">☁️ 戰報已自動同步至家長戰報箱</div>
+        <div class="sync-badge">☁️ 戰報已自動同步至家長戰報箱與成長儀表板</div>
 
         <div class="result-table-wrap">
           <table class="result-table">
             <thead>
               <tr>
-                <th>題目</th>
+                <th>題目與微技能</th>
                 <th>狀態</th>
                 <th>耗時</th>
               </tr>
@@ -980,11 +991,16 @@
       window.speechSynthesis.onvoiceschanged = () => getCantoneseVoice();
     }
 
-    // ========= 第二期全面升級首發試水題庫（全廣東話零劇透） =========
+    // ========= 第二期全面升級首發試水題庫（對接 21 項標準微技能與儀表板 JSON） =========
+    const QUIZ_TERM = "K2-T1";
+
     const quizData = [
       {
         id: "Q1",
-        label: "倒數序列(10-6)",
+        dim: "NUM",
+        skill_id: "NUM-1",
+        level: "L1",
+        reportLabel: "順倒數(10-6)",
         tag: "🚀 火箭倒數 (10→6)",
         type: "sequence",
         isCountdown: true,
@@ -999,7 +1015,10 @@
       },
       {
         id: "Q2",
-        label: "11-20數序",
+        dim: "NUM",
+        skill_id: "NUM-3",
+        level: "L2",
+        reportLabel: "50以內數序(11-15)",
         tag: "🛸 太空艙編號 (11–15)",
         type: "sequence",
         isCountdown: false,
@@ -1014,7 +1033,10 @@
       },
       {
         id: "Q3",
-        label: "序數方位(第3個)",
+        dim: "SPA",
+        skill_id: "SPA-2",
+        level: "L1",
+        reportLabel: "序數第幾個(第3個)",
         tag: "🐾 序數排隊（第 3 隻）",
         type: "ordinal",
         lineup: ["🐰", "🐻", "🦊", "🐱", "🐼"],
@@ -1028,7 +1050,10 @@
       },
       {
         id: "Q4",
-        label: "空間方位(下面)",
+        dim: "SPA",
+        skill_id: "SPA-1",
+        level: "L1",
+        reportLabel: "上下前後左右方位(下面)",
         tag: "📦 3×3 太空櫃（下面）",
         type: "grid3x3",
         anchorIndex: 1,
@@ -1043,7 +1068,10 @@
       },
       {
         id: "Q5",
-        label: "天平輕重推理",
+        dim: "LOG",
+        skill_id: "LOG-3",
+        level: "L2",
+        reportLabel: "進階序列(天平輕重推理)",
         tag: "⚖️ 天平輕重推理",
         type: "scales",
         scales: [
@@ -1060,7 +1088,10 @@
       },
       {
         id: "Q6",
-        label: "接著數加法(5+2)",
+        dim: "ADD",
+        skill_id: "ADD-2",
+        level: "L1",
+        reportLabel: "10以內基礎加法(5+2)",
         tag: "🍬 接著數加法 (5 + 2)",
         type: "countOn",
         baseNum: 5,
@@ -1076,7 +1107,10 @@
       },
       {
         id: "Q7",
-        label: "湊數缺數(4+?=6)",
+        dim: "ADD",
+        skill_id: "ADD-4",
+        level: "L2",
+        reportLabel: "逆向填數(4+?=6)",
         tag: "🔋 能量盒湊數 (4 + ? = 6)",
         type: "missingAddend",
         targetTotal: 6,
@@ -1091,7 +1125,10 @@
       },
       {
         id: "Q8",
-        label: "動態減法(7-3)",
+        dim: "SUB",
+        skill_id: "SUB-1",
+        level: "L1",
+        reportLabel: "10以內基礎減法(7-3)",
         tag: "☄️ 太空減法 (7 - 3)",
         type: "subtraction",
         emoji: "☄️",
@@ -1340,7 +1377,10 @@
         const elapsed = Math.max(1, Math.round((Date.now() - questionStartTs) / 1000));
         results.push({
           id: q.id,
-          label: q.label,
+          dim: q.dim,
+          skill_id: q.skill_id,
+          level: q.level,
+          reportLabel: q.reportLabel,
           sec: elapsed,
           needHint: currentNeedHint
         });
@@ -1368,6 +1408,35 @@
       }
     }
 
+    function buildSkillStats() {
+      const skillMap = {};
+      results.forEach(r => {
+        if (!skillMap[r.skill_id]) {
+          skillMap[r.skill_id] = {
+            dim: r.dim,
+            skill_id: r.skill_id,
+            level: r.level,
+            total: 0,
+            correct: 0,
+            sumSec: 0
+          };
+        }
+        const entry = skillMap[r.skill_id];
+        entry.total += 1;
+        if (!r.needHint) entry.correct += 1;
+        entry.sumSec += r.sec;
+      });
+
+      return Object.values(skillMap).map(s => ({
+        dim: s.dim,
+        skill_id: s.skill_id,
+        level: s.level,
+        total: s.total,
+        correct: s.correct,
+        avg_sec: Number((s.sumSec / s.total).toFixed(1))
+      }));
+    }
+
     function showSummary() {
       stopAllSpeech();
       document.getElementById("quizView").classList.add("hidden");
@@ -1385,19 +1454,23 @@
       results.forEach(r => {
         const statusText = r.needHint ? "🌟 需提示" : "✅ 1次答對";
         const tr = document.createElement("tr");
-        tr.innerHTML = `<td>${r.id} ${r.label}</td><td>${statusText}</td><td>${r.sec} 秒</td>`;
+        tr.innerHTML = `<td>${r.id} ${r.reportLabel}<span class="skill-pill">${r.skill_id}</span></td><td>${statusText}</td><td>${r.sec} 秒</td>`;
         tbody.appendChild(tr);
 
         const codeStatus = r.needHint ? "(需提示)" : "(1次答對)";
-        reportParts.push(`${r.id} ${r.label}: ${r.sec}s${codeStatus}`);
+        reportParts.push(`${r.id} ${r.reportLabel}: ${r.sec}s${codeStatus}`);
       });
 
       generatedReportText = `【數學測驗回報】Day 11（太空站奇遇記） | ${reportParts.join(" | ")}`;
+      const skillStats = buildSkillStats();
 
       if (!hasSavedReport) {
         hasSavedReport = true;
         if (window.LinglingReport && typeof window.LinglingReport.save === "function") {
-          window.LinglingReport.save("數學探索島", "Maths Day 11（太空站奇遇記）", generatedReportText);
+          window.LinglingReport.save("數學探索島", "Maths Day 11（太空站奇遇記）", generatedReportText, {
+            term: QUIZ_TERM,
+            skill_stats: skillStats
+          });
         }
       }
 
