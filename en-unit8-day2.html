@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Unit 8 Day 2 — Tickles 口語對答大挑戰</title>
+  <link rel="stylesheet" href="theme.css?v=1" />
+  <style>
+    * {
+      box-sizing: border-box;
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100dvh;
+      font-family: "PingFang HK", "Noto Sans TC", "Microsoft JhengHei", system-ui, sans-serif;
+      background: linear-gradient(160deg, #bae6fd 0%, #e0f2fe 52%, #fef9c3 100%);
+      color: #0f172a;
+      overflow-x: hidden;
+    }
+
+    body {
+      display: block !important;
+    }
+
+    .app-shell {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 10px 14px 16px;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* 深藍頂部導航列（手機/iPad 不切字） */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+      background: linear-gradient(135deg, #1e3a8a, #1d4ed8);
+      border: 3px solid #60a5fa;
+      border-radius: 22px;
+      padding: 8px 12px;
+      box-shadow: 0 5px 0 #1e40af;
+    }
+
+    .home-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #ffffff;
+      color: #1e3a8a;
+      border: 3px solid #93c5fd;
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-size: 15px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 3px 0 #60a5fa;
+      flex-shrink: 0;
+    }
+    .home-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 1px 0 #60a5fa;
+    }
+
+    .unit-pill {
+      color: #fef08a;
+      font-size: 16px;
+      font-weight: 900;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    /* 頂部 4 幕進度地圖（支援隨按即跳） */
+    .step-dots {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding-top: 4px;
+    }
+
+    .step-dot {
+      border: 3px solid #93c5fd;
+      background: rgba(255, 255, 255, 0.18);
+      color: #e0f2fe;
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 14px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: transform 0.15s ease, background 0.15s ease;
+    }
+    .step-dot:active {
+      transform: scale(0.95);
+    }
+    .step-dot.done {
+      background: #10b981;
+      border-color: #6ee7b7;
+      color: #ffffff;
+    }
+    .step-dot.active {
+      background: #facc15;
+      border-color: #fef08a;
+      color: #713f12;
+      transform: scale(1.06);
+      box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.35);
+    }
+
+    /* Anna 老師黃色常駐橫幅 */
+    .teacher-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(135deg, #fef08a, #fde047);
+      border: 3px solid #f59e0b;
+      border-radius: 22px;
+      padding: 10px 14px;
+      box-shadow: 0 5px 0 #d97706;
+    }
+
+    .teacher-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 3px solid #f59e0b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      flex-shrink: 0;
+    }
+
+    .teacher-text {
+      flex: 1;
+      font-size: 18px;
+      font-weight: 800;
+      line-height: 1.35;
+      color: #78350f;
+    }
+
+    .replay-btn {
+      background: linear-gradient(180deg, #38bdf8, #0284c7);
+      color: #ffffff;
+      border: 3px solid #0369a1;
+      border-radius: 16px;
+      padding: 10px 14px;
+      font-size: 15px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 4px 0 #075985;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .replay-btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 #075985;
+    }
+
+    /* 主舞台（iPad 單屏不捲動） */
+    .stage-card {
+      flex: 1;
+      background: #ffffff;
+      border: 4px solid #38bdf8;
+      border-radius: 28px;
+      padding: 16px;
+      box-shadow: 0 7px 0 #0284c7;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .stage-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .stage-tag {
+      background: #e0f2fe;
+      color: #0369a1;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 15px;
+      font-weight: 900;
+    }
+
+    .sub-progress {
+      font-size: 16px;
+      font-weight: 900;
+      color: #1d4ed8;
+    }
+
+    .stage-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+    }
+
+    /* 第一幕：3D 大圖卡網格 */
+    .cards-grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      width: 100%;
+    }
+
+    .flash-card-3d {
+      background: linear-gradient(180deg, #ffffff 0%, #f0f9ff 100%);
+      border: 4px solid #38bdf8;
+      border-radius: 24px;
+      padding: 14px 10px;
+      box-shadow: 0 6px 0 #0284c7;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: transform 0.14s ease;
+    }
+    .flash-card-3d:active {
+      transform: translateY(4px);
+      box-shadow: 0 2px 0 #0284c7;
+    }
+    .flash-card-3d.yes-card {
+      background: linear-gradient(180deg, #ffffff 0%, #dcfce7 100%);
+      border-color: #22c55e;
+      box-shadow: 0 6px 0 #16a34a;
+    }
+    .flash-card-3d.no-card {
+      background: linear-gradient(180deg, #ffffff 0%, #fee2e2 100%);
+      border-color: #f87171;
+      box-shadow: 0 6px 0 #dc2626;
+    }
+    .flash-card-3d.visited {
+      outline: 4px solid #facc15;
+    }
+
+    .card-emoji {
+      font-size: 54px;
+      line-height: 1.1;
+    }
+    .card-en {
+      font-size: 24px;
+      font-weight: 900;
+      color: #0f172a;
+      text-align: center;
+    }
+    .card-tip {
+      font-size: 14px;
+      font-weight: 800;
+      color: #475569;
+      background: rgba(255, 255, 255, 0.85);
+      padding: 4px 10px;
+      border-radius: 999px;
+      text-align: center;
+    }
+
+    /* 第二幕 & 第三幕：Tickles 對話舞台 */
+    .tickles-scene {
+      width: 100%;
+      background: #f0f9ff;
+      border: 3px dashed #7dd3fc;
+      border-radius: 24px;
+      padding: 16px 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .tickles-bubble {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: #ffffff;
+      border: 3px solid #60a5fa;
+      border-radius: 20px;
+      padding: 10px 16px;
+      font-size: 22px;
+      font-weight: 900;
+      color: #1e3a8a;
+      box-shadow: 0 4px 0 #93c5fd;
+      cursor: pointer;
+    }
+
+    .pet-showcase {
+      width: 132px;
+      height: 132px;
+      border-radius: 28px;
+      background: #ffffff;
+      border: 4px solid #fbbf24;
+      box-shadow: 0 6px 0 #d97706;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 74px;
+    }
+
+    .yn-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      width: 100%;
+    }
+
+    .yn-btn {
+      min-height: 92px;
+      border-radius: 24px;
+      border: 4px solid #22c55e;
+      background: linear-gradient(180deg, #ffffff 0%, #dcfce7 100%);
+      color: #14532d;
+      font-size: 24px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 6px 0 #16a34a;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      padding: 10px;
+    }
+    .yn-btn.no-style {
+      border-color: #f87171;
+      background: linear-gradient(180deg, #ffffff 0%, #fee2e2 100%);
+      color: #7f1d1d;
+      box-shadow: 0 6px 0 #dc2626;
+    }
+    .yn-btn:active {
+      transform: translateY(4px);
+    }
+    .yn-btn.correct-flash {
+      background: #10b981;
+      border-color: #047857;
+      color: #ffffff;
+      transform: scale(1.04);
+    }
+    .yn-btn.wrong-shake {
+      animation: shake 0.36s ease;
+    }
+
+    /* 第四幕：零劇透盲聽尋寶（圖卡純圖片，無劇透字） */
+    .blind-listen-btn {
+      background: linear-gradient(180deg, #38bdf8, #0284c7);
+      color: #ffffff;
+      border: 4px solid #0369a1;
+      border-radius: 999px;
+      padding: 14px 28px;
+      font-size: 22px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 6px 0 #075985;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .blind-listen-btn:active {
+      transform: translateY(4px);
+      box-shadow: 0 2px 0 #075985;
+    }
+
+    .blind-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      width: 100%;
+    }
+
+    .blind-card {
+      min-height: 122px;
+      border-radius: 24px;
+      border: 4px solid #818cf8;
+      background: linear-gradient(180deg, #ffffff 0%, #eef2ff 100%);
+      box-shadow: 0 6px 0 #6366f1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+      padding: 10px;
+    }
+    .blind-card:active {
+      transform: translateY(4px);
+      box-shadow: 0 2px 0 #6366f1;
+    }
+    .blind-card .b-emoji {
+      font-size: 56px;
+      line-height: 1;
+    }
+    .blind-card .b-reveal {
+      font-size: 18px;
+      font-weight: 900;
+      color: #ffffff;
+      display: none;
+    }
+    .blind-card.correct-flash {
+      background: linear-gradient(180deg, #34d399, #10b981);
+      border-color: #047857;
+      box-shadow: 0 6px 0 #047857;
+    }
+    .blind-card.correct-flash .b-reveal {
+      display: block;
+    }
+    .blind-card.wrong-shake {
+      animation: shake 0.36s ease;
+      background: #fef3c7;
+      border-color: #f59e0b;
+    }
+
+    /* 底部主要操作按鈕 */
+    .stage-footer {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .primary-btn {
+      background: linear-gradient(180deg, #34d399, #059669);
+      color: #ffffff;
+      border: 3px solid #047857;
+      border-radius: 20px;
+      padding: 12px 24px;
+      font-size: 19px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 5px 0 #065f46;
+    }
+    .primary-btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 2px 0 #065f46;
+    }
+
+    .secondary-btn {
+      background: linear-gradient(180deg, #fde68a, #f59e0b);
+      color: #78350f;
+      border: 3px solid #d97706;
+      border-radius: 20px;
+      padding: 12px 20px;
+      font-size: 17px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 5px 0 #b45309;
+    }
+    .secondary-btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 2px 0 #b45309;
+    }
+
+    .gentle-msg {
+      min-height: 28px;
+      font-size: 17px;
+      font-weight: 900;
+      color: #b45309;
+      text-align: center;
+    }
+
+    /* 煙花層 */
+    .fx-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 72px;
+      opacity: 0;
+      z-index: 999;
+      transition: opacity 0.25s ease;
+    }
+    .fx-layer.show {
+      opacity: 1;
+      animation: popFx 0.7s ease;
+    }
+
+    /* 結算畫面 */
+    .victory-screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      background: #ffffff;
+      border: 4px solid #f59e0b;
+      border-radius: 28px;
+      padding: 22px 18px;
+      box-shadow: 0 8px 0 #d97706;
+      text-align: center;
+    }
+    .victory-screen.show {
+      display: flex;
+    }
+    .sync-banner {
+      background: #dcfce7;
+      border: 2px solid #22c55e;
+      color: #166534;
+      border-radius: 14px;
+      padding: 8px 14px;
+      font-size: 15px;
+      font-weight: 800;
+    }
+    .summary-box {
+      width: 100%;
+      background: #f8fafc;
+      border: 2px solid #cbd5e1;
+      border-radius: 16px;
+      padding: 12px;
+      font-size: 16px;
+      font-weight: 800;
+      color: #1e293b;
+      line-height: 1.6;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-8px); }
+      50% { transform: translateX(8px); }
+      75% { transform: translateX(-6px); }
+    }
+    @keyframes popFx {
+      0% { transform: scale(0.5); }
+      50% { transform: scale(1.25); }
+      100% { transform: scale(1); }
+    }
+
+    @media (max-width: 560px) {
+      .teacher-text { font-size: 16px; }
+      .card-en { font-size: 20px; }
+      .tickles-bubble { font-size: 18px; }
+      .yn-btn { font-size: 20px; min-height: 82px; }
+      .blind-card .b-emoji { font-size: 46px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="fx-layer" id="fxLayer">🎆🎉⭐</div>
+
+  <div class="app-shell">
+    <!-- 深藍頂部導航 -->
+    <div class="top-bar">
+      <button type="button" class="home-btn" id="btnHome">🏠 返回</button>
+      <div class="unit-pill">🐾 Unit 8 Day 2 · Tickles 對答</div>
+      <div class="step-dots" id="stepDots" aria-label="關卡快速導航"></div>
+    </div>
+
+    <!-- Anna 老師黃色橫幅 -->
+    <div class="teacher-bar" id="teacherBar">
+      <div class="teacher-avatar">👩‍🏫</div>
+      <div class="teacher-text" id="teacherText">今日同 Tickles 玩點頭 Yes、搖頭 No 口語大挑戰！</div>
+      <button type="button" class="replay-btn" id="btnReplayAudio">🔊 重聽</button>
+    </div>
+
+    <!-- 主互動區 -->
+    <div class="stage-card" id="stageCard">
+      <div class="stage-header">
+        <div class="stage-tag" id="stageTag">第一幕 · 口語示範</div>
+        <div class="sub-progress" id="subProgress">1 / 4</div>
+      </div>
+
+      <div class="stage-body" id="stageBody"></div>
+      <div class="gentle-msg" id="gentleMsg"></div>
+      <div class="stage-footer" id="stageFooter"></div>
+    </div>
+
+    <!-- 結算畫面 -->
+    <div class="victory-screen" id="victoryScreen">
+      <div style="font-size: 62px;">🏆🐾🎉</div>
+      <h2 style="margin: 0; font-size: 26px; color: #1e3a8a;">Unit 8 Day 2 大成功！</h2>
+      <div class="sync-banner">☁️ 戰報已自動同步至家長戰報箱</div>
+      <div class="summary-box" id="summaryBox"></div>
+      <div class="stage-footer">
+        <button type="button" class="primary-btn" id="btnCopyReport">📋 一鍵複製進度暗號</button>
+        <button type="button" class="secondary-btn" id="btnRestart">🔄 再玩一次</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="report-hub.js?v=2"></script>
+  <script>
+    // ==========================================
+    // 中英雙軌 (Hybrid Voice) 引擎
+    // - 中文導航：zh-HK (volume 0.68)，嚴格使用 onend 排隊
+    // - 英文教學：ElevenLabs MP3，透過 Web Audio GainNode 放大 2.2 倍
+    // ==========================================
+    window.utterancePool = [];
+    let audioCtx = null;
+    let activeAudioEl = null;
+    let activeBufferSource = null;
+    let audioToken = 0; // 防舊音頻回呼干擾
+    let currentReplayAction = null;
+
+    function getAudioCtx() {
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      if (!Ctx) return null;
+      if (!audioCtx) audioCtx = new Ctx();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      return audioCtx;
+    }
+
+    function stopAllAudio() {
+      audioToken += 1;
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+      window.utterancePool = [];
+      if (activeAudioEl) {
+        try {
+          activeAudioEl.pause();
+          activeAudioEl.currentTime = 0;
+          activeAudioEl.onended = null;
+          activeAudioEl.onerror = null;
+        } catch (e) {}
+        activeAudioEl = null;
+      }
+      if (activeBufferSource) {
+        try {
+          activeBufferSource.onended = null;
+          activeBufferSource.stop();
+        } catch (e) {}
+        activeBufferSource = null;
+      }
+    }
+
+    function playCantonese(text, onEnd) {
+      const myToken = audioToken;
+      if (!('speechSynthesis' in window) || !text) {
+        if (onEnd && myToken === audioToken) onEnd();
+        return;
+      }
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'zh-HK';
+      u.rate = 0.78;
+      u.volume = 0.68;
+      const voices = window.speechSynthesis.getVoices();
+      const hkVoice = voices.find(v => v.lang && v.lang.toLowerCase().includes('zh-hk'))
+        || voices.find(v => v.lang && v.lang.toLowerCase().includes('yue'));
+      if (hkVoice) u.voice = hkVoice;
+
+      window.utterancePool.push(u);
+      let finished = false;
+      const done = () => {
+        if (finished) return;
+        finished = true;
+        window.utterancePool = window.utterancePool.filter(x => x !== u);
+        if (onEnd && myToken === audioToken) onEnd();
+      };
+      u.onend = done;
+      u.onerror = done;
+      window.speechSynthesis.speak(u);
+    }
+
+    // 播放 ElevenLabs MP3（優先使用 Web Audio Gain 2.2x，失敗自動 fallback new Audio）
+    const decodedCache = {};
+    async function playEnglishMP3(filename, onEnd) {
+      const myToken = audioToken;
+      const url = `audio/${filename}`;
+      const ctx = getAudioCtx();
+
+      if (ctx) {
+        try {
+          let buf = decodedCache[url];
+          if (!buf) {
+            const resp = await fetch(url);
+            if (!resp.ok) throw new Error('fetch failed');
+            const arr = await resp.arrayBuffer();
+            buf = await ctx.decodeAudioData(arr);
+            decodedCache[url] = buf;
+          }
+          if (myToken !== audioToken) return;
+          const src = ctx.createBufferSource();
+          src.buffer = buf;
+          const gain = ctx.createGain();
+          gain.gain.value = 2.2;
+          src.connect(gain);
+          gain.connect(ctx.destination);
+          activeBufferSource = src;
+          src.onended = () => {
+            if (activeBufferSource === src) activeBufferSource = null;
+            if (onEnd && myToken === audioToken) onEnd();
+          };
+          src.start(0);
+          return;
+        } catch (err) {
+          // fallback below
+        }
+      }
+
+      if (myToken !== audioToken) return;
+      const audio = new Audio(url);
+      activeAudioEl = audio;
+      audio.onended = () => {
+        if (activeAudioEl === audio) activeAudioEl = null;
+        if (onEnd && myToken === audioToken) onEnd();
+      };
+      audio.onerror = () => {
+        if (activeAudioEl === audio) activeAudioEl = null;
+        if (onEnd && myToken === audioToken) onEnd();
+      };
+      audio.play().catch(() => {
+        if (onEnd && myToken === audioToken) onEnd();
+      });
+    }
+
+    // 嚴格 onend 排隊：先播廣東話指引，結束後自動播英文原聲 MP3
+    function playHybrid(zhText, enFile, onAllDone) {
+      stopAllAudio();
+      const myToken = audioToken;
+      if (zhText && enFile) {
+        playCantonese(zhText, () => {
+          if (myToken !== audioToken) return;
+          playEnglishMP3(enFile, onAllDone);
+        });
+      } else if (enFile) {
+        playEnglishMP3(enFile, onAllDone);
+      } else if (zhText) {
+        playCantonese(zhText, onAllDone);
+      }
+    }
+
+    function showFireworks() {
+      const fx = document.getElementById('fxLayer');
+      fx.classList.remove('show');
+      void fx.offsetWidth;
+      fx.classList.add('show');
+      setTimeout(() => fx.classList.remove('show'), 750);
+    }
+
+    // ==========================================
+    // 課堂 4 幕資料（100% 核對總庫 MP3 檔名）
+    // ==========================================
+    const STAGES = [
+      { id: 0, label: '1. 口語示範' },
+      { id: 1, label: '2. Tickles 陷阱' },
+      { id: 2, label: '3. 開口對答' },
+      { id: 3, label: '4. 盲聽尋寶' }
+    ];
+
+    const DEMO_CARDS = [
+      {
+        id: 'yes',
+        cls: 'yes-card',
+        emoji: '😊👍',
+        en: 'Yes, it is.',
+        tip: '點點頭：係呀！',
+        mp3: 'en-yes-it-is.mp3',
+        zh: '啱嘅時候要一邊點點頭，一邊大聲講：'
+      },
+      {
+        id: 'no',
+        cls: 'no-card',
+        emoji: '🙅‍♀️❌',
+        en: 'No, it is not.',
+        tip: '搖搖頭：唔係呀！',
+        mp3: 'en-no-it-is-not.mp3',
+        zh: '唔啱嘅時候要一邊搖搖頭，一邊大聲講：'
+      },
+      {
+        id: 'qcat',
+        cls: '',
+        emoji: '🐱❓',
+        en: 'Is this your cat?',
+        tip: '問句：呢隻係你嘅貓仔嗎？',
+        mp3: 'en-is-this-your-cat.mp3',
+        zh: '聽下 Tickles 點樣問你：'
+      },
+      {
+        id: 'qhamster',
+        cls: '',
+        emoji: '🐹❓',
+        en: 'Is this your hamster?',
+        tip: '問句：呢隻係你嘅倉鼠嗎？',
+        mp3: 'en-is-this-your-hamster.mp3',
+        zh: '再聽下 Tickles 問倉鼠：'
+      }
+    ];
+
+    // 第二幕：Tickles 指錯寵物陷阱題
+    const TRAP_QUESTIONS = [
+      {
+        petEmoji: '🐱',
+        qText: 'Is this your cat?',
+        qMp3: 'en-is-this-your-cat.mp3',
+        answer: 'yes',
+        ansMp3: 'en-yes-it-is.mp3',
+        zhIntro: '睇清楚 Tickles 拎住嘅係咪貓仔呀？聽下佢點問：'
+      },
+      {
+        petEmoji: '🐶',
+        qText: 'Is this your cat?',
+        qMp3: 'en-is-this-your-cat.mp3',
+        answer: 'no',
+        ansMp3: 'en-no-it-is-not.mp3',
+        zhIntro: '哈哈！Tickles 好似搞錯咗喎，睇真啲張圖呀！'
+      },
+      {
+        petEmoji: '🐹',
+        qText: 'Is this your hamster?',
+        qMp3: 'en-is-this-your-hamster.mp3',
+        answer: 'yes',
+        ansMp3: 'en-yes-it-is.mp3',
+        zhIntro: '今次佢拎住邊隻寵物呀？留心聽下佢點問：'
+      },
+      {
+        petEmoji: '🐰',
+        qText: 'Is this your hamster?',
+        qMp3: 'en-is-this-your-hamster.mp3',
+        answer: 'no',
+        ansMp3: 'en-no-it-is-not.mp3',
+        zhIntro: '咦？呢隻長耳仔係咪倉鼠呀？聽下 Tickles 點問：'
+      }
+    ];
+
+    // 第三幕：開口對答 Speaking（媽媽點擊過關）
+    const SPEAK_QUESTIONS = [
+      {
+        petEmoji: '🐱',
+        qText: 'Is this your cat?',
+        qMp3: 'en-is-this-your-cat.mp3',
+        targetText: '點頭講：Yes, it is.',
+        ansMp3: 'en-yes-it-is.mp3'
+      },
+      {
+        petEmoji: '🐰',
+        qText: 'Is this your cat?',
+        qMp3: 'en-is-this-your-cat.mp3',
+        targetText: '搖頭講：No, it is not.',
+        ansMp3: 'en-no-it-is-not.mp3'
+      },
+      {
+        petEmoji: '🐹',
+        qText: 'Is this your hamster?',
+        qMp3: 'en-is-this-your-hamster.mp3',
+        targetText: '點頭講：Yes, it is.',
+        ansMp3: 'en-yes-it-is.mp3'
+      },
+      {
+        petEmoji: '🐶',
+        qText: 'Is this your hamster?',
+        qMp3: 'en-is-this-your-hamster.mp3',
+        targetText: '搖頭講：No, it is not.',
+        ansMp3: 'en-no-it-is-not.mp3'
+      }
+    ];
+
+    // 第四幕：零劇透盲聽尋寶（6 題，畫面與中文指引絕不劇透答案）
+    const BLIND_QUESTIONS = [
+      {
+        mp3: 'en-yes-it-is.mp3',
+        answer: 'yes',
+        options: [
+          { val: 'yes', emoji: '😊👍', reveal: 'Yes, it is.' },
+          { val: 'no', emoji: '🙅‍♀️❌', reveal: 'No, it is not.' },
+          { val: 'cat', emoji: '🐱', reveal: 'cat' }
+        ]
+      },
+      {
+        mp3: 'en-no-it-is-not.mp3',
+        answer: 'no',
+        options: [
+          { val: 'yes', emoji: '😊👍', reveal: 'Yes, it is.' },
+          { val: 'no', emoji: '🙅‍♀️❌', reveal: 'No, it is not.' },
+          { val: 'dog', emoji: '🐶', reveal: 'dog' }
+        ]
+      },
+      {
+        mp3: 'en-is-this-your-cat.mp3',
+        answer: 'qcat',
+        options: [
+          { val: 'qcat', emoji: '🐱❓', reveal: 'Is this your cat?' },
+          { val: 'qhamster', emoji: '🐹❓', reveal: 'Is this your hamster?' },
+          { val: 'rabbit', emoji: '🐰', reveal: 'rabbit' }
+        ]
+      },
+      {
+        mp3: 'en-is-this-your-hamster.mp3',
+        answer: 'qhamster',
+        options: [
+          { val: 'qcat', emoji: '🐱❓', reveal: 'Is this your cat?' },
+          { val: 'qhamster', emoji: '🐹❓', reveal: 'Is this your hamster?' },
+          { val: 'dog', emoji: '🐶', reveal: 'dog' }
+        ]
+      },
+      {
+        mp3: 'en-hamster.mp3',
+        answer: 'hamster',
+        options: [
+          { val: 'cat', emoji: '🐱', reveal: 'cat' },
+          { val: 'hamster', emoji: '🐹', reveal: 'hamster' },
+          { val: 'rabbit', emoji: '🐰', reveal: 'rabbit' }
+        ]
+      },
+      {
+        mp3: 'en-rabbit.mp3',
+        answer: 'rabbit',
+        options: [
+          { val: 'dog', emoji: '🐶', reveal: 'dog' },
+          { val: 'hamster', emoji: '🐹', reveal: 'hamster' },
+          { val: 'rabbit', emoji: '🐰', reveal: 'rabbit' }
+        ]
+      }
+    ];
+
+    // ==========================================
+    // 狀態管理
+    // ==========================================
+    const lessonStart = Date.now();
+    let currentStage = 0;
+    let trapIdx = 0;
+    let speakIdx = 0;
+    let blindIdx = 0;
+    let isLocked = false;
+    let reportSaved = false;
+
+    const visitedDemo = new Set();
+    const stageCompleted = [false, false, false, false];
+    const blindFirstTry = BLIND_QUESTIONS.map(() => true);
+    const trapFirstTry = TRAP_QUESTIONS.map(() => true);
+
+    const stepDotsEl = document.getElementById('stepDots');
+    const teacherTextEl = document.getElementById('teacherText');
+    const stageTagEl = document.getElementById('stageTag');
+    const subProgressEl = document.getElementById('subProgress');
+    const stageBodyEl = document.getElementById('stageBody');
+    const gentleMsgEl = document.getElementById('gentleMsg');
+    const stageFooterEl = document.getElementById('stageFooter');
+    const stageCardEl = document.getElementById('stageCard');
+    const teacherBarEl = document.getElementById('teacherBar');
+    const victoryScreenEl = document.getElementById('victoryScreen');
+
+    function renderStepDots() {
+      stepDotsEl.innerHTML = '';
+      STAGES.forEach((st, idx) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'step-dot';
+        btn.textContent = st.label;
+        if (stageCompleted[idx]) btn.classList.add('done');
+        if (idx === currentStage && !victoryScreenEl.classList.contains('show')) {
+          btn.classList.add('active');
+        }
+        btn.addEventListener('click', () => jumpToStage(idx));
+        stepDotsEl.appendChild(btn);
+      });
+    }
+
+    function jumpToStage(stageIdx) {
+      stopAllAudio();
+      isLocked = false;
+      victoryScreenEl.classList.remove('show');
+      teacherBarEl.style.display = 'flex';
+      stageCardEl.style.display = 'flex';
+      currentStage = stageIdx;
+      gentleMsgEl.textContent = '';
+
+      if (stageIdx === 0) renderStage1();
+      else if (stageIdx === 1) { trapIdx = 0; renderStage2(); }
+      else if (stageIdx === 2) { speakIdx = 0; renderStage3(); }
+      else if (stageIdx === 3) { blindIdx = 0; renderStage4(); }
+      renderStepDots();
+    }
+
+    // ---------- 第一幕：口語示範 ----------
+    function renderStage1() {
+      stageTagEl.textContent = '第一幕 · 點頭 Yes / 搖頭 No';
+      subProgressEl.textContent = `已點聽 ${visitedDemo.size} / ${DEMO_CARDS.length}`;
+      teacherTextEl.textContent = '點擊下面四張魔法卡，聽下英文點樣問，仲有點樣點頭 Yes、搖頭 No！';
+      gentleMsgEl.textContent = '';
+
+      stageBodyEl.innerHTML = `<div class="cards-grid-2">` + DEMO_CARDS.map(c => `
+        <button type="button" class="flash-card-3d ${c.cls} ${visitedDemo.has(c.id) ? 'visited' : ''}" data-id="${c.id}">
+          <div class="card-emoji">${c.emoji}</div>
+          <div class="card-en">${c.en}</div>
+          <div class="card-tip">${c.tip}</div>
+        </button>
+      `).join('') + `</div>`;
+
+      stageBodyEl.querySelectorAll('.flash-card-3d').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const card = DEMO_CARDS.find(c => c.id === btn.dataset.id);
+          visitedDemo.add(card.id);
+          btn.classList.add('visited');
+          subProgressEl.textContent = `已點聽 ${visitedDemo.size} / ${DEMO_CARDS.length}`;
+          if (visitedDemo.size >= DEMO_CARDS.length) {
+            stageCompleted[0] = true;
+            renderStepDots();
+          }
+          currentReplayAction = () => playHybrid(card.zh, card.mp3);
+          currentReplayAction();
+        });
+      });
+
+      stageFooterEl.innerHTML = `<button type="button" class="primary-btn" id="btnToStage2">➡️ 下一幕：Tickles 陷阱題</button>`;
+      document.getElementById('btnToStage2').addEventListener('click', () => {
+        stageCompleted[0] = true;
+        jumpToStage(1);
+      });
+
+      currentReplayAction = () => playHybrid('今日同 Tickles 學點頭 Yes 同搖頭 No，逐張撳下下面啲卡聽一聽啦！', null);
+      currentReplayAction();
+    }
+
+    // ---------- 第二幕：Tickles 指錯寵物陷阱題 ----------
+    function renderStage2() {
+      const q = TRAP_QUESTIONS[trapIdx];
+      isLocked = false;
+      stageTagEl.textContent = '第二幕 · Tickles 陷阱題';
+      subProgressEl.textContent = `第 ${trapIdx + 1} / ${TRAP_QUESTIONS.length} 題`;
+      teacherTextEl.textContent = '睇清楚 Tickles 拎住邊隻寵物，再揀點頭 Yes 定搖頭 No！';
+      gentleMsgEl.textContent = '';
+
+      stageBodyEl.innerHTML = `
+        <div class="tickles-scene">
+          <button type="button" class="tickles-bubble" id="btnTicklesAsk">🐶 Tickles: "${q.qText}" 🔊</button>
+          <div class="pet-showcase">${q.petEmoji}</div>
+        </div>
+        <div class="yn-grid">
+          <button type="button" class="yn-btn" data-ans="yes">
+            <span>😊👍</span>
+            <span>Yes, it is.</span>
+          </button>
+          <button type="button" class="yn-btn no-style" data-ans="no">
+            <span>🙅‍♀️❌</span>
+            <span>No, it is not.</span>
+          </button>
+        </div>
+      `;
+
+      document.getElementById('btnTicklesAsk').addEventListener('click', () => {
+        stopAllAudio();
+        playEnglishMP3(q.qMp3);
+      });
+
+      stageBodyEl.querySelectorAll('.yn-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (isLocked) return;
+          const val = btn.dataset.ans;
+          if (val === q.answer) {
+            isLocked = true;
+            btn.classList.add('correct-flash');
+            showFireworks();
+            gentleMsgEl.textContent = '🌟 好犀利！睇得好準呀！';
+            playHybrid('答啱喇！跟住讀一次：', q.ansMp3, () => {
+              setTimeout(() => {
+                if (currentStage !== 1) return;
+                if (trapIdx + 1 < TRAP_QUESTIONS.length) {
+                  trapIdx += 1;
+                  renderStage2();
+                } else {
+                  stageCompleted[1] = true;
+                  jumpToStage(2);
+                }
+              }, 450);
+            });
+          } else {
+            trapFirstTry[trapIdx] = false;
+            btn.classList.remove('wrong-shake');
+            void btn.offsetWidth;
+            btn.classList.add('wrong-shake');
+            gentleMsgEl.textContent = '💡 試吓望真啲 Tickles 拎住嘅寵物，再揀隔離嗰個制啦！';
+            playHybrid('唔緊要呀，試吓望真啲張圖，再撳隔離嗰個制啦！', null);
+          }
+        });
+      });
+
+      stageFooterEl.innerHTML = '';
+      currentReplayAction = () => playHybrid(q.zhIntro, q.qMp3);
+      currentReplayAction();
+    }
+
+    // ---------- 第三幕：開口對答 Speaking ----------
+    function renderStage3() {
+      const q = SPEAK_QUESTIONS[speakIdx];
+      stageTagEl.textContent = '第三幕 · 開口對答 Speaking';
+      subProgressEl.textContent = `第 ${speakIdx + 1} / ${SPEAK_QUESTIONS.length} 題`;
+      teacherTextEl.textContent = '聽完問題後，一邊做點頭或搖頭動作，一邊大聲講出英文答案！';
+      gentleMsgEl.textContent = '';
+
+      stageBodyEl.innerHTML = `
+        <div class="tickles-scene">
+          <button type="button" class="tickles-bubble" id="btnSpeakQ">🔊 聽問題：${q.qText}</button>
+          <div class="pet-showcase">${q.petEmoji}</div>
+          <div style="font-size: 20px; font-weight: 900; color: #0369a1;">💡 ${q.targetText}</div>
+        </div>
+      `;
+
+      document.getElementById('btnSpeakQ').addEventListener('click', () => {
+        stopAllAudio();
+        playEnglishMP3(q.qMp3);
+      });
+
+      stageFooterEl.innerHTML = `
+        <button type="button" class="secondary-btn" id="btnHearAns">🔊 聽答案示範</button>
+        <button type="button" class="primary-btn" id="btnMomPass">🌟 玲玲講得好叻！過關</button>
+      `;
+
+      document.getElementById('btnHearAns').addEventListener('click', () => {
+        stopAllAudio();
+        playEnglishMP3(q.ansMp3);
+      });
+
+      document.getElementById('btnMomPass').addEventListener('click', () => {
+        showFireworks();
+        stopAllAudio();
+        playCantonese('好大聲好標準！', () => {
+          if (currentStage !== 2) return;
+          if (speakIdx + 1 < SPEAK_QUESTIONS.length) {
+            speakIdx += 1;
+            renderStage3();
+          } else {
+            stageCompleted[2] = true;
+            jumpToStage(3);
+          }
+        });
+      });
+
+      currentReplayAction = () => playHybrid('聽下 Tickles 問咩，然後大聲答佢啦：', q.qMp3);
+      currentReplayAction();
+    }
+
+    // ---------- 第四幕：零劇透盲聽尋寶 ----------
+    function renderStage4() {
+      const q = BLIND_QUESTIONS[blindIdx];
+      isLocked = false;
+      stageTagEl.textContent = '第四幕 · 盲聽尋寶';
+      subProgressEl.textContent = `第 ${blindIdx + 1} / ${BLIND_QUESTIONS.length} 題`;
+      // 嚴格零劇透中性指引
+      teacherTextEl.textContent = '留心聽下英文聲音，揀出啱嘅圖卡啦！';
+      gentleMsgEl.textContent = '';
+
+      stageBodyEl.innerHTML = `
+        <button type="button" class="blind-listen-btn" id="btnBlindListen">🔊 再聽一次英文</button>
+        <div class="blind-grid">
+          ${q.options.map(opt => `
+            <button type="button" class="blind-card" data-val="${opt.val}">
+              <div class="b-emoji">${opt.emoji}</div>
+              <div class="b-reveal">${opt.reveal}</div>
+            </button>
+          `).join('')}
+        </div>
+      `;
+
+      // 重聽鍵獨立保存當前題目原音，不被答錯提示覆蓋
+      const playCurrentTarget = () => {
+        stopAllAudio();
+        playEnglishMP3(q.mp3);
+      };
+
+      document.getElementById('btnBlindListen').addEventListener('click', playCurrentTarget);
+      currentReplayAction = playCurrentTarget;
+
+      stageBodyEl.querySelectorAll('.blind-card').forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (isLocked) return;
+          if (btn.dataset.val === q.answer) {
+            isLocked = true;
+            btn.classList.add('correct-flash');
+            showFireworks();
+            gentleMsgEl.textContent = '🌟 答啱喇！耳仔好靈呀！';
+            playHybrid('答啱喇！', q.mp3, () => {
+              setTimeout(() => {
+                if (currentStage !== 3) return;
+                if (blindIdx + 1 < BLIND_QUESTIONS.length) {
+                  blindIdx += 1;
+                  renderStage4();
+                } else {
+                  stageCompleted[3] = true;
+                  showVictory();
+                }
+              }, 450);
+            });
+          } else {
+            blindFirstTry[blindIdx] = false;
+            btn.classList.remove('wrong-shake');
+            void btn.offsetWidth;
+            btn.classList.add('wrong-shake');
+            gentleMsgEl.textContent = '💡 試吓隔離嗰張圖卡啦！';
+            playCantonese('試吓隔離嗰張圖卡啦！');
+          }
+        });
+      });
+
+      stageFooterEl.innerHTML = '';
+      playHybrid('留心聽下英文聲音，揀出啱嘅圖卡啦！', q.mp3);
+    }
+
+    // ---------- 結算畫面與自動戰報同步 ----------
+    function showVictory() {
+      stopAllAudio();
+      teacherBarEl.style.display = 'none';
+      stageCardEl.style.display = 'none';
+      victoryScreenEl.classList.add('show');
+      renderStepDots();
+
+      const totalSec = Math.max(1, Math.round((Date.now() - lessonStart) / 1000));
+      const trapScore = trapFirstTry.filter(Boolean).length;
+      const blindScore = blindFirstTry.filter(Boolean).length;
+
+      const reportText = `【英文AI課堂｜Unit 8 Day 2 完成戰報】Tickles 口語對答（Is this your cat/hamster? ＋ Yes, it is. / No, it is not.）全部完成！陷阱題 ${trapScore}/${TRAP_QUESTIONS.length} 一次答對｜盲聽尋寶 ${blindScore}/${BLIND_QUESTIONS.length} 一次答對！｜總用時：${totalSec}秒。`;
+      window.__latestReportText = reportText;
+
+      document.getElementById('summaryBox').innerHTML = `
+        🎯 Tickles 陷阱題：${trapScore} / ${TRAP_QUESTIONS.length} 一次答對<br/>
+        🎧 盲聽尋寶：${blindScore} / ${BLIND_QUESTIONS.length} 一次答對<br/>
+        ⏱️ 總用時：${totalSec} 秒
+      `;
+
+      if (!reportSaved && window.LinglingReport) {
+        reportSaved = true;
+        window.LinglingReport.save('英文AI課堂', 'Unit 8 Day 2', reportText);
+      }
+
+      showFireworks();
+      playCantonese('太叻喇！玲玲完成咗 Unit 8 Day 2 口語對答大挑戰！');
+    }
+
+    // 頂部與結算按鈕綁定
+    document.getElementById('btnReplayAudio').addEventListener('click', () => {
+      if (currentReplayAction) currentReplayAction();
+    });
+
+    document.getElementById('btnHome').addEventListener('click', () => {
+      stopAllAudio();
+      window.location.href = 'en-unit8.html?v=1';
+    });
+
+    document.getElementById('btnCopyReport').addEventListener('click', () => {
+      const text = window.__latestReportText || '';
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          document.getElementById('btnCopyReport').textContent = '✅ 已複製暗號！';
+        }).catch(() => fallbackCopy(text));
+      } else {
+        fallbackCopy(text);
+      }
+    });
+
+    function fallbackCopy(text) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      document.getElementById('btnCopyReport').textContent = '✅ 已複製暗號！';
+    }
+
+    document.getElementById('btnRestart').addEventListener('click', () => {
+      reportSaved = false;
+      visitedDemo.clear();
+      for (let i = 0; i < 4; i++) stageCompleted[i] = false;
+      for (let i = 0; i < trapFirstTry.length; i++) trapFirstTry[i] = true;
+      for (let i = 0; i < blindFirstTry.length; i++) blindFirstTry[i] = true;
+      document.getElementById('btnCopyReport').textContent = '📋 一鍵複製進度暗號';
+      jumpToStage(0);
+    });
+
+    // 啟動第 1 幕
+    renderStepDots();
+    renderStage1();
+  </script>
+</body>
+</html>
