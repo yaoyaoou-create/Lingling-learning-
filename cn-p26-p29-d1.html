@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>中文 P.26-29 Day 1 — 聖誕生字拆字魔法</title>
+  <link rel="stylesheet" href="theme.css?v=1" />
+  <style>
+    * {
+      box-sizing: border-box;
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100dvh;
+      font-family: "PingFang HK", "Noto Sans TC", "Microsoft JhengHei", system-ui, sans-serif;
+      background: linear-gradient(160deg, #fecaca 0%, #fef3c7 50%, #dcfce7 100%);
+      color: #450a0a;
+      overflow-x: hidden;
+    }
+
+    body {
+      display: block !important;
+    }
+
+    .app-shell {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 10px 14px 16px;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* 頂部聖誕紅導航列（手機/iPad 不切字） */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+      background: linear-gradient(135deg, #b91c1c, #dc2626);
+      border: 3px solid #fca5a5;
+      border-radius: 22px;
+      padding: 8px 12px;
+      box-shadow: 0 5px 0 #991b1b;
+    }
+
+    .home-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #ffffff;
+      color: #991b1b;
+      border: 3px solid #fca5a5;
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-size: 15px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 3px 0 #f87171;
+      flex-shrink: 0;
+    }
+    .home-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 1px 0 #f87171;
+    }
+
+    .unit-pill {
+      color: #fef08a;
+      font-size: 16px;
+      font-weight: 900;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    /* 4 幕可點擊隨按即跳進度列 */
+    .step-dots {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding-top: 4px;
+    }
+
+    .step-dot {
+      border: 2px solid #fecaca;
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff1f2;
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 14px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: transform 0.14s ease, background 0.14s ease;
+    }
+    .step-dot:active {
+      transform: scale(0.95);
+    }
+    .step-dot.done {
+      background: #16a34a;
+      border-color: #86efac;
+      color: #ffffff;
+    }
+    .step-dot.active {
+      background: #facc15;
+      border-color: #fef08a;
+      color: #713f12;
+      transform: scale(1.06);
+      box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.4);
+    }
+
+    /* Anna 老師黃色常駐橫幅 */
+    .teacher-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(135deg, #fef08a, #fde047);
+      border: 3px solid #f59e0b;
+      border-radius: 22px;
+      padding: 10px 14px;
+      box-shadow: 0 5px 0 #d97706;
+    }
+
+    .teacher-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 3px solid #f59e0b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      flex-shrink: 0;
+    }
+
+    .teacher-text {
+      flex: 1;
+      font-size: 18px;
+      font-weight: 900;
+      line-height: 1.35;
+      color: #78350f;
+    }
+
+    .replay-btn {
+      background: linear-gradient(180deg, #38bdf8, #0284c7);
+      color: #ffffff;
+      border: 3px solid #0369a1;
+      border-radius: 16px;
+      padding: 10px 14px;
+      font-size: 15px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 4px 0 #075985;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .replay-btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 #075985;
+    }
+
+    /* 主舞台（iPad 單屏） */
+    .stage-card {
+      flex: 1;
+      background: #ffffff;
+      border: 4px solid #f87171;
+      border-radius: 28px;
+      padding: 16px;
+      box-shadow: 0 7px 0 #dc2626;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .stage-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .stage-tag {
+      background: #fee2e2;
+      color: #991b1b;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 15px;
+      font-weight: 900;
+    }
+
+    .sub-progress {
+      font-size: 16px;
+      font-weight: 900;
+      color: #b91c1c;
+    }
+
+    .stage-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+    }
+
+    /* 第一幕 & 第三幕：零劇透聽音選字大卡 */
+    .quiz-grid-4 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      width: 100%;
+    }
+
+    .quiz-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      width: 100%;
+    }
+
+    .char-choice-btn {
+      min-height: 112px;
+      border-radius: 24px;
+      border: 4px solid #38bdf8;
+      background: linear-gradient(180deg, #ffffff 0%, #f0f9ff 100%);
+      color: #0f172a;
+      font-size: 46px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 6px 0 #0284c7;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      padding: 10px;
+      transition: transform 0.14s ease;
+    }
+    .char-choice-btn.word-size {
+      font-size: 32px;
+    }
+    .char-choice-btn:active {
+      transform: translateY(4px);
+      box-shadow: 0 2px 0 #0284c7;
+    }
+    .char-choice-btn.correct-flash {
+      background: linear-gradient(180deg, #34d399, #10b981);
+      border-color: #047857;
+      color: #ffffff;
+      box-shadow: 0 6px 0 #047857;
+      transform: scale(1.04);
+    }
+    .char-choice-btn.wrong-shake {
+      animation: shake 0.36s ease;
+      background: #fef3c7;
+      border-color: #f59e0b;
+    }
+
+    /* 第二幕：視覺拆字魔法舞台（專攻 7 個生字） */
+    .word-group-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+
+    .whole-word-btn {
+      background: linear-gradient(180deg, #fef08a, #facc15);
+      color: #713f12;
+      border: 3px solid #d97706;
+      border-radius: 999px;
+      padding: 8px 20px;
+      font-size: 22px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 4px 0 #b45309;
+    }
+    .whole-word-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 1px 0 #b45309;
+    }
+
+    .char-tiles-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+
+    .magic-char-tile {
+      width: 112px;
+      height: 118px;
+      border-radius: 24px;
+      border: 4px solid #f59e0b;
+      background: linear-gradient(180deg, #ffffff 0%, #fffbeb 100%);
+      box-shadow: 0 6px 0 #d97706;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      cursor: pointer;
+      transition: transform 0.14s ease;
+    }
+    .magic-char-tile.familiar-tile {
+      border-color: #22c55e;
+      background: linear-gradient(180deg, #ffffff 0%, #f0fdf4 100%);
+      box-shadow: 0 6px 0 #16a34a;
+    }
+    .magic-char-tile.selected {
+      transform: scale(1.08);
+      border-color: #dc2626;
+      background: linear-gradient(180deg, #fef2f2 0%, #fee2e2 100%);
+      box-shadow: 0 6px 0 #b91c1c;
+    }
+    .magic-char-tile.visited::after {
+      content: "✅";
+      font-size: 14px;
+    }
+    .magic-char-big {
+      font-size: 56px;
+      font-weight: 900;
+      line-height: 1.05;
+      color: #0f172a;
+    }
+    .magic-char-badge {
+      font-size: 12px;
+      font-weight: 900;
+      color: #b45309;
+    }
+
+    .decompose-panel {
+      width: 100%;
+      background: linear-gradient(180deg, #fffbeb 0%, #fef3c7 100%);
+      border: 3px dashed #f59e0b;
+      border-radius: 24px;
+      padding: 14px 16px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .parts-formula {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      font-size: 24px;
+      font-weight: 900;
+    }
+
+    .part-chip {
+      background: #ffffff;
+      border: 3px solid #fb923c;
+      border-radius: 14px;
+      padding: 4px 12px;
+      color: #c2410c;
+    }
+    .part-chip.known {
+      background: #dcfce7;
+      border-color: #22c55e;
+      color: #166534;
+    }
+
+    .mnemonic-text {
+      font-size: 19px;
+      font-weight: 900;
+      color: #78350f;
+      line-height: 1.4;
+    }
+
+    /* 第四幕：零提示紅圈自讀字牆（靜音圈字） */
+    .wall-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      width: 100%;
+    }
+
+    .wall-tile {
+      position: relative;
+      height: 92px;
+      border-radius: 20px;
+      border: 3px solid #cbd5e1;
+      background: #ffffff;
+      box-shadow: 0 5px 0 #94a3b8;
+      font-size: 44px;
+      font-weight: 900;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .wall-tile:active {
+      transform: translateY(3px);
+    }
+    .wall-tile.circled {
+      border-color: #ef4444;
+      background: #fef2f2;
+      box-shadow: 0 5px 0 #dc2626;
+    }
+    .wall-tile.circled::after {
+      content: "";
+      position: absolute;
+      inset: 6px;
+      border: 6px solid #ef4444;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .gentle-msg {
+      min-height: 28px;
+      font-size: 17px;
+      font-weight: 900;
+      color: #b45309;
+      text-align: center;
+    }
+
+    .stage-footer {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .primary-btn {
+      background: linear-gradient(180deg, #34d399, #059669);
+      color: #ffffff;
+      border: 3px solid #047857;
+      border-radius: 20px;
+      padding: 12px 24px;
+      font-size: 19px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 5px 0 #065f46;
+    }
+    .primary-btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 2px 0 #065f46;
+    }
+
+    .secondary-btn {
+      background: linear-gradient(180deg, #fde68a, #f59e0b);
+      color: #78350f;
+      border: 3px solid #d97706;
+      border-radius: 20px;
+      padding: 12px 20px;
+      font-size: 17px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 5px 0 #b45309;
+    }
+    .secondary-btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 2px 0 #b45309;
+    }
+
+    .fx-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 74px;
+      opacity: 0;
+      z-index: 999;
+      transition: opacity 0.25s ease;
+    }
+    .fx-layer.show {
+      opacity: 1;
+      animation: popFx 0.7s ease;
+    }
+
+    /* 結算畫面 */
+    .victory-screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      background: #ffffff;
+      border: 4px solid #f59e0b;
+      border-radius: 28px;
+      padding: 22px 18px;
+      box-shadow: 0 8px 0 #d97706;
+      text-align: center;
+    }
+    .victory-screen.show {
+      display: flex;
+    }
+    .sync-banner {
+      background: #dcfce7;
+      border: 2px solid #22c55e;
+      color: #166534;
+      border-radius: 14px;
+      padding: 8px 14px;
+      font-size: 15px;
+      font-weight: 800;
+    }
+    .summary-box {
+      width: 100%;
+      background: #f8fafc;
+      border: 2px solid #cbd5e1;
+      border-radius: 16px;
+      padding: 12px;
+      font-size: 16px;
+      font-weight: 800;
+      color: #1e293b;
+      line-height: 1.65;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-8px); }
+      50% { transform: translateX(8px); }
+      75% { transform: translateX(-6px); }
+    }
+    @keyframes popFx {
+      0% { transform: scale(0.5); }
+      50% { transform: scale(1.25); }
+      100% { transform: scale(1); }
+    }
+
+    @media (max-width: 560px) {
+      .teacher-text { font-size: 16px; }
+      .char-choice-btn { font-size: 36px; min-height: 94px; }
+      .char-choice-btn.word-size { font-size: 24px; }
+      .magic-char-tile { width: 92px; height: 100px; }
+      .magic-char-big { font-size: 46px; }
+      .wall-tile { height: 76px; font-size: 36px; }
+      .mnemonic-text { font-size: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="fx-layer" id="fxLayer">🎄🎁⭐</div>
+
+  <div class="app-shell">
+    <div class="top-bar">
+      <button type="button" class="home-btn" id="btnHome">🏠 返回</button>
+      <div class="unit-pill">🎄 P.26-29 Day 1 · 聖誕生字魔法</div>
+      <div class="step-dots" id="stepDots" aria-label="關卡快速導航"></div>
+    </div>
+
+    <div class="teacher-bar" id="teacherBar">
+      <div class="teacher-avatar">👩‍🏫</div>
+      <div class="teacher-text" id="teacherText">今日開新單元《聖誕節》！一齊用拆字魔法認識新字！</div>
+      <button type="button" class="replay-btn" id="btnReplay">🔊 重聽</button>
+    </div>
+
+    <div class="stage-card" id="stageCard">
+      <div class="stage-header">
+        <div class="stage-tag" id="stageTag">第一關 · 熟字熱身</div>
+        <div class="sub-progress" id="subProgress">1 / 4</div>
+      </div>
+
+      <div class="stage-body" id="stageBody"></div>
+      <div class="gentle-msg" id="gentleMsg"></div>
+      <div class="stage-footer" id="stageFooter"></div>
+    </div>
+
+    <div class="victory-screen" id="victoryScreen">
+      <div style="font-size: 62px;">🏆🎄🎁</div>
+      <h2 style="margin: 0; font-size: 25px; color: #991b1b;">聖誕節 Day 1 大成功！</h2>
+      <div class="sync-banner">☁️ 戰報已自動同步至家長戰報箱</div>
+      <div class="summary-box" id="summaryBox"></div>
+      <div class="stage-footer">
+        <button type="button" class="primary-btn" id="btnCopyReport">📋 一鍵複製進度暗號</button>
+        <button type="button" class="secondary-btn" id="btnRestart">🔄 再玩一次</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="report-hub.js?v=2"></script>
+  <script>
+    // ==========================================
+    // iPad Safari 防護：安全廣東話語音引擎（單一合併語音防搶聲）
+    // ==========================================
+    window.utterancePool = [];
+    let speakTimer = null;
+    let nextTimer = null;
+    let currentQuestionSpeech = '';
+
+    function stopAllAudio() {
+      if (speakTimer) { clearTimeout(speakTimer); speakTimer = null; }
+      if (nextTimer) { clearTimeout(nextTimer); nextTimer = null; }
+      if ('speechSynthesis' in window) {
+        try { window.speechSynthesis.cancel(); } catch (e) {}
+      }
+      window.utterancePool = [];
+    }
+
+    function speakHK(text, rate = 0.78, onEnd) {
+      if (speakTimer) { clearTimeout(speakTimer); speakTimer = null; }
+      if (!('speechSynthesis' in window) || !text) {
+        if (onEnd) onEnd();
+        return;
+      }
+      try { window.speechSynthesis.cancel(); } catch (e) {}
+      window.utterancePool = [];
+
+      speakTimer = setTimeout(() => {
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = 'zh-HK';
+        u.rate = rate;
+        u.pitch = 1.05;
+        const voices = window.speechSynthesis.getVoices();
+        const hkVoice =
+          voices.find(v => v.lang && v.lang.toLowerCase().includes('zh-hk')) ||
+          voices.find(v => v.lang && v.lang.toLowerCase().includes('yue'));
+        if (hkVoice) u.voice = hkVoice;
+
+        window.utterancePool.push(u);
+        u.onend = () => {
+          window.utterancePool = window.utterancePool.filter(x => x !== u);
+          if (onEnd) onEnd();
+        };
+        u.onerror = () => {
+          window.utterancePool = window.utterancePool.filter(x => x !== u);
+          if (onEnd) onEnd();
+        };
+        window.speechSynthesis.speak(u);
+      }, 50);
+    }
+
+    function showFx() {
+      const fx = document.getElementById('fxLayer');
+      fx.classList.remove('show');
+      void fx.offsetWidth;
+      fx.classList.add('show');
+      setTimeout(() => fx.classList.remove('show'), 700);
+    }
+
+    // ==========================================
+    // 課堂 4 幕資料（專攻 P.26 7個生字：主、耶、穌、聖、誕、節、禮）
+    // ==========================================
+    const STAGES = [
+      { id: 0, label: '1. 熟字熱身' },
+      { id: 1, label: '2. 拆字魔法' },
+      { id: 2, label: '3. 聽音辨字' },
+      { id: 3, label: '4. 紅圈自讀' }
+    ];
+
+    // 第一幕：先重溫 4 個「幫手熟字」（耳、口、豆、物），全部係今日拆字嘅鑰匙！
+    const WARMUP_QUESTIONS = [
+      { answer: '耳', voice: '第一關熟字熱身！請玲玲搵出：耳朵嘅耳字！', options: ['耳', '口', '豆', '物'] },
+      { answer: '口', voice: '好叻！下一個，請玲玲搵出：嘴巴嘅口字！', options: ['豆', '物', '口', '耳'] },
+      { answer: '豆', voice: '再搵一個，請玲玲搵出：豆豆嘅豆字！', options: ['物', '耳', '豆', '口'] },
+      { answer: '物', voice: '最後一個熟字幫手！請玲玲搵出：食物嘅物字！', options: ['口', '物', '耳', '豆'] }
+    ];
+
+    // 第二幕：3 組核心詞語，逐隻拆解 7 個全新生字
+    const WORD_GROUPS = [
+      {
+        word: '主耶穌',
+        emoji: '✝️✨',
+        wholeVoice: '呢個詞語讀做：主耶穌！快啲逐隻字撳開睇拆字魔法啦！',
+        chars: [
+          {
+            ch: '主', isNew: true,
+            parts: [{ text: '丶 小光環', known: false }, { text: '王 國王', known: false }],
+            mnemonic: '下面係個「王」字，頭頂加一點光環，就係天上嘅「主」！',
+            voice: '主！主耶穌嘅主。下面係國王嘅王字，頭頂加一點小光環，就係主字！'
+          },
+          {
+            ch: '耶', isNew: true,
+            parts: [{ text: '耳 熟字耳朵', known: true }, { text: '阝 大耳朵旁', known: false }],
+            mnemonic: '左邊係玲玲識得嘅「耳」字，右邊都有隻耳仔旁，細心聽主講嘢就係「耶」！',
+            voice: '耶！主耶穌嘅耶。左邊有玲玲識得嘅耳朵嘅耳字，右邊都有隻耳仔旁，合埋就係耶！'
+          },
+          {
+            ch: '穌', isNew: true,
+            parts: [{ text: '魚 小魚', known: false }, { text: '禾 種米禾苗', known: false }],
+            mnemonic: '左邊一條「魚」，右邊種米嘅「禾」，有魚又有米，好開心就係「穌」！',
+            voice: '穌！主耶穌嘅穌。左邊係一條小魚，右邊係種米嘅禾苗，合埋就係穌！'
+          }
+        ]
+      },
+      {
+        word: '聖誕節',
+        emoji: '🎄🌟',
+        wholeVoice: '第二組詞語讀做：聖誕節！逐隻字撳開睇拆字魔法啦！',
+        chars: [
+          {
+            ch: '聖', isNew: true,
+            parts: [{ text: '耳 熟字', known: true }, { text: '口 熟字', known: true }, { text: '王 國王', known: false }],
+            mnemonic: '上面有熟字「耳」同「口」（用耳聽、用口讚美），下面企住個「王」，就係「聖」！',
+            voice: '聖！聖誕節嘅聖。上面左邊係耳字，右邊係口字，下面企住個王字，合埋就係聖！'
+          },
+          {
+            ch: '誕', isNew: true,
+            parts: [{ text: '言 講說話', known: false }, { text: '延 慶祝行路', known: false }],
+            mnemonic: '左邊「言」字旁講好消息，右邊行出嚟慶祝降生，就係「誕」！',
+            voice: '誕！聖誕節嘅誕。左邊係言字旁講好消息，右邊行出嚟慶祝，合埋就係誕！'
+          },
+          {
+            ch: '節', isNew: true,
+            parts: [{ text: '⺮ 兩棵竹裝飾', known: false }, { text: '即 慶祝', known: false }],
+            mnemonic: '頭頂掛起兩棵「竹」字頭聖誕裝飾，開開心心過「節」！',
+            voice: '節！聖誕節嘅節。上面頭頂掛住兩棵竹字頭聖誕裝飾，呢個就係節字！'
+          }
+        ]
+      },
+      {
+        word: '禮物',
+        emoji: '🎁🎀',
+        wholeVoice: '第三組詞語讀做：禮物！入面個物字你一早識㗎喇，快啲睇下新字禮！',
+        chars: [
+          {
+            ch: '禮', isNew: true,
+            parts: [{ text: '礻 擺禮物小枱', known: false }, { text: '曲 靚靚碟', known: false }, { text: '豆 熟字豆豆', known: true }],
+            mnemonic: '左邊小枱「礻」，右邊下面藏住熟字「豆」！用靚碟裝住豆豆送俾人就係「禮」！',
+            voice: '禮！禮物嘅禮。左邊係小枱，右邊下面藏住玲玲識得嘅豆豆嘅豆字，送俾人嘅就係禮！'
+          },
+          {
+            ch: '物', isNew: false,
+            parts: [{ text: '物 熟字老朋友', known: true }],
+            mnemonic: '老朋友重逢！之前學「食物」已經識得嘅「物」字，合埋就係「禮物」！',
+            voice: '物！老朋友物字，之前食物嘅物你已經好熟喇，加埋前面個禮字就係禮物！'
+          }
+        ]
+      }
+    ];
+
+    // 第三幕：零劇透聽音辨字／辨詞（6 題：3 個新詞 + 3 個重點新單字）
+    const BLIND_QUESTIONS = [
+      { answer: '主耶穌', isWord: true, voice: '留心聽清楚！請玲玲搵出：主耶穌！', options: ['主耶穌', '聖誕節', '禮物'] },
+      { answer: '聖誕節', isWord: true, voice: '下一題！請玲玲搵出：聖誕節！', options: ['禮物', '主耶穌', '聖誕節'] },
+      { answer: '禮物', isWord: true, voice: '再聽清楚！請玲玲搵出：禮物！', options: ['食物', '禮物', '蜜糖'] },
+      { answer: '主', isWord: false, voice: '考考你認單字！請玲玲搵出頭頂有小光環嘅：主字！', options: ['主', '耳', '豆'] },
+      { answer: '聖', isWord: false, voice: '請玲玲搵出上面有耳同口嘅：聖字！', options: ['誕', '聖', '口'] },
+      { answer: '禮', isWord: false, voice: '最後一題！請玲玲搵出下面藏住豆豆嘅：禮字！', options: ['物', '節', '禮'] }
+    ];
+
+    // 第四幕：零提示紅圈自讀字牆（7 個生字 + 5 個熟字）
+    const WALL_CHARS = ['主', '耶', '穌', '聖', '誕', '節', '禮', '物', '耳', '口', '豆', '我'];
+
+    // ==========================================
+    // 狀態管理
+    // ==========================================
+    let currentStage = 0;
+    let warmupIdx = 0;
+    let groupIdx = 0;
+    let blindIdx = 0;
+    let isLocked = false;
+    let reportSaved = false;
+
+    const stageStartTimes = [Date.now(), 0, 0, 0];
+    const stageDurations = [0, 0, 0, 0];
+    const stageCompleted = [false, false, false, false];
+    let warmupFirstTryAll = true;
+    let blindFirstTryAll = true;
+    const visitedMagicChars = new Set();
+    const circledChars = new Set();
+
+    const stepDotsEl = document.getElementById('stepDots');
+    const teacherTextEl = document.getElementById('teacherText');
+    const stageTagEl = document.getElementById('stageTag');
+    const subProgressEl = document.getElementById('subProgress');
+    const stageBodyEl = document.getElementById('stageBody');
+    const gentleMsgEl = document.getElementById('gentleMsg');
+    const stageFooterEl = document.getElementById('stageFooter');
+    const stageCardEl = document.getElementById('stageCard');
+    const teacherBarEl = document.getElementById('teacherBar');
+    const victoryScreenEl = document.getElementById('victoryScreen');
+
+    function renderStepDots() {
+      stepDotsEl.innerHTML = '';
+      STAGES.forEach((st, idx) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'step-dot';
+        btn.textContent = st.label;
+        if (stageCompleted[idx]) btn.classList.add('done');
+        if (idx === currentStage && !victoryScreenEl.classList.contains('show')) {
+          btn.classList.add('active');
+        }
+        btn.addEventListener('click', () => jumpToStage(idx));
+        stepDotsEl.appendChild(btn);
+      });
+    }
+
+    function jumpToStage(idx) {
+      stopAllAudio();
+      isLocked = false;
+      victoryScreenEl.classList.remove('show');
+      teacherBarEl.style.display = 'flex';
+      stageCardEl.style.display = 'flex';
+      currentStage = idx;
+      stageStartTimes[idx] = Date.now();
+      gentleMsgEl.textContent = '';
+
+      if (idx === 0) { warmupIdx = 0; renderStage1(); }
+      else if (idx === 1) { groupIdx = 0; renderStage2(); }
+      else if (idx === 2) { blindIdx = 0; renderStage3(); }
+      else if (idx === 3) { renderStage4(); }
+      renderStepDots();
+    }
+
+    // ---------- 第一幕：熟字熱身（零劇透） ----------
+    function renderStage1() {
+      const q = WARMUP_QUESTIONS[warmupIdx];
+      isLocked = false;
+      stageTagEl.textContent = '第一關 · 熟字幫手熱身';
+      subProgressEl.textContent = `第 ${warmupIdx + 1} / ${WARMUP_QUESTIONS.length} 題`;
+      teacherTextEl.textContent = '先搵出幾個玲玲識得嘅熟字幫手！留心聽 Anna 老師讀，揀出啱嘅字卡！';
+      gentleMsgEl.textContent = '';
+      stageFooterEl.innerHTML = '';
+
+      stageBodyEl.innerHTML = `
+        <div class="quiz-grid-4">
+          ${q.options.map(ch => `<button type="button" class="char-choice-btn" data-val="${ch}">${ch}</button>`).join('')}
+        </div>
+      `;
+
+      stageBodyEl.querySelectorAll('.char-choice-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (isLocked) return;
+          if (btn.dataset.val === q.answer) {
+            isLocked = true;
+            btn.classList.add('correct-flash');
+            showFx();
+            gentleMsgEl.textContent = `🌟 答啱喇！係「${q.answer}」字！`;
+            speakHK(`答啱喇！就係${q.answer}字！`, 0.82, () => {
+              nextTimer = setTimeout(() => {
+                if (currentStage !== 0) return;
+                if (warmupIdx + 1 < WARMUP_QUESTIONS.length) {
+                  warmupIdx += 1;
+                  renderStage1();
+                } else {
+                  stageDurations[0] = Math.max(1, Math.round((Date.now() - stageStartTimes[0]) / 1000));
+                  stageCompleted[0] = true;
+                  jumpToStage(1);
+                }
+              }, 350);
+            });
+          } else {
+            warmupFirstTryAll = false;
+            btn.classList.remove('wrong-shake');
+            void btn.offsetWidth;
+            btn.classList.add('wrong-shake');
+            gentleMsgEl.textContent = '💡 唔緊要呀，再聽一次問題，揀隔離嗰張字卡試吓！';
+            speakHK('唔緊要呀，試吓揀隔離嗰張字卡啦！');
+          }
+        });
+      });
+
+      currentQuestionSpeech = q.voice;
+      speakHK(currentQuestionSpeech);
+    }
+
+    // ---------- 第二幕：7 大生字視覺拆字魔法 ----------
+    function renderStage2() {
+      const grp = WORD_GROUPS[groupIdx];
+      stageTagEl.textContent = '第二關 · 視覺拆字魔法';
+      subProgressEl.textContent = `第 ${groupIdx + 1} / ${WORD_GROUPS.length} 組詞語`;
+      teacherTextEl.textContent = `逐隻撳下面嘅魔法字卡，睇下點樣拆字記住「${grp.word}」！`;
+      gentleMsgEl.textContent = '';
+
+      stageBodyEl.innerHTML = `
+        <div class="word-group-bar">
+          <button type="button" class="whole-word-btn" id="btnWholeWord">${grp.emoji} 聽全詞：${grp.word} 🔊</button>
+        </div>
+        <div class="char-tiles-row">
+          ${grp.chars.map((item, idx) => `
+            <button type="button" class="magic-char-tile ${item.isNew ? '' : 'familiar-tile'} ${visitedMagicChars.has(item.ch) ? 'visited' : ''}" data-idx="${idx}">
+              <div class="magic-char-big">${item.ch}</div>
+              <div class="magic-char-badge">${item.isNew ? '✨ 新字' : '💚 熟字'}</div>
+            </button>
+          `).join('')}
+        </div>
+        <div class="decompose-panel" id="decomposePanel">
+          <div style="font-size:19px;font-weight:900;color:#b45309;">👆 撳上面任何一隻字，打開拆字放大鏡！</div>
+        </div>
+      `;
+
+      const panelEl = document.getElementById('decomposePanel');
+
+      function selectChar(idx) {
+        const item = grp.chars[idx];
+        visitedMagicChars.add(item.ch);
+        stageBodyEl.querySelectorAll('.magic-char-tile').forEach((el, i) => {
+          el.classList.toggle('selected', i === idx);
+          if (i === idx) el.classList.add('visited');
+        });
+
+        panelEl.innerHTML = `
+          <div class="parts-formula">
+            ${item.parts.map(p => `<span class="part-chip ${p.known ? 'known' : ''}">${p.text}</span>`).join('<span>＋</span>')}
+            <span>＝</span>
+            <span class="part-chip" style="background:#fee2e2;border-color:#dc2626;color:#991b1b;font-size:28px;">${item.ch}</span>
+          </div>
+          <div class="mnemonic-text">${item.mnemonic}</div>
+        `;
+        currentQuestionSpeech = item.voice;
+        speakHK(item.voice, 0.76);
+      }
+
+      document.getElementById('btnWholeWord').addEventListener('click', () => {
+        currentQuestionSpeech = `${grp.word}！${grp.wholeVoice}`;
+        speakHK(currentQuestionSpeech, 0.78);
+      });
+
+      stageBodyEl.querySelectorAll('.magic-char-tile').forEach(btn => {
+        btn.addEventListener('click', () => selectChar(Number(btn.dataset.idx)));
+      });
+
+      stageFooterEl.innerHTML = `
+        ${groupIdx > 0 ? '<button type="button" class="secondary-btn" id="btnPrevGroup">⬅️ 上一組</button>' : ''}
+        <button type="button" class="primary-btn" id="btnNextGroup">${groupIdx + 1 < WORD_GROUPS.length ? '➡️ 學下一組詞語' : '➡️ 去第三關：聽音辨字'}</button>
+      `;
+
+      if (groupIdx > 0) {
+        document.getElementById('btnPrevGroup').addEventListener('click', () => {
+          stopAllAudio();
+          groupIdx -= 1;
+          renderStage2();
+        });
+      }
+
+      document.getElementById('btnNextGroup').addEventListener('click', () => {
+        stopAllAudio();
+        showFx();
+        if (groupIdx + 1 < WORD_GROUPS.length) {
+          groupIdx += 1;
+          renderStage2();
+        } else {
+          stageDurations[1] = Math.max(1, Math.round((Date.now() - stageStartTimes[1]) / 1000));
+          stageCompleted[1] = true;
+          jumpToStage(2);
+        }
+      });
+
+      currentQuestionSpeech = grp.wholeVoice;
+      speakHK(grp.wholeVoice, 0.78);
+    }
+
+    // ---------- 第三幕：零劇透聽音辨字／辨詞 ----------
+    function renderStage3() {
+      const q = BLIND_QUESTIONS[blindIdx];
+      isLocked = false;
+      stageTagEl.textContent = '第三關 · 零劇透聽音辨字';
+      subProgressEl.textContent = `第 ${blindIdx + 1} / ${BLIND_QUESTIONS.length} 題`;
+      teacherTextEl.textContent = '留心聽 Anna 老師讀出嘅聲音，揀出啱嘅字卡！（可以隨時撳右上角重聽）';
+      gentleMsgEl.textContent = '';
+      stageFooterEl.innerHTML = '';
+
+      stageBodyEl.innerHTML = `
+        <div class="quiz-grid-3">
+          ${q.options.map(opt => `
+            <button type="button" class="char-choice-btn ${q.isWord ? 'word-size' : ''}" data-val="${opt}">${opt}</button>
+          `).join('')}
+        </div>
+      `;
+
+      stageBodyEl.querySelectorAll('.char-choice-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (isLocked) return;
+          if (btn.dataset.val === q.answer) {
+            isLocked = true;
+            btn.classList.add('correct-flash');
+            showFx();
+            gentleMsgEl.textContent = `🌟 好叻呀！答啱「${q.answer}」！`;
+            speakHK(`好犀利！答啱咗${q.answer}！`, 0.82, () => {
+              nextTimer = setTimeout(() => {
+                if (currentStage !== 2) return;
+                if (blindIdx + 1 < BLIND_QUESTIONS.length) {
+                  blindIdx += 1;
+                  renderStage3();
+                } else {
+                  stageDurations[2] = Math.max(1, Math.round((Date.now() - stageStartTimes[2]) / 1000));
+                  stageCompleted[2] = true;
+                  jumpToStage(3);
+                }
+              }, 350);
+            });
+          } else {
+            blindFirstTryAll = false;
+            btn.classList.remove('wrong-shake');
+            void btn.offsetWidth;
+            btn.classList.add('wrong-shake');
+            gentleMsgEl.textContent = '💡 試吓揀隔離嗰張字卡，或者撳右上角再聽一次！';
+            speakHK('試吓揀隔離嗰張字卡啦！');
+          }
+        });
+      });
+
+      currentQuestionSpeech = q.voice;
+      speakHK(currentQuestionSpeech, 0.76);
+    }
+
+    // ---------- 第四幕：零提示靜音紅圈自讀 ----------
+    function renderStage4() {
+      stageTagEl.textContent = '第四關 · 零提示紅圈自讀';
+      subProgressEl.textContent = `已圈出 ${circledChars.size} / ${WALL_CHARS.length} 字`;
+      teacherTextEl.textContent = '請玲玲自己開聲讀出識得嘅字，讀到邊個就用手指撳佢畫紅圈（再撳可以取消）！';
+      gentleMsgEl.textContent = '🔇 靜音模式：撳字只會畫紅圈，由玲玲自己大聲讀出嚟！';
+
+      stageBodyEl.innerHTML = `
+        <div class="wall-grid">
+          ${WALL_CHARS.map(ch => `
+            <button type="button" class="wall-tile ${circledChars.has(ch) ? 'circled' : ''}" data-ch="${ch}">${ch}</button>
+          `).join('')}
+        </div>
+      `;
+
+      // 最高鐵律：靜音紅圈，嚴禁點字發聲！
+      stageBodyEl.querySelectorAll('.wall-tile').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const ch = btn.dataset.ch;
+          if (circledChars.has(ch)) {
+            circledChars.delete(ch);
+            btn.classList.remove('circled');
+          } else {
+            circledChars.add(ch);
+            btn.classList.add('circled');
+          }
+          subProgressEl.textContent = `已圈出 ${circledChars.size} / ${WALL_CHARS.length} 字`;
+        });
+      });
+
+      stageFooterEl.innerHTML = `<button type="button" class="primary-btn" id="btnFinishLesson">🌟 圈完喇！睇成績</button>`;
+      document.getElementById('btnFinishLesson').addEventListener('click', () => {
+        stageDurations[3] = Math.max(1, Math.round((Date.now() - stageStartTimes[3]) / 1000));
+        stageCompleted[3] = true;
+        showVictory();
+      });
+
+      currentQuestionSpeech = '最後一關紅圈自讀！請玲玲睇住下面個字牆，自己大聲讀出識得嘅字，讀到邊個就撳佢畫紅圈啦！';
+      speakHK(currentQuestionSpeech, 0.78);
+    }
+
+    // ---------- 結算畫面與自動戰報同步 ----------
+    function showVictory() {
+      stopAllAudio();
+      teacherBarEl.style.display = 'none';
+      stageCardEl.style.display = 'none';
+      victoryScreenEl.classList.add('show');
+      renderStepDots();
+
+      const circledList = WALL_CHARS.filter(ch => circledChars.has(ch));
+      const circledStr = circledList.length ? circledList.join('、') : '未圈選';
+
+      const reportText = `【中文課堂回報】P.26-29 Day 1 (cn-p26-p29-d1.html) | 熟字熱身: ${stageDurations[0]}s(${warmupFirstTryAll ? '1次答對' : '需提示'}) | 拆字魔法: ${stageDurations[1]}s | 聽音辨字: ${stageDurations[2]}s(${blindFirstTryAll ? '1次答對' : '需提示'}) | 靜音圈字: ${stageDurations[3]}s(圈出${circledList.length}字) | 圈出識字清單: ${circledStr}`;
+      window.__latestReportText = reportText;
+
+      document.getElementById('summaryBox').innerHTML = `
+        🔥 熟字熱身：${stageDurations[0]}s（${warmupFirstTryAll ? '✅ 1次全對' : '💡 需提示'}）<br/>
+        🔍 7 大生字拆字魔法：${stageDurations[1]}s 完成<br/>
+        🎧 零劇透聽音辨字：${stageDurations[2]}s（${blindFirstTryAll ? '✅ 1次全對' : '💡 需提示'}）<br/>
+        ⭕ 靜音紅圈自讀：圈出 ${circledList.length} 字（${circledStr}）
+      `;
+
+      if (!reportSaved && window.LinglingReport) {
+        reportSaved = true;
+        window.LinglingReport.save('中文AI課堂', 'P.26-29 Day 1', reportText);
+      }
+
+      showFx();
+      speakHK('太叻喇！玲玲完成咗聖誕節第一堂生字拆字魔法課！');
+    }
+
+    // 獨立重聽鍵：永不被答錯提示覆蓋
+    document.getElementById('btnReplay').addEventListener('click', () => {
+      if (currentQuestionSpeech) speakHK(currentQuestionSpeech, 0.76);
+    });
+
+    document.getElementById('btnHome').addEventListener('click', () => {
+      stopAllAudio();
+      window.location.href = 'cn-christmas.html?v=1';
+    });
+
+    document.getElementById('btnCopyReport').addEventListener('click', () => {
+      const text = window.__latestReportText || '';
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          document.getElementById('btnCopyReport').textContent = '✅ 已複製暗號！';
+        }).catch(() => fallbackCopy(text));
+      } else {
+        fallbackCopy(text);
+      }
+    });
+
+    function fallbackCopy(text) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      document.getElementById('btnCopyReport').textContent = '✅ 已複製暗號！';
+    }
+
+    document.getElementById('btnRestart').addEventListener('click', () => {
+      reportSaved = false;
+      warmupFirstTryAll = true;
+      blindFirstTryAll = true;
+      visitedMagicChars.clear();
+      circledChars.clear();
+      for (let i = 0; i < 4; i++) { stageCompleted[i] = false; stageDurations[i] = 0; }
+      document.getElementById('btnCopyReport').textContent = '📋 一鍵複製進度暗號';
+      jumpToStage(0);
+    });
+
+    jumpToStage(0);
+  </script>
+</body>
+</html>
