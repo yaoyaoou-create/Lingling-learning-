@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Maths Day 13 — 森林小狐狸野餐會</title>
+  <link rel="stylesheet" href="theme.css?v=1" />
+  <style>
+    * {
+      box-sizing: border-box;
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100dvh;
+      font-family: "PingFang HK", "Noto Sans TC", "Microsoft JhengHei", system-ui, sans-serif;
+      background: linear-gradient(160deg, #bbf7d0 0%, #dcfce7 50%, #fef9c3 100%);
+      color: #14532d;
+      overflow-x: hidden;
+    }
+
+    body {
+      display: block !important;
+    }
+
+    .app-shell {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 10px 14px 16px;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* 頂部森林綠導航列（手機/iPad 不切字） */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+      background: linear-gradient(135deg, #15803d, #16a34a);
+      border: 3px solid #86efac;
+      border-radius: 22px;
+      padding: 8px 12px;
+      box-shadow: 0 5px 0 #166534;
+    }
+
+    .home-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #ffffff;
+      color: #166534;
+      border: 3px solid #86efac;
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-size: 15px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 3px 0 #4ade80;
+      flex-shrink: 0;
+    }
+    .home-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 1px 0 #4ade80;
+    }
+
+    .day-pill {
+      color: #fef08a;
+      font-size: 16px;
+      font-weight: 900;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    /* 獨立換行置中：10 粒可點擊隨按即跳圓點 */
+    .step-dots {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      padding-top: 4px;
+    }
+
+    .step-dot {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid #bbf7d0;
+      background: rgba(255, 255, 255, 0.22);
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 900;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.14s ease, background 0.14s ease;
+    }
+    .step-dot:active {
+      transform: scale(0.92);
+    }
+    .step-dot.done {
+      background: #34d399;
+      border-color: #a7f3d0;
+      color: #064e3b;
+    }
+    .step-dot.active {
+      background: #facc15;
+      border-color: #fef08a;
+      color: #713f12;
+      transform: scale(1.12);
+      box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.4);
+    }
+
+    /* Anna 老師常駐橫幅 */
+    .teacher-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(135deg, #fef08a, #fde047);
+      border: 3px solid #f59e0b;
+      border-radius: 22px;
+      padding: 10px 14px;
+      box-shadow: 0 5px 0 #d97706;
+    }
+
+    .teacher-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 3px solid #f59e0b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      flex-shrink: 0;
+    }
+
+    .teacher-text {
+      flex: 1;
+      font-size: 19px;
+      font-weight: 900;
+      line-height: 1.35;
+      color: #78350f;
+    }
+
+    .replay-btn {
+      background: linear-gradient(180deg, #38bdf8, #0284c7);
+      color: #ffffff;
+      border: 3px solid #0369a1;
+      border-radius: 16px;
+      padding: 10px 14px;
+      font-size: 15px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 4px 0 #075985;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .replay-btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 #075985;
+    }
+
+    /* 主舞台（iPad 單屏） */
+    .stage-card {
+      flex: 1;
+      background: #ffffff;
+      border: 4px solid #4ade80;
+      border-radius: 28px;
+      padding: 16px;
+      box-shadow: 0 7px 0 #16a34a;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .stage-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .dim-tag {
+      background: #dcfce7;
+      color: #166534;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 15px;
+      font-weight: 900;
+    }
+
+    .q-counter {
+      font-size: 16px;
+      font-weight: 900;
+      color: #15803d;
+    }
+
+    .visual-box {
+      flex: 1;
+      width: 100%;
+      background: #f0fdf4;
+      border: 3px dashed #86efac;
+      border-radius: 24px;
+      padding: 16px 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      min-height: 180px;
+    }
+
+    /* 靜音自主點數實物（絕不顯示數字標籤、絕不報數） */
+    .count-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .count-item {
+      position: relative;
+      width: 66px;
+      height: 66px;
+      border-radius: 18px;
+      background: #ffffff;
+      border: 3px solid #86efac;
+      box-shadow: 0 4px 0 #4ade80;
+      font-size: 42px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.14s ease, background 0.14s ease;
+    }
+    .count-item.tapped {
+      background: #fef9c3;
+      border-color: #facc15;
+      box-shadow: 0 4px 0 #eab308;
+      transform: translateY(-4px) scale(1.06);
+    }
+    .count-item.tapped::after {
+      content: "✨";
+      position: absolute;
+      top: -10px;
+      right: -8px;
+      font-size: 18px;
+    }
+    .count-item.crossed {
+      background: #f1f5f9;
+      border-color: #cbd5e1;
+      box-shadow: none;
+      opacity: 0.45;
+      pointer-events: none;
+    }
+    .count-item.crossed::before {
+      content: "";
+      position: absolute;
+      width: 80%;
+      height: 5px;
+      background: #ef4444;
+      transform: rotate(-35deg);
+      border-radius: 4px;
+    }
+
+    .math-group-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .math-group {
+      background: #ffffff;
+      border: 3px solid #60a5fa;
+      border-radius: 20px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .math-op {
+      font-size: 38px;
+      font-weight: 900;
+      color: #ea580c;
+    }
+
+    /* 數序卡片 */
+    .seq-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .seq-tile {
+      width: 68px;
+      height: 68px;
+      border-radius: 18px;
+      background: #ffffff;
+      border: 4px solid #38bdf8;
+      box-shadow: 0 4px 0 #0284c7;
+      font-size: 32px;
+      font-weight: 900;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .seq-tile.blank {
+      background: #fef08a;
+      border-color: #f59e0b;
+      color: #b45309;
+      box-shadow: 0 4px 0 #d97706;
+    }
+
+    /* 規律分組框 */
+    .pattern-group {
+      display: inline-flex;
+      gap: 6px;
+      padding: 8px 10px;
+      border-radius: 18px;
+      background: #ffffff;
+      border: 3px solid #a78bfa;
+      font-size: 40px;
+    }
+
+    /* 序數排隊起點視覺輔助 */
+    .ordinal-guide {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #fef3c7;
+      border: 2px solid #f59e0b;
+      color: #92400e;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 16px;
+      font-weight: 900;
+    }
+
+    /* 方位大場景 */
+    .dir-scene {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+    .dir-card {
+      width: 112px;
+      height: 112px;
+      border-radius: 24px;
+      background: #ffffff;
+      border: 4px solid #93c5fd;
+      box-shadow: 0 5px 0 #3b82f6;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 56px;
+    }
+    .dir-card.center-ref {
+      border-color: #f59e0b;
+      background: #fef9c3;
+      box-shadow: 0 5px 0 #d97706;
+    }
+    .dir-badge {
+      font-size: 13px;
+      font-weight: 900;
+      color: #1e40af;
+      margin-top: 2px;
+    }
+
+    /* 選項按鈕區 */
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      width: 100%;
+    }
+
+    .opt-btn {
+      min-height: 82px;
+      border-radius: 22px;
+      border: 4px solid #38bdf8;
+      background: linear-gradient(180deg, #ffffff 0%, #f0f9ff 100%);
+      color: #0f172a;
+      font-size: 28px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 6px 0 #0284c7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px;
+      transition: transform 0.12s ease;
+    }
+    .opt-btn:active {
+      transform: translateY(4px);
+      box-shadow: 0 2px 0 #0284c7;
+    }
+    .opt-btn.correct-flash {
+      background: linear-gradient(180deg, #34d399, #10b981);
+      border-color: #047857;
+      color: #ffffff;
+      box-shadow: 0 6px 0 #047857;
+      transform: scale(1.04);
+    }
+    .opt-btn.wrong-shake {
+      animation: shake 0.36s ease;
+      background: #fef3c7;
+      border-color: #f59e0b;
+    }
+
+    .gentle-hint-box {
+      min-height: 30px;
+      font-size: 17px;
+      font-weight: 900;
+      color: #b45309;
+      text-align: center;
+    }
+
+    /* 煙花層 */
+    .fx-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 76px;
+      opacity: 0;
+      z-index: 999;
+      transition: opacity 0.25s ease;
+    }
+    .fx-layer.show {
+      opacity: 1;
+      animation: popFx 0.7s ease;
+    }
+
+    /* 結算畫面 */
+    .victory-screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      background: #ffffff;
+      border: 4px solid #f59e0b;
+      border-radius: 28px;
+      padding: 20px 16px;
+      box-shadow: 0 8px 0 #d97706;
+      text-align: center;
+    }
+    .victory-screen.show {
+      display: flex;
+    }
+    .sync-banner {
+      background: #dcfce7;
+      border: 2px solid #22c55e;
+      color: #166534;
+      border-radius: 14px;
+      padding: 8px 14px;
+      font-size: 15px;
+      font-weight: 800;
+    }
+    .result-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      text-align: left;
+    }
+    .result-table th, .result-table td {
+      border-bottom: 1px solid #e2e8f0;
+      padding: 7px 6px;
+      font-weight: 800;
+    }
+    .result-table th {
+      background: #f0fdf4;
+      color: #166534;
+    }
+
+    .footer-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .primary-btn {
+      background: linear-gradient(180deg, #34d399, #059669);
+      color: #ffffff;
+      border: 3px solid #047857;
+      border-radius: 20px;
+      padding: 12px 22px;
+      font-size: 18px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 5px 0 #065f46;
+    }
+    .secondary-btn {
+      background: linear-gradient(180deg, #fde68a, #f59e0b);
+      color: #78350f;
+      border: 3px solid #d97706;
+      border-radius: 20px;
+      padding: 12px 20px;
+      font-size: 17px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 5px 0 #b45309;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-8px); }
+      50% { transform: translateX(8px); }
+      75% { transform: translateX(-6px); }
+    }
+    @keyframes popFx {
+      0% { transform: scale(0.5); }
+      50% { transform: scale(1.25); }
+      100% { transform: scale(1); }
+    }
+
+    @media (max-width: 560px) {
+      .teacher-text { font-size: 16px; }
+      .opt-btn { font-size: 22px; min-height: 74px; }
+      .count-item { width: 54px; height: 54px; font-size: 34px; }
+      .seq-tile { width: 54px; height: 54px; font-size: 26px; }
+      .dir-card { width: 92px; height: 92px; font-size: 44px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="fx-layer" id="fxLayer">🎉🌟🦊</div>
+
+  <div class="app-shell">
+    <div class="top-bar">
+      <button type="button" class="home-btn" id="btnHome">🏠 返回</button>
+      <div class="day-pill">🦊 Maths Day 13 · 森林野餐會</div>
+      <div class="step-dots" id="stepDots" aria-label="題目快速跳轉"></div>
+    </div>
+
+    <div class="teacher-bar" id="teacherBar">
+      <div class="teacher-avatar">👩‍🏫</div>
+      <div class="teacher-text" id="teacherText">歡迎嚟到森林小狐狸野餐會！</div>
+      <button type="button" class="replay-btn" id="btnReplay">🔊 重聽</button>
+    </div>
+
+    <div class="stage-card" id="stageCard">
+      <div class="stage-header">
+        <div class="dim-tag" id="dimTag">數感與數序</div>
+        <div class="q-counter" id="qCounter">第 1 / 10 題</div>
+      </div>
+
+      <div class="visual-box" id="visualBox"></div>
+      <div class="gentle-hint-box" id="hintBox"></div>
+      <div class="options-grid" id="optionsGrid"></div>
+    </div>
+
+    <div class="victory-screen" id="victoryScreen">
+      <div style="font-size: 58px;">🏆🦊🧺</div>
+      <h2 style="margin: 0; font-size: 24px; color: #166534;">Maths Day 13 野餐大成功！</h2>
+      <div class="sync-banner">☁️ 戰報已自動同步至家長戰報箱與成長儀表板</div>
+      <table class="result-table">
+        <thead>
+          <tr><th>題目</th><th>結果</th><th>耗時</th></tr>
+        </thead>
+        <tbody id="resultTbody"></tbody>
+      </table>
+      <div class="footer-actions">
+        <button type="button" class="primary-btn" id="btnCopyReport">📋 一鍵複製進度暗號俾 Anna 老師</button>
+        <button type="button" class="secondary-btn" id="btnRestart">🔄 再玩一次</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="report-hub.js?v=2"></script>
+  <script>
+    // ==========================================
+    // iPad Safari 防護：安全廣東話語音引擎 (純廣東話 zh-HK)
+    // ==========================================
+    window.utterancePool = [];
+    let speakTimer = null;
+    let nextTimer = null;
+
+    function stopAudioAndTimers() {
+      if (speakTimer) { clearTimeout(speakTimer); speakTimer = null; }
+      if (nextTimer) { clearTimeout(nextTimer); nextTimer = null; }
+      if ('speechSynthesis' in window) {
+        try { window.speechSynthesis.cancel(); } catch (e) {}
+      }
+      window.utterancePool = [];
+    }
+
+    function speakHK(text, onEnd) {
+      if (speakTimer) { clearTimeout(speakTimer); speakTimer = null; }
+      if (!('speechSynthesis' in window) || !text) {
+        if (onEnd) onEnd();
+        return;
+      }
+      try { window.speechSynthesis.cancel(); } catch (e) {}
+      window.utterancePool = [];
+
+      speakTimer = setTimeout(() => {
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = 'zh-HK';
+        u.rate = 0.72;
+        u.pitch = 1.05;
+        const voices = window.speechSynthesis.getVoices();
+        const hkVoice =
+          voices.find(v => v.lang && v.lang.toLowerCase().includes('zh-hk')) ||
+          voices.find(v => v.lang && v.lang.toLowerCase().includes('yue'));
+        if (hkVoice) u.voice = hkVoice;
+
+        window.utterancePool.push(u);
+        u.onend = () => {
+          window.utterancePool = window.utterancePool.filter(x => x !== u);
+          if (onEnd) onEnd();
+        };
+        u.onerror = () => {
+          window.utterancePool = window.utterancePool.filter(x => x !== u);
+          if (onEnd) onEnd();
+        };
+        window.speechSynthesis.speak(u);
+      }, 40);
+    }
+
+    // 清晰紅藍針整點鐘面 SVG（長藍針指 12，短紅針指正點數字）
+    function makeClockSVG(hour) {
+      const angleDeg = (hour % 12) * 30;
+      const rad = (angleDeg - 90) * (Math.PI / 180);
+      const hx = 100 + Math.cos(rad) * 44;
+      const hy = 100 + Math.sin(rad) * 44;
+      let nums = '';
+      for (let i = 1; i <= 12; i++) {
+        const r = (i * 30 - 90) * (Math.PI / 180);
+        const nx = 100 + Math.cos(r) * 72;
+        const ny = 100 + Math.sin(r) * 72 + 6;
+        const highlight = i === hour ? 'fill="#dc2626" font-size="22"' : 'fill="#1e293b" font-size="16"';
+        nums += `<text x="${nx}" y="${ny}" text-anchor="middle" font-weight="900" ${highlight}>${i}</text>`;
+      }
+      return `
+        <svg width="180" height="180" viewBox="0 0 200 200" aria-label="鐘面">
+          <circle cx="100" cy="100" r="92" fill="#ffffff" stroke="#f59e0b" stroke-width="8"/>
+          <circle cx="100" cy="100" r="84" fill="#fffbeb"/>
+          ${nums}
+          <!-- 長藍針指住 12 -->
+          <line x1="100" y1="100" x2="100" y2="34" stroke="#2563eb" stroke-width="6" stroke-linecap="round"/>
+          <!-- 短紅針指住幾點鐘 -->
+          <line x1="100" y1="100" x2="${hx}" y2="${hy}" stroke="#dc2626" stroke-width="9" stroke-linecap="round"/>
+          <circle cx="100" cy="100" r="8" fill="#1e293b"/>
+        </svg>
+        <div style="font-size:15px;font-weight:900;color:#dc2626;">💡 睇清楚【短紅針】指住邊個數字呀！</div>
+      `;
+    }
+
+    // ==========================================
+    // 方案 B：10 題六維全覆蓋 ＋ Day 12 紅燈精準加權補漏
+    // ==========================================
+    const quizData = [
+      {
+        dim: 'NUM', dimName: '🔢 數感與數序', skill_id: 'NUM-1', level: 'L1',
+        reportLabel: '數字順序(11-15順序)',
+        prompt: '小狐狸擺好野餐墊號碼牌：11、12、問號、14、15。中間唔見咗邊個數字呀？',
+        hint: '試吓由 11 慢慢數落去：11、12、跟住係咩呢？',
+        render: () => `
+          <div class="seq-row">
+            <div class="seq-tile">11</div>
+            <div class="seq-tile">12</div>
+            <div class="seq-tile blank">?</div>
+            <div class="seq-tile">14</div>
+            <div class="seq-tile">15</div>
+          </div>
+        `,
+        options: [
+          { label: '13', val: '13' },
+          { label: '10', val: '10' },
+          { label: '16', val: '16' }
+        ],
+        answer: '13'
+      },
+      {
+        dim: 'APP', dimName: '⏰ 圖形與生活（重點補漏）', skill_id: 'APP-2', level: 'L1',
+        reportLabel: '整點鐘面(4點鐘)',
+        prompt: '野餐時間到喇！望下個時鐘，長藍針指住 12，短紅針指住邊個數字？而家係幾點鐘呀？',
+        hint: '搵出紅色短針指住嘅紅色數字，就係幾點鐘喇！',
+        render: () => makeClockSVG(4),
+        options: [
+          { label: '2 點鐘', val: '2' },
+          { label: '4 點鐘', val: '4' },
+          { label: '6 點鐘', val: '6' }
+        ],
+        answer: '4'
+      },
+      {
+        dim: 'SPA', dimName: '🧭 空間與方位（重點補漏）', skill_id: 'SPA-2', level: 'L1',
+        reportLabel: '序數第幾個(左起第2個)',
+        prompt: '森林小動物排隊去野餐！由左邊箭嘴開始數，邊隻動物排第 2 個呀？你可以撳下佢哋自己數！',
+        hint: '由左邊第一個開始數：第 1 個係小狐狸，跟住隔離嗰隻就係第 2 個！',
+        render: () => `
+          <div class="ordinal-guide">➡️ 由呢邊（左邊）開始數起！</div>
+          <div class="count-row">
+            <div class="count-item" data-count="1">🦊</div>
+            <div class="count-item" data-count="1">🐰</div>
+            <div class="count-item" data-count="1">🐻</div>
+            <div class="count-item" data-count="1">🐼</div>
+          </div>
+        `,
+        options: [
+          { label: '🦊 小狐狸', val: 'fox' },
+          { label: '🐰 兔仔', val: 'rabbit' },
+          { label: '🐻 小熊', val: 'bear' }
+        ],
+        answer: 'rabbit'
+      },
+      {
+        dim: 'ADD', dimName: '➕ 加法運算', skill_id: 'ADD-2', level: 'L1',
+        reportLabel: '10以內基礎加法(3+2)',
+        prompt: '野餐籃原本有 3 個紅蘋果，小熊再拎多 2 個嚟，總共有幾多個蘋果呀？撳下蘋果自己數下！',
+        hint: '逐個撳下上面啲蘋果，由頭自己開聲數一數總共有幾多個！',
+        render: () => `
+          <div class="math-group-wrap">
+            <div class="math-group">
+              <div class="count-item" data-count="1">🍎</div>
+              <div class="count-item" data-count="1">🍎</div>
+              <div class="count-item" data-count="1">🍎</div>
+            </div>
+            <div class="math-op">+</div>
+            <div class="math-group">
+              <div class="count-item" data-count="1">🍎</div>
+              <div class="count-item" data-count="1">🍎</div>
+            </div>
+          </div>
+          <div style="font-size:24px;font-weight:900;color:#15803d;">3 + 2 = ?</div>
+        `,
+        options: [
+          { label: '4', val: '4' },
+          { label: '5', val: '5' },
+          { label: '6', val: '6' }
+        ],
+        answer: '5'
+      },
+      {
+        dim: 'LOG', dimName: '🧩 規律與邏輯', skill_id: 'LOG-1', level: 'L1',
+        reportLabel: '基礎圖形規律(AABB)',
+        prompt: '小狐狸用生果串起靚靚花環：西瓜、西瓜、香蕉、香蕉、西瓜、西瓜、香蕉……最後一個係咩生果呀？',
+        hint: '每種生果都係兩粒一對！最後已經有一隻香蕉，仲欠一隻咩呢？',
+        render: () => `
+          <div class="count-row">
+            <div class="pattern-group"><span>🍉</span><span>🍉</span></div>
+            <div class="pattern-group"><span>🍌</span><span>🍌</span></div>
+            <div class="pattern-group"><span>🍉</span><span>🍉</span></div>
+            <div class="pattern-group" style="border-color:#f59e0b;background:#fef9c3;"><span>🍌</span><span style="color:#b45309;font-weight:900;">?</span></div>
+          </div>
+        `,
+        options: [
+          { label: '🍉 西瓜', val: 'watermelon' },
+          { label: '🍌 香蕉', val: 'banana' },
+          { label: '🍇 提子', val: 'grape' }
+        ],
+        answer: 'banana'
+      },
+      {
+        dim: 'SPA', dimName: '🧭 空間與方位', skill_id: 'SPA-1', level: 'L1',
+        reportLabel: '上下前後左右方位(右邊)',
+        prompt: '望住中間嘅野餐籃！喺野餐籃嘅【右邊】擺咗邊樣食物呀？',
+        hint: '舉起你平時揸筆寫字嘅右手，望下野餐籃右邊係咩食物！',
+        render: () => `
+          <div class="dir-scene">
+            <div class="dir-card"><span>🥪</span><span class="dir-badge">⬅️ 左邊</span></div>
+            <div class="dir-card center-ref"><span>🧺</span><span class="dir-badge" style="color:#b45309;">中間</span></div>
+            <div class="dir-card"><span>🧁</span><span class="dir-badge">右邊 ➡️</span></div>
+          </div>
+        `,
+        options: [
+          { label: '🥪 三文治', val: 'sandwich' },
+          { label: '🧁 杯子蛋糕', val: 'cupcake' },
+          { label: '🧺 野餐籃', val: 'basket' }
+        ],
+        answer: 'cupcake'
+      },
+      {
+        dim: 'ADD', dimName: '➕ 加法運算', skill_id: 'ADD-1', level: 'L1',
+        reportLabel: '5至10分合(6的組成)',
+        prompt: '我哋一共要準備 6 粒曲奇餅！左邊碟已經有 4 粒，右邊碟仲要放多幾多粒先夠 6 粒呀？',
+        hint: '左邊已經有 4 粒，繼續數落去：5、6！仲欠幾多粒呢？',
+        render: () => `
+          <div style="font-size:22px;font-weight:900;color:#166534;">目標：總共 6 粒曲奇 🍪</div>
+          <div class="math-group-wrap">
+            <div class="math-group">
+              <div class="count-item" data-count="1">🍪</div>
+              <div class="count-item" data-count="1">🍪</div>
+              <div class="count-item" data-count="1">🍪</div>
+              <div class="count-item" data-count="1">🍪</div>
+            </div>
+            <div class="math-op">＋</div>
+            <div class="seq-tile blank" style="width:76px;height:76px;">?</div>
+            <div class="math-op">＝</div>
+            <div class="seq-tile" style="border-color:#16a34a;color:#166534;">6</div>
+          </div>
+        `,
+        options: [
+          { label: '1', val: '1' },
+          { label: '2', val: '2' },
+          { label: '3', val: '3' }
+        ],
+        answer: '2'
+      },
+      {
+        dim: 'APP', dimName: '⏰ 圖形與生活（重點補漏）', skill_id: 'APP-2', level: 'L1',
+        reportLabel: '整點鐘面(7點鐘)',
+        prompt: '天黑要返屋企食晚飯喇！再望多一次個時鐘，短紅針指住邊個數字？而家係幾點鐘呀？',
+        hint: '長藍針指住 12，短紅針指住紅色嘅數字 7，即係幾點呀？',
+        render: () => makeClockSVG(7),
+        options: [
+          { label: '5 點鐘', val: '5' },
+          { label: '7 點鐘', val: '7' },
+          { label: '9 點鐘', val: '9' }
+        ],
+        answer: '7'
+      },
+      {
+        dim: 'SPA', dimName: '🧭 空間與方位（重點補漏）', skill_id: 'SPA-2', level: 'L1',
+        reportLabel: '序數第幾個(左起第3個)',
+        prompt: '甜品排排坐！由左邊箭嘴開始數，邊樣甜品排第 3 個呀？撳下佢哋自己開聲數！',
+        hint: '由左邊數起：第 1 個係冬甩、第 2 個係布丁，下一個就係第 3 個！',
+        render: () => `
+          <div class="ordinal-guide">➡️ 由呢邊（左邊）開始數起！</div>
+          <div class="count-row">
+            <div class="count-item" data-count="1">🍩</div>
+            <div class="count-item" data-count="1">🍮</div>
+            <div class="count-item" data-count="1">🍰</div>
+            <div class="count-item" data-count="1">🍦</div>
+          </div>
+        `,
+        options: [
+          { label: '🍮 布丁', val: 'pudding' },
+          { label: '🍰 蛋糕', val: 'cake' },
+          { label: '🍦 雪糕', val: 'icecream' }
+        ],
+        answer: 'cake'
+      },
+      {
+        dim: 'SUB', dimName: '➖ 減法運算', skill_id: 'SUB-1', level: 'L1',
+        reportLabel: '10以內基礎減法(5-2)',
+        prompt: '碟入面原本有 5 粒士多啤梨，小狐狸食咗劃紅線嗰 2 粒，仲剩返幾多粒呀？撳下未劃線嘅士多啤梨自己數！',
+        hint: '唔好數劃咗紅線嗰 2 粒，數下仲有幾多粒新鮮士多啤梨！',
+        render: () => `
+          <div class="count-row">
+            <div class="count-item" data-count="1">🍓</div>
+            <div class="count-item" data-count="1">🍓</div>
+            <div class="count-item" data-count="1">🍓</div>
+            <div class="count-item crossed">🍓</div>
+            <div class="count-item crossed">🍓</div>
+          </div>
+          <div style="font-size:24px;font-weight:900;color:#dc2626;">5 - 2 = ?</div>
+        `,
+        options: [
+          { label: '2', val: '2' },
+          { label: '3', val: '3' },
+          { label: '4', val: '4' }
+        ],
+        answer: '3'
+      }
+    ];
+
+    // ==========================================
+    // 狀態與計時管理
+    // ==========================================
+    let currentIdx = 0;
+    let qStartTime = Date.now();
+    let isLocked = false;
+    let reportSaved = false;
+
+    const records = quizData.map(() => ({
+      done: false,
+      firstTry: true,
+      sec: 0
+    }));
+
+    const stepDotsEl = document.getElementById('stepDots');
+    const teacherTextEl = document.getElementById('teacherText');
+    const dimTagEl = document.getElementById('dimTag');
+    const qCounterEl = document.getElementById('qCounter');
+    const visualBoxEl = document.getElementById('visualBox');
+    const hintBoxEl = document.getElementById('hintBox');
+    const optionsGridEl = document.getElementById('optionsGrid');
+    const stageCardEl = document.getElementById('stageCard');
+    const teacherBarEl = document.getElementById('teacherBar');
+    const victoryScreenEl = document.getElementById('victoryScreen');
+
+    function showFx() {
+      const fx = document.getElementById('fxLayer');
+      fx.classList.remove('show');
+      void fx.offsetWidth;
+      fx.classList.add('show');
+      setTimeout(() => fx.classList.remove('show'), 700);
+    }
+
+    function renderStepDots() {
+      stepDotsEl.innerHTML = '';
+      quizData.forEach((_, idx) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'step-dot';
+        btn.textContent = idx + 1;
+        if (records[idx].done) btn.classList.add('done');
+        if (idx === currentIdx && !victoryScreenEl.classList.contains('show')) {
+          btn.classList.add('active');
+        }
+        btn.addEventListener('click', () => jumpToQuestion(idx));
+        stepDotsEl.appendChild(btn);
+      });
+    }
+
+    function jumpToQuestion(idx) {
+      stopAudioAndTimers();
+      isLocked = false;
+      victoryScreenEl.classList.remove('show');
+      teacherBarEl.style.display = 'flex';
+      stageCardEl.style.display = 'flex';
+      currentIdx = idx;
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      const q = quizData[currentIdx];
+      qStartTime = Date.now();
+      isLocked = false;
+
+      dimTagEl.textContent = q.dimName;
+      qCounterEl.textContent = `第 ${currentIdx + 1} / ${quizData.length} 題`;
+      teacherTextEl.textContent = q.prompt;
+      hintBoxEl.textContent = '';
+      visualBoxEl.innerHTML = q.render();
+
+      // 綁定靜音自主點數實物（只發光加小星星，絕不報數、絕不顯數字）
+      visualBoxEl.querySelectorAll('.count-item[data-count="1"]').forEach(el => {
+        el.addEventListener('click', () => {
+          el.classList.toggle('tapped');
+        });
+      });
+
+      optionsGridEl.innerHTML = q.options.map(opt => `
+        <button type="button" class="opt-btn" data-val="${opt.val}">${opt.label}</button>
+      `).join('');
+
+      optionsGridEl.querySelectorAll('.opt-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (isLocked) return;
+          if (btn.dataset.val === q.answer) {
+            isLocked = true;
+            btn.classList.add('correct-flash');
+            const sec = Math.max(1, Math.round((Date.now() - qStartTime) / 1000));
+            if (!records[currentIdx].done) {
+              records[currentIdx].done = true;
+              records[currentIdx].sec = sec;
+            }
+            renderStepDots();
+            showFx();
+            hintBoxEl.textContent = '🌟 好犀利！一次就答啱喇！';
+            speakHK('答啱喇！好犀利呀！');
+
+            nextTimer = setTimeout(() => {
+              const nextUnfinished = records.findIndex((r, i) => i > currentIdx && !r.done);
+              if (currentIdx + 1 < quizData.length && !records[currentIdx + 1].done) {
+                currentIdx += 1;
+                renderQuestion();
+              } else if (nextUnfinished !== -1) {
+                currentIdx = nextUnfinished;
+                renderQuestion();
+              } else if (records.every(r => r.done)) {
+                showVictory();
+              } else {
+                const firstMissing = records.findIndex(r => !r.done);
+                currentIdx = firstMissing;
+                renderQuestion();
+              }
+            }, 950);
+          } else {
+            if (!records[currentIdx].done) {
+              records[currentIdx].firstTry = false;
+            }
+            btn.classList.remove('wrong-shake');
+            void btn.offsetWidth;
+            btn.classList.add('wrong-shake');
+            hintBoxEl.textContent = '💡 ' + q.hint;
+            speakHK(q.hint);
+          }
+        });
+      });
+
+      renderStepDots();
+      speakHK(q.prompt);
+    }
+
+    function showVictory() {
+      stopAudioAndTimers();
+      teacherBarEl.style.display = 'none';
+      stageCardEl.style.display = 'none';
+      victoryScreenEl.classList.add('show');
+      renderStepDots();
+
+      const tbody = document.getElementById('resultTbody');
+      tbody.innerHTML = '';
+
+      const parts = [];
+      const skillMap = {};
+
+      quizData.forEach((q, idx) => {
+        const rec = records[idx];
+        const statusText = rec.firstTry ? '1次答對' : '需提示';
+        const statusBadge = rec.firstTry ? '✅ 1次答對' : '💡 需提示';
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>Q${idx + 1} ${q.reportLabel}</td><td>${statusBadge}</td><td>${rec.sec}s</td>`;
+        tbody.appendChild(tr);
+
+        parts.push(`Q${idx + 1} ${q.reportLabel}: ${rec.sec}s(${statusText})`);
+
+        if (!skillMap[q.skill_id]) {
+          skillMap[q.skill_id] = {
+            dim: q.dim,
+            skill_id: q.skill_id,
+            level: q.level,
+            total: 0,
+            correct: 0,
+            sumSec: 0
+          };
+        }
+        skillMap[q.skill_id].total += 1;
+        if (rec.firstTry) skillMap[q.skill_id].correct += 1;
+        skillMap[q.skill_id].sumSec += rec.sec;
+      });
+
+      const skillStats = Object.values(skillMap).map(s => ({
+        dim: s.dim,
+        skill_id: s.skill_id,
+        level: s.level,
+        total: s.total,
+        correct: s.correct,
+        avg_sec: Math.round((s.sumSec / s.total) * 10) / 10
+      }));
+
+      const reportText = `【數學測驗回報】Day 13（森林野餐會） | ` + parts.join(' | ');
+      window.__latestReportText = reportText;
+
+      if (!reportSaved && window.LinglingReport) {
+        reportSaved = true;
+        window.LinglingReport.save('數學探索島', 'Maths Day 13（森林野餐會）', reportText, {
+          term: 'K2-T1',
+          skill_stats: skillStats
+        });
+      }
+
+      showFx();
+      speakHK('太叻喇！玲玲完成咗森林小狐狸野餐會全部十條數學挑戰！');
+    }
+
+    document.getElementById('btnReplay').addEventListener('click', () => {
+      speakHK(quizData[currentIdx].prompt);
+    });
+
+    document.getElementById('btnHome').addEventListener('click', () => {
+      stopAudioAndTimers();
+      window.location.href = 'index.html?v=1';
+    });
+
+    document.getElementById('btnCopyReport').addEventListener('click', () => {
+      const text = window.__latestReportText || '';
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          document.getElementById('btnCopyReport').textContent = '✅ 已複製暗號！';
+        }).catch(() => fallbackCopy(text));
+      } else {
+        fallbackCopy(text);
+      }
+    });
+
+    function fallbackCopy(text) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      document.getElementById('btnCopyReport').textContent = '✅ 已複製暗號！';
+    }
+
+    document.getElementById('btnRestart').addEventListener('click', () => {
+      reportSaved = false;
+      records.forEach(r => { r.done = false; r.firstTry = true; r.sec = 0; });
+      document.getElementById('btnCopyReport').textContent = '📋 一鍵複製進度暗號俾 Anna 老師';
+      jumpToQuestion(0);
+    });
+
+    renderQuestion();
+  </script>
+</body>
+</html>
