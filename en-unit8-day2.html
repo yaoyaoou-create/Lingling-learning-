@@ -599,6 +599,9 @@
   </style>
 </head>
 <body>
+  <!-- 常駐單一原生 HTML5 播放器：徹底解決 iPad Safari Web Audio 被中斷／靜音問題 -->
+  <audio id="enPlayer" playsinline preload="auto"></audio>
+
   <!-- iPad Safari 聲音解鎖啟動頁 -->
   <div class="start-overlay" id="startOverlay">
     <div class="start-card">
@@ -654,84 +657,58 @@
   <script src="report-hub.js?v=2"></script>
   <script>
     // ==========================================
-    // iPad Safari 終極防護：中英雙軌 (Hybrid Voice) 引擎
-    // 1. 首次點擊即解鎖 AudioContext（無聲緩衝保活）+ 喚醒 speechSynthesis
-    // 2. cancel() 後強制 60ms 延遲防 Safari 吞聲
-    // 3. onend 防卡死保險計時器，確保英文 MP3 必播
-    // 4. Web Audio GainNode 2.2x 放大英文 MP3，中文音量 0.68
+    // iPad Safari 終極穩定版：原生單一 <audio> + 廣東話雙軌引擎
+    // - 完全棄用 AudioContext，行 iPad 媒體聲道，絕不被 speechSynthesis 中斷或靜音
+    // - 首次點擊「開始上堂」同步解鎖 enPlayer，之後在 onend 內亦 100% 暢順播英文 MP3
+    // - 中文音量 0.55，英文 MP3 原聲 1.0，兩者聲量自然平衡
     // ==========================================
     window.utterancePool = [];
-    let audioCtx = null;
-    let activeAudioEl = null;
-    let activeBufferSource = null;
+    const enPlayer = document.getElementById('enPlayer');
+    const SILENT_WAV = 'data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA';
+
     let speechDelayTimer = null;
     let speechSafetyTimer = null;
+    let handoverTimer = null;
     let audioToken = 0;
     let currentReplayAction = null;
     let audioUnlocked = false;
-    const decodedCache = {};
 
     function unlockIOSAudio() {
-      const Ctx = window.AudioContext || window.webkitAudioContext;
-      if (Ctx) {
-        if (!audioCtx) audioCtx = new Ctx();
-        if (audioCtx.state === 'suspended') {
-          audioCtx.resume().catch(() => {});
+      try {
+        enPlayer.src = SILENT_WAV;
+        enPlayer.volume = 1.0;
+        const p = enPlayer.play();
+        if (p && typeof p.then === 'function') {
+          p.then(() => {
+            enPlayer.pause();
+            enPlayer.currentTime = 0;
+          }).catch(() => {});
         }
-        try {
-          // 播放 1 sample 無聲緩衝，正式解鎖 iPad Safari Web Audio 輸出
-          const silentBuf = audioCtx.createBuffer(1, 1, 22050);
-          const src = audioCtx.createBufferSource();
-          src.buffer = silentBuf;
-          src.connect(audioCtx.destination);
-          src.start(0);
-        } catch (e) {}
-      }
+      } catch (e) {}
+
       if ('speechSynthesis' in window) {
-        try {
-          window.speechSynthesis.getVoices();
-        } catch (e) {}
+        try { window.speechSynthesis.getVoices(); } catch (e) {}
       }
       audioUnlocked = true;
     }
 
-    // 任意點擊皆確保 AudioContext 處於 running 狀態
-    document.addEventListener('touchstart', () => {
-      if (audioCtx && audioCtx.state === 'suspended') {
-        audioCtx.resume().catch(() => {});
-      }
-    }, { passive: true });
-
     function stopAllAudio() {
       audioToken += 1;
-      if (speechDelayTimer) {
-        clearTimeout(speechDelayTimer);
-        speechDelayTimer = null;
-      }
-      if (speechSafetyTimer) {
-        clearTimeout(speechSafetyTimer);
-        speechSafetyTimer = null;
-      }
+      if (speechDelayTimer) { clearTimeout(speechDelayTimer); speechDelayTimer = null; }
+      if (speechSafetyTimer) { clearTimeout(speechSafetyTimer); speechSafetyTimer = null; }
+      if (handoverTimer) { clearTimeout(handoverTimer); handoverTimer = null; }
+
       if ('speechSynthesis' in window) {
         try { window.speechSynthesis.cancel(); } catch (e) {}
       }
       window.utterancePool = [];
-      if (activeAudioEl) {
-        try {
-          activeAudioEl.pause();
-          activeAudioEl.currentTime = 0;
-          activeAudioEl.onended = null;
-          activeAudioEl.onerror = null;
-        } catch (e) {}
-        activeAudioEl = null;
-      }
-      if (activeBufferSource) {
-        try {
-          activeBufferSource.onended = null;
-          activeBufferSource.stop();
-        } catch (e) {}
-        activeBufferSource = null;
-      }
+
+      try {
+        enPlayer.onended = null;
+        enPlayer.onerror = null;
+        enPlayer.pause();
+        enPlayer.currentTime = 0;
+      } catch (e) {}
     }
 
     function playCantonese(text, onEnd) {
@@ -741,13 +718,12 @@
         return;
       }
 
-      // 強制延遲 60ms，防止 iPad Safari 在 cancel() 後吞聲
       speechDelayTimer = setTimeout(() => {
         if (myToken !== audioToken) return;
         const u = new SpeechSynthesisUtterance(text);
         u.lang = 'zh-HK';
         u.rate = 0.78;
-        u.volume = 0.68;
+        u.volume = 0.55;
         const voices = window.speechSynthesis.getVoices();
         const hkVoice =
           voices.find(v => v.lang && v.lang.toLowerCase().includes('zh-hk')) ||
@@ -770,7 +746,6 @@
         u.onend = done;
         u.onerror = done;
 
-        // 保險計時器：萬一 iPad Safari 漏觸發 onend，自動放行繼續播英文 MP3
         const estMs = Math.max(2200, text.length * 360 + 900);
         speechSafetyTimer = setTimeout(done, estMs);
 
@@ -778,79 +753,38 @@
       }, 60);
     }
 
-    // 預載所有本課 MP3 進 Web Audio 解碼快取，令 iPad 點播零延遲
-    const ALL_MP3_FILES = [
-      'en-yes-it-is.mp3',
-      'en-no-it-is-not.mp3',
-      'en-is-this-your-cat.mp3',
-      'en-is-this-your-hamster.mp3',
-      'en-hamster.mp3',
-      'en-rabbit.mp3'
-    ];
-
-    function preloadAllMP3() {
-      if (!audioCtx) return;
-      ALL_MP3_FILES.forEach(file => {
-        const url = `audio/${file}`;
-        if (decodedCache[url]) return;
-        fetch(url)
-          .then(r => (r.ok ? r.arrayBuffer() : null))
-          .then(arr => (arr && audioCtx ? audioCtx.decodeAudioData(arr) : null))
-          .then(buf => { if (buf) decodedCache[url] = buf; })
-          .catch(() => {});
-      });
-    }
-
-    async function playEnglishMP3(filename, onEnd) {
+    function playEnglishMP3(filename, onEnd) {
       const myToken = audioToken;
       const url = `audio/${filename}`;
 
-      if (audioCtx) {
-        try {
-          if (audioCtx.state === 'suspended') {
-            await audioCtx.resume();
-          }
-          let buf = decodedCache[url];
-          if (!buf) {
-            const resp = await fetch(url);
-            if (!resp.ok) throw new Error('fetch failed');
-            const arr = await resp.arrayBuffer();
-            buf = await audioCtx.decodeAudioData(arr);
-            decodedCache[url] = buf;
-          }
-          if (myToken !== audioToken) return;
-          const src = audioCtx.createBufferSource();
-          src.buffer = buf;
-          const gain = audioCtx.createGain();
-          gain.gain.value = 2.2;
-          src.connect(gain);
-          gain.connect(audioCtx.destination);
-          activeBufferSource = src;
-          src.onended = () => {
-            if (activeBufferSource === src) activeBufferSource = null;
-            if (onEnd && myToken === audioToken) onEnd();
-          };
-          src.start(0);
-          return;
-        } catch (err) {
-          // fallback below
-        }
-      }
+      try {
+        enPlayer.onended = null;
+        enPlayer.onerror = null;
+        enPlayer.pause();
+        enPlayer.src = url;
+        enPlayer.volume = 1.0;
+        enPlayer.load();
 
-      if (myToken !== audioToken) return;
-      const audio = new Audio(url);
-      activeAudioEl = audio;
-      audio.onended = () => {
-        if (activeAudioEl === audio) activeAudioEl = null;
+        enPlayer.onended = () => {
+          enPlayer.onended = null;
+          enPlayer.onerror = null;
+          if (onEnd && myToken === audioToken) onEnd();
+        };
+        enPlayer.onerror = () => {
+          enPlayer.onended = null;
+          enPlayer.onerror = null;
+          if (onEnd && myToken === audioToken) onEnd();
+        };
+
+        const playPromise = enPlayer.play();
+        if (playPromise && typeof playPromise.catch === 'function') {
+          playPromise.catch(() => {
+            if (onEnd && myToken === audioToken) onEnd();
+          });
+        }
+      } catch (e) {
         if (onEnd && myToken === audioToken) onEnd();
-      };
-      audio.onerror = () => {
-        if (activeAudioEl === audio) activeAudioEl = null;
-        if (onEnd && myToken === audioToken) onEnd();
-      };
-      audio.play().catch(() => {
-        if (onEnd && myToken === audioToken) onEnd();
-      });
+      }
     }
 
     function playHybrid(zhText, enFile, onAllDone) {
@@ -859,7 +793,11 @@
       if (zhText && enFile) {
         playCantonese(zhText, () => {
           if (myToken !== audioToken) return;
-          playEnglishMP3(enFile, onAllDone);
+          // 預留 120ms 讓 iPad 順暢交棒音頻通道，絕唔切頭
+          handoverTimer = setTimeout(() => {
+            if (myToken !== audioToken) return;
+            playEnglishMP3(enFile, onAllDone);
+          }, 120);
         });
       } else if (enFile) {
         playEnglishMP3(enFile, onAllDone);
@@ -1124,7 +1062,6 @@
 
       stageBodyEl.querySelectorAll('.flash-card-3d').forEach(btn => {
         btn.addEventListener('click', () => {
-          if (!audioUnlocked) unlockIOSAudio();
           const card = DEMO_CARDS.find(c => c.id === btn.dataset.id);
           visitedDemo.add(card.id);
           btn.classList.add('visited');
@@ -1368,7 +1305,6 @@
     // ==========================================
     document.getElementById('btnUnlockStart').addEventListener('click', () => {
       unlockIOSAudio();
-      preloadAllMP3();
       lessonStart = Date.now();
       document.getElementById('startOverlay').classList.add('hidden');
       renderStage1(true);
@@ -1381,7 +1317,7 @@
 
     document.getElementById('btnHome').addEventListener('click', () => {
       stopAllAudio();
-      window.location.href = 'en-unit8.html?v=2';
+      window.location.href = 'en-unit8.html?v=3';
     });
 
     document.getElementById('btnCopyReport').addEventListener('click', () => {
@@ -1415,7 +1351,6 @@
       jumpToStage(0);
     });
 
-    // 先渲染背景畫面（不自動播聲，等點擊「開始上堂」解鎖 iPad 聲音）
     renderStepDots();
     renderStage1(false);
   </script>
