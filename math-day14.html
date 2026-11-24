@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Maths Day 14：動物運動會 - 玲玲學習樂園</title>
+  <link rel="stylesheet" href="theme.css?v=1">
+  <script src="report-hub.js?v=2"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    html, body {
+      margin: 0; padding: 0; width: 100%; height: 100dvh; overflow: hidden;
+      font-family: "PingFang HK", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      background: linear-gradient(180deg, #ECFDF5 0%, #FEF9C3 100%);
+      color: #1E293B;
+      display: flex; flex-direction: column;
+    }
+
+    /* 雙層頂部導航欄：確保手機與 iPad 均不切字 */
+    .top-header {
+      background: rgba(255, 255, 255, 0.94);
+      border-bottom: 3px solid #A7F3D0;
+      padding: 8px 12px 10px;
+      flex-shrink: 0;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .top-row-1 {
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    }
+    .btn-back {
+      background: #ECFDF5; color: #047857; border: 2px solid #6EE7B7; border-bottom-width: 4px;
+      border-radius: 14px; padding: 5px 12px; font-size: 14px; font-weight: 800;
+      cursor: pointer; white-space: nowrap; flex-shrink: 0;
+    }
+    .btn-back:active { transform: translateY(2px); border-bottom-width: 2px; }
+    .day-title {
+      font-size: 16px; font-weight: 900; color: #065F46; text-align: center;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .btn-speak {
+      background: #FEF3C7; color: #B45309; border: 2px solid #FCD34D; border-bottom-width: 4px;
+      border-radius: 14px; padding: 5px 12px; font-size: 14px; font-weight: 800;
+      cursor: pointer; white-space: nowrap; flex-shrink: 0;
+    }
+    .btn-speak:active { transform: translateY(2px); border-bottom-width: 2px; }
+
+    /* 隨按即跳圓點導航列（獨立置中換行） */
+    .step-dots {
+      display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 6px;
+    }
+    .step-dot {
+      width: 32px; height: 32px; border-radius: 50%;
+      border: 2px solid #CBD5E1; background: #F1F5F9; color: #64748B;
+      font-size: 14px; font-weight: 900; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: transform 0.12s ease;
+    }
+    .step-dot.active {
+      background: #10B981; border-color: #047857; color: #FFFFFF; transform: scale(1.12);
+      box-shadow: 0 2px 6px rgba(16, 185, 129, 0.35);
+    }
+    .step-dot.done {
+      background: #DCFCE7; border-color: #22C55E; color: #15803D;
+    }
+    .step-dot.hinted {
+      background: #FEF3C7; border-color: #F59E0B; color: #B45309;
+    }
+
+    /* 主互動舞台 */
+    .stage {
+      flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+      padding: 10px 14px 14px; max-width: 860px; width: 100%; margin: 0 auto; overflow: hidden;
+    }
+
+    /* Anna 老師對話氣泡 */
+    .anna-bar {
+      width: 100%; background: #FFFFFF; border: 3px solid #6EE7B7; border-radius: 20px;
+      padding: 10px 14px; display: flex; align-items: center; gap: 12px;
+      box-shadow: 0 4px 10px rgba(6, 95, 70, 0.08); cursor: pointer; flex-shrink: 0;
+    }
+    .anna-avatar {
+      width: 46px; height: 46px; border-radius: 50%; background: #D1FAE5;
+      display: flex; align-items: center; justify-content: center; font-size: 30px; flex-shrink: 0;
+    }
+    .anna-text { font-size: 18px; font-weight: 800; color: #1E293B; line-height: 1.35; }
+    .skill-pill {
+      display: inline-block; font-size: 11px; font-weight: 800; color: #047857;
+      background: #D1FAE5; padding: 2px 8px; border-radius: 999px; margin-bottom: 3px;
+    }
+
+    /* 視覺展示主區域 */
+    .visual-box {
+      width: 100%; flex: 1; background: #FFFFFF; border: 4px solid #A7F3D0; border-bottom-width: 8px;
+      border-radius: 26px; margin: 10px 0; padding: 14px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+    }
+
+    /* 靜音自主點數實物樣式（絕無數字角標、絕無報數語音） */
+    .count-row {
+      display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 10px;
+    }
+    .count-item {
+      font-size: 46px; line-height: 1; padding: 6px; border-radius: 16px;
+      cursor: pointer; transition: transform 0.14s ease, background 0.14s ease;
+      position: relative; display: inline-flex; align-items: center; justify-content: center;
+    }
+    .count-item.tapped {
+      background: #FEF3C7; transform: scale(1.14);
+      box-shadow: 0 0 0 3px #FBBF24;
+    }
+    .count-item.tapped::after {
+      content: "✨"; position: absolute; top: -6px; right: -6px; font-size: 16px; pointer-events: none;
+    }
+    .count-item.gone {
+      opacity: 0.28; filter: grayscale(70%); pointer-events: none;
+      border: 2px dashed #94A3B8;
+    }
+
+    /* 各種場景輔助容器 */
+    .compare-wrap {
+      display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 600px;
+    }
+    .team-row {
+      display: flex; align-items: center; gap: 10px; padding: 10px 14px;
+      border-radius: 20px; border: 3px solid #E2E8F0; background: #F8FAFC;
+    }
+    .team-label {
+      font-size: 18px; font-weight: 900; min-width: 86px; text-align: center;
+      padding: 6px 10px; border-radius: 14px; background: #FFFFFF; border: 2px solid #CBD5E1;
+    }
+
+    .track-row {
+      display: flex; align-items: center; justify-content: center; gap: 12px;
+      background: #FEF9C3; border: 3px dashed #F59E0B; border-radius: 22px; padding: 14px 18px;
+      width: 100%; max-width: 640px; flex-wrap: wrap;
+    }
+    .animal-slot {
+      width: 84px; height: 84px; background: #FFFFFF; border: 3px solid #FCD34D; border-bottom-width: 6px;
+      border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 50px;
+    }
+    .animal-slot.center-hl {
+      background: #FEF3C7; border-color: #F59E0B; transform: scale(1.06);
+    }
+
+    .math-group-wrap {
+      display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap;
+    }
+    .math-tray {
+      background: #F0FDF4; border: 3px solid #86EFAC; border-radius: 20px;
+      padding: 12px 16px; display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .math-op { font-size: 38px; font-weight: 900; color: #059669; }
+
+    .bond-wrap {
+      display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%;
+    }
+    .bond-total {
+      background: #FEF3C7; border: 3px solid #F59E0B; border-radius: 18px;
+      padding: 6px 20px; font-size: 20px; font-weight: 900; color: #92400E;
+    }
+    .bond-parts {
+      display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap;
+    }
+    .bond-box {
+      background: #EFF6FF; border: 3px solid #60A5FA; border-radius: 20px;
+      padding: 10px 14px; text-align: center;
+    }
+    .bond-box.mystery {
+      background: #FFF7ED; border: 3px dashed #FB923C;
+    }
+    .bond-caption { font-size: 15px; font-weight: 800; color: #475569; margin-bottom: 6px; }
+
+    /* 一對一對齊比較相差（L2 SUB-3） */
+    .diff-grid {
+      display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 580px;
+    }
+    .diff-row {
+      display: grid; grid-template-columns: 84px repeat(6, 1fr); align-items: center; gap: 6px;
+      background: #F8FAFC; border: 2px solid #E2E8F0; border-radius: 18px; padding: 8px 10px;
+    }
+    .diff-extra {
+      background: #FEF3C7; border: 2px dashed #F59E0B; border-radius: 14px;
+    }
+
+    /* 溫柔提示框（嚴禁 ❌ 符號） */
+    .gentle-hint-box {
+      margin-top: 8px; background: #FFFBEB; border: 2px solid #FBBF24; border-radius: 14px;
+      padding: 6px 14px; font-size: 16px; font-weight: 800; color: #B45309; display: none;
+    }
+
+    /* 選項按鈕區 */
+    .options-bar {
+      width: 100%; display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 12px; flex-shrink: 0; max-width: 680px;
+    }
+    .opt-btn {
+      background: #FFFFFF; border: 4px solid #34D399; border-bottom-width: 8px;
+      border-radius: 22px; padding: 14px 10px; font-size: 28px; font-weight: 900; color: #065F46;
+      cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;
+      transition: transform 0.1s;
+    }
+    .opt-btn:active { transform: translateY(4px); border-bottom-width: 4px; }
+    .opt-btn.correct { background: #DCFCE7; border-color: #16A34A; color: #14532D; }
+    .opt-btn.wrong-shake {
+      background: #FEF3C7; border-color: #F59E0B; color: #92400E; animation: shake 0.35s;
+    }
+
+    /* 結算畫面 */
+    .summary-wrap {
+      width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center;
+      justify-content: space-between; gap: 8px; overflow: hidden;
+    }
+    .sync-badge {
+      background: #DCFCE7; color: #15803D; font-size: 13px; font-weight: 800;
+      padding: 5px 14px; border-radius: 999px;
+    }
+    .report-table-box {
+      width: 100%; flex: 1; overflow-y: auto; border: 2px solid #E2E8F0; border-radius: 16px;
+      background: #F8FAFC;
+    }
+    table.report-table {
+      width: 100%; border-collapse: collapse; font-size: 14px;
+    }
+    table.report-table th, table.report-table td {
+      padding: 6px 8px; border-bottom: 1px solid #E2E8F0; text-align: left;
+    }
+    table.report-table th { background: #ECFDF5; color: #065F46; position: sticky; top: 0; }
+    .summary-actions {
+      display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; flex-shrink: 0;
+    }
+    .btn-action-primary {
+      background: #10B981; color: #FFFFFF; border: 3px solid #047857; border-bottom-width: 6px;
+      border-radius: 18px; padding: 10px 20px; font-size: 17px; font-weight: 900; cursor: pointer;
+    }
+    .btn-action-secondary {
+      background: #FEF3C7; color: #92400E; border: 3px solid #F59E0B; border-bottom-width: 6px;
+      border-radius: 18px; padding: 10px 18px; font-size: 16px; font-weight: 900; cursor: pointer;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-7px); }
+      75% { transform: translateX(7px); }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="top-header">
+    <div class="top-row-1">
+      <button class="btn-back" onclick="goHome()">🏠 返回</button>
+      <div class="day-title">🐾 Day 14：動物運動會</div>
+      <button class="btn-speak" onclick="replayQuestion()">🔊 聽題目</button>
+    </div>
+    <div class="step-dots" id="stepDots"></div>
+  </header>
+
+  <main class="stage" id="stageArea">
+    <div class="anna-bar" onclick="replayQuestion()">
+      <div class="anna-avatar">👩‍🏫</div>
+      <div>
+        <div class="skill-pill" id="skillPill">載入中…</div>
+        <div class="anna-text" id="annaText">歡迎嚟到動物運動會！</div>
+      </div>
+    </div>
+
+    <div class="visual-box" id="visualBox"></div>
+    <div class="gentle-hint-box" id="hintBox"></div>
+    <div class="options-bar" id="optionsBar"></div>
+  </main>
+
+  <script>
+    // ========= 1. iPad Safari 防護廣東話語音引擎 + 靜音點數輕快音效 =========
+    window.utterancePool = [];
+    let speechTimer = null;
+    let advanceTimer = null;
+    let audioCtx = null;
+
+    function clearAllTimers() {
+      if (speechTimer) { clearTimeout(speechTimer); speechTimer = null; }
+      if (advanceTimer) { clearTimeout(advanceTimer); advanceTimer = null; }
+    }
+
+    function stopSpeech() {
+      clearAllTimers();
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    }
+
+    function speakHK(text) {
+      if (!('speechSynthesis' in window) || !text) return;
+      if (speechTimer) { clearTimeout(speechTimer); speechTimer = null; }
+      window.speechSynthesis.cancel();
+      speechTimer = setTimeout(() => {
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = 'zh-HK';
+        u.rate = 0.72;
+        u.pitch = 1.05;
+        const voices = window.speechSynthesis.getVoices();
+        const hk = voices.find(v => v.lang.includes('zh-HK') || v.lang.includes('zh_HK')) ||
+                   voices.find(v => v.lang.includes('zh-TW')) || voices[0];
+        if (hk) u.voice = hk;
+        window.utterancePool.push(u);
+        if (window.utterancePool.length > 10) window.utterancePool.shift();
+        window.speechSynthesis.speak(u);
+      }, 40);
+    }
+
+    // 靜音點數專用：只播輕快「叮」音效，絕不報數
+    function playPopSound() {
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(520, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(780, audioCtx.currentTime + 0.08);
+        gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.09);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.09);
+      } catch (e) {}
+    }
+
+    function toggleCountItem(el) {
+      playPopSound();
+      el.classList.toggle('tapped');
+    }
+
+    function goHome() {
+      stopSpeech();
+      window.location.href = 'index.html';
+    }
+
+    // ========= 2. 輔助 SVG 繪製（整點鐘面 ＋ 平面圖形） =========
+    function buildClockSVG(hour) {
+      const hourAngle = (hour % 12) * 30;
+      let nums = '';
+      for (let n = 1; n <= 12; n++) {
+        const rad = (n * 30 - 90) * Math.PI / 180;
+        const x = 100 + 70 * Math.cos(rad);
+        const y = 100 + 70 * Math.sin(rad) + 6;
+        nums += `<text x="${x}" y="${y}" text-anchor="middle" font-size="18" font-weight="900" fill="#1E293B">${n}</text>`;
+      }
+      return `
+        <svg viewBox="0 0 200 200" width="188" height="188" aria-label="鐘面">
+          <circle cx="100" cy="100" r="92" fill="#FFFBEB" stroke="#F59E0B" stroke-width="8"/>
+          <circle cx="100" cy="100" r="84" fill="#FFFFFF" stroke="#FDE68A" stroke-width="2"/>
+          ${nums}
+          <line x1="100" y1="100" x2="100" y2="38" stroke="#3B82F6" stroke-width="6" stroke-linecap="round"/>
+          <line x1="100" y1="100" x2="100" y2="54" stroke="#EF4444" stroke-width="9" stroke-linecap="round" transform="rotate(${hourAngle} 100 100)"/>
+          <circle cx="100" cy="100" r="7" fill="#1E293B"/>
+        </svg>
+      `;
+    }
+
+    const SHAPE_SVGS = {
+      circle: `<svg width="64" height="64" viewBox="0 0 80 80"><circle cx="40" cy="40" r="30" fill="#60A5FA" stroke="#1D4ED8" stroke-width="4"/></svg>`,
+      triangle: `<svg width="64" height="64" viewBox="0 0 80 80"><polygon points="40,10 72,68 8,68" fill="#FBBF24" stroke="#B45309" stroke-width="4" stroke-linejoin="round"/></svg>`,
+      square: `<svg width="64" height="64" viewBox="0 0 80 80"><rect x="14" y="14" width="52" height="52" rx="4" fill="#34D399" stroke="#047857" stroke-width="4"/></svg>`,
+      star: `<svg width="64" height="64" viewBox="0 0 80 80"><polygon points="40,8 49,30 73,30 54,45 61,68 40,54 19,68 26,45 7,30 31,30" fill="#F472B6" stroke="#BE185D" stroke-width="4" stroke-linejoin="round"/></svg>`
+    };
+
+    // ========= 3. 方案 B 10 題數據庫（六維全覆蓋 ＋ 跨日覆核 ＋ SUB-3 單線超前解鎖） =========
+    const quizData = [
+      {
+        dim: 'NUM', skill_id: 'NUM-2', level: 'L1',
+        tag: '數感與數序 · 比大小',
+        reportLabel: '比大小(邊隊多啲)',
+        question: '動物拔河比賽開始喇！你逐隻點下數一數，邊一隊嘅動物多啲呀？',
+        hint: '試下用手指逐隻點下小兔同青蛙，睇下邊隊多啲啦！',
+        renderVisual: () => `
+          <div class="compare-wrap">
+            <div class="team-row">
+              <div class="team-label">🐰 小兔隊</div>
+              <div class="count-row">${Array(6).fill('<span class="count-item" onclick="toggleCountItem(this)">🐰</span>').join('')}</div>
+            </div>
+            <div class="team-row">
+              <div class="team-label">🐸 青蛙隊</div>
+              <div class="count-row">${Array(8).fill('<span class="count-item" onclick="toggleCountItem(this)">🐸</span>').join('')}</div>
+            </div>
+          </div>
+        `,
+        options: [
+          { label: '🐰 小兔隊', value: 'rabbit' },
+          { label: '🐸 青蛙隊', value: 'frog' }
+        ],
+        answer: 'frog'
+      },
+      {
+        dim: 'SPA', skill_id: 'SPA-1', level: 'L1',
+        tag: '空間與方位 · 跨日覆核',
+        reportLabel: '上下前後左右方位(右邊)',
+        question: '熊仔企喺頒獎台嘅中間，請問邊隻小動物企喺熊仔嘅「右邊」呀？',
+        hint: '伸出你寫字或者揸羹嗰隻右手，望向熊仔右手邊係邊個呀？',
+        renderVisual: () => `
+          <div class="track-row">
+            <div class="animal-slot">🐱</div>
+            <div class="animal-slot center-hl">🐻</div>
+            <div class="animal-slot">🐶</div>
+          </div>
+        `,
+        options: [
+          { label: '🐱 小貓', value: 'cat' },
+          { label: '🐻 熊仔', value: 'bear' },
+          { label: '🐶 小狗', value: 'dog' }
+        ],
+        answer: 'dog'
+      },
+      {
+        dim: 'APP', skill_id: 'APP-2', level: 'L1',
+        tag: '圖形與生活 · 跨日覆核',
+        reportLabel: '整點鐘面(9點鐘)',
+        question: '運動會跳高比賽準備開始喇！睇下個時鐘，依家係幾點鐘呀？',
+        hint: '長針指住 12，睇下紅色短針指住邊個數字呀？',
+        renderVisual: () => buildClockSVG(9),
+        options: [
+          { label: '6點鐘', value: '6' },
+          { label: '9點鐘', value: '9' },
+          { label: '12點鐘', value: '12' }
+        ],
+        answer: '9'
+      },
+      {
+        dim: 'ADD', skill_id: 'ADD-2', level: 'L1',
+        tag: '加法運算 · 10以內加法',
+        reportLabel: '10以內基礎加法(4+2)',
+        question: '草地左邊有四個足球，右邊有兩個足球，合埋一共有幾多個足球呀？',
+        hint: '可以用手指逐個點下啲足球，由左邊數到右邊一共有幾多個！',
+        renderVisual: () => `
+          <div class="math-group-wrap">
+            <div class="math-tray">${Array(4).fill('<span class="count-item" onclick="toggleCountItem(this)">⚽</span>').join('')}</div>
+            <span class="math-op">＋</span>
+            <div class="math-tray">${Array(2).fill('<span class="count-item" onclick="toggleCountItem(this)">⚽</span>').join('')}</div>
+          </div>
+        `,
+        options: [
+          { label: '5', value: '5' },
+          { label: '6', value: '6' },
+          { label: '7', value: '7' }
+        ],
+        answer: '6'
+      },
+      {
+        dim: 'LOG', skill_id: 'LOG-2', level: 'L1',
+        tag: '規律與邏輯 · 分類配對',
+        reportLabel: '分類與配對(唔同類)',
+        question: '運動器材盒入面混咗一樣唔同類嘅嘢，請問邊一樣唔係波波嚟㗎？',
+        hint: '有三樣都係圓碌碌嘅運動波波，有一樣係可以食嘅生果呀！',
+        renderVisual: () => `
+          <div class="track-row">
+            <div class="animal-slot">⚽</div>
+            <div class="animal-slot">🏀</div>
+            <div class="animal-slot">🍌</div>
+            <div class="animal-slot">🎾</div>
+          </div>
+        `,
+        options: [
+          { label: '⚽ 足球', value: 'soccer' },
+          { label: '🏀 籃球', value: 'basket' },
+          { label: '🍌 香蕉', value: 'banana' },
+          { label: '🎾 網球', value: 'tennis' }
+        ],
+        answer: 'banana'
+      },
+      {
+        dim: 'SPA', skill_id: 'SPA-2', level: 'L1',
+        tag: '空間與方位 · 序數定位',
+        reportLabel: '序數第幾個(左起第4個)',
+        question: '動物賽跑開始！由左邊紅旗數起，邊隻小動物排喺「第 4 個」呀？',
+        hint: '由左邊紅旗開始慢慢數：第1、第2、第3、第4個係邊隻呀？',
+        renderVisual: () => `
+          <div class="track-row">
+            <div style="font-size:38px;">🚩</div>
+            <div class="animal-slot">🐰</div>
+            <div class="animal-slot">🐢</div>
+            <div class="animal-slot">🦊</div>
+            <div class="animal-slot">🐼</div>
+            <div class="animal-slot">🦁</div>
+          </div>
+        `,
+        options: [
+          { label: '🐢 烏龜', value: 'turtle' },
+          { label: '🦊 狐狸', value: 'fox' },
+          { label: '🐼 熊貓', value: 'panda' },
+          { label: '🦁 獅子', value: 'lion' }
+        ],
+        answer: 'panda'
+      },
+      {
+        dim: 'SUB', skill_id: 'SUB-1', level: 'L1',
+        tag: '減法運算 · 10以內減法',
+        reportLabel: '10以內基礎減法(7-2)',
+        question: '慶祝氣球原本有七個，風一吹飛走咗兩個，依家仲剩低幾多個氣球呀？',
+        hint: '淡色嗰兩個飛走咗喇，逐個點下仲喺度嘅紅色氣球有幾多個！',
+        renderVisual: () => `
+          <div class="count-row">
+            ${Array(5).fill('<span class="count-item" onclick="toggleCountItem(this)">🎈</span>').join('')}
+            ${Array(2).fill('<span class="count-item gone">🎈</span>').join('')}
+          </div>
+        `,
+        options: [
+          { label: '4', value: '4' },
+          { label: '5', value: '5' },
+          { label: '6', value: '6' }
+        ],
+        answer: '5'
+      },
+      {
+        dim: 'ADD', skill_id: 'ADD-1', level: 'L1',
+        tag: '加法運算 · 數的分合',
+        reportLabel: '5至10分合(7的組成)',
+        question: '一共有七粒星星獎章，左邊盒放咗四粒，右邊盒要放幾多粒先夠七粒呀？',
+        hint: '睇下虛線框入面仲差幾多粒星星，用手指逐粒點下數一數啦！',
+        renderVisual: () => `
+          <div class="bond-wrap">
+            <div class="bond-total">一共有 7 粒星星</div>
+            <div class="bond-parts">
+              <div class="bond-box">
+                <div class="bond-caption">左邊盒（4 粒）</div>
+                <div class="count-row">${Array(4).fill('<span class="count-item" onclick="toggleCountItem(this)">⭐</span>').join('')}</div>
+              </div>
+              <div class="bond-box mystery">
+                <div class="bond-caption">右邊盒（？粒）</div>
+                <div class="count-row">${Array(3).fill('<span class="count-item" style="opacity:0.75;" onclick="toggleCountItem(this)">⭐</span>').join('')}</div>
+              </div>
+            </div>
+          </div>
+        `,
+        options: [
+          { label: '2', value: '2' },
+          { label: '3', value: '3' },
+          { label: '4', value: '4' }
+        ],
+        answer: '3'
+      },
+      {
+        dim: 'APP', skill_id: 'APP-1', level: 'L1',
+        tag: '圖形與生活 · 平面圖形',
+        reportLabel: '平面圖形辨識(正方形)',
+        question: '運動會嘅接力隊牌係「正方形」嘅，請玲玲幫手搵出正方形！',
+        hint: '正方形有四條一樣長嘅直邊，同埋四隻尖尖角㗎！',
+        renderVisual: () => `
+          <div style="font-size:24px;font-weight:900;color:#047857;text-align:center;">
+            🏁 請喺下面撳出「正方形」接力隊牌！
+          </div>
+        `,
+        options: [
+          { html: SHAPE_SVGS.circle, value: 'circle' },
+          { html: SHAPE_SVGS.triangle, value: 'triangle' },
+          { html: SHAPE_SVGS.square, value: 'square' },
+          { html: SHAPE_SVGS.star, value: 'star' }
+        ],
+        answer: 'square'
+      },
+      {
+        dim: 'SUB', skill_id: 'SUB-3', level: 'L2',
+        tag: '🚀 減法進階解鎖 · 比較相差',
+        reportLabel: '比較相差(多幾個)',
+        question: '小兔贏咗六個獎牌，小鴨贏咗四個獎牌。你睇下黃色虛線格，小兔比小鴨「多幾多個」獎牌呀？',
+        hint: '前面四個一對一排齊咗，數下後面黃色格仔入面多咗出嚟嗰啲獎牌啦！',
+        renderVisual: () => `
+          <div class="diff-grid">
+            <div class="diff-row">
+              <div style="font-size:17px;font-weight:900;">🐰 小兔</div>
+              <span class="count-item" onclick="toggleCountItem(this)">🏅</span>
+              <span class="count-item" onclick="toggleCountItem(this)">🏅</span>
+              <span class="count-item" onclick="toggleCountItem(this)">🏅</span>
+              <span class="count-item" onclick="toggleCountItem(this)">🏅</span>
+              <span class="count-item diff-extra" onclick="toggleCountItem(this)">🏅</span>
+              <span class="count-item diff-extra" onclick="toggleCountItem(this)">🏅</span>
+            </div>
+            <div class="diff-row">
+              <div style="font-size:17px;font-weight:900;">🦆 小鴨</div>
+              <span class="count-item" onclick="toggleCountItem(this)">🏅</span>
+              <span class="count-item" onclick="toggleCountItem(this)">🏅</span>
+              <span class="count-item" onclick="toggleCountItem(this)">🏅</span>
+              <span class="count-item" onclick="toggleCountItem(this)">🏅</span>
+              <span></span><span></span>
+            </div>
+          </div>
+        `,
+        options: [
+          { label: '1個', value: '1' },
+          { label: '2個', value: '2' },
+          { label: '3個', value: '3' }
+        ],
+        answer: '2'
+      }
+    ];
+
+    // ========= 4. 測驗狀態、隨按跳題與計時 =========
+    let currentIdx = 0;
+    let qStartTime = Date.now();
+    let isLocked = false;
+    let reportSent = false;
+    const results = quizData.map(() => ({ answered: false, hadWrong: false, sec: 0 }));
+
+    function renderDots() {
+      const wrap = document.getElementById('stepDots');
+      wrap.innerHTML = quizData.map((_, i) => {
+        const r = results[i];
+        let cls = 'step-dot';
+        if (i === currentIdx) cls += ' active';
+        else if (r.answered && !r.hadWrong) cls += ' done';
+        else if (r.answered && r.hadWrong) cls += ' hinted';
+        return `<button class="${cls}" onclick="jumpToQuestion(${i})">${i + 1}</button>`;
+      }).join('');
+    }
+
+    function jumpToQuestion(idx) {
+      stopSpeech();
+      isLocked = false;
+      currentIdx = idx;
+      renderQuestion();
+    }
+
+    function replayQuestion() {
+      const q = quizData[currentIdx];
+      if (q) speakHK(q.question);
+    }
+
+    function renderQuestion() {
+      renderDots();
+      const q = quizData[currentIdx];
+      qStartTime = Date.now();
+      isLocked = false;
+
+      document.getElementById('skillPill').textContent = `第 ${currentIdx + 1} / ${quizData.length} 題 · ${q.tag}`;
+      document.getElementById('annaText').textContent = q.question;
+      document.getElementById('visualBox').innerHTML = q.renderVisual();
+
+      const hintBox = document.getElementById('hintBox');
+      hintBox.style.display = 'none';
+      hintBox.textContent = '';
+
+      document.getElementById('optionsBar').innerHTML = q.options.map((opt, idx) => `
+        <button class="opt-btn" id="opt-${idx}" onclick="selectOption(${idx}, '${opt.value}')">
+          ${opt.html ? opt.html : opt.label}
+        </button>
+      `).join('');
+
+      speakHK(q.question);
+    }
+
+    function selectOption(optIdx, val) {
+      if (isLocked) return;
+      const q = quizData[currentIdx];
+      const btn = document.getElementById(`opt-${optIdx}`);
+      const r = results[currentIdx];
+
+      if (val === q.answer) {
+        isLocked = true;
+        btn.classList.add('correct');
+        const elapsed = Math.max(1, Math.round((Date.now() - qStartTime) / 1000));
+        if (!r.answered) {
+          r.answered = true;
+          r.sec = elapsed;
+        }
+        renderDots();
+        document.getElementById('hintBox').style.display = 'none';
+        speakHK('好叻呀玲玲！答啱喇！');
+
+        advanceTimer = setTimeout(() => {
+          const nextUnanswered = results.findIndex((item, i) => i > currentIdx && !item.answered);
+          const anyUnanswered = results.findIndex(item => !item.answered);
+          if (nextUnanswered !== -1) {
+            currentIdx = nextUnanswered;
+            renderQuestion();
+          } else if (anyUnanswered !== -1) {
+            currentIdx = anyUnanswered;
+            renderQuestion();
+          } else {
+            renderSummary();
+          }
+        }, 1250);
+      } else {
+        r.hadWrong = true;
+        btn.classList.remove('wrong-shake');
+        void btn.offsetWidth;
+        btn.classList.add('wrong-shake');
+        const hintBox = document.getElementById('hintBox');
+        hintBox.textContent = `💡 提示：${q.hint}`;
+        hintBox.style.display = 'block';
+        speakHK(q.hint);
+      }
+    }
+
+    // ========= 5. 結算戰報與儀表板雙保險自動同步 =========
+    function renderSummary() {
+      stopSpeech();
+      renderDots();
+
+      const parts = [];
+      const skillMap = {};
+
+      quizData.forEach((q, i) => {
+        const r = results[i];
+        const sec = r.sec || 1;
+        const statusText = r.hadWrong ? '需提示' : '1次答對';
+        parts.push(`Q${i + 1} ${q.reportLabel}: ${sec}s(${statusText})`);
+
+        if (!skillMap[q.skill_id]) {
+          skillMap[q.skill_id] = {
+            dim: q.dim, skill_id: q.skill_id, level: q.level,
+            total: 0, correct: 0, total_sec: 0
+          };
+        }
+        skillMap[q.skill_id].total += 1;
+        if (!r.hadWrong) skillMap[q.skill_id].correct += 1;
+        skillMap[q.skill_id].total_sec += sec;
+      });
+
+      const skillStats = Object.values(skillMap).map(s => ({
+        dim: s.dim,
+        skill_id: s.skill_id,
+        level: s.level,
+        total: s.total,
+        correct: s.correct,
+        avg_sec: Number((s.total_sec / s.total).toFixed(1))
+      }));
+
+      const reportText = `【數學測驗回報】Day 14（動物運動會） | ${parts.join(' | ')}`;
+
+      if (!reportSent && window.LinglingReport) {
+        window.LinglingReport.save('數學探索島', 'Maths Day 14（動物運動會）', reportText, {
+          term: 'K2-T1',
+          skill_stats: skillStats
+        });
+        reportSent = true;
+      }
+
+      const firstTryCount = results.filter(r => !r.hadWrong).length;
+      const rowsHtml = quizData.map((q, i) => {
+        const r = results[i];
+        return `
+          <tr>
+            <td><strong>Q${i + 1}</strong> ${q.reportLabel}</td>
+            <td>${r.hadWrong ? '💡 需提示' : '✅ 1次答對'}</td>
+            <td>${r.sec || 1} 秒</td>
+          </tr>
+        `;
+      }).join('');
+
+      document.getElementById('stageArea').innerHTML = `
+        <div class="summary-wrap">
+          <div style="text-align:center;">
+            <div style="font-size:44px;line-height:1;">🏆🐾🎉</div>
+            <h2 style="margin:4px 0;font-size:22px;color:#065F46;">動物運動會完成！（1次答對 ${firstTryCount}/${quizData.length} 題）</h2>
+            <span class="sync-badge">☁️ 戰報已自動同步至家長戰報箱與成長儀表板</span>
+          </div>
+          <div class="report-table-box">
+            <table class="report-table">
+              <thead><tr><th>題目與技能</th><th>表現</th><th>耗時</th></tr></thead>
+              <tbody>${rowsHtml}</tbody>
+            </table>
+          </div>
+          <div class="summary-actions">
+            <button class="btn-action-secondary" onclick="copyReport()">📋 一鍵複製進度暗號俾 Anna 老師</button>
+            <button class="btn-action-primary" onclick="goHome()">🏠 返回學習樂園</button>
+          </div>
+        </div>
+      `;
+
+      window.__latestReportText = reportText;
+      speakHK('哇！恭喜玲玲完成今日嘅動物運動會數學大挑戰！你真係好聰明呀！');
+    }
+
+    function copyReport() {
+      const txt = window.__latestReportText || '';
+      if (navigator.clipboard && txt) {
+        navigator.clipboard.writeText(txt).then(() => alert('已複製 Maths Day 14 進度暗號！'));
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      if ('speechSynthesis' in window) window.speechSynthesis.getVoices();
+      renderQuestion();
+    });
+  </script>
+</body>
+</html>
