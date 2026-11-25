@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>玲玲學習樂園 · 成長評估儀表板</title>
+  <title>玲玲學習樂園 · 成長評估儀表板 v2.0</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <style>
@@ -14,6 +14,7 @@
       background-color: #FFFBF0;
       color: #1E293B;
       -webkit-tap-highlight-color: transparent;
+      overflow-x: hidden;
     }
     .card-3d {
       background: #FFFFFF;
@@ -27,40 +28,15 @@
       user-select: none;
       -webkit-user-select: none;
     }
-    .btn-3d:active {
-      transform: translateY(3px);
-    }
-    .trophy-glow {
-      box-shadow: 0 8px 0 #D97706, 0 12px 24px rgba(245, 158, 11, 0.25);
-    }
-    .trophy-glow-cn {
-      box-shadow: 0 8px 0 #E11D48, 0 12px 24px rgba(244, 63, 94, 0.22);
-    }
-    .trophy-locked {
-      box-shadow: 0 6px 0 #CBD5E1;
-    }
+    .btn-3d:active { transform: translateY(3px); }
+    .trophy-glow { box-shadow: 0 8px 0 #D97706, 0 12px 24px rgba(245, 158, 11, 0.25); }
+    .trophy-glow-cn { box-shadow: 0 8px 0 #DC2626, 0 12px 24px rgba(239, 68, 68, 0.22); }
+    .trophy-locked { box-shadow: 0 6px 0 #CBD5E1; }
     @keyframes floatSlow {
       0%, 100% { transform: translateY(0px); }
       50% { transform: translateY(-6px); }
     }
-    .float-slow {
-      animation: floatSlow 3s ease-in-out infinite;
-    }
-    .char-chip {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 2.35rem;
-      height: 2.35rem;
-      padding: 0 0.5rem;
-      border-radius: 0.85rem;
-      font-weight: 900;
-      font-size: 1.05rem;
-      cursor: pointer;
-      transition: transform 0.1s ease;
-      user-select: none;
-    }
-    .char-chip:active { transform: scale(0.92); }
+    .float-slow { animation: floatSlow 3s ease-in-out infinite; }
     @media print {
       .no-print { display: none !important; }
       body { background: #FFFFFF !important; }
@@ -72,26 +48,26 @@
 
   <!-- 頂部導覽列 -->
   <header class="bg-amber-400 border-b-4 border-amber-500 sticky top-0 z-30 no-print">
-    <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
-      <div class="flex items-center gap-3">
-        <a href="index.html?v=1" class="btn-3d bg-white text-amber-700 font-black px-3.5 py-2 rounded-2xl border-2 border-amber-600 border-b-4 text-sm flex items-center gap-1 shrink-0">
+    <div class="max-w-6xl mx-auto px-3 sm:px-4 py-3 flex flex-wrap items-center justify-between gap-2.5">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <a href="index.html?v=2" onclick="stopSpeech()" class="btn-3d shrink-0 bg-white text-amber-700 font-black px-3 py-2 rounded-2xl border-2 border-amber-600 border-b-4 text-xs sm:text-sm flex items-center gap-1">
           🏠 返回樂園
         </a>
-        <div>
-          <h1 class="text-lg sm:text-xl font-black text-amber-950 leading-tight">📊 玲玲成長評估儀表板</h1>
-          <p id="syncStatusText" class="text-xs font-bold text-amber-900">正在連線雲端戰報箱...</p>
+        <div class="min-w-0">
+          <h1 class="text-base sm:text-xl font-black text-amber-950 leading-tight truncate">📊 玲玲成長評估儀表板</h1>
+          <p id="syncStatusText" class="text-[11px] sm:text-xs font-bold text-amber-900 truncate">正在連線雲端戰報箱...</p>
         </div>
       </div>
 
       <!-- 視角切換 ＋ 數據來源切換 -->
-      <div class="flex flex-wrap items-center gap-2">
-        <button id="btnViewMom" onclick="switchView('mom')" class="btn-3d px-3.5 py-2 rounded-2xl font-black text-sm border-2 border-b-4 bg-indigo-600 text-white border-indigo-800">
+      <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
+        <button id="btnViewMom" onclick="switchView('mom')" class="btn-3d px-3 py-2 rounded-2xl font-black text-xs sm:text-sm border-2 border-b-4 bg-indigo-600 text-white border-indigo-800">
           👩‍🏫 媽媽評估
         </button>
-        <button id="btnViewKid" onclick="switchView('kid')" class="btn-3d px-3.5 py-2 rounded-2xl font-black text-sm border-2 border-b-4 bg-white text-pink-600 border-pink-300">
+        <button id="btnViewKid" onclick="switchView('kid')" class="btn-3d px-3 py-2 rounded-2xl font-black text-xs sm:text-sm border-2 border-b-4 bg-white text-pink-600 border-pink-300">
           🏆 玲玲獎盃牆
         </button>
-        <button id="btnDataMode" onclick="toggleDataMode()" class="btn-3d px-3 py-2 rounded-2xl font-bold text-xs border-2 border-b-4 bg-emerald-500 text-white border-emerald-700">
+        <button id="btnDataMode" onclick="toggleDataMode()" class="btn-3d px-2.5 py-2 rounded-2xl font-bold text-xs border-2 border-b-4 bg-emerald-500 text-white border-emerald-700">
           ☁️ 真實雲端
         </button>
         <button onclick="openSettingsModal()" class="btn-3d px-2.5 py-2 rounded-2xl font-bold text-xs border-2 border-b-4 bg-white text-slate-700 border-slate-300" title="API 設定">
@@ -101,8 +77,8 @@
     </div>
   </header>
 
-  <!-- 科目分頁 ＋ 學期篩選列（媽媽視角顯示） -->
-  <div id="filterBar" class="max-w-6xl mx-auto px-4 pt-5 no-print">
+  <!-- 科目分頁 ＋ 學期篩選列 -->
+  <div id="filterBar" class="max-w-6xl mx-auto px-3 sm:px-4 pt-5 no-print">
     <div class="flex flex-wrap items-center justify-between gap-3">
       <!-- 科目分頁 -->
       <div class="flex flex-wrap items-center gap-2">
@@ -110,15 +86,15 @@
           📐 數學探索島
         </button>
         <button id="tabCn" onclick="switchSubject('cn')" class="btn-3d px-4 py-2 rounded-2xl font-black text-sm bg-white text-rose-600 border-2 border-rose-300 border-b-4">
-          📖 中文樂園
+          🏮 中文樂園
         </button>
-        <button onclick="showComingSoon('英文世界')" class="px-4 py-2 rounded-2xl font-bold text-sm bg-slate-100 text-slate-400 border-2 border-slate-200 border-b-4 cursor-pointer">
+        <button onclick="showComingSoon('英文世界')" class="btn-3d px-4 py-2 rounded-2xl font-bold text-sm bg-slate-100 text-slate-400 border-2 border-slate-200 border-b-4">
           🔤 英文世界（即將開放）
         </button>
       </div>
 
       <!-- 學期篩選與工具 -->
-      <div class="flex flex-wrap items-center gap-2">
+      <div id="momToolsBar" class="flex flex-wrap items-center gap-2">
         <select id="termFilter" onchange="renderAll()" class="bg-white font-bold text-sm text-slate-700 px-3 py-2 rounded-xl border-2 border-slate-300 border-b-4 outline-none">
           <option value="all">📅 全部學期 (K2 全年)</option>
           <option value="K2-T1">🌱 K2 上學期 (T1)</option>
@@ -136,7 +112,7 @@
     <!-- 模擬模式橫幅提示 -->
     <div id="demoBanner" class="hidden mt-4 bg-violet-100 border-2 border-violet-400 border-b-4 rounded-2xl px-4 py-3 flex flex-wrap items-center justify-between gap-2">
       <div id="demoBannerText" class="text-sm font-bold text-violet-900">
-        🎮 目前正在瀏覽「模擬半學期數據預覽」，方便妳預覽成長曲線與能力圖譜效果。
+        🎮 目前正在瀏覽「模擬半學期數據預覽」，方便妳預覽成長曲線與技能樹效果。
       </div>
       <button onclick="toggleDataMode()" class="btn-3d bg-violet-600 text-white text-xs font-black px-3 py-1.5 rounded-xl border-2 border-violet-800 border-b-4">
         切回真實雲端數據
@@ -145,368 +121,202 @@
   </div>
 
   <!-- ==================== 視角 A：媽媽數據評估視角 ==================== -->
-  <main id="momView" class="max-w-6xl mx-auto px-4 mt-5">
+  <main id="momView" class="max-w-6xl mx-auto px-3 sm:px-4 mt-5 space-y-6">
 
-    <!-- ########## 分頁 1：📐 數學探索島 ########## -->
-    <div id="mathSection" class="space-y-6">
-      <!-- 1. 數學四大 KPI -->
-      <section class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="card-3d p-4 border-sky-200 border-b-sky-300">
-          <div class="text-xs font-bold text-slate-500">累積數學測驗</div>
-          <div class="mt-1 flex items-baseline gap-1.5">
-            <span id="kpiCount" class="text-3xl font-black text-sky-600">--</span>
-            <span class="text-sm font-bold text-slate-500">次</span>
-          </div>
-          <div id="kpiSubCount" class="text-xs font-bold text-sky-700 mt-1">涵蓋 -- 個測驗日</div>
+    <!-- 1. 四大 KPI 概覽卡 -->
+    <section class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+      <div class="card-3d p-4 border-sky-200 border-b-sky-300">
+        <div id="kpiLabel1" class="text-xs font-bold text-slate-500">累積數學測驗</div>
+        <div class="mt-1 flex items-baseline gap-1.5">
+          <span id="kpiVal1" class="text-2xl sm:text-3xl font-black text-sky-600">--</span>
+          <span id="kpiUnit1" class="text-sm font-bold text-slate-500">次</span>
         </div>
-
-        <div class="card-3d p-4 border-emerald-200 border-b-emerald-300">
-          <div class="text-xs font-bold text-slate-500">總體首答正確率</div>
-          <div class="mt-1 flex items-baseline gap-1.5">
-            <span id="kpiAcc" class="text-3xl font-black text-emerald-600">--%</span>
-          </div>
-          <div id="kpiAccTrend" class="text-xs font-bold text-emerald-700 mt-1">累積答題 -- 題</div>
-        </div>
-
-        <div class="card-3d p-4 border-amber-200 border-b-amber-300">
-          <div class="text-xs font-bold text-slate-500">單題平均反應時間</div>
-          <div class="mt-1 flex items-baseline gap-1.5">
-            <span id="kpiSec" class="text-3xl font-black text-amber-600">--s</span>
-          </div>
-          <div id="kpiSecTrend" class="text-xs font-bold text-amber-700 mt-1">熟練線：≤ 10 秒/題</div>
-        </div>
-
-        <div class="card-3d p-4 border-pink-200 border-b-pink-300">
-          <div class="text-xs font-bold text-slate-500">已穩固微技能 (🟢)</div>
-          <div class="mt-1 flex items-baseline gap-1.5">
-            <span id="kpiMastered" class="text-3xl font-black text-pink-600">0</span>
-            <span class="text-sm font-bold text-slate-500">/ 21 項</span>
-          </div>
-          <div id="kpiEarlyUnlock" class="text-xs font-bold text-pink-700 mt-1">上學期核心完成 0 / 11</div>
-        </div>
-      </section>
-
-      <!-- 2. 數學六維雷達 ＋ 雙軸成長趨勢 -->
-      <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div class="card-3d p-5">
-          <div class="mb-3">
-            <h2 class="text-lg font-black text-slate-800">🕸️ 六大能力雷達與四象限診斷</h2>
-            <p class="text-xs font-bold text-slate-500">結合「正確率 × 反應速度」綜合評分</p>
-          </div>
-          <div class="relative h-64 w-full flex items-center justify-center">
-            <canvas id="radarChart"></canvas>
-          </div>
-          <div id="quadrantGrid" class="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-2"></div>
-        </div>
-
-        <div class="card-3d p-5 flex flex-col justify-between">
-          <div>
-            <div class="mb-2">
-              <h2 class="text-lg font-black text-slate-800">📈 學期成長雙軸趨勢曲線</h2>
-              <p class="text-xs font-bold text-slate-500">綠線（正確率）期望向上，橙線（秒數）期望向下</p>
-            </div>
-            <div class="relative h-64 w-full">
-              <canvas id="trendChart"></canvas>
-            </div>
-          </div>
-          <div id="growthCompareBox" class="mt-4 bg-amber-50 border-2 border-amber-200 rounded-2xl p-3 text-xs font-bold text-amber-950">
-            累積更多測驗後，這裡會自動對比「期初 vs. 近期」進步幅度。
-          </div>
-        </div>
-      </section>
-
-      <!-- 3. 21 項數學紅綠燈技能樹 -->
-      <section class="card-3d p-5">
-        <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
-          <div>
-            <h2 class="text-lg font-black text-slate-800">🚦 K2 數學 21 項知識點紅綠燈圖鑑</h2>
-            <p class="text-xs font-bold text-slate-500">
-              🟢 已穩固（≥5題、跨≥2日、≥90%、≤10s） ｜ 🟡 鞏固中 ｜ 🔴 待加強（&lt;70%） ｜ ⚪ 未練習
-            </p>
-          </div>
-          <div class="text-xs font-black bg-indigo-50 text-indigo-700 border-2 border-indigo-200 px-3 py-1.5 rounded-xl">
-            ✨ 分線獨立解鎖：單一維度 L1 全亮 🟢 即解鎖 L2
-          </div>
-        </div>
-        <div id="skillTreeContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-      </section>
-
-      <!-- 4. 數學處方與 AI 數據包 -->
-      <section class="card-3d p-5 border-indigo-200 border-b-indigo-300">
-        <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
-          <div>
-            <h2 class="text-lg font-black text-indigo-950">🧭 數學學習處方與下學期銜接規劃</h2>
-            <p class="text-xs font-bold text-slate-500">根據玲玲累積表現自動生成補漏清單與超前解鎖路線</p>
-          </div>
-          <button onclick="copyAIPackage()" class="btn-3d no-print bg-indigo-600 text-white font-black text-sm px-4 py-2.5 rounded-2xl border-2 border-indigo-800 border-b-4">
-            📋 一鍵複製「數學學期數據包」給 Elsa
-          </button>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div class="bg-rose-50 border-2 border-rose-200 rounded-2xl p-4">
-            <div class="text-sm font-black text-rose-800 mb-2">🔴 優先補漏清單</div>
-            <ul id="planRedList" class="text-xs font-bold text-rose-900 space-y-1.5"></ul>
-          </div>
-          <div class="bg-amber-50 border-2 border-amber-200 rounded-2xl p-4">
-            <div class="text-sm font-black text-amber-800 mb-2">🟡 鞏固與提速重點</div>
-            <ul id="planYellowList" class="text-xs font-bold text-amber-900 space-y-1.5"></ul>
-          </div>
-          <div class="bg-emerald-50 border-2 border-emerald-200 rounded-2xl p-4">
-            <div class="text-sm font-black text-emerald-800 mb-2">🚀 下學期 / 超前解鎖預告</div>
-            <ul id="planNextList" class="text-xs font-bold text-emerald-900 space-y-1.5"></ul>
-          </div>
-        </div>
-      </section>
-
-      <!-- 5. 數學歷史戰報表 -->
-      <section class="card-3d p-5">
-        <div class="flex items-center justify-between mb-3">
-          <h2 class="text-lg font-black text-slate-800">🗂️ 歷次數學測驗戰報紀錄</h2>
-          <span id="historyCountBadge" class="text-xs font-bold bg-slate-100 text-slate-600 px-3 py-1 rounded-full">0 筆</span>
-        </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse text-sm">
-            <thead>
-              <tr class="border-b-2 border-slate-200 text-xs text-slate-500">
-                <th class="py-2 pr-3">日期</th>
-                <th class="py-2 pr-3">關卡名稱</th>
-                <th class="py-2 pr-3">學期</th>
-                <th class="py-2 pr-3">正確率</th>
-                <th class="py-2 pr-3">單題均時</th>
-                <th class="py-2">涵蓋技能</th>
-              </tr>
-            </thead>
-            <tbody id="historyTableBody" class="divide-y divide-slate-100 font-bold text-slate-700"></tbody>
-          </table>
-        </div>
-      </section>
-    </div>
-
-    <!-- ########## 分頁 2：📖 中文樂園（雙軌評估：五維 12 項 ＋ 識字成長資產庫） ########## -->
-    <div id="cnSection" class="hidden space-y-6">
-      <!-- 1. 中文四大 KPI -->
-      <section class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="card-3d p-4 border-rose-200 border-b-rose-300">
-          <div class="text-xs font-bold text-slate-500">累積中文學習</div>
-          <div class="mt-1 flex items-baseline gap-1.5">
-            <span id="cnKpiCount" class="text-3xl font-black text-rose-600">--</span>
-            <span class="text-sm font-bold text-slate-500">次</span>
-          </div>
-          <div id="cnKpiSubCount" class="text-xs font-bold text-rose-700 mt-1">課堂 -- · 盲測 --</div>
-        </div>
-
-        <div class="card-3d p-4 border-emerald-200 border-b-emerald-300">
-          <div class="text-xs font-bold text-slate-500">整體獨立答對率</div>
-          <div class="mt-1 flex items-baseline gap-1.5">
-            <span id="cnKpiAcc" class="text-3xl font-black text-emerald-600">--%</span>
-          </div>
-          <div id="cnKpiAccTrend" class="text-xs font-bold text-emerald-700 mt-1">重準確不逼速 · 分析 -- 項</div>
-        </div>
-
-        <div class="card-3d p-4 border-amber-200 border-b-amber-300">
-          <div class="text-xs font-bold text-slate-500">🌳 識字成長資產庫</div>
-          <div class="mt-1 flex items-baseline gap-1.5">
-            <span id="cnKpiVocab" class="text-3xl font-black text-amber-600">--</span>
-            <span class="text-sm font-bold text-slate-500">字</span>
-          </div>
-          <div id="cnKpiVocabSub" class="text-xs font-bold text-amber-700 mt-1">🟡 成長中 -- · 🔴 待鞏固 --</div>
-        </div>
-
-        <div class="card-3d p-4 border-violet-200 border-b-violet-300">
-          <div class="text-xs font-bold text-slate-500">已穩固中文技能 (🟢)</div>
-          <div class="mt-1 flex items-baseline gap-1.5">
-            <span id="cnKpiMastered" class="text-3xl font-black text-violet-600">0</span>
-            <span class="text-sm font-bold text-slate-500">/ 12 項</span>
-          </div>
-          <div id="cnKpiL1" class="text-xs font-bold text-violet-700 mt-1">L1 核心 0 / 7</div>
-        </div>
-      </section>
-
-      <!-- 2. 🌳 識字成長資產庫（三層分流，中文核心亮點） -->
-      <section class="card-3d p-5 border-emerald-200 border-b-emerald-300">
-        <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
-          <div>
-            <h2 class="text-lg font-black text-slate-800">🌳 玲玲識字成長資產庫（三層分流）</h2>
-            <p class="text-xs font-bold text-slate-500">
-              整合靜音紅圈自讀與盲測錯題紀錄 · 點擊任何中文字卡可即聽廣東話發音溫習 🔊
-            </p>
-          </div>
-          <div id="cnVocabBadges" class="flex flex-wrap gap-1.5 text-xs font-black"></div>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          <!-- 🔴 易混／待鞏固字詞 -->
-          <div class="bg-rose-50 border-2 border-rose-200 rounded-2xl p-4">
-            <div class="flex items-center justify-between mb-2">
-              <div class="text-sm font-black text-rose-800">🔴 易混／待鞏固字詞</div>
-              <span id="cnRedWordCount" class="text-xs font-black bg-rose-200 text-rose-900 px-2 py-0.5 rounded-full">0 項</span>
-            </div>
-            <p class="text-[11px] font-bold text-rose-700 mb-2.5">盲測曾出錯或需提示，建議本週優先溫習及配合生活認字：</p>
-            <div id="cnRedWordsBox" class="space-y-2"></div>
-          </div>
-
-          <!-- 🟡 成長中生字 -->
-          <div class="bg-amber-50 border-2 border-amber-200 rounded-2xl p-4">
-            <div class="flex items-center justify-between mb-2">
-              <div class="text-sm font-black text-amber-800">🟡 成長中生字（剛認出 1 次）</div>
-              <span id="cnGrowCharCount" class="text-xs font-black bg-amber-200 text-amber-900 px-2 py-0.5 rounded-full">0 字</span>
-            </div>
-            <p class="text-[11px] font-bold text-amber-700 mb-2.5">剛於靜音紅圈獨立認出，跨日再認出一次即升級 🟢 熟字：</p>
-            <div id="cnGrowingCharsBox" class="flex flex-wrap gap-2"></div>
-          </div>
-
-          <!-- 🟢 已紮根熟字 -->
-          <div class="bg-emerald-50 border-2 border-emerald-200 rounded-2xl p-4">
-            <div class="flex items-center justify-between mb-2">
-              <div class="text-sm font-black text-emerald-800">🟢 已紮根熟字</div>
-              <span id="cnRootCharCount" class="text-xs font-black bg-emerald-200 text-emerald-900 px-2 py-0.5 rounded-full">0 字</span>
-            </div>
-            <p class="text-[11px] font-bold text-emerald-700 mb-2">☁️ 雲端跨日實證（獨立認出 ≥2 次）：</p>
-            <div id="cnCloudRootedBox" class="flex flex-wrap gap-1.5 mb-3"></div>
-            <details class="bg-white/75 rounded-xl p-2.5 border border-emerald-200">
-              <summary class="cursor-pointer text-xs font-black text-emerald-800 select-none">
-                📚 展開總庫已核定熟字（共 <span id="cnBaseMasteredCount">0</span> 字）▾
-              </summary>
-              <div id="cnBaseMasteredBox" class="flex flex-wrap gap-1.5 mt-2.5"></div>
-            </details>
-          </div>
-        </div>
-      </section>
-
-      <!-- 3. 中文五維雷達 ＋ 準確率與紅圈認字趨勢 -->
-      <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div class="card-3d p-5">
-          <div class="mb-3">
-            <h2 class="text-lg font-black text-slate-800">🕸️ 中文五大能力雷達圖</h2>
-            <p class="text-xs font-bold text-slate-500">以「零提示獨立準確率」評估，絕不以答題快慢施壓</p>
-          </div>
-          <div class="relative h-64 w-full flex items-center justify-center">
-            <canvas id="cnRadarChart"></canvas>
-          </div>
-          <div id="cnDimGrid" class="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-2"></div>
-        </div>
-
-        <div class="card-3d p-5 flex flex-col justify-between">
-          <div>
-            <div class="mb-2">
-              <h2 class="text-lg font-black text-slate-800">📈 獨立準確率 × 靜音紅圈認字趨勢</h2>
-              <p class="text-xs font-bold text-slate-500">綠線（獨立答對率 %）｜ 粉紅柱（單次紅圈獨立認出字數）</p>
-            </div>
-            <div class="relative h-64 w-full">
-              <canvas id="cnTrendChart"></canvas>
-            </div>
-          </div>
-          <div id="cnGrowthCompareBox" class="mt-4 bg-rose-50 border-2 border-rose-200 rounded-2xl p-3 text-xs font-bold text-rose-950">
-            累積更多中文課堂與盲測後，這裡會自動總結玲玲的獨立認讀與準確率成長。
-          </div>
-        </div>
-      </section>
-
-      <!-- 4. 12 項中文微技能紅綠燈圖鑑 -->
-      <section class="card-3d p-5">
-        <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
-          <div>
-            <h2 class="text-lg font-black text-slate-800">🚦 K2 中文 12 項微技能紅綠燈圖鑑</h2>
-            <p class="text-xs font-bold text-slate-500">
-              🟢 已穩固（≥5項、跨≥2日、≥85%；紅圈≥90%） ｜ 🟡 鞏固／待跨日覆核 ｜ 🔴 優先支援（&lt;65%） ｜ ⚪ 未練習
-            </p>
-          </div>
-          <div class="text-xs font-black bg-rose-50 text-rose-700 border-2 border-rose-200 px-3 py-1.5 rounded-xl">
-            🏮 重準確與獨立性 · 不逼速原則
-          </div>
-        </div>
-        <div id="cnSkillTreeContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-      </section>
-
-      <!-- 5. 中文處方與一鍵複製數據包給 Elsa -->
-      <section class="card-3d p-5 border-rose-200 border-b-rose-300">
-        <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
-          <div>
-            <h2 class="text-lg font-black text-rose-950">🧭 中文溫習處方與零屏幕親子建議</h2>
-            <p class="text-xs font-bold text-slate-500">自動整合五維紅綠燈與識字成長資產庫，一鍵貼給 Elsa 排新課</p>
-          </div>
-          <button onclick="copyAIPackage()" class="btn-3d no-print bg-rose-600 text-white font-black text-sm px-4 py-2.5 rounded-2xl border-2 border-rose-800 border-b-4">
-            📋 一鍵複製「中文評估數據包」給 Elsa
-          </button>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div class="bg-rose-50 border-2 border-rose-200 rounded-2xl p-4">
-            <div class="text-sm font-black text-rose-800 mb-2">🔴 優先溫習與零屏幕遊戲</div>
-            <ul id="cnPlanRedList" class="text-xs font-bold text-rose-900 space-y-1.5"></ul>
-          </div>
-          <div class="bg-amber-50 border-2 border-amber-200 rounded-2xl p-4">
-            <div class="text-sm font-black text-amber-800 mb-2">🟡 跨日覆核防遺忘</div>
-            <ul id="cnPlanYellowList" class="text-xs font-bold text-amber-900 space-y-1.5"></ul>
-          </div>
-          <div class="bg-emerald-50 border-2 border-emerald-200 rounded-2xl p-4">
-            <div class="text-sm font-black text-emerald-800 mb-2">🌱 進階挑戰預告 (L2)</div>
-            <ul id="cnPlanNextList" class="text-xs font-bold text-emerald-900 space-y-1.5"></ul>
-          </div>
-        </div>
-      </section>
-
-      <!-- 6. 中文歷史戰報明細表 -->
-      <section class="card-3d p-5">
-        <div class="flex items-center justify-between mb-3">
-          <h2 class="text-lg font-black text-slate-800">🗂️ 歷次中文課堂與盲測戰報紀錄</h2>
-          <span id="cnHistoryCountBadge" class="text-xs font-bold bg-slate-100 text-slate-600 px-3 py-1 rounded-full">0 筆</span>
-        </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse text-sm">
-            <thead>
-              <tr class="border-b-2 border-slate-200 text-xs text-slate-500">
-                <th class="py-2 pr-3">日期</th>
-                <th class="py-2 pr-3">類型</th>
-                <th class="py-2 pr-3">關卡名稱</th>
-                <th class="py-2 pr-3">獨立答對率</th>
-                <th class="py-2 pr-3">紅圈認字 / 待加強</th>
-                <th class="py-2">涵蓋微技能</th>
-              </tr>
-            </thead>
-            <tbody id="cnHistoryTableBody" class="divide-y divide-slate-100 font-bold text-slate-700"></tbody>
-          </table>
-        </div>
-      </section>
-    </div>
-  </main>
-
-  <!-- ==================== 視角 B：玲玲雙科 3D 獎盃牆（零分數壓力） ==================== -->
-  <main id="kidView" class="hidden max-w-5xl mx-auto px-4 mt-6 space-y-6">
-    <!-- 雙科獎盃屋切換 -->
-    <div class="flex justify-center gap-3">
-      <button id="kidTabMath" onclick="switchKidSubject('math')" class="btn-3d px-5 py-2.5 rounded-2xl font-black text-base border-2 border-b-4 bg-amber-400 text-amber-950 border-amber-600">
-        📐 數學獎盃屋
-      </button>
-      <button id="kidTabCn" onclick="switchKidSubject('cn')" class="btn-3d px-5 py-2.5 rounded-2xl font-black text-base border-2 border-b-4 bg-white text-rose-600 border-rose-300">
-        📖 中文識字獎盃屋
-      </button>
-    </div>
-
-    <section id="kidBannerBox" class="bg-gradient-to-b from-amber-100 to-orange-50 border-4 border-amber-400 border-b-8 rounded-[2rem] p-6 text-center">
-      <div id="kidBannerEmoji" class="text-5xl float-slow inline-block">🏆</div>
-      <h2 id="kidBannerTitle" class="text-2xl sm:text-3xl font-black text-amber-900 mt-2">🌟 玲玲的數學魔法獎盃屋 🌟</h2>
-      <p id="kidBannerSub" class="text-sm sm:text-base font-bold text-amber-800 mt-1">每學會一個魔法，就會點亮一枚閃閃發光的大獎章！點擊已點亮的獎章聽讚美喔！</p>
-
-      <!-- 魔法星星收集進度條 -->
-      <div class="max-w-md mx-auto mt-4">
-        <div class="flex justify-between text-xs font-black text-amber-900 mb-1">
-          <span id="kidProgressTitle">✨ 魔法徽章收集進度</span>
-          <span id="kidProgressLabel">0 / 21 枚</span>
-        </div>
-        <div class="w-full h-6 bg-white rounded-full border-2 border-amber-400 overflow-hidden p-0.5">
-          <div id="kidProgressBar" class="h-full bg-gradient-to-r from-amber-400 to-pink-500 rounded-full transition-all duration-700" style="width: 6%"></div>
-        </div>
+        <div id="kpiSub1" class="text-xs font-bold text-sky-700 mt-1">涵蓋 -- 個學習日</div>
       </div>
 
-      <!-- 中文限定：玲玲識字小樹零壓力鼓勵條 -->
-      <div id="kidCnTreeBanner" class="hidden max-w-md mx-auto mt-4 bg-white/85 border-2 border-emerald-300 rounded-2xl px-4 py-2.5 text-sm font-black text-emerald-800">
-        🌳 玲玲嘅識字小樹：已經認識 <span id="kidCnCharTotal" class="text-xl text-rose-600">0</span> 個中文字寶寶！
+      <div class="card-3d p-4 border-emerald-200 border-b-emerald-300">
+        <div id="kpiLabel2" class="text-xs font-bold text-slate-500">總體首答正確率</div>
+        <div class="mt-1 flex items-baseline gap-1.5">
+          <span id="kpiVal2" class="text-2xl sm:text-3xl font-black text-emerald-600">--%</span>
+        </div>
+        <div id="kpiSub2" class="text-xs font-bold text-emerald-700 mt-1">累積分析 -- 題</div>
+      </div>
+
+      <div class="card-3d p-4 border-amber-200 border-b-amber-300">
+        <div id="kpiLabel3" class="text-xs font-bold text-slate-500">單題平均反應時間</div>
+        <div class="mt-1 flex items-baseline gap-1.5">
+          <span id="kpiVal3" class="text-2xl sm:text-3xl font-black text-amber-600">--</span>
+          <span id="kpiUnit3" class="text-sm font-bold text-slate-500"></span>
+        </div>
+        <div id="kpiSub3" class="text-xs font-bold text-amber-700 mt-1">熟練線：≤ 10 秒/題</div>
+      </div>
+
+      <div class="card-3d p-4 border-pink-200 border-b-pink-300">
+        <div id="kpiLabel4" class="text-xs font-bold text-slate-500">已穩固微技能 (🟢)</div>
+        <div class="mt-1 flex items-baseline gap-1.5">
+          <span id="kpiVal4" class="text-2xl sm:text-3xl font-black text-pink-600">0</span>
+          <span id="kpiUnit4" class="text-sm font-bold text-slate-500">/ 21 項</span>
+        </div>
+        <div id="kpiSub4" class="text-xs font-bold text-pink-700 mt-1">上學期核心完成 0 / 11</div>
       </div>
     </section>
 
-    <!-- 3D 魔法獎盃牆 -->
+    <!-- 2. 多維雷達圖 ＋ 雙軸成長趨勢圖 -->
+    <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="card-3d p-5">
+        <div class="mb-3">
+          <h2 id="radarTitle" class="text-lg font-black text-slate-800">🕸️ 六大能力雷達與四象限診斷</h2>
+          <p id="radarSub" class="text-xs font-bold text-slate-500">結合「正確率 × 反應速度」綜合評分</p>
+        </div>
+        <div class="relative h-64 w-full flex items-center justify-center">
+          <canvas id="radarChart"></canvas>
+        </div>
+        <div id="quadrantGrid" class="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-2"></div>
+      </div>
+
+      <div class="card-3d p-5 flex flex-col justify-between">
+        <div>
+          <div class="mb-2">
+            <h2 id="trendTitle" class="text-lg font-black text-slate-800">📈 學期成長雙軸趨勢曲線</h2>
+            <p id="trendSub" class="text-xs font-bold text-slate-500">綠線（正確率）期望向上，橙線（秒數）期望向下</p>
+          </div>
+          <div class="relative h-64 w-full">
+            <canvas id="trendChart"></canvas>
+          </div>
+        </div>
+        <div id="growthCompareBox" class="mt-4 bg-amber-50 border-2 border-amber-200 rounded-2xl p-3 text-xs font-bold text-amber-950">
+          累積更多學習戰報後，這裡會自動對比「期初 vs. 近期」進步幅度。
+        </div>
+      </div>
+    </section>
+
+    <!-- 2.5 中文專屬：🌳 識字成長資產庫（三層分流） -->
+    <section id="cnLiteracySection" class="hidden card-3d p-5 border-rose-200 border-b-rose-300">
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+        <div>
+          <h2 class="text-lg font-black text-rose-950">🌳 玲玲識字成長資產庫（三層分流）</h2>
+          <p class="text-xs font-bold text-slate-500">
+            重獨立認讀、不逼答題速度：自動追蹤靜音紅圈熟字、近期新字與盲測易混詞
+          </p>
+        </div>
+        <label class="inline-flex items-center gap-2 bg-rose-50 border-2 border-rose-200 px-3 py-1.5 rounded-xl text-xs font-black text-rose-800 cursor-pointer">
+          <input id="chkIncludeBaseline" type="checkbox" checked onchange="renderAll()" class="accent-rose-600 w-4 h-4" />
+          合併顯示總庫已認證熟字（68字）
+        </label>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- 🟢 已紮根熟字 -->
+        <div class="bg-emerald-50 border-2 border-emerald-200 rounded-2xl p-4">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-sm font-black text-emerald-800">🟢 已紮根熟字</span>
+            <span id="litGreenCount" class="text-xs font-black bg-emerald-200 text-emerald-900 px-2 py-0.5 rounded-full">0 字</span>
+          </div>
+          <p class="text-[11px] font-bold text-emerald-700 mb-2">跨 ≥ 2 日獨立認出或總庫已畢業認證</p>
+          <div id="litGreenList" class="flex flex-wrap gap-1.5 max-h-48 overflow-y-auto"></div>
+        </div>
+
+        <!-- 🟡 成長中生字 -->
+        <div class="bg-amber-50 border-2 border-amber-200 rounded-2xl p-4">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-sm font-black text-amber-800">🟡 成長中生字</span>
+            <span id="litYellowCount" class="text-xs font-black bg-amber-200 text-amber-900 px-2 py-0.5 rounded-full">0 字</span>
+          </div>
+          <p class="text-[11px] font-bold text-amber-700 mb-2">近期新認出 1 次，建議隔日熱身防遺忘</p>
+          <div id="litYellowList" class="flex flex-wrap gap-1.5 max-h-48 overflow-y-auto"></div>
+        </div>
+
+        <!-- 🔴 易混／回生字詞 -->
+        <div class="bg-rose-50 border-2 border-rose-200 rounded-2xl p-4">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-sm font-black text-rose-800">🔴 易混／待鞏固字詞</span>
+            <span id="litRedCount" class="text-xs font-black bg-rose-200 text-rose-900 px-2 py-0.5 rounded-full">0 項</span>
+          </div>
+          <p class="text-[11px] font-bold text-rose-700 mb-2">盲測曾需提示或句式出錯，列為本週優先溫習</p>
+          <div id="litRedList" class="flex flex-wrap gap-1.5 max-h-48 overflow-y-auto"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. 紅綠燈微技能樹圖鑑 -->
+    <section class="card-3d p-5">
+      <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+        <div>
+          <h2 id="skillTreeTitle" class="text-lg font-black text-slate-800">🚦 K2 數學 21 項知識點紅綠燈圖鑑</h2>
+          <p id="skillTreeSub" class="text-xs font-bold text-slate-500">
+            🟢 已穩固（≥5題、跨≥2日、≥90%、≤10s） ｜ 🟡 鞏固中 ｜ 🔴 待加強（&lt;70%） ｜ ⚪ 未練習
+          </p>
+        </div>
+        <div id="skillTreeBadge" class="text-xs font-black bg-indigo-50 text-indigo-700 border-2 border-indigo-200 px-3 py-1.5 rounded-xl">
+          ✨ 分線獨立解鎖：單一維度 L1 全亮 🟢 即解鎖 L2
+        </div>
+      </div>
+      <div id="skillTreeContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+    </section>
+
+    <!-- 4. 智能學習處方 ＋ 一鍵複製 AI 數據包 -->
+    <section class="card-3d p-5 border-indigo-200 border-b-indigo-300">
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+        <div>
+          <h2 id="planTitle" class="text-lg font-black text-indigo-950">🧭 學習處方與下階段銜接規劃</h2>
+          <p id="planSub" class="text-xs font-bold text-slate-500">根據玲玲累積表現自動生成補漏清單與進階路線</p>
+        </div>
+        <button onclick="copyAIPackage()" id="btnCopyAI" class="btn-3d no-print bg-indigo-600 text-white font-black text-sm px-4 py-2.5 rounded-2xl border-2 border-indigo-800 border-b-4">
+          📋 一鍵複製「學期數據包」給 Elsa
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-rose-50 border-2 border-rose-200 rounded-2xl p-4">
+          <div class="text-sm font-black text-rose-800 mb-2">🔴 優先支援／溫習清單</div>
+          <ul id="planRedList" class="text-xs font-bold text-rose-900 space-y-1.5"></ul>
+        </div>
+        <div class="bg-amber-50 border-2 border-amber-200 rounded-2xl p-4">
+          <div class="text-sm font-black text-amber-800 mb-2">🟡 跨日覆核與鞏固重點</div>
+          <ul id="planYellowList" class="text-xs font-bold text-amber-900 space-y-1.5"></ul>
+        </div>
+        <div class="bg-emerald-50 border-2 border-emerald-200 rounded-2xl p-4">
+          <div class="text-sm font-black text-emerald-800 mb-2">🚀 進階解鎖與下一階段建議</div>
+          <ul id="planNextList" class="text-xs font-bold text-emerald-900 space-y-1.5"></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. 歷史戰報紀錄明細 -->
+    <section class="card-3d p-5">
+      <div class="flex items-center justify-between mb-3">
+        <h2 id="historyTitle" class="text-lg font-black text-slate-800">🗂️ 歷次測驗戰報紀錄</h2>
+        <span id="historyCountBadge" class="text-xs font-bold bg-slate-100 text-slate-600 px-3 py-1 rounded-full">0 筆</span>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse text-sm">
+          <thead>
+            <tr id="historyTableHead" class="border-b-2 border-slate-200 text-xs text-slate-500"></tr>
+          </thead>
+          <tbody id="historyTableBody" class="divide-y divide-slate-100 font-bold text-slate-700"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==================== 視角 B：玲玲 3D 獎盃牆（零分數壓力） ==================== -->
+  <main id="kidView" class="hidden max-w-5xl mx-auto px-3 sm:px-4 mt-5 space-y-6">
+    <section id="kidHeroCard" class="bg-gradient-to-b from-amber-100 to-orange-50 border-4 border-amber-400 border-b-8 rounded-[2rem] p-6 text-center">
+      <div id="kidHeroIcon" class="text-5xl float-slow inline-block">🏆</div>
+      <h2 id="kidHeroTitle" class="text-2xl sm:text-3xl font-black text-amber-900 mt-2">🌟 玲玲的數學魔法獎盃屋 🌟</h2>
+      <p id="kidHeroDesc" class="text-sm sm:text-base font-bold text-amber-800 mt-1">每學會一個魔法，就會點亮一枚閃閃發光的大獎章！點擊已點亮的獎章聽讚美喔！</p>
+
+      <div class="max-w-md mx-auto mt-4">
+        <div class="flex justify-between text-xs font-black text-amber-900 mb-1">
+          <span>✨ 魔法徽章收集進度</span>
+          <span id="kidProgressLabel">0 / 21 枚</span>
+        </div>
+        <div class="w-full h-6 bg-white rounded-full border-2 border-amber-400 overflow-hidden p-0.5">
+          <div id="kidProgressBar" class="h-full bg-gradient-to-r from-amber-400 to-pink-500 rounded-full transition-all duration-700" style="width: 5%"></div>
+        </div>
+      </div>
+    </section>
+
     <section id="kidTrophyGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"></section>
   </main>
 
@@ -527,14 +337,14 @@
   </div>
 
   <!-- 輕提示 Toast -->
-  <div id="toastBox" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-sm font-bold px-5 py-3 rounded-2xl shadow-xl z-50 max-w-[92vw] text-center"></div>
+  <div id="toastBox" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-sm font-bold px-5 py-3 rounded-2xl shadow-xl z-50 max-w-[90vw] text-center"></div>
 
 <script>
-/* ==================== 1. 基礎設定與雙科標準能力庫 ==================== */
+/* ==================== 1. 全站設定與數學／中文微技能標準庫 ==================== */
 const DEFAULT_API_URL = 'https://script.google.com/macros/s/AKfycbwQ2ddWL9Fgq_cwA5F_WFp5dPQ-lr0mjQAga8rlSxX2jiVBBVn82xo9oR0TRkCQTchafA/exec';
 window.utterancePool = window.utterancePool || [];
 
-/* --- 1A. 數學六大維度 × 21 項微技能 --- */
+/* --- 數學 6 維度 × 21 項微技能 --- */
 const MATH_DIMENSIONS = [
   { id: 'NUM', name: '數感與數序', icon: '🔢', color: '#0EA5E9' },
   { id: 'ADD', name: '加法運算',   icon: '➕', color: '#10B981' },
@@ -544,7 +354,7 @@ const MATH_DIMENSIONS = [
   { id: 'APP', name: '圖形與生活', icon: '⏰', color: '#F97316' }
 ];
 
-const MATH_SKILLS_CATALOG = [
+const MATH_SKILLS = [
   { id: 'NUM-1', dim: 'NUM', level: 'L1', name: '20以內順倒數與相鄰數', trophy: '數序小火車長', emoji: '🚂', maxSec: 10, prereq: [] },
   { id: 'NUM-2', dim: 'NUM', level: 'L1', name: '20以內比大小與數量對應', trophy: '點數神眼偵探', emoji: '🔍', maxSec: 10, prereq: [] },
   { id: 'NUM-3', dim: 'NUM', level: 'L2', name: '50以內數序與雙數跳數', trophy: '跳跳數感超人', emoji: '🦘', maxSec: 10, prereq: ['NUM-1', 'NUM-2'] },
@@ -568,32 +378,32 @@ const MATH_SKILLS_CATALOG = [
   { id: 'APP-4', dim: 'APP', level: 'L2', name: '一步加減生活聽題應用', trophy: '生活解題小博士', emoji: '🎓', maxSec: 15, prereq: ['ADD-2', 'SUB-1'] }
 ];
 
-/* --- 1B. 中文五大維度 × 12 項微技能（重準確不逼速） --- */
+/* --- 中文 5 維度 × 12 項微技能（重準確與獨立性、不逼速） --- */
 const CN_DIMENSIONS = [
   { id: 'LIS', name: '聽音辨字力', icon: '👂', color: '#0EA5E9' },
   { id: 'MOR', name: '拆字構詞力', icon: '🧩', color: '#8B5CF6' },
   { id: 'SEN', name: '句式語感力', icon: '🧱', color: '#F59E0B' },
   { id: 'REC', name: '自主認讀力', icon: '⭕', color: '#10B981' },
-  { id: 'CTX', name: '語境閱讀力', icon: '🎵', color: '#EC4899' }
+  { id: 'CTX', name: '語境閱讀力', icon: '📖', color: '#EC4899' }
 ];
 
-const CN_SKILLS_CATALOG = [
-  { id: 'CN-LIS-1', dim: 'LIS', level: 'L1', name: '單字／雙字詞無圖盲聽', trophy: '順風耳辨字王', emoji: '👂', minAcc: 85, prereq: [] },
-  { id: 'CN-LIS-2', dim: 'LIS', level: 'L2', name: '多字詞組與易混詞盲聽辨析', trophy: '超級聽音偵探', emoji: '🎧', minAcc: 85, prereq: ['CN-LIS-1'] },
-  { id: 'CN-MOR-1', dim: 'MOR', level: 'L1', name: '視覺部件拆字記憶', trophy: '拆字魔法師', emoji: '🪄', minAcc: 85, prereq: [] },
-  { id: 'CN-MOR-2', dim: 'MOR', level: 'L1', name: '雙字詞語小火車配對', trophy: '詞語火車長', emoji: '🚂', minAcc: 85, prereq: [] },
-  { id: 'CN-MOR-3', dim: 'MOR', level: 'L2', name: '跨單元高干擾合體字構詞配對', trophy: '構詞大建築師', emoji: '🏗️', minAcc: 85, prereq: ['CN-MOR-1', 'CN-MOR-2'] },
-  { id: 'CN-SEN-1', dim: 'SEN', level: 'L1', name: '2–3 塊短句積木重組', trophy: '短句小作家', emoji: '✏️', minAcc: 85, prereq: [] },
-  { id: 'CN-SEN-2', dim: 'SEN', level: 'L2', name: '4 塊以上長句與分類句式重組', trophy: '長句魔法師', emoji: '📜', minAcc: 85, prereq: ['CN-SEN-1'] },
-  { id: 'CN-REC-1', dim: 'REC', level: 'L1', name: '10 秒純中文字閃卡大聲讀', trophy: '閃卡小明星', emoji: '⚡', minAcc: 85, prereq: [] },
-  { id: 'CN-REC-2', dim: 'REC', level: 'L1', name: '當週核心生字靜音紅圈自讀', trophy: '紅圈識字達人', emoji: '⭕', minAcc: 90, prereq: [] },
-  { id: 'CN-REC-3', dim: 'REC', level: 'L2', name: '跨日／跨單元熟字靜音紅圈自讀', trophy: '自主閱讀小博士', emoji: '🎓', minAcc: 90, prereq: ['CN-REC-2'] },
-  { id: 'CN-CTX-1', dim: 'CTX', level: 'L1', name: '兒歌逐句慢速跟讀與熟字搜尋', trophy: '兒歌朗讀百靈鳥', emoji: '🎵', minAcc: 85, prereq: [] },
-  { id: 'CN-CTX-2', dim: 'CTX', level: 'L2', name: '兒歌留白接龍與 4×4 語境尋寶', trophy: '語境尋寶探險家', emoji: '🗺️', minAcc: 85, prereq: ['CN-CTX-1'] }
+const CN_SKILLS = [
+  { id: 'CN-LIS-1', dim: 'LIS', level: 'L1', name: '單字與雙字詞無圖盲聽', trophy: '順風耳小偵探', emoji: '👂', targetAcc: 85, prereq: [] },
+  { id: 'CN-LIS-2', dim: 'LIS', level: 'L2', name: '多字詞組與易混詞盲聽辨析', trophy: '辨音小天師', emoji: '🎧', targetAcc: 85, prereq: ['CN-LIS-1'] },
+  { id: 'CN-MOR-1', dim: 'MOR', level: 'L1', name: '視覺部件拆字記憶', trophy: '拆字小魔術師', emoji: '🪄', targetAcc: 85, prereq: [] },
+  { id: 'CN-MOR-2', dim: 'MOR', level: 'L1', name: '雙字詞語小火車配對', trophy: '詞語火車司機', emoji: '🚂', targetAcc: 85, prereq: [] },
+  { id: 'CN-MOR-3', dim: 'MOR', level: 'L2', name: '跨單元高干擾合體字構詞配對', trophy: '百變構詞大師', emoji: '🧩', targetAcc: 85, prereq: ['CN-MOR-1', 'CN-MOR-2'] },
+  { id: 'CN-SEN-1', dim: 'SEN', level: 'L1', name: '2–3 塊短句積木重組', trophy: '短句積木達人', emoji: '🧱', targetAcc: 85, prereq: [] },
+  { id: 'CN-SEN-2', dim: 'SEN', level: 'L2', name: '4 塊以上長句與分類句式重組', trophy: '造句小作家', emoji: '✍️', targetAcc: 85, prereq: ['CN-SEN-1'] },
+  { id: 'CN-REC-1', dim: 'REC', level: 'L1', name: '10 秒純文字閃卡大聲讀', trophy: '閃卡小超人', emoji: '⚡', targetAcc: 85, prereq: [] },
+  { id: 'CN-REC-2', dim: 'REC', level: 'L1', name: '當週核心生字靜音紅圈自讀', trophy: '紅圈自讀小明星', emoji: '⭕', targetAcc: 90, prereq: [] },
+  { id: 'CN-REC-3', dim: 'REC', level: 'L2', name: '跨日／跨單元熟字靜音紅圈自讀', trophy: '認字大富翁', emoji: '🌳', targetAcc: 90, prereq: ['CN-REC-2'] },
+  { id: 'CN-CTX-1', dim: 'CTX', level: 'L1', name: '兒歌逐句慢速跟讀與熟字搜尋', trophy: '兒歌朗誦家', emoji: '🎵', targetAcc: 85, prereq: [] },
+  { id: 'CN-CTX-2', dim: 'CTX', level: 'L2', name: '兒歌留白接龍與 4×4 語境尋寶', trophy: '尋寶閱讀王', emoji: '🗺️', targetAcc: 85, prereq: ['CN-CTX-1'] }
 ];
 
-// 來自《玲玲K2_中文學習總庫》P.1–25 畢業熟字基準（新單元生字如 耶、穌 由雲端實時追蹤跨日升級）
-const CN_BASE_MASTERED = [
+// 來自《玲玲K2_中文學習總庫》已認證之 68 個熟字基線
+const CN_BASELINE_LEARNED = [
   '我','你','爸','媽','哥','姐','朋','友','人','家','庭','子',
   '眼','耳','口','鼻','手','唱','歌','玩','出','遊',
   '米','飯','牛','奶','肉','蛋','菜','豆','水','果','香','甜','蜜','糖','紅','白','蔬','食','物','蝸','翠','綠','新','鮮',
@@ -601,76 +411,57 @@ const CN_BASE_MASTERED = [
   '學','校','室','課','書','圖','畫','愛','好','樂','電','主','禮'
 ];
 
-/* --- 1C. 離線模擬數據（數學 ＋ 中文） --- */
-const MATH_DEMO_RECORDS = [
-  { date: '2026-10-18 16:30:00', date_day: '2026-10-18', lesson: 'Maths Day 4（魔法烘焙坊）', term: 'K2-T1', accuracy: 75, avg_sec: 14.2, skill_stats: [
+/* --- 模擬預覽數據 --- */
+const DEMO_MATH_RECORDS = [
+  { date: '2026-10-18 16:30:00', date_day: '2026-10-18', subject_code: 'math', lesson: 'Maths Day 4（魔法烘焙坊）', term: 'K2-T1', accuracy: 75, avg_sec: 14.2, skill_stats: [
     { dim:'ADD', skill_id:'ADD-1', level:'L1', total:2, correct:2, avg_sec:12.5 },
     { dim:'ADD', skill_id:'ADD-2', level:'L1', total:3, correct:2, avg_sec:15.0 },
     { dim:'SUB', skill_id:'SUB-1', level:'L1', total:3, correct:2, avg_sec:14.6 }
   ]},
-  { date: '2026-10-22 17:10:00', date_day: '2026-10-22', lesson: 'Maths Day 5（海底尋寶記）', term: 'K2-T1', accuracy: 83, avg_sec: 12.1, skill_stats: [
-    { dim:'NUM', skill_id:'NUM-1', level:'L1', total:3, correct:3, avg_sec:9.5 },
-    { dim:'NUM', skill_id:'NUM-2', level:'L1', total:3, correct:2, avg_sec:11.0 },
-    { dim:'LOG', skill_id:'LOG-1', level:'L1', total:3, correct:3, avg_sec:10.5 },
-    { dim:'SPA', skill_id:'SPA-1', level:'L1', total:3, correct:2, avg_sec:17.4 }
+  { date: '2026-10-27 16:45:00', date_day: '2026-10-27', subject_code: 'math', lesson: 'Maths Day 6（森林小火車）', term: 'K2-T1', accuracy: 88, avg_sec: 10.4, skill_stats: [
+    { dim:'NUM', skill_id:'NUM-1', level:'L1', total:3, correct:3, avg_sec:7.8 },
+    { dim:'NUM', skill_id:'NUM-2', level:'L1', total:3, correct:3, avg_sec:8.9 },
+    { dim:'SPA', skill_id:'SPA-1', level:'L1', total:2, correct:1, avg_sec:16.5 }
   ]},
-  { date: '2026-11-02 17:00:00', date_day: '2026-11-02', lesson: 'Maths Day 7（遊樂園派對）', term: 'K2-T1', accuracy: 89, avg_sec: 9.6, skill_stats: [
-    { dim:'ADD', skill_id:'ADD-1', level:'L1', total:3, correct:3, avg_sec:8.2 },
-    { dim:'ADD', skill_id:'ADD-2', level:'L1', total:3, correct:3, avg_sec:8.8 },
-    { dim:'SPA', skill_id:'SPA-2', level:'L1', total:3, correct:2, avg_sec:11.8 }
-  ]},
-  { date: '2026-11-15 17:05:00', date_day: '2026-11-15', lesson: 'Maths Day 9（披薩分享日）', term: 'K2-T1', accuracy: 92, avg_sec: 7.9, skill_stats: [
-    { dim:'NUM', skill_id:'NUM-1', level:'L1', total:2, correct:2, avg_sec:6.5 },
-    { dim:'ADD', skill_id:'ADD-1', level:'L1', total:2, correct:2, avg_sec:7.2 },
+  { date: '2026-11-15 17:05:00', date_day: '2026-11-15', subject_code: 'math', lesson: 'Maths Day 9（披薩分享日）', term: 'K2-T1', accuracy: 92, avg_sec: 7.9, skill_stats: [
+    { dim:'NUM', skill_id:'NUM-1', level:'L1', total:3, correct:3, avg_sec:6.5 },
+    { dim:'ADD', skill_id:'ADD-1', level:'L1', total:3, correct:3, avg_sec:7.2 },
     { dim:'SUB', skill_id:'SUB-1', level:'L1', total:3, correct:3, avg_sec:8.8 },
     { dim:'APP', skill_id:'APP-2', level:'L1', total:3, correct:2, avg_sec:9.1 }
   ]},
-  { date: '2026-11-21 17:14:47', date_day: '2026-11-21', lesson: 'Maths Day 10（數學小博士總考）', term: 'K2-T1', accuracy: 100, avg_sec: 6.5, skill_stats: [
+  { date: '2026-11-21 17:14:47', date_day: '2026-11-21', subject_code: 'math', lesson: 'Maths Day 10（數學小博士總考）', term: 'K2-T1', accuracy: 100, avg_sec: 6.5, skill_stats: [
     { dim:'NUM', skill_id:'NUM-1', level:'L1', total:2, correct:2, avg_sec:8.0 },
     { dim:'SPA', skill_id:'SPA-1', level:'L1', total:1, correct:1, avg_sec:5.0 },
     { dim:'LOG', skill_id:'LOG-3', level:'L2', total:1, correct:1, avg_sec:10.0 },
     { dim:'ADD', skill_id:'ADD-2', level:'L1', total:3, correct:3, avg_sec:5.7 },
-    { dim:'SUB', skill_id:'SUB-1', level:'L1', total:1, correct:1, avg_sec:4.0 }
+    { dim:'SUB', skill_id:'SUB-1', level:'L1', total:2, correct:2, avg_sec:4.0 }
   ]}
 ];
 
-const CN_DEMO_RECORDS = [
-  { date: '2026-11-21 17:12:31', date_day: '2026-11-21', subject: '中文AI課堂', lesson: 'P.21-25 Day 10', term: 'K2-T1',
-    feedback: '【中文課堂回報】P.21-25 Day 10 (cn-p21-p25-d10.html) | 詞語聽音: 53s(1次答對) | 句式積木: 123s(1次答對) | 兒歌重溫: 195s | 靜音圈字: 126s(圈出24字) | 圈出識字清單: 香、甜、蜜、糖、翠、綠、蔬、菜、新、鮮、食、物、豆、肉、米、飯、牛、奶、蛋、水、果、電、蝸、遊' },
-  { date: '2026-11-22 22:08:37', date_day: '2026-11-22', subject: '中文闖關測驗', lesson: 'P.1-4 Test 1', term: 'K2-T1',
-    feedback: '【中文盲測回報】P.1-4 Test 1 (cn-p1-p4-test1.html) | 總耗時: 580s | 表現: 待加強項目共 2 項 | 錯誤字詞: 閃卡:快樂, 火車:老師' },
-  { date: '2026-11-23 19:43:43', date_day: '2026-11-23', subject: '中文闖關測驗', lesson: 'P.1-4 Test 2', term: 'K2-T1',
-    feedback: '【中文盲測回報】P.1-4 Test 2 (cn-p1-p4-test2.html) | 總耗時: 360s | 表現: 待加強項目共 4 項 | 錯誤字詞: 聽音:同學, 火車:學校, 火車:同學, 句式:天天快樂笑呵呵。' },
-  { date: '2026-11-24 18:38:41', date_day: '2026-11-24', subject: '中文AI課堂', lesson: 'P.26-29 Day 1', term: 'K2-T1',
-    feedback: '【中文課堂回報】P.26-29 Day 1 (cn-p26-p29-d1.html) | 熟字熱身: 47s(1次答對) | 拆字魔法: 345s | 聽音辨字: 76s(1次答對) | 靜音圈字: 75s(圈出7字) | 圈出識字清單: 主、禮、物、耳、口、豆、我' },
-  { date: '2026-11-25 17:58:21', date_day: '2026-11-25', subject: '中文AI課堂', lesson: 'P.26-29 Day 2', term: 'K2-T1',
-    feedback: '【中文課堂回報】P.26-29 Day 2 (cn-p26-p29-d2.html) | 生字拆字重溫: 144s | 聽音尋寶: 61s(1次答對) | 句式積木: 59s(需提示(1次)) | 靜音圈字: 87s(圈出6字) | 圈出識字清單: 好、我、物、主、耶、穌' }
+const DEMO_CN_RECORDS = [
+  { date: '2026-11-21 17:12:31', date_day: '2026-11-21', subject: '中文AI課堂', subject_code: 'cn', lesson: 'P.21-25 Day 10', term: 'K2-T1',
+    feedback: '【中文課堂回報】P.21-25 Day 10 (cn-p21-p25-d10.html) | 詞語聽音: 53s(1次答對) | 句式積木: 123s(1次答對) | 兒歌重溫: 195s | 靜音圈字: 126s(圈出24字) | 圈出識字清單: 香、甜、蜜、糖、翠、綠、蔬、菜、新、鮮、食、物、豆、肉、米、飯、牛、奶、蛋、水、果、電、蝸、遊', skill_stats: [] },
+  { date: '2026-11-22 22:08:37', date_day: '2026-11-22', subject: '中文闖關測驗', subject_code: 'cn', lesson: 'P.1-4 Test 1', term: 'K2-T1',
+    feedback: '【中文盲測回報】P.1-4 Test 1 (cn-p1-p4-test1.html) | 總耗時: 580s | 表現: 待加強項目共 2 項 | 錯誤字詞: 閃卡:快樂, 火車:老師', skill_stats: [] },
+  { date: '2026-11-23 19:43:43', date_day: '2026-11-23', subject: '中文闖關測驗', subject_code: 'cn', lesson: 'P.1-4 Test 2', term: 'K2-T1',
+    feedback: '【中文盲測回報】P.1-4 Test 2 (cn-p1-p4-test2.html) | 總耗時: 360s | 表現: 待加強項目共 4 項 | 錯誤字詞: 聽音:同學, 火車:學校, 火車:同學, 句式:天天快樂笑呵呵。', skill_stats: [] },
+  { date: '2026-11-24 18:38:41', date_day: '2026-11-24', subject: '中文AI課堂', subject_code: 'cn', lesson: 'P.26-29 Day 1', term: 'K2-T1',
+    feedback: '【中文課堂回報】P.26-29 Day 1 (cn-p26-p29-d1.html) | 熟字熱身: 47s(1次答對) | 拆字魔法: 345s | 聽音辨字: 76s(1次答對) | 靜音圈字: 75s(圈出7字) | 圈出識字清單: 主、禮、物、耳、口、豆、我', skill_stats: [] },
+  { date: '2026-11-25 17:58:21', date_day: '2026-11-25', subject: '中文AI課堂', subject_code: 'cn', lesson: 'P.26-29 Day 2', term: 'K2-T1',
+    feedback: '【中文課堂回報】P.26-29 Day 2 (cn-p26-p29-d2.html) | 生字拆字重溫: 144s | 聽音尋寶: 61s(1次答對) | 句式積木: 59s(需提示(1次)) | 靜音圈字: 87s(圈出6字) | 圈出識字清單: 好、我、物、主、耶、穌', skill_stats: [] }
 ];
 
-/* ==================== 2. 全局狀態與雲端讀取 ==================== */
-let liveMathRecords = [];
-let liveCnRecords = [];
+/* ==================== 2. 狀態管理與雲端讀取 ==================== */
+let liveAllRecords = [];
 let isDemoMode = false;
-let currentView = 'mom';
-let currentSubject = 'math';
-let currentKidSubject = 'math';
-
+let currentView = 'mom';     // 'mom' | 'kid'
+let currentSubject = 'math'; // 'math' | 'cn'
 let radarChartInstance = null;
 let trendChartInstance = null;
-let cnRadarChartInstance = null;
-let cnTrendChartInstance = null;
-
-let latestMathComputed = null;
-let latestCnComputed = null;
+let latestComputed = null;
 
 function getApiUrl() {
   return localStorage.getItem('lingling_dashboard_api_url') || DEFAULT_API_URL;
-}
-
-function splitLiveRecords(records) {
-  const arr = Array.isArray(records) ? records : [];
-  liveMathRecords = arr.filter(r => r.subject_code === 'math' || /數學|math/i.test(r.subject || ''));
-  liveCnRecords = arr.filter(r => r.subject_code === 'cn' || /中文|cn/i.test(r.subject || ''));
 }
 
 async function fetchLiveData() {
@@ -684,13 +475,19 @@ async function fetchLiveData() {
     const json = await res.json();
     if (!json.ok) throw new Error(json.error || 'API 回傳異常');
 
-    splitLiveRecords(json.records);
-    const ts = json.generated_at ? json.generated_at.slice(11, 16) : '剛剛';
-    statusEl.textContent = `✅ 已同步雲端戰報（數學 ${liveMathRecords.length} 筆 · 中文 ${liveCnRecords.length} 筆 · ${ts}）`;
-    if (!isDemoMode) renderAll();
+    applyLiveJson(json, statusEl, false);
   } catch (err) {
     fetchViaJsonp(url, statusEl);
   }
+}
+
+function applyLiveJson(json, statusEl, viaJsonp) {
+  liveAllRecords = Array.isArray(json.records) ? json.records : [];
+  const mathN = liveAllRecords.filter(r => detectSubject(r) === 'math').length;
+  const cnN = liveAllRecords.filter(r => detectSubject(r) === 'cn').length;
+  const timeTxt = json.generated_at ? ' · ' + json.generated_at.slice(11, 16) : '';
+  statusEl.textContent = `✅ 已${viaJsonp ? '安全通道' : ''}同步雲端（數學 ${mathN} 筆 · 中文 ${cnN} 筆${timeTxt}）`;
+  if (!isDemoMode) renderAll();
 }
 
 function fetchViaJsonp(baseUrl, statusEl) {
@@ -702,15 +499,9 @@ function fetchViaJsonp(baseUrl, statusEl) {
     finished = true;
     delete window[cbName];
     script.remove();
-    if (json && json.ok) {
-      splitLiveRecords(json.records);
-      statusEl.textContent = `✅ 已透過安全通道同步（數學 ${liveMathRecords.length} 筆 · 中文 ${liveCnRecords.length} 筆）`;
-      if (!isDemoMode) renderAll();
-    } else {
-      handleFetchFail(statusEl);
-    }
+    if (json && json.ok) applyLiveJson(json, statusEl, true);
+    else handleFetchFail(statusEl);
   };
-
   script.onerror = function () {
     if (!finished) {
       delete window[cbName];
@@ -729,11 +520,118 @@ function handleFetchFail(statusEl) {
   renderAll();
 }
 
-/* ==================== 3A. 數學評估演算法 ==================== */
+function detectSubject(rec) {
+  if (rec.subject_code === 'math' || rec.subject_code === 'cn' || rec.subject_code === 'en') return rec.subject_code;
+  const s = String(rec.subject || '').toLowerCase();
+  if (s.includes('數學') || s.includes('math')) return 'math';
+  if (s.includes('中文') || s.includes('cn')) return 'cn';
+  if (s.includes('英文') || s.includes('en')) return 'en';
+  return 'other';
+}
+
+/* ==================== 3. 中文歷史戰報解析引擎 ==================== */
+function extractCircledChars(rec) {
+  const out = [];
+  if (Array.isArray(rec.circled_chars)) {
+    rec.circled_chars.forEach(c => { const t = String(c || '').trim(); if (t) out.push(t); });
+  }
+  const fb = String(rec.feedback || '');
+  const m = fb.match(/圈出識字清單[:：]\s*([^|\n]+)/);
+  if (m && m[1]) {
+    m[1].split(/[、,，\s\/]+/).forEach(tok => {
+      const clean = tok.replace(/[。！!？?（）()]/g, '').trim();
+      if (clean && !out.includes(clean)) out.push(clean);
+    });
+  }
+  return out;
+}
+
+function extractErrorItems(rec) {
+  const out = []; // { stage, word, raw }
+  const seen = new Set();
+  const pushRaw = (raw) => {
+    const s = String(raw || '').trim();
+    if (!s || s === '無' || seen.has(s)) return;
+    seen.add(s);
+    const parts = s.split(/[:：]/);
+    if (parts.length >= 2) {
+      out.push({ stage: parts[0].trim(), word: parts.slice(1).join(':').trim(), raw: s });
+    } else {
+      out.push({ stage: '測驗', word: s, raw: s });
+    }
+  };
+  if (Array.isArray(rec.error_words)) rec.error_words.forEach(pushRaw);
+  const fb = String(rec.feedback || '');
+  const m = fb.match(/錯誤字詞[:：]\s*([^|\n]+)/);
+  if (m && m[1]) {
+    m[1].split(/[,，]+/).forEach(pushRaw);
+  }
+  return out;
+}
+
+function parseLegacyCnSkillStats(rec, circledChars, errorItems) {
+  if (Array.isArray(rec.skill_stats) && rec.skill_stats.length > 0) return rec.skill_stats;
+  const fb = String(rec.feedback || '');
+  const stats = [];
+
+  // 類型 A：中文盲測回報（5 關：閃卡／聽音／火車／尋寶／句式）
+  if (fb.includes('中文盲測回報') || String(rec.subject || '').includes('闖關測驗')) {
+    const stageErr = { flash: 0, lis: 0, train: 0, hunt: 0, sen: 0 };
+    errorItems.forEach(e => {
+      if (e.stage.includes('閃卡')) stageErr.flash++;
+      else if (e.stage.includes('聽音')) stageErr.lis++;
+      else if (e.stage.includes('火車')) stageErr.train++;
+      else if (e.stage.includes('尋寶')) stageErr.hunt++;
+      else if (e.stage.includes('句式')) stageErr.sen++;
+    });
+    const pushTest = (dim, id, lvl, total, errs) => {
+      stats.push({ dim, skill_id: id, level: lvl, total, correct: Math.max(0, total - errs), avg_sec: 0 });
+    };
+    pushTest('REC', 'CN-REC-1', 'L1', 4, stageErr.flash);
+    pushTest('LIS', 'CN-LIS-1', 'L1', 4, stageErr.lis);
+    pushTest('MOR', 'CN-MOR-2', 'L1', 4, stageErr.train);
+    pushTest('CTX', 'CN-CTX-2', 'L2', 4, stageErr.hunt);
+    pushTest('SEN', 'CN-SEN-2', 'L2', 3, stageErr.sen);
+    return stats;
+  }
+
+  // 類型 B：中文微課堂回報（依各關卡文字拆解）
+  const segs = fb.split('|').map(s => s.trim());
+  const addOrMerge = (dim, skill_id, level, total, correct) => {
+    const found = stats.find(x => x.skill_id === skill_id);
+    if (found) { found.total += total; found.correct += correct; }
+    else stats.push({ dim, skill_id, level, total, correct, avg_sec: 0 });
+  };
+
+  segs.forEach(seg => {
+    const firstTry = seg.includes('1次答對') || seg.includes('一次答對');
+    const needHint = seg.includes('需提示');
+
+    if (/熟字熱身|聽音辨字|聽音辨詞|詞語聽音|聽音尋寶/.test(seg)) {
+      addOrMerge('LIS', 'CN-LIS-1', 'L1', 3, needHint ? 2 : 3);
+    } else if (/拆字魔法|視覺拆字|生字拆字/.test(seg)) {
+      addOrMerge('MOR', 'CN-MOR-1', 'L1', 3, needHint ? 2 : 3);
+    } else if (/句式積木|句式配對/.test(seg)) {
+      const isLong = String(rec.lesson || '').includes('Day 10');
+      addOrMerge('SEN', isLong ? 'CN-SEN-2' : 'CN-SEN-1', isLong ? 'L2' : 'L1', 2, needHint ? 1 : (firstTry ? 2 : 2));
+    } else if (/兒歌朗讀|兒歌重溫|兒歌與接龍/.test(seg)) {
+      addOrMerge('CTX', seg.includes('接龍') ? 'CN-CTX-2' : 'CN-CTX-1', seg.includes('接龍') ? 'L2' : 'L1', 2, needHint ? 1 : 2);
+    } else if (/靜音圈字/.test(seg)) {
+      const n = circledChars.length || (seg.match(/圈出(\d+)字/) ? Number(seg.match(/圈出(\d+)字/)[1]) : 0);
+      if (n > 0) {
+        const isGrand = String(rec.lesson || '').includes('Day 10') || n >= 15;
+        addOrMerge('REC', isGrand ? 'CN-REC-3' : 'CN-REC-2', isGrand ? 'L2' : 'L1', n, n);
+      }
+    }
+  });
+  return stats;
+}
+
+/* ==================== 4. 數學評估演算法 ==================== */
 function analyzeMathRecords(records) {
   const sorted = [...records].sort((a, b) => String(a.date).localeCompare(String(b.date)));
   const skillMap = {};
-  MATH_SKILLS_CATALOG.forEach(s => {
+  MATH_SKILLS.forEach(s => {
     skillMap[s.id] = { ...s, total: 0, correct: 0, sumSec: 0, daysSet: new Set(), attempts: [], earlyUnlocked: false };
   });
 
@@ -743,42 +641,32 @@ function analyzeMathRecords(records) {
   sorted.forEach(rec => {
     const day = rec.date_day || String(rec.date || '').slice(0, 10);
     if (day) allDays.add(day);
-    const stats = Array.isArray(rec.skill_stats) ? rec.skill_stats : [];
-    stats.forEach(st => {
+    (Array.isArray(rec.skill_stats) ? rec.skill_stats : []).forEach(st => {
       const sk = skillMap[st.skill_id];
       if (!sk) return;
-      const t = Number(st.total) || 0;
-      const c = Number(st.correct) || 0;
-      const sec = Number(st.avg_sec) || 0;
+      const t = Number(st.total) || 0, c = Number(st.correct) || 0, sec = Number(st.avg_sec) || 0;
       if (t <= 0) return;
-
-      sk.total += t;
-      sk.correct += c;
-      sk.sumSec += sec * t;
+      sk.total += t; sk.correct += c; sk.sumSec += sec * t;
       if (day) sk.daysSet.add(day);
       sk.attempts.push({ date_day: day, term: rec.term || 'K2-T1', total: t, correct: c, avg_sec: sec });
       if (sk.level === 'L2' && (rec.term || 'K2-T1') === 'K2-T1') sk.earlyUnlocked = true;
-
-      grandTotalQ += t;
-      grandCorrectQ += c;
-      grandTotalSec += sec * t;
+      grandTotalQ += t; grandCorrectQ += c; grandTotalSec += sec * t;
     });
   });
 
   Object.values(skillMap).forEach(sk => {
     sk.daysCount = sk.daysSet.size;
     if (sk.total === 0) {
-      sk.status = 'gray'; sk.acc = null; sk.avgSec = null; sk.note = '尚未練習';
-      return;
+      sk.status = 'gray'; sk.acc = null; sk.avgSec = null; sk.note = '尚未練習'; return;
     }
-    let recentQ = 0, recentC = 0, recentSecSum = 0;
+    let rq = 0, rc = 0, rsec = 0;
     for (let i = sk.attempts.length - 1; i >= 0; i--) {
       const a = sk.attempts[i];
-      recentQ += a.total; recentC += a.correct; recentSecSum += a.avg_sec * a.total;
-      if (recentQ >= 5) break;
+      rq += a.total; rc += a.correct; rsec += a.avg_sec * a.total;
+      if (rq >= 5) break;
     }
-    sk.acc = Math.round((recentC / recentQ) * 100);
-    sk.avgSec = Math.round((recentSecSum / recentQ) * 10) / 10;
+    sk.acc = Math.round((rc / rq) * 100);
+    sk.avgSec = Math.round((rsec / rq) * 10) / 10;
 
     if (sk.acc < 70) {
       sk.status = 'red'; sk.note = '正確率偏低，建議實物帶做';
@@ -802,33 +690,31 @@ function analyzeMathRecords(records) {
   });
 
   const dimSummary = MATH_DIMENSIONS.map(dim => {
-    const dimSkills = Object.values(skillMap).filter(s => s.dim === dim.id);
+    const ds = Object.values(skillMap).filter(s => s.dim === dim.id);
     let q = 0, c = 0, secSum = 0;
-    dimSkills.forEach(s => { q += s.total; c += s.correct; secSum += s.sumSec; });
-    if (q === 0) {
-      return { ...dim, totalQ: 0, acc: 0, avgSec: null, score: 0, quadrant: '未開始', qBadgeClass: 'bg-slate-100 text-slate-500 border-slate-200' };
-    }
+    ds.forEach(s => { q += s.total; c += s.correct; secSum += s.sumSec; });
+    if (q === 0) return { ...dim, totalQ: 0, acc: 0, avgSec: null, score: 0, badgeText: '未開始', badgeClass: 'bg-slate-100 text-slate-500 border-slate-200' };
     const acc = Math.round((c / q) * 100);
     const avgSec = Math.round((secSum / q) * 10) / 10;
     const speedScore = Math.max(0, Math.min(100, Math.round(100 - Math.max(0, avgSec - 7) * 8)));
-    const composite = Math.round(acc * 0.75 + speedScore * 0.25);
-
-    let quadrant = '', qBadgeClass = '';
-    if (acc >= 85 && avgSec <= 10.5) { quadrant = '🟢 已內化'; qBadgeClass = 'bg-emerald-50 text-emerald-700 border-emerald-300'; }
-    else if (acc >= 85 && avgSec > 10.5) { quadrant = '🟡 懂原理未熟'; qBadgeClass = 'bg-amber-50 text-amber-700 border-amber-300'; }
-    else if (acc < 85 && avgSec <= 8.5) { quadrant = '🟠 易粗心搶答'; qBadgeClass = 'bg-orange-50 text-orange-700 border-orange-300'; }
-    else { quadrant = '🔴 概念盲區'; qBadgeClass = 'bg-rose-50 text-rose-700 border-rose-300'; }
-    return { ...dim, totalQ: q, acc, avgSec, score: composite, quadrant, qBadgeClass };
+    const score = Math.round(acc * 0.75 + speedScore * 0.25);
+    let badgeText = '', badgeClass = '';
+    if (acc >= 85 && avgSec <= 10.5) { badgeText = '🟢 已內化'; badgeClass = 'bg-emerald-50 text-emerald-700 border-emerald-300'; }
+    else if (acc >= 85) { badgeText = '🟡 懂原理未熟'; badgeClass = 'bg-amber-50 text-amber-700 border-amber-300'; }
+    else if (avgSec <= 8.5) { badgeText = '🟠 易粗心搶答'; badgeClass = 'bg-orange-50 text-orange-700 border-orange-300'; }
+    else { badgeText = '🔴 概念盲區'; badgeClass = 'bg-rose-50 text-rose-700 border-rose-300'; }
+    return { ...dim, totalQ: q, acc, avgSec, score, badgeText, badgeClass };
   });
 
   const skillsArr = Object.values(skillMap);
   return {
+    subject: 'math',
+    dimensions: MATH_DIMENSIONS,
     sortedRecords: sorted,
     daysCount: allDays.size,
     grandTotalQ,
     overallAcc: grandTotalQ > 0 ? Math.round((grandCorrectQ / grandTotalQ) * 100) : null,
     overallSec: grandTotalQ > 0 ? Math.round((grandTotalSec / grandTotalQ) * 10) / 10 : null,
-    skillMap,
     skillsArr,
     dimSummary,
     greenCount: skillsArr.filter(s => s.status === 'green').length,
@@ -838,294 +724,712 @@ function analyzeMathRecords(records) {
   };
 }
 
-/* ==================== 3B. 中文歷史解析與雙軌評估演算法 ==================== */
-function extractCircledChars(feedback, rawCircled) {
-  const set = new Set();
-  if (Array.isArray(rawCircled)) {
-    rawCircled.forEach(c => {
-      const m = String(c || '').match(/[\u4e00-\u9fff]/g);
-      if (m) m.forEach(ch => set.add(ch));
-    });
-  }
-  const m = String(feedback || '').match(/圈出識字清單[:：]\s*([^|\n]+)/);
-  if (m) {
-    const chars = m[1].match(/[\u4e00-\u9fff]/g);
-    if (chars) chars.forEach(ch => set.add(ch));
-  }
-  return Array.from(set);
-}
-
-function extractErrorItems(feedback, rawErrors) {
-  const list = [];
-  const pushRaw = (str) => {
-    const clean = String(str || '').trim().replace(/[。！!？?]+$/, '');
-    if (!clean || clean === '無' || clean.indexOf('無（') === 0) return;
-    const parts = clean.split(/[:：]/);
-    if (parts.length >= 2) {
-      list.push({ stage: parts[0].trim(), word: parts.slice(1).join(':').trim() });
-    } else {
-      list.push({ stage: '溫習', word: clean });
-    }
-  };
-  if (Array.isArray(rawErrors) && rawErrors.length > 0) {
-    rawErrors.forEach(pushRaw);
-  } else {
-    const m = String(feedback || '').match(/錯誤字詞[:：]\s*([^|\n]+)/);
-    if (m) {
-      m[1].split(/[,，、]+/).forEach(pushRaw);
-    }
-  }
-  return list;
-}
-
-function parseLegacyCnSkillStats(rec, circledChars, errorItems) {
-  const fb = String(rec.feedback || '');
-  const isQuiz = /盲測|測驗|Test/i.test((rec.subject || '') + ' ' + (rec.lesson || '') + ' ' + fb);
-  const stats = [];
-
-  if (isQuiz) {
-    // 5 關中文盲測基準推算：每關扣除實錄錯題數
-    const errByStage = { flash: 0, listen: 0, train: 0, hunt: 0, sent: 0 };
-    errorItems.forEach(it => {
-      const s = it.stage;
-      if (/閃卡/.test(s)) errByStage.flash++;
-      else if (/聽音/.test(s)) errByStage.listen++;
-      else if (/火車|構詞/.test(s)) errByStage.train++;
-      else if (/尋寶|語境/.test(s)) errByStage.hunt++;
-      else if (/句式|句子/.test(s)) errByStage.sent++;
-    });
-    const addQuizStage = (dim, id, lv, total, errs) => {
-      stats.push({ dim, skill_id: id, level: lv, total, correct: Math.max(0, total - errs), avg_sec: 0 });
-    };
-    addQuizStage('REC', 'CN-REC-1', 'L1', 4, errByStage.flash);
-    addQuizStage('LIS', 'CN-LIS-1', 'L1', 4, errByStage.listen);
-    addQuizStage('MOR', 'CN-MOR-2', 'L1', 4, errByStage.train);
-    addQuizStage('CTX', 'CN-CTX-2', 'L2', 4, errByStage.hunt);
-    addQuizStage('SEN', 'CN-SEN-1', 'L1', 2, errByStage.sent);
-    return stats;
-  }
-
-  // 中文 AI 課堂文字戰報解析
-  const segs = fb.split('|').map(s => s.trim());
-  const agg = {};
-  const addItem = (dim, id, lv, total, correct) => {
-    if (!agg[id]) agg[id] = { dim, skill_id: id, level: lv, total: 0, correct: 0, avg_sec: 0 };
-    agg[id].total += total;
-    agg[id].correct += correct;
-  };
-
-  segs.forEach(seg => {
-    if (!seg || seg.indexOf('圈出識字清單') !== -1 || seg.indexOf('【中文') === 0) return;
-    const ok = /1次答對|一次答對/.test(seg);
-    const hint = /需提示/.test(seg);
-
-    if (/熟字熱身|聽音辨字|詞語聽音|聽音辨詞|聽音尋寶/.test(seg)) {
-      addItem('LIS', 'CN-LIS-1', 'L1', 2, ok ? 2 : (hint ? 1 : 2));
-    } else if (/拆字/.test(seg)) {
-      addItem('MOR', 'CN-MOR-1', 'L1', 2, hint ? 1 : 2);
-    } else if (/句式/.test(seg)) {
-      const isLong = /Day 10|分類|長句/.test((rec.lesson || '') + fb);
-      addItem('SEN', isLong ? 'CN-SEN-2' : 'CN-SEN-1', isLong ? 'L2' : 'L1', 2, ok ? 2 : (hint ? 1 : 2));
-    } else if (/兒歌/.test(seg)) {
-      addItem('CTX', 'CN-CTX-1', 'L1', 2, hint ? 1 : 2);
-      if (/接龍/.test(seg)) addItem('CTX', 'CN-CTX-2', 'L2', 2, ok ? 2 : (hint ? 1 : 2));
-    } else if (/靜音圈字/.test(seg)) {
-      const isCrossUnit = circledChars.length >= 12 || /Day 9|Day 10|總結/.test((rec.lesson || '') + fb);
-      const id = isCrossUnit ? 'CN-REC-3' : 'CN-REC-2';
-      const lv = isCrossUnit ? 'L2' : 'L1';
-      addItem('REC', id, lv, 2, circledChars.length >= 5 ? 2 : 1);
-    }
-  });
-
-  return Object.values(agg);
-}
-
+/* ==================== 5. 中文雙軌評估演算法（能力＋識字資產庫） ==================== */
 function analyzeCnRecords(records) {
   const sorted = [...records].sort((a, b) => String(a.date).localeCompare(String(b.date)));
-
   const skillMap = {};
-  CN_SKILLS_CATALOG.forEach(s => {
-    skillMap[s.id] = { ...s, total: 0, correct: 0, daysSet: new Set(), attempts: [] };
+  CN_SKILLS.forEach(s => {
+    skillMap[s.id] = { ...s, total: 0, correct: 0, daysSet: new Set(), attempts: [], earlyUnlocked: false };
   });
 
+  let grandTotalQ = 0, grandCorrectQ = 0;
   const allDays = new Set();
-  const charTrack = {};   // { '主': { count, daysSet, lastDate } }
-  const errorTrack = {};  // { '同學': { word, count, stages: Set, lastDate } }
-
-  let classCount = 0, quizCount = 0;
-  let grandTotal = 0, grandCorrect = 0;
+  const charTracker = {}; // char -> { count, days: Set }
+  const errorMap = {};    // word -> { word, stages: Set, count }
   const enrichedRecords = [];
 
   sorted.forEach(rec => {
     const day = rec.date_day || String(rec.date || '').slice(0, 10);
     if (day) allDays.add(day);
+    const circledChars = extractCircledChars(rec);
+    const errorItems = extractErrorItems(rec);
+    const stats = parseLegacyCnSkillStats(rec, circledChars, errorItems);
 
-    const fb = String(rec.feedback || '');
-    const isQuiz = /盲測|測驗|Test/i.test((rec.subject || '') + ' ' + (rec.lesson || '') + ' ' + fb);
-    if (isQuiz) quizCount++; else classCount++;
-
-    const circledChars = extractCircledChars(fb, rec.circled_chars);
-    const errorItems = extractErrorItems(fb, rec.error_words);
-
-    // 追蹤識字資產庫
+    // 追蹤靜音圈字
     circledChars.forEach(ch => {
-      if (!charTrack[ch]) charTrack[ch] = { char: ch, count: 0, daysSet: new Set(), lastDate: day };
-      charTrack[ch].count += 1;
-      if (day) charTrack[ch].daysSet.add(day);
-      charTrack[ch].lastDate = day;
+      if (!charTracker[ch]) charTracker[ch] = { count: 0, days: new Set() };
+      charTracker[ch].count += 1;
+      if (day) charTracker[ch].days.add(day);
     });
 
-    errorItems.forEach(it => {
-      const w = it.word;
-      if (!errorTrack[w]) errorTrack[w] = { word: w, count: 0, stages: new Set(), lastDate: day };
-      errorTrack[w].count += 1;
-      if (it.stage) errorTrack[w].stages.add(it.stage);
-      errorTrack[w].lastDate = day;
+    // 追蹤盲測錯題字詞
+    errorItems.forEach(e => {
+      const key = e.word;
+      if (!errorMap[key]) errorMap[key] = { word: key, stages: new Set(), count: 0 };
+      errorMap[key].stages.add(e.stage);
+      errorMap[key].count += 1;
     });
 
-    // 優先用雲端結構化 skill_stats，否則用歷史解析引擎
-    const hasNative = Array.isArray(rec.skill_stats) && rec.skill_stats.length > 0;
-    const stats = hasNative ? rec.skill_stats : parseLegacyCnSkillStats(rec, circledChars, errorItems);
-
-    let recT = 0, recC = 0;
+    let recQ = 0, recC = 0;
     stats.forEach(st => {
       const sk = skillMap[st.skill_id];
       if (!sk) return;
-      const t = Number(st.total) || 0;
-      const c = Number(st.correct) || 0;
+      const t = Number(st.total) || 0, c = Number(st.correct) || 0;
       if (t <= 0) return;
-
-      sk.total += t;
-      sk.correct += c;
+      sk.total += t; sk.correct += c;
       if (day) sk.daysSet.add(day);
-      sk.attempts.push({ date_day: day, total: t, correct: c });
-
-      recT += t; recC += c;
-      grandTotal += t; grandCorrect += c;
+      sk.attempts.push({ date_day: day, term: rec.term || 'K2-T1', total: t, correct: c });
+      grandTotalQ += t; grandCorrectQ += c;
+      recQ += t; recC += c;
     });
 
-    const recAcc = recT > 0 ? Math.round((recC / recT) * 100) : (rec.accuracy ?? null);
+    const computedAcc = rec.accuracy !== null && rec.accuracy !== undefined && rec.accuracy !== ''
+      ? Number(rec.accuracy)
+      : (recQ > 0 ? Math.round((recC / recQ) * 100) : null);
+
     enrichedRecords.push({
       ...rec,
-      date_day: day,
-      isQuiz,
-      circledChars,
-      errorItems,
-      computed_skill_stats: stats,
-      computed_acc: recAcc
+      accuracy: computedAcc,
+      skill_stats: stats,
+      circled_chars: circledChars,
+      error_items: errorItems
     });
   });
 
-  // 計算 12 項中文微技能紅綠燈（重準確不逼速）
+  // 計算 12 項微技能紅綠燈（重準確度與跨日獨立性，不計秒數壓力）
   Object.values(skillMap).forEach(sk => {
     sk.daysCount = sk.daysSet.size;
     if (sk.total === 0) {
-      sk.status = 'gray'; sk.acc = null; sk.note = '尚未練習';
-      return;
+      sk.status = 'gray'; sk.acc = null; sk.note = '尚未練習'; return;
     }
-    let recentT = 0, recentC = 0;
+    let rq = 0, rc = 0;
     for (let i = sk.attempts.length - 1; i >= 0; i--) {
-      recentT += sk.attempts[i].total;
-      recentC += sk.attempts[i].correct;
-      if (recentT >= 6) break;
+      rq += sk.attempts[i].total; rc += sk.attempts[i].correct;
+      if (rq >= 5) break;
     }
-    sk.acc = Math.round((recentC / recentT) * 100);
+    sk.acc = Math.round((rc / rq) * 100);
+    const target = sk.targetAcc || 85;
 
-    // 檢查是否連續 2 次作答均低於 70%
-    const lastTwoFail = sk.attempts.length >= 2 &&
-      (sk.attempts[sk.attempts.length - 1].correct / sk.attempts[sk.attempts.length - 1].total) < 0.7 &&
-      (sk.attempts[sk.attempts.length - 2].correct / sk.attempts[sk.attempts.length - 2].total) < 0.7;
-
-    if (sk.acc < 65 || lastTwoFail) {
-      sk.status = 'red';
-      sk.note = '建議列入本週熱身與生活認字支援';
-    } else if (sk.total >= 5 && sk.daysCount >= 2 && sk.acc >= sk.minAcc) {
-      sk.status = 'green';
-      sk.note = '已跨日穩固達標';
+    if (sk.acc < 65) {
+      sk.status = 'red'; sk.note = '建議加入生活認字與熱身重溫';
+    } else if (sk.total >= 5 && sk.daysCount >= 2 && sk.acc >= target) {
+      sk.status = 'green'; sk.note = '已跨日穩固達標（零提示）';
     } else {
       sk.status = 'yellow';
-      if (sk.acc >= sk.minAcc && sk.daysCount < 2) sk.note = '表現優秀，待跨日覆核防遺忘';
-      else if (sk.acc >= sk.minAcc && sk.total < 5) sk.note = `表現優秀，再累積 ${5 - sk.total} 項即亮綠燈`;
-      else sk.note = '穩步鞏固中（重準確不趕快）';
+      if (sk.acc >= target && sk.daysCount < 2) sk.note = '單日達標，待隔日覆核防遺忘';
+      else if (sk.acc >= target && sk.total < 5) sk.note = `表現優秀，再累積 ${5 - sk.total} 題亮綠燈`;
+      else sk.note = '穩步鞏固中（重準確不逼速）';
     }
   });
 
-  // 判斷中文 L2 進階建議
   Object.values(skillMap).forEach(sk => {
-    if (sk.level === 'L2') {
-      sk.canUnlockL2 = (sk.prereq || []).every(pid => skillMap[pid] && skillMap[pid].status === 'green');
-    } else sk.canUnlockL2 = false;
+    sk.canUnlockL2 = sk.level === 'L2' && (sk.prereq || []).every(pid => skillMap[pid] && skillMap[pid].status === 'green');
   });
 
-  // 識字資產庫三層分流
-  const redWords = Object.values(errorTrack)
-    .map(x => ({ word: x.word, count: x.count, stages: Array.from(x.stages), lastDate: x.lastDate }))
-    .sort((a, b) => b.count - a.count);
-
-  const baseSet = new Set(CN_BASE_MASTERED);
-  const cloudRootedChars = [];
-  const growingChars = [];
-
-  Object.values(charTrack).forEach(item => {
-    const days = item.daysSet.size;
-    if (days >= 2 || item.count >= 2) {
-      cloudRootedChars.push({ char: item.char, count: item.count, days });
-    } else if (!baseSet.has(item.char)) {
-      growingChars.push({ char: item.char, count: item.count, days, lastDate: item.lastDate });
-    }
-  });
-
-  const cloudRootedSet = new Set(cloudRootedChars.map(x => x.char));
-  const baseOnlyMastered = CN_BASE_MASTERED.filter(ch => !cloudRootedSet.has(ch));
-  const totalUniqueMastered = new Set([...CN_BASE_MASTERED, ...cloudRootedSet]).size;
-
-  // 五大維度評分（純準確率，無速度扣分）
+  // 五維雷達（純準確與獨立性）
   const dimSummary = CN_DIMENSIONS.map(dim => {
-    const dimSkills = Object.values(skillMap).filter(s => s.dim === dim.id);
-    let t = 0, c = 0;
-    dimSkills.forEach(s => { t += s.total; c += s.correct; });
-    if (t === 0) {
-      return { ...dim, total: 0, acc: 0, score: 0, badge: '未開始', badgeClass: 'bg-slate-100 text-slate-500 border-slate-200' };
-    }
-    const acc = Math.round((c / t) * 100);
-    let badge = '', badgeClass = '';
-    if (acc >= 85) { badge = '🟢 穩步達標'; badgeClass = 'bg-emerald-50 text-emerald-700 border-emerald-300'; }
-    else if (acc >= 65) { badge = '🟡 鞏固中'; badgeClass = 'bg-amber-50 text-amber-700 border-amber-300'; }
-    else { badge = '🔴 優先支援'; badgeClass = 'bg-rose-50 text-rose-700 border-rose-300'; }
-    return { ...dim, total: t, acc, score: acc, badge, badgeClass };
+    const ds = Object.values(skillMap).filter(s => s.dim === dim.id);
+    let q = 0, c = 0;
+    ds.forEach(s => { q += s.total; c += s.correct; });
+    if (q === 0) return { ...dim, totalQ: 0, acc: 0, score: 0, badgeText: '未開始', badgeClass: 'bg-slate-100 text-slate-500 border-slate-200' };
+    const acc = Math.round((c / q) * 100);
+    let badgeText = '', badgeClass = '';
+    if (acc >= 85) { badgeText = '🟢 獨立穩固'; badgeClass = 'bg-emerald-50 text-emerald-700 border-emerald-300'; }
+    else if (acc >= 65) { badgeText = '🟡 鞏固覆核中'; badgeClass = 'bg-amber-50 text-amber-700 border-amber-300'; }
+    else { badgeText = '🔴 優先支援'; badgeClass = 'bg-rose-50 text-rose-700 border-rose-300'; }
+    return { ...dim, totalQ: q, acc, score: acc, badgeText, badgeClass };
   });
+
+  // 🌳 識字成長資產庫三層分流
+  const includeBaseline = document.getElementById('chkIncludeBaseline') ? document.getElementById('chkIncludeBaseline').checked : true;
+  const greenSet = new Set();
+  const yellowSet = new Set();
+
+  if (includeBaseline) CN_BASELINE_LEARNED.forEach(ch => greenSet.add(ch));
+  Object.keys(charTracker).forEach(ch => {
+    const info = charTracker[ch];
+    if (info.days.size >= 2 || info.count >= 2) {
+      greenSet.add(ch);
+      yellowSet.delete(ch);
+    } else if (!greenSet.has(ch)) {
+      yellowSet.add(ch);
+    }
+  });
+
+  const redList = Object.values(errorMap).sort((a, b) => b.count - a.count).map(e => ({
+    word: e.word,
+    stages: Array.from(e.stages).join('・'),
+    count: e.count
+  }));
 
   const skillsArr = Object.values(skillMap);
   return {
+    subject: 'cn',
+    dimensions: CN_DIMENSIONS,
     sortedRecords: enrichedRecords,
-    classCount,
-    quizCount,
     daysCount: allDays.size,
-    grandTotal,
-    overallAcc: grandTotal > 0 ? Math.round((grandCorrect / grandTotal) * 100) : null,
-    skillMap,
+    grandTotalQ,
+    overallAcc: grandTotalQ > 0 ? Math.round((grandCorrectQ / grandTotalQ) * 100) : null,
     skillsArr,
     dimSummary,
     greenCount: skillsArr.filter(s => s.status === 'green').length,
     l1Total: skillsArr.filter(s => s.level === 'L1').length,
     l1Green: skillsArr.filter(s => s.level === 'L1' && s.status === 'green').length,
-    vocab: {
-      redWords,
-      growingChars,
-      cloudRootedChars,
-      baseOnlyMastered,
-      totalMasteredCount: totalUniqueMastered,
-      totalAllKnown: totalUniqueMastered + growingChars.length
+    literacy: {
+      green: Array.from(greenSet),
+      yellow: Array.from(yellowSet),
+      red: redList,
+      totalActive: greenSet.size + yellowSet.size
     }
   };
 }
 
-/* ==================== 4. 總渲染入口 ==================== */
+/* ==================== 6. 統一畫面渲染 ==================== */
 function renderAll() {
+  const rawSource = isDemoMode
+    ? (currentSubject === 'math' ? DEMO_MATH_RECORDS : DEMO_CN_RECORDS)
+    : liveAllRecords.filter(r => detectSubject(r) === currentSubject);
+
   const termVal = document.getElementById('termFilter').value;
+  const filtered = termVal === 'all' ? rawSource : rawSource.filter(r => (r.term || 'K2-T1') === termVal);
 
-  const mathSrc = isDemoMode ? MATH_DEMO_RECORDS : liveMathRecords;
-  const mathFiltered = termVal === 'all' ? mathSrc : mathSrc.filter(r => (r.term || 'K2-T1') === termVal);
-  latestMathComputed = analyzeMathRecords(mathFiltered);
+  const data = currentSubject === 'math' ? analyzeMathRecords(filtered) : analyzeCnRecords(filtered);
+  latestComputed = data;
 
-  const
+  document.getElementById('cnLiteracySection').classList.toggle('hidden', currentSubject !== 'cn');
+
+  renderKPIs(data);
+  renderRadarAndQuadrants(data);
+  renderTrendChart(data);
+  if (currentSubject === 'cn') renderCnLiteracyBox(data);
+  renderSkillTree(data);
+  renderNextTermPlan(data);
+  renderHistoryTable(data);
+  renderKidTrophyWall(data);
+}
+
+function renderKPIs(data) {
+  if (data.subject === 'math') {
+    document.getElementById('kpiLabel1').textContent = '累積數學測驗';
+    document.getElementById('kpiVal1').textContent = data.sortedRecords.length;
+    document.getElementById('kpiUnit1').textContent = '次';
+    document.getElementById('kpiSub1').textContent = `涵蓋 ${data.daysCount} 個測驗日`;
+
+    document.getElementById('kpiLabel2').textContent = '總體首答正確率';
+    document.getElementById('kpiVal2').textContent = data.overallAcc !== null ? `${data.overallAcc}%` : '--%';
+    document.getElementById('kpiSub2').textContent = `累積分析 ${data.grandTotalQ} 題細項`;
+
+    document.getElementById('kpiLabel3').textContent = '單題平均反應時間';
+    document.getElementById('kpiVal3').textContent = data.overallSec !== null ? `${data.overallSec}s` : '--s';
+    document.getElementById('kpiUnit3').textContent = '';
+    document.getElementById('kpiSub3').textContent = '熟練線：≤ 10 秒/題';
+
+    document.getElementById('kpiLabel4').textContent = '已穩固微技能 (🟢)';
+    document.getElementById('kpiVal4').textContent = data.greenCount;
+    document.getElementById('kpiUnit4').textContent = `/ ${data.skillsArr.length} 項`;
+    const earlyTxt = data.earlyCount > 0 ? ` · ✨ 超前 ${data.earlyCount} 項` : '';
+    document.getElementById('kpiSub4').textContent = `上學期核心 ${data.l1Green} / ${data.l1Total}${earlyTxt}`;
+  } else {
+    document.getElementById('kpiLabel1').textContent = '累積中文課堂／盲測';
+    document.getElementById('kpiVal1').textContent = data.sortedRecords.length;
+    document.getElementById('kpiUnit1').textContent = '次';
+    document.getElementById('kpiSub1').textContent = `涵蓋 ${data.daysCount} 個學習日`;
+
+    document.getElementById('kpiLabel2').textContent = '零提示一次答對率';
+    document.getElementById('kpiVal2').textContent = data.overallAcc !== null ? `${data.overallAcc}%` : '--%';
+    document.getElementById('kpiSub2').textContent = `重準確不逼速 · 分析 ${data.grandTotalQ} 項`;
+
+    document.getElementById('kpiLabel3').textContent = '🌳 識字成長資產';
+    document.getElementById('kpiVal3').textContent = data.literacy.totalActive;
+    document.getElementById('kpiUnit3').textContent = '字';
+    document.getElementById('kpiSub3').textContent = `🟢 熟字 ${data.literacy.green.length} ＋ 🟡 新字 ${data.literacy.yellow.length}`;
+
+    document.getElementById('kpiLabel4').textContent = '已穩固中文技能 (🟢)';
+    document.getElementById('kpiVal4').textContent = data.greenCount;
+    document.getElementById('kpiUnit4').textContent = `/ ${data.skillsArr.length} 項`;
+    document.getElementById('kpiSub4').textContent = `上學期核心 ${data.l1Green} / ${data.l1Total}（紅燈詞 ${data.literacy.red.length} 項）`;
+  }
+}
+
+function renderRadarAndQuadrants(data) {
+  const isMath = data.subject === 'math';
+  document.getElementById('radarTitle').textContent = isMath ? '🕸️ 六大能力雷達與四象限診斷' : '🏮 中文五大能力雷達圖';
+  document.getElementById('radarSub').textContent = isMath ? '結合「正確率 × 反應速度」綜合評分' : '以「零提示獨立準確率」評估，不對幼兒施加答題速度壓力';
+
+  const ctx = document.getElementById('radarChart').getContext('2d');
+  if (radarChartInstance) radarChartInstance.destroy();
+
+  radarChartInstance = new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels: data.dimSummary.map(d => `${d.icon} ${d.name}`),
+      datasets: [{
+        label: isMath ? '綜合掌握力' : '獨立準確率 (%)',
+        data: data.dimSummary.map(d => d.score),
+        backgroundColor: isMath ? 'rgba(99, 102, 241, 0.22)' : 'rgba(244, 63, 94, 0.20)',
+        borderColor: isMath ? '#4F46E5' : '#E11D48',
+        borderWidth: 3,
+        pointBackgroundColor: '#F59E0B',
+        pointBorderColor: '#FFFFFF',
+        pointBorderWidth: 2,
+        pointRadius: 5
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        r: {
+          min: 0, max: 100,
+          ticks: { stepSize: 25, backdropColor: 'transparent', font: { size: 10, weight: 'bold' } },
+          pointLabels: { font: { size: 12, weight: 'bold' }, color: '#334155' },
+          grid: { color: '#E2E8F0' }
+        }
+      },
+      plugins: { legend: { display: false } }
+    }
+  });
+
+  document.getElementById('quadrantGrid').innerHTML = data.dimSummary.map(d => `
+    <div class="rounded-2xl border-2 p-2.5 ${d.badgeClass}">
+      <div class="text-xs font-black truncate">${d.icon} ${d.name}</div>
+      <div class="text-xs font-black mt-1">${d.badgeText}</div>
+      <div class="text-[11px] opacity-85 mt-0.5">${
+        d.totalQ > 0
+          ? (isMath ? `${d.acc}% · ${d.avgSec}s` : `${d.acc}% · ${d.totalQ}項`)
+          : '尚無作答'
+      }</div>
+    </div>
+  `).join('');
+}
+
+function renderTrendChart(data) {
+  const isMath = data.subject === 'math';
+  document.getElementById('trendTitle').textContent = isMath ? '📈 學期成長雙軸趨勢曲線' : '📈 中文準確率與靜音認字量趨勢';
+  document.getElementById('trendSub').textContent = isMath
+    ? '綠線（正確率）期望向上，橙線（秒數）期望向下'
+    : '綠線為零提示正確率 (%)，粉柱為該堂靜音紅圈認出字數';
+
+  const ctx = document.getElementById('trendChart').getContext('2d');
+  if (trendChartInstance) trendChartInstance.destroy();
+
+  const labels = data.sortedRecords.map(r => {
+    const m = String(r.lesson || '').match(/(Day\s*\d+|Test\s*\d+)/i);
+    return m ? m[0] : String(r.date_day || '').slice(5);
+  });
+
+  const datasets = isMath ? [
+    {
+      label: '首答正確率 (%)',
+      data: data.sortedRecords.map(r => r.accuracy !== null ? r.accuracy : null),
+      borderColor: '#10B981', backgroundColor: 'rgba(16, 185, 129, 0.12)',
+      borderWidth: 3, tension: 0.3, yAxisID: 'yLeft', pointRadius: 5, pointBackgroundColor: '#10B981'
+    },
+    {
+      label: '單題平均秒數 (s)',
+      data: data.sortedRecords.map(r => r.avg_sec !== null ? r.avg_sec : null),
+      borderColor: '#F59E0B', backgroundColor: 'rgba(245, 158, 11, 0.1)',
+      borderWidth: 3, borderDash: [5, 4], tension: 0.3, yAxisID: 'yRight', pointRadius: 5, pointBackgroundColor: '#F59E0B'
+    }
+  ] : [
+    {
+      type: 'line',
+      label: '零提示正確率 (%)',
+      data: data.sortedRecords.map(r => r.accuracy !== null ? r.accuracy : null),
+      borderColor: '#10B981', backgroundColor: 'rgba(16, 185, 129, 0.12)',
+      borderWidth: 3, tension: 0.3, yAxisID: 'yLeft', pointRadius: 5, pointBackgroundColor: '#10B981'
+    },
+    {
+      type: 'bar',
+      label: '靜音圈出識字數 (字)',
+      data: data.sortedRecords.map(r => (r.circled_chars && r.circled_chars.length) ? r.circled_chars.length : 0),
+      backgroundColor: 'rgba(244, 63, 94, 0.32)', borderColor: '#F43F5E', borderWidth: 2, borderRadius: 8,
+      yAxisID: 'yRight'
+    }
+  ];
+
+  trendChartInstance = new Chart(ctx, {
+    type: 'line',
+    data: { labels: labels.length ? labels : ['尚無數據'], datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      scales: {
+        yLeft: { type: 'linear', position: 'left', min: 0, max: 105, title: { display: true, text: '正確率 %', font: { size: 11, weight: 'bold' } } },
+        yRight: { type: 'linear', position: 'right', min: 0, suggestedMax: isMath ? 20 : 25, grid: { drawOnChartArea: false }, title: { display: true, text: isMath ? '秒數 (s)' : '圈出字數', font: { size: 11, weight: 'bold' } } }
+      },
+      plugins: { legend: { position: 'bottom', labels: { font: { size: 11, weight: 'bold' } } } }
+    }
+  });
+
+  const box = document.getElementById('growthCompareBox');
+  if (isMath) {
+    const valid = data.sortedRecords.filter(r => r.accuracy !== null && r.avg_sec !== null);
+    if (valid.length >= 2) {
+      const k = Math.min(3, Math.floor(valid.length / 2));
+      const avg = (arr, key) => Math.round((arr.reduce((s, x) => s + x[key], 0) / arr.length) * 10) / 10;
+      const eAcc = Math.round(avg(valid.slice(0, k), 'accuracy')), rAcc = Math.round(avg(valid.slice(-k), 'accuracy'));
+      const eSec = avg(valid.slice(0, k), 'avg_sec'), rSec = avg(valid.slice(-k), 'avg_sec');
+      const diff = rAcc - eAcc, spd = eSec > 0 ? Math.round(((eSec - rSec) / eSec) * 100) : 0;
+      box.innerHTML = `✨ <strong>學期成長對比（最初 ${k} 次 vs. 最近 ${k} 次）：</strong>正確率 ${eAcc}% → <strong>${rAcc}%</strong>（${diff >= 0 ? '⬆️ +' + diff + '%' : '⬇️ ' + diff + '%'}）；單題反應 ${eSec}s → <strong>${rSec}s</strong>（${spd >= 0 ? '⚡ 提速 ' + spd + '%' : '⏳ 多想 ' + Math.abs(spd) + '%，屬進階過渡正常現象'}）。`;
+    } else {
+      box.innerHTML = `🌱 目前已記錄 ${valid.length} 次數學戰報，累積滿 2 次不同測驗後自動計算成長對比！`;
+    }
+  } else {
+    const totalCircled = data.sortedRecords.reduce((s, r) => s + (r.circled_chars ? r.circled_chars.length : 0), 0);
+    box.innerHTML = `🏮 <strong>中文學習摘要：</strong>已追蹤 <strong>${data.sortedRecords.length}</strong> 次中文課堂／盲測，雲端累積靜音圈字共 <strong>${totalCircled}</strong> 人次；目前 🟢 已紮根熟字 <strong>${data.literacy.green.length} 字</strong>、🟡 近期成長中新字 <strong>${data.literacy.yellow.length} 字</strong>。`;
+  }
+}
+
+function renderCnLiteracyBox(data) {
+  const lit = data.literacy;
+  document.getElementById('litGreenCount').textContent = `${lit.green.length} 字`;
+  document.getElementById('litYellowCount').textContent = `${lit.yellow.length} 字`;
+  document.getElementById('litRedCount').textContent = `${lit.red.length} 項`;
+
+  document.getElementById('litGreenList').innerHTML = lit.green.length
+    ? lit.green.map(c => `<span class="px-2.5 py-1 rounded-xl bg-white border border-emerald-300 text-emerald-900 font-black text-sm">${escapeHtml(c)}</span>`).join('')
+    : '<span class="text-xs text-emerald-700">累積跨日圈字後自動亮燈</span>';
+
+  document.getElementById('litYellowList').innerHTML = lit.yellow.length
+    ? lit.yellow.map(c => `<span class="px-2.5 py-1 rounded-xl bg-white border-2 border-amber-300 text-amber-900 font-black text-sm">${escapeHtml(c)}</span>`).join('')
+    : '<span class="text-xs text-amber-700">✨ 近期新字均已順利紮根！</span>';
+
+  document.getElementById('litRedList').innerHTML = lit.red.length
+    ? lit.red.map(item => `<span class="px-2.5 py-1 rounded-xl bg-white border-2 border-rose-300 text-rose-900 font-black text-xs">${escapeHtml(item.word)} <span class="text-[10px] text-rose-500">(${escapeHtml(item.stages)}×${item.count})</span></span>`).join('')
+    : '<span class="text-xs text-rose-700">🎉 目前零盲測錯題字詞！</span>';
+}
+
+function renderSkillTree(data) {
+  const isMath = data.subject === 'math';
+  document.getElementById('skillTreeTitle').textContent = isMath
+    ? `🚦 K2 數學 ${data.skillsArr.length} 項知識點紅綠燈圖鑑`
+    : `🚦 K2 中文 ${data.skillsArr.length} 項核心微技能紅綠燈圖鑑`;
+  document.getElementById('skillTreeSub').textContent = isMath
+    ? '🟢 已穩固（≥5題、跨≥2日、≥90%、≤10s） ｜ 🟡 鞏固中 ｜ 🔴 待加強（<70%） ｜ ⚪ 未練習'
+    : '🟢 已穩固（≥5題、跨≥2日、零提示≥85%；紅圈≥90%） ｜ 🟡 鞏固／覆核中 ｜ 🔴 優先支援（<65%） ｜ ⚪ 未練習';
+  document.getElementById('skillTreeBadge').textContent = isMath
+    ? '✨ 分線獨立解鎖：單一維度 L1 全亮 🟢 即解鎖 L2'
+    : '💛 幼兒友善原則：重準確與獨立認讀，不逼速';
+
+  const statusIcon = { green: '🟢', yellow: '🟡', red: '🔴', gray: '⚪' };
+  const statusBg = {
+    green: 'bg-emerald-50 border-emerald-300',
+    yellow: 'bg-amber-50 border-amber-300',
+    red: 'bg-rose-50 border-rose-300',
+    gray: 'bg-slate-50 border-slate-200'
+  };
+
+  document.getElementById('skillTreeContainer').innerHTML = data.dimensions.map(dim => {
+    const items = data.skillsArr.filter(s => s.dim === dim.id);
+    const l1AllGreen = items.filter(s => s.level === 'L1').every(s => s.status === 'green');
+
+    const rowsHtml = items.map(sk => {
+      const levelTag = sk.level === 'L1'
+        ? '<span class="text-[10px] font-black px-1.5 py-0.5 rounded bg-sky-100 text-sky-700">L1 基礎</span>'
+        : '<span class="text-[10px] font-black px-1.5 py-0.5 rounded bg-purple-100 text-purple-700">L2 進階</span>';
+      let extraBadge = '';
+      if (sk.earlyUnlocked) extraBadge = '<span class="text-[10px] font-black px-1.5 py-0.5 rounded bg-pink-100 text-pink-700">✨ 超前解鎖</span>';
+      else if (sk.level === 'L2' && sk.status === 'gray' && sk.canUnlockL2) extraBadge = '<span class="text-[10px] font-black px-1.5 py-0.5 rounded bg-emerald-200 text-emerald-900">🔓 可立即解鎖</span>';
+
+      const metrics = sk.total > 0
+        ? (isMath ? `${sk.acc}% · ${sk.avgSec}s · ${sk.total}題/${sk.daysCount}日` : `${sk.acc}% · ${sk.total}項/${sk.daysCount}日`)
+        : sk.note;
+
+      return `
+        <div class="rounded-xl border-2 p-2.5 ${statusBg[sk.status]}">
+          <div class="flex items-center gap-1.5 flex-wrap">
+            <span>${statusIcon[sk.status]}</span>
+            <span class="text-xs font-black text-slate-800">${sk.name}</span>
+            ${levelTag} ${extraBadge}
+          </div>
+          <div class="mt-1 flex items-center justify-between gap-2 text-[11px] font-bold text-slate-600 pl-5">
+            <span>${metrics}</span>
+            <span class="text-slate-500 text-right">${sk.total > 0 ? sk.note : ''}</span>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    return `
+      <div class="rounded-2xl border-2 border-slate-200 p-3.5 bg-white">
+        <div class="flex items-center justify-between mb-2.5">
+          <div class="font-black text-sm text-slate-800">${dim.icon} ${dim.name}</div>
+          ${l1AllGreen
+            ? '<span class="text-[11px] font-black text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">✅ 基礎核心已滿貫</span>'
+            : '<span class="text-[11px] font-bold text-slate-500">核心修煉中</span>'}
+        </div>
+        <div class="space-y-2">${rowsHtml}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderNextTermPlan(data) {
+  const isMath = data.subject === 'math';
+  document.getElementById('btnCopyAI').textContent = isMath
+    ? '📋 一鍵複製「數學學期數據包」給 Elsa'
+    : '📋 一鍵複製「中文評估數據包」給 Elsa';
+
+  const reds = data.skillsArr.filter(s => s.status === 'red');
+  const yellows = data.skillsArr.filter(s => s.status === 'yellow');
+  const readyL2 = data.skillsArr.filter(s => s.level === 'L2' && s.canUnlockL2 && s.status !== 'green');
+  const unstartedL1 = data.skillsArr.filter(s => s.level === 'L1' && s.status === 'gray');
+
+  const redHtml = reds.map(s => `<li>• <strong>${s.name}</strong>（${s.acc}%）：${isMath ? '建議先用實物教具帶做再出題。' : '建議安排零壓力拆字重溫與生活認字。'}</li>`);
+  if (!isMath && data.literacy.red.length) {
+    redHtml.push(`<li>• <strong>易混詞語優先溫習</strong>：${data.literacy.red.slice(0, 6).map(x => x.word).join('、')}</li>`);
+  }
+  document.getElementById('planRedList').innerHTML = redHtml.length ? redHtml.join('') : '<li>🎉 目前零紅燈項目！基礎非常紮實。</li>';
+
+  const yellowHtml = yellows.slice(0, 5).map(s => `<li>• <strong>${s.name}</strong>：${s.note}。</li>`);
+  if (!isMath && data.literacy.yellow.length) {
+    yellowHtml.unshift(`<li>• <strong>成長中生字隔日重溫</strong>：${data.literacy.yellow.slice(0, 8).join('、')}</li>`);
+  }
+  document.getElementById('planYellowList').innerHTML = yellowHtml.length ? yellowHtml.join('') : '<li>✨ 沒有卡關的鞏固項目。</li>';
+
+  const nextHtml = [];
+  readyL2.forEach(s => nextHtml.push(`<li>🔓 <strong>${s.name}</strong>（前置已全亮 🟢，隨時可進階！）</li>`));
+  if (nextHtml.length < 4 && unstartedL1.length) {
+    unstartedL1.slice(0, 3).forEach(s => nextHtml.push(`<li>🌱 尚待接觸基礎技能：<strong>${s.name}</strong></li>`));
+  }
+  if (!nextHtml.length) nextHtml.push(isMath ? '<li>🚀 K2 數學技能已全面鋪開，可銜接進階生活應用題！</li>' : '<li>🚀 中文五維能力均衡推進中，可持續累積兒歌與靜音紅圈認字！</li>');
+  document.getElementById('planNextList').innerHTML = nextHtml.join('');
+}
+
+function renderHistoryTable(data) {
+  const isMath = data.subject === 'math';
+  const recs = [...data.sortedRecords].reverse();
+  document.getElementById('historyTitle').textContent = isMath ? '🗂️ 歷次數學測驗戰報紀錄' : '🗂️ 歷次中文課堂與盲測紀錄';
+  document.getElementById('historyCountBadge').textContent = `${recs.length} 筆`;
+
+  document.getElementById('historyTableHead').innerHTML = isMath
+    ? '<th class="py-2 pr-3">日期</th><th class="py-2 pr-3">關卡名稱</th><th class="py-2 pr-3">學期</th><th class="py-2 pr-3">正確率</th><th class="py-2 pr-3">單題均時</th><th class="py-2">涵蓋技能</th>'
+    : '<th class="py-2 pr-3">日期</th><th class="py-2 pr-3">課堂／測驗</th><th class="py-2 pr-3">類型</th><th class="py-2 pr-3">準確率</th><th class="py-2">靜音圈字／待加強摘要</th>';
+
+  const tbody = document.getElementById('historyTableBody');
+  if (!recs.length) {
+    tbody.innerHTML = `<tr><td colspan="${isMath ? 6 : 5}" class="py-6 text-center text-slate-400">尚無符合篩選條件的學習紀錄</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = recs.map(r => {
+    if (isMath) {
+      const tags = (r.skill_stats || []).map(st => `<span class="inline-block text-[11px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded-lg mr-1 mb-1">${st.skill_id}</span>`).join('') || '<span class="text-xs text-slate-400">純文字戰報</span>';
+      return `<tr class="hover:bg-amber-50/50">
+        <td class="py-2.5 pr-3 whitespace-nowrap text-xs text-slate-500">${String(r.date || '').slice(0, 10)}</td>
+        <td class="py-2.5 pr-3 text-slate-800">${escapeHtml(r.lesson || '數學測驗')}</td>
+        <td class="py-2.5 pr-3 whitespace-nowrap"><span class="text-xs bg-sky-100 text-sky-800 px-2 py-0.5 rounded-lg">${escapeHtml(r.term || 'K2-T1')}</span></td>
+        <td class="py-2.5 pr-3 whitespace-nowrap text-emerald-700">${r.accuracy !== null ? r.accuracy + '%' : '--'}</td>
+        <td class="py-2.5 pr-3 whitespace-nowrap text-amber-700">${r.avg_sec !== null ? r.avg_sec + 's' : '--'}</td>
+        <td class="py-2.5">${tags}</td>
+      </tr>`;
+    } else {
+      const isQuiz = String(r.subject || '').includes('測驗') || String(r.feedback || '').includes('盲測');
+      const typeTag = isQuiz
+        ? '<span class="text-xs bg-purple-100 text-purple-800 px-2 py-0.5 rounded-lg">🎯 盲測</span>'
+        : '<span class="text-xs bg-rose-100 text-rose-800 px-2 py-0.5 rounded-lg">🏮 課堂</span>';
+      const detailParts = [];
+      if (r.circled_chars && r.circled_chars.length) detailParts.push(`<span class="text-emerald-700">⭕ 圈出 ${r.circled_chars.length} 字：${escapeHtml(r.circled_chars.join('、'))}</span>`);
+      if (r.error_items && r.error_items.length) detailParts.push(`<span class="text-rose-600">🔴 待加強：${escapeHtml(r.error_items.map(e => e.raw).join('、'))}</span>`);
+      if (!detailParts.length) detailParts.push(`<span class="text-xs text-slate-500">${escapeHtml(String(r.feedback || '').slice(0, 60))}</span>`);
+      return `<tr class="hover:bg-rose-50/40">
+        <td class="py-2.5 pr-3 whitespace-nowrap text-xs text-slate-500">${String(r.date || '').slice(0, 10)}</td>
+        <td class="py-2.5 pr-3 text-slate-800 whitespace-nowrap">${escapeHtml(r.lesson || '中文課堂')}</td>
+        <td class="py-2.5 pr-3 whitespace-nowrap">${typeTag}</td>
+        <td class="py-2.5 pr-3 whitespace-nowrap text-emerald-700">${r.accuracy !== null ? r.accuracy + '%' : '--'}</td>
+        <td class="py-2.5 text-xs space-y-1">${detailParts.join('<br/>')}</td>
+      </tr>`;
+    }
+  }).join('');
+}
+
+function renderKidTrophyWall(data) {
+  const isMath = data.subject === 'math';
+  const hero = document.getElementById('kidHeroCard');
+  hero.className = isMath
+    ? 'bg-gradient-to-b from-amber-100 to-orange-50 border-4 border-amber-400 border-b-8 rounded-[2rem] p-6 text-center'
+    : 'bg-gradient-to-b from-rose-100 to-amber-50 border-4 border-rose-400 border-b-8 rounded-[2rem] p-6 text-center';
+  document.getElementById('kidHeroIcon').textContent = isMath ? '🏆' : '🏮';
+  document.getElementById('kidHeroTitle').textContent = isMath ? '🌟 玲玲的數學魔法獎盃屋 🌟' : '🏮 玲玲的中文識字魔法屋 🏮';
+
+  const unlockedCount = data.skillsArr.filter(s => s.status === 'green').length;
+  const totalCount = data.skillsArr.length;
+  const pct = Math.max(6, Math.round((unlockedCount / totalCount) * 100));
+  document.getElementById('kidProgressLabel').textContent = `${unlockedCount} / ${totalCount} 枚`;
+  document.getElementById('kidProgressBar').style.width = `${pct}%`;
+
+  document.getElementById('kidTrophyGrid').innerHTML = data.skillsArr.map(sk => {
+    const isUnlocked = sk.status === 'green';
+    const isPracticing = sk.status === 'yellow' || sk.status === 'red';
+    if (isUnlocked) {
+      const cardStyle = isMath
+        ? 'bg-gradient-to-b from-yellow-200 to-amber-300 border-amber-500 trophy-glow'
+        : 'bg-gradient-to-b from-rose-200 to-amber-200 border-rose-500 trophy-glow-cn';
+      return `<button onclick="praiseKid('${sk.trophy}')" class="btn-3d ${cardStyle} border-4 rounded-3xl p-4 text-center">
+        <div class="text-5xl mb-2">${sk.emoji}</div>
+        <div class="text-sm font-black text-amber-950">${sk.trophy}</div>
+        <div class="mt-1 inline-block text-[11px] font-black bg-white/85 text-amber-800 px-2.5 py-0.5 rounded-full">⭐ 已獲得</div>
+      </button>`;
+    }
+    return `<div class="bg-white border-4 border-slate-200 rounded-3xl p-4 text-center trophy-locked opacity-85">
+      <div class="text-4xl mb-2 grayscale opacity-40">${sk.emoji}</div>
+      <div class="text-sm font-black text-slate-400">${sk.trophy}</div>
+      <div class="mt-1 inline-block text-[11px] font-bold ${isPracticing ? 'bg-sky-100 text-sky-700' : 'bg-slate-100 text-slate-400'} px-2.5 py-0.5 rounded-full">
+        ${isPracticing ? '✨ 魔法充能中...' : '🔒 神秘寶箱'}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ==================== 7. 互動控制與 iPad 防吞聲 ==================== */
+function switchSubject(subj) {
+  stopSpeech();
+  currentSubject = subj;
+  const isMath = subj === 'math';
+  document.getElementById('tabMath').className = isMath
+    ? 'btn-3d px-4 py-2 rounded-2xl font-black text-sm bg-sky-500 text-white border-2 border-sky-700 border-b-4'
+    : 'btn-3d px-4 py-2 rounded-2xl font-black text-sm bg-white text-sky-700 border-2 border-sky-300 border-b-4';
+  document.getElementById('tabCn').className = !isMath
+    ? 'btn-3d px-4 py-2 rounded-2xl font-black text-sm bg-rose-500 text-white border-2 border-rose-700 border-b-4'
+    : 'btn-3d px-4 py-2 rounded-2xl font-black text-sm bg-white text-rose-600 border-2 border-rose-300 border-b-4';
+  renderAll();
+}
+
+function switchView(view) {
+  stopSpeech();
+  currentView = view;
+  const isMom = view === 'mom';
+  document.getElementById('momView').classList.toggle('hidden', !isMom);
+  document.getElementById('momToolsBar').classList.toggle('hidden', !isMom);
+  document.getElementById('kidView').classList.toggle('hidden', isMom);
+
+  document.getElementById('btnViewMom').className = isMom
+    ? 'btn-3d px-3 py-2 rounded-2xl font-black text-xs sm:text-sm border-2 border-b-4 bg-indigo-600 text-white border-indigo-800'
+    : 'btn-3d px-3 py-2 rounded-2xl font-black text-xs sm:text-sm border-2 border-b-4 bg-white text-indigo-700 border-indigo-300';
+  document.getElementById('btnViewKid').className = !isMom
+    ? 'btn-3d px-3 py-2 rounded-2xl font-black text-xs sm:text-sm border-2 border-b-4 bg-pink-500 text-white border-pink-700'
+    : 'btn-3d px-3 py-2 rounded-2xl font-black text-xs sm:text-sm border-2 border-b-4 bg-white text-pink-600 border-pink-300';
+}
+
+function toggleDataMode() {
+  isDemoMode = !isDemoMode;
+  updateModeButtons();
+  renderAll();
+}
+
+function updateModeButtons() {
+  const btn = document.getElementById('btnDataMode');
+  const banner = document.getElementById('demoBanner');
+  if (isDemoMode) {
+    btn.textContent = '🎮 模擬預覽中';
+    btn.className = 'btn-3d px-2.5 py-2 rounded-2xl font-bold text-xs border-2 border-b-4 bg-violet-600 text-white border-violet-800';
+    banner.classList.remove('hidden');
+  } else {
+    btn.textContent = '☁️ 真實雲端';
+    btn.className = 'btn-3d px-2.5 py-2 rounded-2xl font-bold text-xs border-2 border-b-4 bg-emerald-500 text-white border-emerald-700';
+    banner.classList.add('hidden');
+  }
+}
+
+function stopSpeech() {
+  if ('speechSynthesis' in window) {
+    try { window.speechSynthesis.cancel(); } catch (e) {}
+  }
+  window.utterancePool = [];
+}
+
+function praiseKid(trophyName) {
+  showToast(`🎉 好叻呀玲玲！你已經獲得「${trophyName}」魔法獎章！`);
+  if ('speechSynthesis' in window) {
+    stopSpeech();
+    setTimeout(() => {
+      const u = new SpeechSynthesisUtterance(`好叻呀玲玲！你已經得到${trophyName}大獎章啦，繼續加油！`);
+      u.lang = 'zh-HK';
+      u.rate = 0.88;
+      const voices = window.speechSynthesis.getVoices();
+      const hk = voices.find(v => v.lang && (v.lang.toLowerCase().includes('zh-hk') || v.lang.toLowerCase().includes('yue')));
+      if (hk) u.voice = hk;
+      window.utterancePool.push(u);
+      u.onend = () => { window.utterancePool = window.utterancePool.filter(x => x !== u); };
+      window.speechSynthesis.speak(u);
+    }, 60);
+  }
+}
+
+function copyAIPackage() {
+  if (!latestComputed) return;
+  const d = latestComputed;
+  let text = '';
+
+  if (d.subject === 'math') {
+    const greens = d.skillsArr.filter(s => s.status === 'green').map(s => `${s.id} ${s.name}`).join('、') || '暫無';
+    const yellows = d.skillsArr.filter(s => s.status === 'yellow').map(s => `${s.id} ${s.name}(${s.acc}%/${s.avgSec}s)`).join('、') || '暫無';
+    const reds = d.skillsArr.filter(s => s.status === 'red').map(s => `${s.id} ${s.name}(${s.acc}%/${s.avgSec}s)`).join('、') || '暫無';
+    const readyL2 = d.skillsArr.filter(s => s.level === 'L2' && s.canUnlockL2 && s.status !== 'green').map(s => `${s.id} ${s.name}`).join('、') || '暫無';
+    text = [
+      '【玲玲 K2 數學學期評估數據包】',
+      `• 數據來源：${isDemoMode ? '模擬預覽' : 'Google Sheets 真實戰報'}（共 ${d.sortedRecords.length} 次測驗 / ${d.daysCount} 個測驗日）`,
+      `• 總體表現：首答正確率 ${d.overallAcc ?? '--'}%，單題均時 ${d.overallSec ?? '--'} 秒`,
+      `• 六大維度四象限：` + d.dimSummary.map(x => `${x.name}[${x.badgeText} ${x.acc}%/${x.avgSec ?? '--'}s]`).join(' | '),
+      `• 🟢 已穩固（${d.greenCount}/${d.skillsArr.length}項）：${greens}`,
+      `• 🟡 鞏固中：${yellows}`,
+      `• 🔴 待加強：${reds}`,
+      `• 🚀 已達標可解鎖下學期技能：${readyL2}`,
+      '請 Elsa 根據以上數據，為我規劃玲玲接下來一週的數學重點與進階出題權重建議。'
+    ].join('\n');
+  } else {
+    const greens = d.skillsArr.filter(s => s.status === 'green').map(s => `${s.id} ${s.name}`).join('、') || '暫無';
+    const yellows = d.skillsArr.filter(s => s.status === 'yellow').map(s => `${s.id} ${s.name}(${s.acc}%)`).join('、') || '暫無';
+    const reds = d.skillsArr.filter(s => s.status === 'red').map(s => `${s.id} ${s.name}(${s.acc}%)`).join('、') || '暫無';
+    const lit = d.literacy;
+    text = [
+      '【玲玲 K2 中文評估數據包】',
+      `• 數據來源：${isDemoMode ? '模擬預覽' : 'Google Sheets 真實戰報'}（共 ${d.sortedRecords.length} 次課堂／盲測，涵蓋 ${d.daysCount} 個學習日）`,
+      `• 總體表現：零提示一次答對率 ${d.overallAcc ?? '--'}%（重準確不逼速）`,
+      `• 五大能力維度：` + d.dimSummary.map(x => `${x.name}[${x.badgeText} ${x.acc}%]`).join(' | '),
+      `• 🟢 已穩固微技能（${d.greenCount}/${d.skillsArr.length}項）：${greens}`,
+      `• 🟡 鞏固／待跨日覆核：${yellows}`,
+      `• 🔴 優先支援微技能：${reds}`,
+      `• 🌳 識字成長資產庫：🟢 已紮根熟字 ${lit.green.length} 字｜🟡 成長中生字（${lit.yellow.length}字）：${lit.yellow.join('、') || '無'}｜🔴 易混／待鞏固字詞：${lit.red.map(x => `${x.word}(${x.stages})`).join('、') || '無'}`,
+      '請 Elsa 根據以上中文評估數據包，為我規劃玲玲接下來一週的中文微課堂補漏重點與生活認字建議。'
+    ].join('\n');
+  }
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(() => {
+      showToast('✅ 已複製評估數據包！可直接貼給 Elsa 規劃下週課綱。');
+    }).catch(() => prompt('請手動全選複製以下數據包：', text));
+  } else {
+    prompt('請手動全選複製以下數據包：', text);
+  }
+}
+
+function escapeHtml(s) {
+  return String(s || '').replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+}
+function openSettingsModal() {
+  document.getElementById('apiUrlInput').value = getApiUrl();
+  document.getElementById('settingsModal').classList.remove('hidden');
+}
+function closeSettingsModal() { document.getElementById('settingsModal').classList.add('hidden'); }
+function saveApiUrl() {
+  const v = document.getElementById('apiUrlInput').value.trim();
+  if (v) localStorage.setItem('lingling_dashboard_api_url', v);
+  closeSettingsModal();
+  isDemoMode = false;
+  updateModeButtons();
+  fetchLiveData();
+}
+function resetApiUrl() {
+  localStorage.removeItem('lingling_dashboard_api_url');
+  document.getElementById('apiUrlInput').value = DEFAULT_API_URL;
+}
+function showComingSoon(name) {
+  showToast(`🚧 「${name}」評估模組已預留架構，等中文版跑順後即可一鍵接入！`);
+}
+function showToast(msg) {
+  const el = document.getElementById('toastBox');
+  el.textContent = msg;
+  el.classList.remove('hidden');
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(() => el.classList.add('hidden'), 3200);
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  fetchLiveData();
+});
+</script>
+</body>
+</html>
