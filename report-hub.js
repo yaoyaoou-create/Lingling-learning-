@@ -1,7 +1,12 @@
+/**
+ * 玲玲學習樂園 — 全站雲端戰報箱與儀表板數據橋接腳本 (report-hub.js v3.0)
+ * 100% 向下相容舊版 3 參數呼叫：LinglingReport.save(subject, lesson, feedback)
+ * 升級支援第 4 參數 meta：{ term, skill_stats, circled_chars, error_words, total_score, avg_sec }
+ */
 (function () {
-  // ▼ 只需將下面引號內的文字替換成你第一步複製的 Apps Script 網頁應用程式網址
   var CLOUD_API_URL = "https://script.google.com/macros/s/AKfycbwQ2ddWL9Fgq_cwA5F_WFp5dPQ-lr0mjQAga8rlSxX2jiVBBVn82xo9oR0TRkCQTchafA/exec";
   var LOCAL_KEY = "lingling_pending_reports_v1";
+  var DEFAULT_TERM = "K2-T1";
 
   function formatNow() {
     var d = new Date();
@@ -19,14 +24,72 @@
     try { localStorage.setItem(LOCAL_KEY, JSON.stringify(list)); } catch (e) {}
   }
 
-  // 全站課堂／測驗結算時呼叫：LinglingReport.save('科目', '關卡名', '完整戰報文字')
-  function saveReport(subject, lesson, feedback) {
+  function cleanStringArray(arr) {
+    if (!Array.isArray(arr)) return [];
+    var seen = {};
+    var out = [];
+    for (var i = 0; i < arr.length; i++) {
+      var s = String(arr[i] || "").trim();
+      if (s && !seen[s]) {
+        seen[s] = true;
+        out.push(s);
+      }
+    }
+    return out;
+  }
+
+  function normalizeSkillStats(arr) {
+    if (!Array.isArray(arr)) return [];
+    var out = [];
+    for (var i = 0; i < arr.length; i++) {
+      var item = arr[i];
+      if (!item || typeof item !== "object") continue;
+      var total = Number(item.total);
+      var correct = Number(item.correct);
+      if (isNaN(total) || total <= 0) continue;
+      out.push({
+        dim: String(item.dim || "").trim(),
+        skill_id: String(item.skill_id || "").trim(),
+        level: String(item.level || "L1").trim(),
+        total: total,
+        correct: isNaN(correct) ? 0 : Math.max(0, Math.min(total, correct)),
+        avg_sec: (item.avg_sec !== undefined && item.avg_sec !== null && !isNaN(Number(item.avg_sec)))
+          ? Math.round(Number(item.avg_sec) * 10) / 10
+          : 0
+      });
+    }
+    return out;
+  }
+
+  // 全站課堂／測驗結算時呼叫：
+  // LinglingReport.save('科目', '關卡名', '完整戰報文字', { term, skill_stats, circled_chars, error_words })
+  function saveReport(subject, lesson, feedback, meta) {
+    var opts = (meta && typeof meta === "object") ? meta : {};
+    var term = String(opts.term || DEFAULT_TERM).trim() || DEFAULT_TERM;
+    var skillStats = normalizeSkillStats(opts.skill_stats || opts.skillStats);
+    var circledChars = cleanStringArray(opts.circled_chars || opts.circledChars);
+    var errorWords = cleanStringArray(opts.error_words || opts.errorWords);
+
+    var finalFeedback = String(feedback || "");
+
+    // 雙保險：若呼叫端把圈出字或錯題放在 meta 但文字未帶入，自動補上確保儀表板完整讀取
+    if (circledChars.length > 0 && finalFeedback.indexOf("圈出識字清單") === -1) {
+      finalFeedback += (finalFeedback ? " | " : "") + "圈出識字清單: " + circledChars.join("、");
+    }
+    if (errorWords.length > 0 && finalFeedback.indexOf("錯誤字詞") === -1) {
+      finalFeedback += (finalFeedback ? " | " : "") + "錯誤字詞: " + errorWords.join(", ");
+    }
+
     var record = {
       time: formatNow(),
       subject: subject || "其他",
       lesson: lesson || document.title || "",
-      feedback: feedback || ""
+      feedback: finalFeedback,
+      term: term
     };
+    if (skillStats.length > 0) record.skill_stats = skillStats;
+    if (circledChars.length > 0) record.circled_chars = circledChars;
+    if (errorWords.length > 0) record.error_words = errorWords;
 
     // 1. 立即存入本機緩存（防斷網遺失，同日同關卡覆蓋防重複）
     var list = getLocalPending();
@@ -40,18 +103,67 @@
 
     // 2. 背景自動同步到 Google Sheet（使用 text/plain 避開 CORS 預檢）
     if (CLOUD_API_URL && CLOUD_API_URL.indexOf("https://script.google.com/") === 0) {
+      var payload = {
+        action: "save",
+        subject: record.subject,
+        lesson: record.lesson,
+        feedback: record.feedback,
+        term: term
+      };
+      if (skillStats.length > 0) payload.skill_stats = skillStats;
+      if (typeof opts.total_score === "number" && !isNaN(opts.total_score)) payload.total_score = opts.total_score;
+      if (typeof opts.avg_sec === "number" && !isNaN(opts.avg_sec)) payload.avg_sec = opts.avg_sec;
+      if (circledChars.length > 0) payload.circled_chars = circledChars;
+      if (errorWords.length > 0) payload.error_words = errorWords;
+
       fetch(CLOUD_API_URL, {
         method: "POST",
         headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify({
-          action: "save",
-          subject: record.subject,
-          lesson: record.lesson,
-          feedback: record.feedback
-        })
+        body: JSON.stringify(payload)
       }).catch(function () {});
     }
     return true;
+  }
+
+  function fetchCloudPendingJsonp() {
+    return new Promise(function (resolve) {
+      var cbName = "llHubCb_" + Math.floor(Math.random() * 100000);
+      var script = document.createElement("script");
+      var done = false;
+      var timer = setTimeout(function () {
+        if (done) return;
+        done = true;
+        cleanup();
+        resolve({ source: "local", pending: getLocalPending() });
+      }, 6000);
+
+      function cleanup() {
+        clearTimeout(timer);
+        try { delete window[cbName]; } catch (e) { window[cbName] = undefined; }
+        if (script.parentNode) script.parentNode.removeChild(script);
+      }
+
+      window[cbName] = function (data) {
+        if (done) return;
+        done = true;
+        cleanup();
+        if (data && data.ok && Array.isArray(data.pending)) {
+          resolve({ source: "cloud", pending: data.pending });
+        } else {
+          resolve({ source: "local", pending: getLocalPending() });
+        }
+      };
+
+      script.onerror = function () {
+        if (done) return;
+        done = true;
+        cleanup();
+        resolve({ source: "local", pending: getLocalPending() });
+      };
+
+      script.src = CLOUD_API_URL + "?t=" + Date.now() + "&callback=" + cbName;
+      document.body.appendChild(script);
+    });
   }
 
   function fetchCloudPending() {
@@ -64,10 +176,10 @@
         if (data && data.ok && Array.isArray(data.pending)) {
           return { source: "cloud", pending: data.pending };
         }
-        return { source: "local", pending: getLocalPending() };
+        return fetchCloudPendingJsonp();
       })
       .catch(function () {
-        return { source: "local", pending: getLocalPending() };
+        return fetchCloudPendingJsonp();
       });
   }
 
@@ -126,7 +238,7 @@
     var style = document.createElement("style");
     style.textContent = [
       "#ll-report-bar { margin-top: 12px; display: flex; justify-content: center; }",
-      "#ll-report-btn { background: linear-gradient(135deg, #FEF3C7, #FDE68A); color: #92400E; border: 3px solid #F59E0B; border-bottom-width: 6px; border-radius: 999px; padding: 8px 18px; font-weight: 900; font-size: 14px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-family: inherit; box-shadow: 0 4px 10px rgba(245,158,11,0.18); }",
+      "#ll-report-btn { background: linear-gradient(135deg, #FEF3C7, #FDE68A); color: #92400E; border: 3px solid #F59E0B; border-bottom-width: 6px; border-radius: 999px; padding: 8px 18px; font-weight: 900; font-size: 14px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-family: inherit; box-shadow: 0 4px 10px rgba(245,158,11,0.18); touch-action: manipulation; }",
       "#ll-report-btn:active { transform: translateY(3px); border-bottom-width: 3px; }",
       "#ll-report-badge { background: #EF4444; color: #fff; font-size: 12px; padding: 2px 8px; border-radius: 999px; min-width: 22px; text-align: center; }",
       "#ll-report-badge.zero { background: #10B981; }",
@@ -141,7 +253,7 @@
       ".ll-rm-item-head { display: flex; justify-content: space-between; font-weight: 900; color: #B45309; margin-bottom: 4px; gap: 8px; flex-wrap: wrap; }",
       ".ll-rm-item-body { white-space: pre-wrap; word-break: break-word; line-height: 1.45; }",
       ".ll-rm-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }",
-      ".ll-rm-act { border: none; border-radius: 16px; padding: 12px 10px; font-weight: 900; font-size: 14px; cursor: pointer; font-family: inherit; border-bottom: 5px solid rgba(0,0,0,0.18); }",
+      ".ll-rm-act { border: none; border-radius: 16px; padding: 12px 10px; font-weight: 900; font-size: 14px; cursor: pointer; font-family: inherit; border-bottom: 5px solid rgba(0,0,0,0.18); touch-action: manipulation; }",
       ".ll-rm-act:active { transform: translateY(3px); border-bottom-width: 2px; }",
       ".ll-btn-copy { background: #10B981; color: #fff; grid-column: 1 / -1; font-size: 15px; }",
       ".ll-btn-done { background: #3B82F6; color: #fff; }",
@@ -176,6 +288,12 @@
 
     var currentPending = [];
 
+    function escapeHtml(s) {
+      return String(s || "").replace(/[&<>"']/g, function (c) {
+        return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c];
+      });
+    }
+
     function render(result) {
       currentPending = result.pending || [];
       var badge = document.getElementById("ll-report-badge");
@@ -198,12 +316,6 @@
           '</span><span style="color:#64748B;font-size:11px;">' + escapeHtml(r.time) +
           '</span></div><div class="ll-rm-item-body">' + escapeHtml(r.feedback) + "</div></div>";
       }).join("");
-    }
-
-    function escapeHtml(s) {
-      return String(s || "").replace(/[&<>"']/g, function (c) {
-        return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c];
-      });
     }
 
     function refresh() {
@@ -242,7 +354,7 @@
     });
 
     document.getElementById("ll-rm-test").addEventListener("click", function () {
-      saveReport("系統測試", "雲端連線測試", "【測試成功】玲玲學習樂園已成功接通 Google Sheet 雲端戰報系統！");
+      saveReport("系統測試", "雲端連線測試", "【測試成功】玲玲學習樂園已成功接通 Google Sheet 雲端戰報系統！", { term: DEFAULT_TERM });
       document.getElementById("ll-rm-status").textContent = "🚀 已發送測試戰報，2 秒後自動刷新...";
       setTimeout(refresh, 2000);
     });
@@ -251,7 +363,11 @@
     fetchCloudPending().then(render);
   }
 
-  window.LinglingReport = { save: saveReport };
+  window.LinglingReport = {
+    version: "3.0",
+    save: saveReport,
+    getApiUrl: function () { return CLOUD_API_URL; }
+  };
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", function () {
