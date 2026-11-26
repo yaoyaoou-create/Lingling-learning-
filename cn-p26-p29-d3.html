@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>🎄 聖誕節 Day 3｜P.28 兒歌《聖誕節》</title>
+  <link rel="stylesheet" href="theme.css?v=1" />
+  <script src="report-hub.js?v=3"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100dvh;
+      overflow: hidden;
+      font-family: "PingFang HK", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      background: linear-gradient(160deg, #fff5f5 0%, #fef9e7 55%, #eefaf3 100%);
+      color: #2d3436;
+    }
+
+    .app-shell {
+      height: 100dvh;
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 10px 14px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* 頂部導航列（防手機/iPad 切字） */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 8px 12px;
+      box-shadow: 0 4px 0 #f1d4d4, 0 6px 14px rgba(0, 0, 0, 0.06);
+      flex-shrink: 0;
+    }
+
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      text-decoration: none;
+      background: #ffe8e8;
+      color: #c0392b;
+      font-weight: 800;
+      font-size: clamp(13px, 2vw, 16px);
+      padding: 7px 12px;
+      border-radius: 12px;
+      box-shadow: 0 3px 0 #e6b8b8;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .btn-back:active { transform: translateY(2px); box-shadow: 0 1px 0 #e6b8b8; }
+
+    .lesson-title {
+      font-weight: 900;
+      font-size: clamp(14px, 2.3vw, 20px);
+      color: #b71c1c;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align: center;
+    }
+
+    .step-dots {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .step-dot {
+      width: clamp(28px, 4vw, 36px);
+      height: clamp(28px, 4vw, 36px);
+      border-radius: 50%;
+      border: 2px solid #f0b27a;
+      background: #fff8ee;
+      color: #b9770e;
+      font-weight: 900;
+      font-size: clamp(13px, 2vw, 16px);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 3px 0 #e5c39c;
+      transition: transform 0.12s ease, background 0.15s ease;
+    }
+    .step-dot:active { transform: translateY(2px); }
+    .step-dot.active {
+      background: #e74c3c;
+      border-color: #c0392b;
+      color: #ffffff;
+      box-shadow: 0 3px 0 #922b21;
+      transform: scale(1.08);
+    }
+    .step-dot.done {
+      background: #27ae60;
+      border-color: #1e8449;
+      color: #ffffff;
+      box-shadow: 0 3px 0 #145a32;
+    }
+
+    /* 老師引導橫幅 */
+    .teacher-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: #ffffff;
+      border: 3px solid #fadbd8;
+      border-radius: 20px;
+      padding: 10px 14px;
+      box-shadow: 0 4px 0 #f5b7b1;
+      flex-shrink: 0;
+    }
+
+    .teacher-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .anna-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #fef5e7;
+      border: 2px solid #f5b041;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      flex-shrink: 0;
+    }
+
+    .teacher-msg {
+      font-size: clamp(15px, 2.3vw, 20px);
+      font-weight: 800;
+      color: #2c3e50;
+      line-height: 1.3;
+    }
+
+    .btn-audio {
+      border: none;
+      background: #f39c12;
+      color: #ffffff;
+      font-weight: 900;
+      font-size: clamp(14px, 2vw, 17px);
+      padding: 10px 16px;
+      border-radius: 14px;
+      box-shadow: 0 4px 0 #c87f0a;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .btn-audio:active { transform: translateY(3px); box-shadow: 0 1px 0 #c87f0a; }
+    .btn-audio.hidden { display: none; }
+
+    /* 主互動舞台（iPad 單屏不捲動） */
+    .stage-card {
+      flex: 1;
+      min-height: 0;
+      background: #ffffff;
+      border-radius: 24px;
+      padding: 14px 18px;
+      box-shadow: 0 6px 0 #e6dcd1, 0 10px 24px rgba(0, 0, 0, 0.06);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .stage-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #fef3c7;
+      color: #92400e;
+      font-weight: 900;
+      font-size: clamp(14px, 2vw, 18px);
+      padding: 6px 16px;
+      border-radius: 999px;
+      border: 2px solid #fcd34d;
+    }
+
+    /* 第一關：聽音辨字卡片 */
+    .hint-emoji-box {
+      font-size: clamp(46px, 8vh, 72px);
+      line-height: 1;
+      margin: 4px 0;
+      filter: drop-shadow(0 4px 4px rgba(0,0,0,0.08));
+    }
+
+    .choices-grid {
+      width: 100%;
+      max-width: 680px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin: auto 0;
+    }
+
+    .choice-btn {
+      border: 3px solid #d6eaf8;
+      background: #f4faff;
+      color: #1b4f72;
+      font-size: clamp(32px, 5.2vw, 48px);
+      font-weight: 900;
+      padding: clamp(16px, 2.8vh, 26px) 12px;
+      border-radius: 20px;
+      box-shadow: 0 6px 0 #aed6f1;
+      cursor: pointer;
+      transition: transform 0.12s ease, background 0.15s ease;
+    }
+    .choice-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #aed6f1; }
+    .choice-btn.correct {
+      background: #d4efdf;
+      border-color: #27ae60;
+      color: #145a32;
+      box-shadow: 0 6px 0 #229954;
+    }
+    .choice-btn.wrong {
+      background: #fadbd8;
+      border-color: #e74c3c;
+      color: #922b21;
+      animation: shake 0.35s ease;
+    }
+
+    /* 第二關：句式積木 */
+    .slots-wrap {
+      width: 100%;
+      max-width: 760px;
+      min-height: 82px;
+      background: #fffdf5;
+      border: 3px dashed #f5b041;
+      border-radius: 20px;
+      padding: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+    .slots-wrap.wrong { border-color: #e74c3c; background: #fff5f5; animation: shake 0.35s ease; }
+    .slots-wrap.correct { border-color: #27ae60; border-style: solid; background: #eafaf1; }
+
+    .slot-pill {
+      min-width: 84px;
+      min-height: 54px;
+      padding: 8px 16px;
+      border-radius: 14px;
+      border: 2px dashed #d5dbdb;
+      background: #ffffff;
+      font-size: clamp(22px, 3.2vw, 32px);
+      font-weight: 900;
+      color: #95a5a6;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .slot-pill.filled {
+      border: 3px solid #2e86c1;
+      background: #ebf5fb;
+      color: #1b4f72;
+      box-shadow: 0 4px 0 #85c1e9;
+    }
+
+    .blocks-bank {
+      width: 100%;
+      max-width: 760px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .word-block {
+      border: 3px solid #a9dfbf;
+      background: #eafaf1;
+      color: #145a32;
+      font-size: clamp(24px, 3.4vw, 34px);
+      font-weight: 900;
+      padding: 12px 22px;
+      border-radius: 16px;
+      box-shadow: 0 5px 0 #52be80;
+      cursor: pointer;
+    }
+    .word-block:active { transform: translateY(3px); box-shadow: 0 2px 0 #52be80; }
+    .word-block.used { opacity: 0.28; pointer-events: none; }
+
+    /* 第三關：兒歌逐句跟讀 */
+    .rhyme-header {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-full-song {
+      border: none;
+      background: #27ae60;
+      color: #ffffff;
+      font-weight: 900;
+      font-size: clamp(15px, 2.2vw, 19px);
+      padding: 10px 18px;
+      border-radius: 14px;
+      box-shadow: 0 4px 0 #1e8449;
+      cursor: pointer;
+    }
+    .btn-full-song:active { transform: translateY(3px); box-shadow: 0 1px 0 #1e8449; }
+
+    .rhyme-lines {
+      width: 100%;
+      max-width: 780px;
+      display: flex;
+      flex-direction: column;
+      gap: clamp(8px, 1.5vh, 14px);
+      margin: auto 0;
+    }
+
+    .rhyme-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: #fffdf7;
+      border: 3px solid #fdebd0;
+      border-radius: 18px;
+      padding: clamp(10px, 1.8vh, 16px) 16px;
+      box-shadow: 0 4px 0 #f5cba7;
+      transition: all 0.18s ease;
+    }
+    .rhyme-row.speaking {
+      background: #fef9e7;
+      border-color: #f39c12;
+      transform: scale(1.015);
+      box-shadow: 0 5px 0 #d68910;
+    }
+
+    .rhyme-text {
+      font-size: clamp(24px, 3.6vw, 38px);
+      font-weight: 900;
+      letter-spacing: 3px;
+      color: #2c3e50;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .line-star {
+      font-size: 20px;
+      opacity: 0.25;
+    }
+    .rhyme-row.listened .line-star { opacity: 1; }
+
+    .btn-line-speak {
+      border: none;
+      background: #3498db;
+      color: #ffffff;
+      font-weight: 900;
+      font-size: clamp(14px, 2vw, 18px);
+      padding: 10px 14px;
+      border-radius: 14px;
+      box-shadow: 0 4px 0 #21618c;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .btn-line-speak:active { transform: translateY(3px); box-shadow: 0 1px 0 #21618c; }
+
+    /* 第四關：靜音紅圈自讀字牆 */
+    .silent-notice {
+      font-size: clamp(14px, 2vw, 17px);
+      font-weight: 800;
+      color: #c0392b;
+      background: #fdedec;
+      border: 2px solid #f5b7b1;
+      padding: 6px 14px;
+      border-radius: 999px;
+    }
+
+    .char-wall {
+      width: 100%;
+      max-width: 800px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: clamp(8px, 1.5vh, 14px);
+      margin: auto 0;
+    }
+
+    .char-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(6px, 1.2vw, 12px);
+      flex-wrap: nowrap;
+    }
+
+    .char-tile {
+      position: relative;
+      width: clamp(44px, 8.8vw, 76px);
+      height: clamp(48px, 9.2vh, 78px);
+      border-radius: 16px;
+      border: 3px solid #d5dbdb;
+      background: #ffffff;
+      color: #2c3e50;
+      font-size: clamp(24px, 4vw, 40px);
+      font-weight: 900;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 0 #bdc3c7;
+      cursor: pointer;
+      transition: transform 0.1s ease;
+    }
+    .char-tile:active { transform: scale(0.94); }
+
+    .char-tile.circled {
+      border-color: #e74c3c;
+      background: #fff5f5;
+      color: #b71c1c;
+      box-shadow: 0 4px 0 #c0392b;
+    }
+    .char-tile.circled::after {
+      content: "";
+      position: absolute;
+      inset: 3px;
+      border: 4px solid #e74c3c;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .punct-mark {
+      font-size: clamp(18px, 2.6vw, 28px);
+      font-weight: 900;
+      color: #95a5a6;
+      padding: 0 1px;
+    }
+
+    /* 底部操作區 */
+    .footer-actions {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding-top: 4px;
+    }
+
+    .feedback-banner {
+      font-size: clamp(18px, 2.6vw, 24px);
+      font-weight: 900;
+      min-height: 32px;
+      text-align: center;
+      color: #1e8449;
+    }
+
+    .btn-primary {
+      border: none;
+      background: #e74c3c;
+      color: #ffffff;
+      font-weight: 900;
+      font-size: clamp(16px, 2.3vw, 21px);
+      padding: 12px 26px;
+      border-radius: 16px;
+      box-shadow: 0 5px 0 #a93226;
+      cursor: pointer;
+    }
+    .btn-primary:active { transform: translateY(3px); box-shadow: 0 2px 0 #a93226; }
+
+    .btn-secondary {
+      border: 2px solid #bdc3c7;
+      background: #f8f9f9;
+      color: #566573;
+      font-weight: 800;
+      font-size: clamp(15px, 2vw, 18px);
+      padding: 10px 18px;
+      border-radius: 14px;
+      box-shadow: 0 4px 0 #bdc3c7;
+      cursor: pointer;
+    }
+    .btn-secondary:active { transform: translateY(2px); }
+
+    /* 結算畫面 */
+    .summary-box {
+      width: 100%;
+      max-width: 760px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      margin: auto 0;
+    }
+
+    .trophy-big { font-size: clamp(46px, 8vh, 68px); line-height: 1; }
+
+    .summary-grid {
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .stat-pill {
+      background: #fef9e7;
+      border: 2px solid #f9e79f;
+      border-radius: 14px;
+      padding: 10px 12px;
+      text-align: center;
+      font-weight: 800;
+      font-size: clamp(14px, 2vw, 17px);
+      color: #7d6608;
+    }
+
+    .circled-preview {
+      width: 100%;
+      background: #fdedec;
+      border: 2px solid #fadbd8;
+      border-radius: 14px;
+      padding: 10px 14px;
+      font-size: clamp(14px, 2vw, 17px);
+      font-weight: 800;
+      color: #922b21;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    .sync-badge {
+      background: #eafaf1;
+      border: 2px solid #a9dfbf;
+      color: #1e8449;
+      font-weight: 800;
+      font-size: clamp(13px, 1.9vw, 16px);
+      padding: 6px 14px;
+      border-radius: 999px;
+    }
+
+    /* 啟動解鎖覆蓋層（確保 iPad Safari 首句語音穩定發聲） */
+    .start-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(255, 248, 240, 0.96);
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      padding: 24px;
+      text-align: center;
+    }
+    .start-overlay.hidden { display: none; }
+    .start-card {
+      background: #ffffff;
+      border: 4px solid #f5b7b1;
+      border-radius: 28px;
+      padding: 28px 32px;
+      max-width: 480px;
+      width: 100%;
+      box-shadow: 0 8px 0 #e6b0aa, 0 16px 32px rgba(0,0,0,0.08);
+    }
+    .start-card h1 {
+      margin: 10px 0 6px;
+      font-size: clamp(24px, 4vw, 32px);
+      color: #c0392b;
+    }
+    .start-card p {
+      margin: 0 0 20px;
+      font-size: clamp(15px, 2.3vw, 19px);
+      color: #566573;
+      font-weight: 700;
+      line-height: 1.5;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-6px); }
+      75% { transform: translateX(6px); }
+    }
+  </style>
+</head>
+<body>
+  <!-- iPad Safari 語音啟動頁 -->
+  <div id="startOverlay" class="start-overlay">
+    <div class="start-card">
+      <div style="font-size: 64px; line-height: 1;">🎄🎵</div>
+      <h1>聖誕節 Day 3</h1>
+      <p>今日跟 Anna 老師一齊聽音熱身、砌句子，仲有讀 P.28 兒歌《聖誕節》同靜音紅圈尋寶呀！</p>
+      <button class="btn-primary" style="width: 100%; font-size: 22px; padding: 16px;" onclick="startLesson()">
+        🚀 開始上堂啦！
+      </button>
+    </div>
+  </div>
+
+  <div class="app-shell">
+    <!-- 頂部導航列 -->
+    <header class="top-bar">
+      <a href="cn-christmas.html?v=1" class="btn-back" onclick="stopAllSpeech()">⬅️ 返回</a>
+      <div class="lesson-title">🎄 聖誕節 Day 3</div>
+      <nav class="step-dots" aria-label="關卡進度">
+        <button class="step-dot active" id="dot-1" onclick="jumpToStage(1)" title="第 1 關：聽音熱身">1</button>
+        <button class="step-dot" id="dot-2" onclick="jumpToStage(2)" title="第 2 關：句式積木">2</button>
+        <button class="step-dot" id="dot-3" onclick="jumpToStage(3)" title="第 3 關：兒歌跟讀">3</button>
+        <button class="step-dot" id="dot-4" onclick="jumpToStage(4)" title="第 4 關：靜音圈字">4</button>
+      </nav>
+    </header>
+
+    <!-- Anna 老師對話列 -->
+    <section class="teacher-bar">
+      <div class="teacher-left">
+        <div class="anna-avatar">👩‍🏫</div>
+        <div class="teacher-msg" id="teacherMsg">準備好就跟 Anna 老師一齊出發啦！</div>
+      </div>
+      <button class="btn-audio" id="replayBtn" onclick="replayCurrentAudio()">🔊 聽題目</button>
+    </section>
+
+    <!-- 主互動舞台 -->
+    <main class="stage-card" id="stageContainer"></main>
+  </div>
+
+  <script>
+    // ====== 1. 廣東話防搶聲語音引擎 ======
+    let hkVoice = null;
+    let currentQuestionAudio = "";
+    let currentSpeakRate = 0.9;
+    let activeTimers = [];
+
+    function loadHKVoice() {
+      if (!window.speechSynthesis) return;
+      const voices = window.speechSynthesis.getVoices();
+      hkVoice =
+        voices.find(v => /zh[-_]HK/i.test(v.lang) && /sin[-_ ]?ji|tracy|hanhan|female/i.test(v.name)) ||
+        voices.find(v => /zh[-_]HK/i.test(v.lang)) ||
+        voices.find(v => /yue/i.test(v.lang)) ||
+        null;
+    }
+
+    if (window.speechSynthesis) {
+      loadHKVoice();
+      window.speechSynthesis.onvoiceschanged = loadHKVoice;
+    }
+
+    function clearAllTimers() {
+      activeTimers.forEach(t => clearTimeout(t));
+      activeTimers = [];
+    }
+
+    function scheduleTimer(fn, ms) {
+      const id = setTimeout(fn, ms);
+      activeTimers.push(id);
+      return id;
+    }
+
+    function stopAllSpeech() {
+      clearAllTimers();
+      if (window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+      }
+      document.querySelectorAll(".rhyme-row.speaking").forEach(el => el.classList.remove("speaking"));
+    }
+
+    function speakText(text, rate = 0.9, onEnd = null) {
+      if (!window.speechSynthesis || !text) {
+        if (onEnd) onEnd();
+        return;
+      }
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = "zh-HK";
+      u.rate = rate;
+      u.pitch = 1.05;
+      if (hkVoice) u.voice = hkVoice;
+      if (onEnd) u.onend = onEnd;
+      window.speechSynthesis.speak(u);
+    }
+
+    function replayCurrentAudio() {
+      if (currentQuestionAudio) {
+        speakText(currentQuestionAudio, currentSpeakRate);
+      }
+    }
+
+    // ====== 2. 課程題庫與教材數據（P.26–29 Day 3） ======
+    function shuffleArray(arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    // 第 1 關：聽音熱身（自然重溫「聖、誕、節」與「快樂」）
+    const STAGE1_ITEMS = [
+      {
+        id: "lis1",
+        target: "聖",
+        dim: "LIS",
+        skill_id: "CN-LIS-1",
+        level: "L1",
+        emoji: "🎄",
+        introPrefix: "第一關，聽音熱身！",
+        speech: "請玲玲搵出，聖誕節嘅，聖字！",
+        choices: shuffleArray(["聖", "主", "禮", "口"])
+      },
+      {
+        id: "lis2",
+        target: "誕",
+        dim: "LIS",
+        skill_id: "CN-LIS-1",
+        level: "L1",
+        emoji: "🌟",
+        introPrefix: "好叻呀！下一題，",
+        speech: "請玲玲搵出，聖誕節嘅，誕字！",
+        choices: shuffleArray(["誕", "耶", "物", "豆"])
+      },
+      {
+        id: "lis3",
+        target: "聖誕節",
+        dim: "LIS",
+        skill_id: "CN-LIS-2",
+        level: "L2",
+        emoji: "🎁",
+        introPrefix: "跟住係詞語啦！",
+        speech: "請搵出：聖誕節！",
+        choices: shuffleArray(["聖誕節", "主耶穌", "好朋友", "新禮物"])
+      },
+      {
+        id: "lis4",
+        target: "快樂",
+        dim: "LIS",
+        skill_id: "CN-LIS-1",
+        level: "L1",
+        emoji: "😄",
+        introPrefix: "最後一題熱身！",
+        speech: "請搵出：快樂！",
+        choices: shuffleArray(["快樂", "禮物", "唱歌", "一家"])
+      }
+    ];
+
+    // 第 2 關：句式積木輕溫習（鞏固 Day 2 句式）
+    function shuffleNotSame(arr) {
+      if (arr.length <= 1) return [...arr];
+      let out = shuffleArray(arr);
+      let guard = 0;
+      while (out.join("") === arr.join("") && guard < 10) {
+        out = shuffleArray(arr);
+        guard++;
+      }
+      return out;
+    }
+
+    const STAGE2_ITEMS = [
+      {
+        id: "sen1",
+        answer: "聖誕快樂！",
+        blocks: ["聖誕", "快樂！"],
+        shuffled: shuffleNotSame(["聖誕", "快樂！"]),
+        dim: "SEN",
+        skill_id: "CN-SEN-1",
+        level: "L1",
+        emoji: "🎄🎉",
+        introPrefix: "第二關，句式積木！聽住 Anna 老師，",
+        speech: "請砌出呢一句：聖誕快樂！"
+      },
+      {
+        id: "sen2",
+        answer: "聖誕節是慶祝主耶穌降生。",
+        blocks: ["聖誕節", "是慶祝", "主耶穌", "降生。"],
+        shuffled: shuffleNotSame(["聖誕節", "是慶祝", "主耶穌", "降生。"]),
+        dim: "SEN",
+        skill_id: "CN-SEN-2",
+        level: "L2",
+        emoji: "🌟👶🎄",
+        introPrefix: "好叻喎！挑戰多一句長啲嘅，",
+        speech: "請砌出呢一句：聖誕節是慶祝主耶穌降生。"
+      }
+    ];
+
+    // 第 3 & 4 關：P.28 兒歌《聖誕節》原文
+    const RHYME_LINES = [
+      "聖誕節，喜洋洋，",
+      "博士、牧人和小羊，",
+      "齊來慶祝主降生，",
+      "一家快樂來高唱。"
+    ];
+
+    // 靜音紅圈認字追蹤分組（供儀表板 CN-REC-2 與 CN-REC-3 精準入數）
+    const WEEK_CORE_CHARS = ["聖", "誕", "節"];
+    const PRIOR_LEARNED_IN_RHYME = ["人", "和", "小", "主", "一", "家", "樂", "唱"];
+
+    // ====== 3. 狀態與計時追蹤 ======
+    let currentStage = 1;
+    let s1Index = 0;
+    let s2Index = 0;
+    let s2SelectedIndices = [];
+    let s3Listened = new Set();
+    let circledTileKeys = new Set(); // key = "lineIdx-charIdx"
+    let reportSent = false;
+    let finalReportText = "";
+
+    const stageStats = {
+      1: { start: 0, totalSec: 0, done: false, errors: 0 },
+      2: { start: 0, totalSec: 0, done: false, errors: 0 },
+      3: { start: 0, totalSec: 0, done: false },
+      4: { start: 0, totalSec: 0, done: false }
+    };
+
+    const itemRecords = {}; // key -> { dim, skill_id, level, hadError, elapsedSec, label }
+    const errorWordsSet = new Set();
+
+    function beginStageTimer(stageNum) {
+      stageStats[stageNum].start = Date.now();
+    }
+
+    function endStageTimer(stageNum) {
+      if (stageStats[stageNum] && stageStats[stageNum].start > 0) {
+        const delta = Math.max(1, Math.round((Date.now() - stageStats[stageNum].start) / 1000));
+        stageStats[stageNum].totalSec += delta;
+        stageStats[stageNum].start = 0;
+      }
+    }
+
+    function updateStepDots() {
+      for (let i = 1; i <= 4; i++) {
+        const dot = document.getElementById("dot-" + i);
+        dot.classList.remove("active", "done");
+        if (i === currentStage) {
+          dot.classList.add("active");
+        } else if (stageStats[i].done) {
+          dot.classList.add("done");
+        }
+      }
+    }
+
+    function startLesson() {
+      document.getElementById("startOverlay").classList.add("hidden");
+      loadHKVoice();
+      jumpToStage(1);
+    }
+
+    function jumpToStage(stageNum) {
+      stopAllSpeech();
+      if (currentStage >= 1 && currentStage <= 4) {
+        endStageTimer(currentStage);
+      }
+      currentStage = stageNum;
+      updateStepDots();
+      beginStageTimer(stageNum);
+
+      if (stageNum === 1) {
+        s1Index = 0;
+        renderStage1();
+      } else if (stageNum === 2) {
+        s2Index = 0;
+        renderStage2();
+      } else if (stageNum === 3) {
+        renderStage3();
+      } else if (stageNum === 4) {
+        renderStage4();
+      }
+    }
+
+    // ====== 4. 第 1 關：聽音熱身（零劇透） ======
+    let s1ItemStart = 0;
+    let s1Locked = false;
+
+    function renderStage1() {
+      const item = STAGE1_ITEMS[s1Index];
+      s1Locked = false;
+      s1ItemStart = Date.now();
+
+      document.getElementById("teacherMsg").textContent = "🎧 聽一聽 Anna 老師讀邊個字詞，再撳出嚟呀！";
+      const replayBtn = document.getElementById("replayBtn");
+      replayBtn.classList.remove("hidden");
+      replayBtn.textContent = "🔊 聽題目";
+
+      currentQuestionAudio = item.speech;
+      currentSpeakRate = 0.88;
+
+      const stage = document.getElementById("stageContainer");
+      stage.innerHTML = `
+        <div class="stage-badge">第 1 關 · 聽音熱身（${s1Index + 1} / ${STAGE1_ITEMS.length}）</div>
+        <div class="hint-emoji-box">${item.emoji}</div>
+        <div class="choices-grid">
+          ${item.choices.map((ch, idx) => `
+            <button class="choice-btn" id="s1-btn-${idx}" onclick="checkStage1(${idx})">${ch}</button>
+          `).join("")}
+        </div>
+        <div class="footer-actions">
+          <div class="feedback-banner" id="s1Feedback"></div>
+        </div>
+      `;
+
+      // 合併導航與題目成單一語音防搶聲
+      const combined = (s1Index === 0 ? item.introPrefix : item.introPrefix) + item.speech;
+      speakText(combined, 0.88);
+    }
+
+    function checkStage1(choiceIdx) {
+      if (s1Locked) return;
+      const item = STAGE1_ITEMS[s1Index];
+      const chosen = item.choices[choiceIdx];
+      const btn = document.getElementById("s1-btn-" + choiceIdx);
+      const fb = document.getElementById("s1Feedback");
+
+      if (!itemRecords[item.id]) {
+        itemRecords[item.id] = {
+          dim: item.dim,
+          skill_id: item.skill_id,
+          level: item.level,
+          hadError: false,
+          elapsedSec: 1,
+          label: item.target
+        };
+      }
+
+      if (chosen === item.target) {
+        s1Locked = true;
+        btn.classList.add("correct");
+        itemRecords[item.id].elapsedSec = Math.max(1, Math.round((Date.now() - s1ItemStart) / 1000));
+        fb.style.color = "#1e8449";
+        fb.textContent = `🎉 答啱喇！係「${item.target}」！`;
+        speakText(`好叻呀！答啱喇，係${item.target}！`, 0.92);
+
+        scheduleTimer(() => {
+          if (s1Index < STAGE1_ITEMS.length - 1) {
+            s1Index++;
+            renderStage1();
+          } else {
+            stageStats[1].done = true;
+            updateStepDots();
+            jumpToStage(2);
+          }
+        }, 1450);
+      } else {
+        btn.classList.add("wrong");
+        itemRecords[item.id].hadError = true;
+        stageStats[1].errors++;
+        errorWordsSet.add("聽音:" + item.target);
+        fb.style.color = "#c0392b";
+        // 零劇透答錯提示：不印答案
+        fb.textContent = "💭 唔係呢個呀，撳右上角喇叭再聽多次試下！";
+        speakText("唔係呢個呀，再聽多次試下啦！", 0.92);
+        scheduleTimer(() => btn.classList.remove("wrong"), 450);
+      }
+    }
+
+    // ====== 5. 第 2 關：句式積木輕溫習（零劇透） ======
+    let s2ItemStart = 0;
+    let s2Locked = false;
+
+    function renderStage2() {
+      const item = STAGE2_ITEMS[s2Index];
+      s2SelectedIndices = [];
+      s2Locked = false;
+      s2ItemStart = Date.now();
+
+      document.getElementById("teacherMsg").textContent = "🧱 聽住老師講，按次序撳積木砌返啱句句子啦！";
+      const replayBtn = document.getElementById("replayBtn");
+      replayBtn.classList.remove("hidden");
+      replayBtn.textContent = "🔊 聽題目";
+
+      currentQuestionAudio = item.speech;
+      currentSpeakRate = 0.85;
+
+      const stage = document.getElementById("stageContainer");
+      stage.innerHTML = `
+        <div class="stage-badge">第 2 關 · 句式積木（${s2Index + 1} / ${STAGE2_ITEMS.length}）</div>
+        <div class="hint-emoji-box" style="font-size: clamp(38px, 6.5vh, 58px);">${item.emoji}</div>
+        <div class="slots-wrap" id="slotsWrap"></div>
+        <div class="blocks-bank" id="blocksBank"></div>
+        <div class="footer-actions">
+          <div class="feedback-banner" id="s2Feedback"></div>
+          <button class="btn-secondary" id="s2ResetBtn" onclick="resetStage2Slots()">🔄 重砌</button>
+        </div>
+      `;
+
+      paintStage2UI();
+      speakText(item.introPrefix + item.speech, 0.85);
+    }
+
+    function paintStage2UI() {
+      const item = STAGE2_ITEMS[s2Index];
+      const slotsWrap = document.getElementById("slotsWrap");
+      const blocksBank = document.getElementById("blocksBank");
+
+      slotsWrap.innerHTML = item.blocks.map((_, slotIdx) => {
+        const chosenIdx = s2SelectedIndices[slotIdx];
+        if (chosenIdx !== undefined) {
+          return `<button class="slot-pill filled" onclick="removeBlockFromSlot(${slotIdx})">${item.shuffled[chosenIdx]}</button>`;
+        }
+        return `<div class="slot-pill">？</div>`;
+      }).join("");
+
+      blocksBank.innerHTML = item.shuffled.map((txt, idx) => {
+        const isUsed = s2SelectedIndices.includes(idx);
+        return `<button class="word-block ${isUsed ? "used" : ""}" onclick="pickStage2Block(${idx})">${txt}</button>`;
+      }).join("");
+    }
+
+    function pickStage2Block(blockIdx) {
+      if (s2Locked) return;
+      const item = STAGE2_ITEMS[s2Index];
+      if (s2SelectedIndices.includes(blockIdx)) return;
+      if (s2SelectedIndices.length >= item.blocks.length) return;
+
+      s2SelectedIndices.push(blockIdx);
+      paintStage2UI();
+
+      if (s2SelectedIndices.length === item.blocks.length) {
+        scheduleTimer(verifyStage2Answer, 220);
+      }
+    }
+
+    function removeBlockFromSlot(slotIdx) {
+      if (s2Locked) return;
+      s2SelectedIndices.splice(slotIdx, 1);
+      paintStage2UI();
+    }
+
+    function resetStage2Slots() {
+      if (s2Locked) return;
+      s2SelectedIndices = [];
+      document.getElementById("s2Feedback").textContent = "";
+      document.getElementById("slotsWrap").classList.remove("wrong");
+      paintStage2UI();
+    }
+
+    function verifyStage2Answer() {
+      const item = STAGE2_ITEMS[s2Index];
+      const attempt = s2SelectedIndices.map(i => item.shuffled[i]).join("");
+      const slotsWrap = document.getElementById("slotsWrap");
+      const fb = document.getElementById("s2Feedback");
+
+      if (!itemRecords[item.id]) {
+        itemRecords[item.id] = {
+          dim: item.dim,
+          skill_id: item.skill_id,
+          level: item.level,
+          hadError: false,
+          elapsedSec: 1,
+          label: item.answer
+        };
+      }
+
+      if (attempt === item.answer) {
+        s2Locked = true;
+        slotsWrap.classList.add("correct");
+        itemRecords[item.id].elapsedSec = Math.max(1, Math.round((Date.now() - s2ItemStart) / 1000));
+        fb.style.color = "#1e8449";
+        fb.textContent = `🌟 砌啱喇！${item.answer}`;
+        speakText(`好叻呀！砌啱喇！${item.answer}`, 0.88);
+
+        scheduleTimer(() => {
+          if (s2Index < STAGE2_ITEMS.length - 1) {
+            s2Index++;
+            renderStage2();
+          } else {
+            stageStats[2].done = true;
+            updateStepDots();
+            jumpToStage(3);
+          }
+        }, 2100);
+      } else {
+        slotsWrap.classList.add("wrong");
+        itemRecords[item.id].hadError = true;
+        stageStats[2].errors++;
+        errorWordsSet.add("句式:" + item.answer);
+        fb.style.color = "#c0392b";
+        // 零劇透答錯提示
+        fb.textContent = "💭 次序有少少唔同喎，撳喇叭聽多次再試下！";
+        speakText("次序有少少唔同喎，唔使急，撳喇叭再聽多次試下啦！", 0.9);
+        scheduleTimer(() => {
+          slotsWrap.classList.remove("wrong");
+          s2SelectedIndices = [];
+          paintStage2UI();
+        }, 1050);
+      }
+    }
+
+    // ====== 6. 第 3 關：P.28 兒歌《聖誕節》逐句慢速跟讀 ======
+    function renderStage3() {
+      document.getElementById("teacherMsg").textContent = "🎵 撳右邊喇叭一句一句慢慢跟住讀，亦可以聽全首呀！";
+      const replayBtn = document.getElementById("replayBtn");
+      replayBtn.classList.add("hidden");
+      currentQuestionAudio = "";
+
+      const stage = document.getElementById("stageContainer");
+      stage.innerHTML = `
+        <div class="rhyme-header">
+          <div class="stage-badge">第 3 關 · P.28 兒歌《聖誕節》</div>
+          <button class="btn-full-song" onclick="playFullRhyme()">🎵 聽全首</button>
+        </div>
+
+        <div class="rhyme-lines">
+          ${RHYME_LINES.map((line, idx) => `
+            <div class="rhyme-row ${s3Listened.has(idx) ? "listened" : ""}" id="rhyme-row-${idx}">
+              <div class="rhyme-text">
+                <span class="line-star">⭐</span>
+                <span>${line}</span>
+              </div>
+              <button class="btn-line-speak" onclick="playRhymeLine(${idx})">🔊 聽呢句</button>
+            </div>
+          `).join("")}
+        </div>
+
+        <div class="footer-actions">
+          <button class="btn-primary" onclick="finishStage3()">下一步：靜音紅圈認字 ➡️</button>
+        </div>
+      `;
+
+      speakText("第三關，兒歌跟讀！今日一齊讀《聖誕節》兒歌！撳右邊喇叭可以一句一句慢慢跟住讀呀！", 0.88);
+    }
+
+    function playRhymeLine(idx) {
+      stopAllSpeech();
+      const row = document.getElementById("rhyme-row-" + idx);
+      if (row) {
+        row.classList.add("speaking", "listened");
+      }
+      s3Listened.add(idx);
+      speakText(RHYME_LINES[idx], 0.78, () => {
+        if (row) row.classList.remove("speaking");
+      });
+    }
+
+    function playFullRhyme() {
+      stopAllSpeech();
+      const rows = RHYME_LINES.map((_, idx) => document.getElementById("rhyme-row-" + idx));
+      rows.forEach((r, idx) => {
+        if (r) r.classList.add("listened");
+        s3Listened.add(idx);
+      });
+
+      function speakSeq(i) {
+        if (i >= RHYME_LINES.length || currentStage !== 3) return;
+        rows.forEach(r => r && r.classList.remove("speaking"));
+        if (rows[i]) rows[i].classList.add("speaking");
+        speakText(RHYME_LINES[i], 0.78, () => {
+          if (rows[i]) rows[i].classList.remove("speaking");
+          scheduleTimer(() => speakSeq(i + 1), 260);
+        });
+      }
+      speakSeq(0);
+    }
+
+    function finishStage3() {
+      stageStats[3].done = true;
+      updateStepDots();
+      jumpToStage(4);
+    }
+
+    // ====== 7. 第 4 關：靜音紅圈自讀尋寶（絕對零發聲） ======
+    function getUniqueCircledChars() {
+      const chars = [];
+      const seen = new Set();
+      RHYME_LINES.forEach((line, lIdx) => {
+        [...line].forEach((ch, cIdx) => {
+          if (/[，、。！]/.test(ch)) return;
+          const key = `${lIdx}-${cIdx}`;
+          if (circledTileKeys.has(key) && !seen.has(ch)) {
+            seen.add(ch);
+            chars.push(ch);
+          }
+        });
+      });
+      return chars;
+    }
+
+    function renderStage4() {
+      document.getElementById("teacherMsg").textContent = "⭕ 靜音紅圈尋寶：自己讀得出邊個字，就撳佢圈起佢呀！";
+      const replayBtn = document.getElementById("replayBtn");
+      replayBtn.classList.add("hidden");
+      currentQuestionAudio = "";
+
+      const stage = document.getElementById("stageContainer");
+      stage.innerHTML = `
+        <div class="rhyme-header">
+          <div class="stage-badge">第 4 關 · 靜音紅圈自讀</div>
+          <div class="silent-notice">🤫 靜音模式：撳字只畫紅圈唔會讀出嚟</div>
+        </div>
+
+        <div class="char-wall" id="charWall">
+          ${RHYME_LINES.map((line, lIdx) => `
+            <div class="char-row">
+              ${[...line].map((ch, cIdx) => {
+                if (/[，、。！]/.test(ch)) {
+                  return `<span class="punct-mark">${ch}</span>`;
+                }
+                const key = `${lIdx}-${cIdx}`;
+                const circled = circledTileKeys.has(key) ? "circled" : "";
+                return `<button class="char-tile ${circled}" id="tile-${key}" onclick="toggleCircleSilent('${key}')">${ch}</button>`;
+              }).join("")}
+            </div>
+          `).join("")}
+        </div>
+
+        <div class="footer-actions">
+          <div class="feedback-banner" id="circleCountText" style="color:#b71c1c; min-width: 150px;">
+            已圈出：${getUniqueCircledChars().length} 個字
+          </div>
+          <button class="btn-primary" onclick="finishLesson()">🎉 圈完喇！睇今日成績</button>
+        </div>
+      `;
+
+      // 進入此關只播放一次總指引，之後點擊字磚絕對靜音
+      speakText("第四關，靜音紅圈尋寶！呢一關唔會有聲㗎！玲玲自己讀得出邊個字，就用手指撳佢畫個紅圈圈起佢啦！", 0.88);
+    }
+
+    // 靜音圈字：嚴禁任何語音發聲
+    function toggleCircleSilent(key) {
+      const btn = document.getElementById("tile-" + key);
+      if (circledTileKeys.has(key)) {
+        circledTileKeys.delete(key);
+        if (btn) btn.classList.remove("circled");
+      } else {
+        circledTileKeys.add(key);
+        if (btn) btn.classList.add("circled");
+      }
+      const countEl = document.getElementById("circleCountText");
+      if (countEl) {
+        countEl.textContent = `已圈出：${getUniqueCircledChars().length} 個字`;
+      }
+    }
+
+    // ====== 8. 結算、微技能彙總與雲端戰報自動上報 ======
+    function buildSkillStats(circledArr) {
+      const circledSet = new Set(circledArr);
+      const map = {};
+
+      function addMetric(dim, skill_id, level, isCorrect, sec) {
+        if (!map[skill_id]) {
+          map[skill_id] = { dim, skill_id, level, total: 0, correct: 0, secSum: 0 };
+        }
+        map[skill_id].total += 1;
+        if (isCorrect) map[skill_id].correct += 1;
+        map[skill_id].secSum += sec;
+      }
+
+      Object.values(itemRecords).forEach(rec => {
+        addMetric(rec.dim, rec.skill_id, rec.level, !rec.hadError, rec.elapsedSec);
+      });
+
+      // 第 3 關兒歌跟讀（CN-CTX-1）
+      const s3Sec = Math.max(1, stageStats[3].totalSec || 1);
+      addMetric("CTX", "CN-CTX-1", "L1", true, s3Sec);
+
+      // 第 4 關靜音紅圈：當週生字 CN-REC-2（聖、誕、節）與已學熟字 CN-REC-3（人、和、小、主、一、家、樂、唱）
+      const s4Sec = Math.max(1, stageStats[4].totalSec || 1);
+      const weekHit = WEEK_CORE_CHARS.filter(c => circledSet.has(c)).length;
+      map["CN-REC-2"] = {
+        dim: "REC",
+        skill_id: "CN-REC-2",
+        level: "L1",
+        total: WEEK_CORE_CHARS.length,
+        correct: weekHit,
+        secSum: s4Sec
+      };
+
+      const priorHit = PRIOR_LEARNED_IN_RHYME.filter(c => circledSet.has(c)).length;
+      map["CN-REC-3"] = {
+        dim: "REC",
+        skill_id: "CN-REC-3",
+        level: "L2",
+        total: PRIOR_LEARNED_IN_RHYME.length,
+        correct: priorHit,
+        secSum: s4Sec
+      };
+
+      return Object.values(map).map(m => ({
+        dim: m.dim,
+        skill_id: m.skill_id,
+        level: m.level,
+        total: m.total,
+        correct: m.correct,
+        avg_sec: Number((m.secSum / Math.max(1, m.total)).toFixed(1))
+      }));
+    }
+
+    function finishLesson() {
+      stopAllSpeech();
+      endStageTimer(4);
+      stageStats[4].done = true;
+      currentStage = 5;
+      updateStepDots();
+
+      const circledArr = getUniqueCircledChars();
+      const errorWords = Array.from(errorWordsSet);
+      const skillStats = buildSkillStats(circledArr);
+
+      const s1Label = stageStats[1].errors === 0 ? "1次答對" : `需提示(${stageStats[1].errors}次)`;
+      const s2Label = stageStats[2].errors === 0 ? "1次答對" : `需提示(${stageStats[2].errors}次)`;
+      const s1Sec = stageStats[1].totalSec || 0;
+      const s2Sec = stageStats[2].totalSec || 0;
+      const s3Sec = stageStats[3].totalSec || 0;
+      const s4Sec = stageStats[4].totalSec || 0;
+      const circledStr = circledArr.length > 0 ? circledArr.join("、") : "無";
+
+      finalReportText =
+        `【中文課堂回報】P.26-29 Day 3 (cn-p26-p29-d3.html) | ` +
+        `聽音熱身: ${s1Sec}s(${s1Label}) | ` +
+        `句式積木: ${s2Sec}s(${s2Label}) | ` +
+        `兒歌跟讀: ${s3Sec}s | ` +
+        `靜音圈字: ${s4Sec}s(圈出${circledArr.length}字) | ` +
+        `圈出識字清單: ${circledStr}`;
+
+      if (!reportSent && window.LinglingReport && typeof window.LinglingReport.save === "function") {
+        reportSent = true;
+        window.LinglingReport.save("中文AI課堂", "P.26-29 Day 3", finalReportText, {
+          term: "K2-T1",
+          skill_stats: skillStats,
+          circled_chars: circledArr,
+          error_words: errorWords
+        });
+      }
+
+      document.getElementById("teacherMsg").textContent = "🏆 玲玲今日好叻呀！《聖誕節》Day 3 全部完成喇！";
+      document.getElementById("replayBtn").classList.add("hidden");
+
+      const stage = document.getElementById("stageContainer");
+      stage.innerHTML = `
+        <div class="summary-box">
+          <div class="trophy-big">🏆🎄✨</div>
+          <div class="sync-badge">☁️ 戰報已自動同步至家長戰報箱與成長儀表板</div>
+          <div class="summary-grid">
+            <div class="stat-pill">🎧 聽音熱身：${s1Sec}s（${s1Label}）</div>
+            <div class="stat-pill">🧱 句式積木：${s2Sec}s（${s2Label}）</div>
+            <div class="stat-pill">🎵 兒歌跟讀：${s3Sec}s</div>
+            <div class="stat-pill">⭕ 靜音圈字：${s4Sec}s（${circledArr.length} 字）</div>
+          </div>
+          <div class="circled-preview">
+            <strong>今日獨立認出字詞（${circledArr.length} 字）：</strong>${circledStr}
+          </div>
+        </div>
+        <div class="footer-actions">
+          <button class="btn-secondary" id="copyReportBtn" onclick="copyBackupReport()">📋 一鍵複製進度暗號</button>
+          <a href="cn-christmas.html?v=1" class="btn-primary" style="text-decoration:none;" onclick="stopAllSpeech()">🏠 返回聖誕節單元</a>
+        </div>
+      `;
+
+      speakText(`嘩！玲玲好叻呀！今日聖誕節第三日課堂全部完成喇！你自己認出咗${circledArr.length}個字呀，俾個大拇指自己！`, 0.9);
+    }
+
+    function copyBackupReport() {
+      const btn = document.getElementById("copyReportBtn");
+      const doneUI = () => {
+        if (btn) {
+          btn.textContent = "✅ 已複製進度暗號！";
+          scheduleTimer(() => { btn.textContent = "📋 一鍵複製進度暗號"; }, 2200);
+        }
+      };
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(finalReportText).then(doneUI).catch(fallbackCopy);
+      } else {
+        fallbackCopy();
+      }
+
+      function fallbackCopy() {
+        const ta = document.createElement("textarea");
+        ta.value = finalReportText;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand("copy"); } catch (e) {}
+        document.body.removeChild(ta);
+        doneUI();
+      }
+    }
+  </script>
+</body>
+</html>
