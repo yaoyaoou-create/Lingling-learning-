@@ -1,0 +1,1375 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>🎪 Maths Day 15｜奇幻馬戲團</title>
+  <link rel="stylesheet" href="theme.css?v=1" />
+  <script src="report-hub.js?v=3"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100dvh;
+      overflow: hidden;
+      font-family: "PingFang HK", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      background: linear-gradient(160deg, #fff6e5 0%, #fef0f5 52%, #edf7ff 100%);
+      color: #2c3e50;
+    }
+
+    .app-shell {
+      height: 100dvh;
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 8px 12px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    /* 頂部兩行式導航列：防手機/iPad 切字 ＋ 圓點置中隨按即跳 */
+    .top-bar {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 8px 12px;
+      box-shadow: 0 4px 0 #f3d5a5, 0 6px 14px rgba(0, 0, 0, 0.06);
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      flex-shrink: 0;
+    }
+
+    .top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      text-decoration: none;
+      background: #fff1db;
+      color: #b9770e;
+      font-weight: 900;
+      font-size: clamp(13px, 2vw, 15px);
+      padding: 6px 12px;
+      border-radius: 12px;
+      box-shadow: 0 3px 0 #e5c39c;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .btn-back:active { transform: translateY(2px); box-shadow: 0 1px 0 #e5c39c; }
+
+    .quiz-title {
+      font-weight: 900;
+      font-size: clamp(15px, 2.3vw, 20px);
+      color: #c0392b;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align: center;
+    }
+
+    .progress-pill {
+      background: #fdebd0;
+      color: #9c640c;
+      font-weight: 900;
+      font-size: clamp(12px, 1.9vw, 15px);
+      padding: 5px 10px;
+      border-radius: 999px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .step-dots {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(5px, 1.2vw, 10px);
+      flex-wrap: nowrap;
+    }
+
+    .step-dot {
+      width: clamp(26px, 4.2vw, 34px);
+      height: clamp(26px, 4.2vw, 34px);
+      border-radius: 50%;
+      border: 2px solid #f5cba7;
+      background: #fffaf2;
+      color: #9c640c;
+      font-weight: 900;
+      font-size: clamp(12px, 1.8vw, 15px);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 3px 0 #e5c39c;
+      transition: transform 0.12s ease, background 0.15s ease;
+      padding: 0;
+    }
+    .step-dot:active { transform: translateY(2px); }
+    .step-dot.active {
+      background: #e67e22;
+      border-color: #ba4a00;
+      color: #ffffff;
+      box-shadow: 0 3px 0 #873600;
+      transform: scale(1.1);
+    }
+    .step-dot.done-ok {
+      background: #27ae60;
+      border-color: #1e8449;
+      color: #ffffff;
+      box-shadow: 0 3px 0 #145a32;
+    }
+    .step-dot.done-hint {
+      background: #f1c40f;
+      border-color: #b7950b;
+      color: #5d4037;
+      box-shadow: 0 3px 0 #9a7d0a;
+    }
+
+    /* Anna 老師語音橫幅 */
+    .teacher-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: #ffffff;
+      border: 3px solid #fad7a0;
+      border-radius: 18px;
+      padding: 8px 12px;
+      box-shadow: 0 4px 0 #f5cba7;
+      flex-shrink: 0;
+    }
+
+    .teacher-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .anna-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: #fef5e7;
+      border: 2px solid #f39c12;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    .teacher-msg {
+      font-size: clamp(15px, 2.2vw, 20px);
+      font-weight: 900;
+      color: #2c3e50;
+      line-height: 1.3;
+    }
+
+    .btn-audio {
+      border: none;
+      background: #e67e22;
+      color: #ffffff;
+      font-weight: 900;
+      font-size: clamp(13px, 2vw, 17px);
+      padding: 9px 14px;
+      border-radius: 14px;
+      box-shadow: 0 4px 0 #ba4a00;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .btn-audio:active { transform: translateY(3px); box-shadow: 0 1px 0 #ba4a00; }
+    .btn-audio.hidden { display: none; }
+
+    /* 主互動舞台（單屏免捲動） */
+    .stage-card {
+      flex: 1;
+      min-height: 0;
+      background: #ffffff;
+      border-radius: 24px;
+      padding: 12px 16px;
+      box-shadow: 0 6px 0 #e5d8c8, 0 10px 24px rgba(0, 0, 0, 0.06);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .stage-top-meta {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .dim-badge {
+      background: #fef3c7;
+      color: #92400e;
+      border: 2px solid #fcd34d;
+      font-weight: 900;
+      font-size: clamp(13px, 1.9vw, 16px);
+      padding: 5px 14px;
+      border-radius: 999px;
+    }
+
+    .silent-tip {
+      font-size: clamp(12px, 1.8vw, 15px);
+      font-weight: 800;
+      color: #7f8c8d;
+    }
+
+    /* 視覺展示區 */
+    .visual-stage {
+      width: 100%;
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 6px 4px;
+    }
+
+    /* 靜音可點數物件 */
+    .tap-item {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(34px, 5.6vh, 52px);
+      width: clamp(50px, 8vw, 68px);
+      height: clamp(50px, 8vw, 68px);
+      border-radius: 16px;
+      background: #fffdf7;
+      border: 3px solid #fdebd0;
+      box-shadow: 0 4px 0 #f5cba7;
+      cursor: pointer;
+      transition: transform 0.14s ease, background 0.14s ease, border-color 0.14s ease;
+    }
+    .tap-item:active { transform: scale(0.92); }
+    .tap-item.counted {
+      background: #fef9e7;
+      border-color: #f1c40f;
+      box-shadow: 0 0 0 3px rgba(241, 196, 15, 0.32), 0 4px 0 #d4ac0d;
+      transform: translateY(-3px) scale(1.06);
+    }
+    .tap-item.counted::after {
+      content: "✨";
+      position: absolute;
+      top: -8px;
+      right: -6px;
+      font-size: 18px;
+      pointer-events: none;
+    }
+    .tap-item.empty-slot {
+      background: #f8fbff;
+      border: 3px dashed #85c1e9;
+      box-shadow: none;
+      color: #85c1e9;
+      font-size: clamp(24px, 4vh, 34px);
+    }
+    .tap-item.empty-slot.counted {
+      background: #ebf5fb;
+      border-color: #2e86c1;
+      border-style: solid;
+      box-shadow: 0 0 0 3px rgba(46, 134, 193, 0.25);
+    }
+    .tap-item.taken-away {
+      opacity: 0.28;
+      border: 3px dashed #d5dbdb;
+      background: #f8f9f9;
+      box-shadow: none;
+      cursor: default;
+      filter: grayscale(0.7);
+    }
+
+    /* 數序火車 */
+    .train-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(6px, 1.4vw, 14px);
+      flex-wrap: nowrap;
+    }
+    .train-car {
+      width: clamp(54px, 11vw, 96px);
+      height: clamp(62px, 11vh, 96px);
+      border-radius: 18px;
+      background: #ebf5fb;
+      border: 3px solid #5dade2;
+      box-shadow: 0 5px 0 #2e86c1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(28px, 4.6vw, 44px);
+      font-weight: 900;
+      color: #1b4f72;
+    }
+    .train-car.missing {
+      background: #fef9e7;
+      border: 4px dashed #e67e22;
+      color: #d35400;
+      box-shadow: 0 5px 0 #f5b041;
+    }
+
+    /* 分合框 */
+    .bond-frame {
+      background: #fffcf5;
+      border: 3px solid #fad7a0;
+      border-radius: 22px;
+      padding: 12px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      max-width: 720px;
+    }
+    .bond-eq {
+      font-size: clamp(24px, 3.8vw, 36px);
+      font-weight: 900;
+      color: #b9770e;
+      letter-spacing: 2px;
+    }
+    .items-flex {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(6px, 1.2vw, 12px);
+      flex-wrap: wrap;
+    }
+
+    /* 規律序列 */
+    .pattern-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(6px, 1.2vw, 12px);
+      flex-wrap: wrap;
+    }
+    .pattern-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 10px;
+      border-radius: 18px;
+      background: #f4faff;
+      border: 3px solid #aed6f1;
+    }
+    .pattern-cell {
+      width: clamp(46px, 7.6vw, 66px);
+      height: clamp(46px, 7.6vw, 66px);
+      border-radius: 14px;
+      background: #ffffff;
+      border: 2px solid #d6eaf8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(28px, 4.5vw, 42px);
+    }
+    .pattern-cell.missing {
+      background: #fef9e7;
+      border: 3px dashed #e67e22;
+      color: #d35400;
+      font-weight: 900;
+      font-size: clamp(24px, 3.8vw, 36px);
+    }
+
+    /* 方位舞台 */
+    .spatial-stage {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(10px, 2vw, 20px);
+      width: 100%;
+      max-width: 600px;
+    }
+    .spatial-box {
+      background: #fffdf7;
+      border: 3px solid #f5cba7;
+      border-radius: 20px;
+      padding: 16px 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 5px 0 #e5c39c;
+    }
+    .spatial-box.center-ref {
+      background: #fef5e7;
+      border-color: #e67e22;
+    }
+    .spatial-emoji { font-size: clamp(44px, 7.5vh, 66px); line-height: 1; }
+    .spatial-label { font-size: clamp(14px, 2vw, 18px); font-weight: 900; color: #7f8c8d; }
+
+    /* 比較相差對齊列 */
+    .compare-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: #fffdf8;
+      border: 3px solid #f9e79f;
+      border-radius: 20px;
+      padding: 12px 16px;
+    }
+    .compare-row {
+      display: grid;
+      grid-template-columns: repeat(6, clamp(46px, 7.8vw, 66px));
+      gap: clamp(6px, 1.2vw, 10px);
+      align-items: center;
+    }
+    .compare-placeholder {
+      width: clamp(46px, 7.8vw, 66px);
+      height: clamp(46px, 7.8vw, 66px);
+      border-radius: 14px;
+      border: 2px dashed #e5e8e8;
+    }
+
+    /* 選項列 */
+    .options-row {
+      width: 100%;
+      max-width: 700px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(10px, 2vw, 18px);
+      flex-shrink: 0;
+    }
+
+    .opt-btn {
+      border: 3px solid #aed6f1;
+      background: #f4faff;
+      color: #1b4f72;
+      font-size: clamp(26px, 4.2vw, 42px);
+      font-weight: 900;
+      padding: clamp(12px, 2.2vh, 20px) 8px;
+      border-radius: 20px;
+      box-shadow: 0 6px 0 #5dade2;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      transition: transform 0.12s ease, background 0.15s ease;
+    }
+    .opt-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #5dade2; }
+    .opt-btn.correct {
+      background: #d4efdf;
+      border-color: #27ae60;
+      color: #145a32;
+      box-shadow: 0 6px 0 #229954;
+    }
+    .opt-btn.wrong-shake {
+      background: #fef5e7;
+      border-color: #f39c12;
+      animation: shake 0.38s ease;
+    }
+
+    /* 溫柔提示框（嚴禁出現 ❌） */
+    .gentle-hint-box {
+      min-height: 30px;
+      font-size: clamp(15px, 2.2vw, 20px);
+      font-weight: 900;
+      text-align: center;
+      color: #d35400;
+      padding: 2px 8px;
+      flex-shrink: 0;
+    }
+    .gentle-hint-box.ok { color: #1e8449; }
+
+    /* 結算畫面 */
+    .summary-wrap {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      min-height: 0;
+    }
+
+    .summary-head {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    .sync-badge {
+      background: #eafaf1;
+      border: 2px solid #a9dfbf;
+      color: #1e8449;
+      font-weight: 900;
+      font-size: clamp(12px, 1.9vw, 15px);
+      padding: 5px 14px;
+      border-radius: 999px;
+    }
+
+    .summary-table-box {
+      width: 100%;
+      max-width: 780px;
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      border: 2px solid #f5cba7;
+      border-radius: 16px;
+      background: #fffdf9;
+    }
+
+    table.report-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: clamp(13px, 1.9vw, 16px);
+    }
+    table.report-table th, table.report-table td {
+      padding: 7px 10px;
+      border-bottom: 1px solid #f5e6d3;
+      text-align: left;
+      font-weight: 800;
+    }
+    table.report-table th {
+      background: #fef3c7;
+      color: #92400e;
+      position: sticky;
+      top: 0;
+    }
+
+    .summary-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      flex-shrink: 0;
+    }
+
+    .btn-primary {
+      border: none;
+      background: #e67e22;
+      color: #ffffff;
+      font-weight: 900;
+      font-size: clamp(15px, 2.2vw, 19px);
+      padding: 11px 22px;
+      border-radius: 16px;
+      box-shadow: 0 5px 0 #ba4a00;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .btn-primary:active { transform: translateY(3px); box-shadow: 0 2px 0 #ba4a00; }
+
+    .btn-secondary {
+      border: 2px solid #5dade2;
+      background: #ebf5fb;
+      color: #1b4f72;
+      font-weight: 900;
+      font-size: clamp(14px, 2vw, 18px);
+      padding: 10px 18px;
+      border-radius: 16px;
+      box-shadow: 0 4px 0 #5dade2;
+      cursor: pointer;
+    }
+    .btn-secondary:active { transform: translateY(2px); }
+
+    /* 啟動解鎖頁 */
+    .start-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(255, 248, 235, 0.96);
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .start-overlay.hidden { display: none; }
+    .start-card {
+      background: #ffffff;
+      border: 4px solid #f5b041;
+      border-radius: 28px;
+      padding: 26px 28px;
+      max-width: 460px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 8px 0 #e59866, 0 16px 32px rgba(0, 0, 0, 0.08);
+    }
+    .start-card h1 {
+      margin: 10px 0 6px;
+      font-size: clamp(24px, 4vw, 32px);
+      color: #c0392b;
+    }
+    .start-card p {
+      margin: 0 0 18px;
+      font-size: clamp(15px, 2.2vw, 19px);
+      font-weight: 700;
+      color: #566573;
+      line-height: 1.5;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-6px); }
+      75% { transform: translateX(6px); }
+    }
+  </style>
+</head>
+<body>
+  <div id="startOverlay" class="start-overlay">
+    <div class="start-card">
+      <div style="font-size: 64px; line-height: 1;">🎪🤡🦁</div>
+      <h1>Maths Day 15<br>奇幻馬戲團</h1>
+      <p>歡迎嚟到奇幻馬戲團！今日有 10 關數學小挑戰，可以自己用手點住啲星星同波波慢慢數㗎！</p>
+      <button class="btn-primary" style="width:100%; font-size:22px; padding:15px;" onclick="startQuiz()">
+        🚀 開始馬戲團大冒險！
+      </button>
+    </div>
+  </div>
+
+  <div class="app-shell">
+    <header class="top-bar">
+      <div class="top-row">
+        <a href="index.html" class="btn-back" onclick="stopAllAudioAndTimers()">⬅️ 返回主頁</a>
+        <div class="quiz-title">🎪 Maths Day 15 · 奇幻馬戲團</div>
+        <div class="progress-pill" id="progressPill">第 1 / 10 題</div>
+      </div>
+      <nav class="step-dots" id="stepDots" aria-label="題目進度"></nav>
+    </header>
+
+    <section class="teacher-bar">
+      <div class="teacher-left">
+        <div class="anna-avatar">👩‍🏫</div>
+        <div class="teacher-msg" id="teacherMsg">準備好就跟 Anna 老師一齊入馬戲團啦！</div>
+      </div>
+      <button class="btn-audio" id="replayBtn" onclick="replayQuestion()">🔊 再聽多次</button>
+    </section>
+
+    <main class="stage-card" id="stageCard"></main>
+  </div>
+
+  <script>
+    // ====== 1. iPad Safari 防回收廣東話語音引擎（Anti-GC） ======
+    window.utterancePool = [];
+    let hkVoice = null;
+    let activeTimers = [];
+    let currentQuestionSpeech = "";
+    let audioCtx = null;
+
+    function loadHKVoice() {
+      if (!window.speechSynthesis) return;
+      const voices = window.speechSynthesis.getVoices();
+      hkVoice =
+        voices.find(v => /zh[-_]HK/i.test(v.lang) && /sin[-_ ]?ji|tracy|hanhan|female/i.test(v.name)) ||
+        voices.find(v => /zh[-_]HK/i.test(v.lang)) ||
+        voices.find(v => /yue/i.test(v.lang)) ||
+        null;
+    }
+
+    if (window.speechSynthesis) {
+      loadHKVoice();
+      window.speechSynthesis.onvoiceschanged = loadHKVoice;
+    }
+
+    function clearTimers() {
+      activeTimers.forEach(id => clearTimeout(id));
+      activeTimers = [];
+    }
+
+    function scheduleTimer(fn, ms) {
+      const id = setTimeout(fn, ms);
+      activeTimers.push(id);
+      return id;
+    }
+
+    function stopAllAudioAndTimers() {
+      clearTimers();
+      if (window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+      }
+    }
+
+    function speakCantonese(text, rate = 0.72) {
+      if (!window.speechSynthesis || !text) return;
+      window.speechSynthesis.cancel();
+      scheduleTimer(() => {
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = "zh-HK";
+        u.rate = rate;
+        u.pitch = 1.05;
+        if (hkVoice) u.voice = hkVoice;
+        window.utterancePool.push(u);
+        u.onend = () => {
+          const idx = window.utterancePool.indexOf(u);
+          if (idx > -1) window.utterancePool.splice(idx, 1);
+        };
+        window.speechSynthesis.speak(u);
+      }, 40);
+    }
+
+    function replayQuestion() {
+      if (currentQuestionSpeech) {
+        speakCantonese(currentQuestionSpeech, 0.72);
+      }
+    }
+
+    // 靜音點數輕快音效（純叮咚聲，絕不報數）
+    function playSoftTapTone() {
+      try {
+        const Ctx = window.AudioContext || window.webkitAudioContext;
+        if (!Ctx) return;
+        if (!audioCtx) audioCtx = new Ctx();
+        if (audioCtx.state === "suspended") audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(660, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.08);
+        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.1);
+      } catch (e) {}
+    }
+
+    function toggleCountItem(el) {
+      if (el.classList.contains("taken-away")) return;
+      el.classList.toggle("counted");
+      playSoftTapTone();
+    }
+
+    // ====== 2. SVG 輔助繪圖（整點鐘面 ＋ 平面圖形） ======
+    function buildClockSVG(hour) {
+      const hourAngle = (hour % 12) * 30;
+      let nums = "";
+      for (let h = 1; h <= 12; h++) {
+        const rad = ((h * 30 - 90) * Math.PI) / 180;
+        const x = 100 + Math.cos(rad) * 70;
+        const y = 100 + Math.sin(rad) * 70 + 7;
+        nums += `<text x="${x}" y="${y}" text-anchor="middle" font-size="18" font-weight="900" fill="#2c3e50">${h}</text>`;
+      }
+      return `
+        <svg viewBox="0 0 200 200" style="width: clamp(145px, 28vh, 200px); height: clamp(145px, 28vh, 200px);">
+          <circle cx="100" cy="100" r="92" fill="#fffdf7" stroke="#e67e22" stroke-width="8" />
+          <circle cx="100" cy="100" r="84" fill="none" stroke="#fdebd0" stroke-width="2" />
+          ${nums}
+          <line x1="100" y1="100" x2="100" y2="36" stroke="#2e86c1" stroke-width="6" stroke-linecap="round" />
+          <line x1="100" y1="100" x2="100" y2="54" stroke="#e74c3c" stroke-width="8" stroke-linecap="round" transform="rotate(${hourAngle} 100 100)" />
+          <circle cx="100" cy="100" r="7" fill="#c0392b" />
+        </svg>
+      `;
+    }
+
+    function buildShapeSVG(type) {
+      if (type === "circle") {
+        return `<svg viewBox="0 0 80 80" width="60" height="60"><circle cx="40" cy="40" r="30" fill="#f39c12" stroke="#b9770e" stroke-width="5"/></svg>`;
+      }
+      if (type === "triangle") {
+        return `<svg viewBox="0 0 80 80" width="60" height="60"><polygon points="40,10 72,68 8,68" fill="#5dade2" stroke="#21618c" stroke-width="5" stroke-linejoin="round"/></svg>`;
+      }
+      return `<svg viewBox="0 0 80 80" width="60" height="60"><rect x="14" y="14" width="52" height="52" rx="6" fill="#58d68d" stroke="#1e8449" stroke-width="5"/></svg>`;
+    }
+
+    // ====== 3. 方案 B 題庫（10 題六維全覆蓋＋4 題動態加權） ======
+    const quizData = [
+      {
+        id: 1,
+        dim: "NUM",
+        dimName: "數感與數序",
+        skill_id: "NUM-1",
+        level: "L1",
+        reportLabel: "數字順序(16-20相鄰數)",
+        promptText: "馬戲團小火車開動喇！16、17、中間唔見咗邊個數字呀？",
+        speech: "第一題！馬戲團小火車開動喇！十六、十七，中間唔見咗邊個數字呀？",
+        hintText: "💡 試下由 16 慢慢數落去：16、17、跟住係咩呀？",
+        hintSpeech: "唔使急，試下由十六慢慢數落去，十六、十七，下一個係邊個呀？",
+        allowSilentTip: false,
+        answer: "18",
+        options: [
+          { value: "16", label: "16" },
+          { value: "18", label: "18" },
+          { value: "20", label: "20" }
+        ],
+        renderVisual: () => `
+          <div class="train-row">
+            <div class="train-car">16</div>
+            <div class="train-car">17</div>
+            <div class="train-car missing">？</div>
+            <div class="train-car">19</div>
+            <div class="train-car">20</div>
+          </div>
+        `
+      },
+      {
+        id: 2,
+        dim: "ADD",
+        dimName: "加法運算",
+        skill_id: "ADD-1",
+        level: "L1",
+        reportLabel: "5至10分合(6的組成)",
+        promptText: "小丑要拋 6 個波波！已經有 4 個，仲差幾個空位先夠 6 個呀？",
+        speech: "第二題！小丑一共要拋六個波波！已經有四個紅波波，仲差幾個空位先夠六個呀？你可以用手點住空位慢慢數㗎！",
+        hintText: "💡 數一數虛線入面有幾多個空位就知喇！",
+        hintSpeech: "試下用手點住後面藍色虛線嘅空位，數一數有幾個空位呀！",
+        allowSilentTip: true,
+        answer: "2",
+        options: [
+          { value: "1", label: "1" },
+          { value: "2", label: "2" },
+          { value: "3", label: "3" }
+        ],
+        renderVisual: () => `
+          <div class="bond-frame">
+            <div class="bond-eq">4 ＋ ？ ＝ 6</div>
+            <div class="items-flex">
+              <button class="tap-item" onclick="toggleCountItem(this)">🔴</button>
+              <button class="tap-item" onclick="toggleCountItem(this)">🔴</button>
+              <button class="tap-item" onclick="toggleCountItem(this)">🔴</button>
+              <button class="tap-item" onclick="toggleCountItem(this)">🔴</button>
+              <button class="tap-item empty-slot" onclick="toggleCountItem(this)">？</button>
+              <button class="tap-item empty-slot" onclick="toggleCountItem(this)">？</button>
+            </div>
+          </div>
+        `
+      },
+      {
+        id: 3,
+        dim: "LOG",
+        dimName: "規律與邏輯",
+        skill_id: "LOG-1",
+        level: "L1",
+        reportLabel: "基礎圖形規律(ABAB)",
+        promptText: "馬戲團掛彩旗！帳篷、氣球、帳篷、氣球、帳篷，下一個係咩呀？",
+        speech: "第三題！睇下馬戲團嘅彩旗規律！帳篷、氣球、帳篷、氣球、帳篷，下一個應該掛邊個呀？",
+        hintText: "💡 兩個一組睇：帳篷跟氣球，下一個係氣球定帳篷呢？",
+        hintSpeech: "試下兩個兩個一齊讀，帳篷、氣球，帳篷、氣球，帳篷、跟住係咩呀？",
+        allowSilentTip: false,
+        answer: "🎈",
+        options: [
+          { value: "🎪", label: "🎪" },
+          { value: "🎈", label: "🎈" },
+          { value: "🦁", label: "🦁" }
+        ],
+        renderVisual: () => `
+          <div class="pattern-row">
+            <div class="pattern-group">
+              <div class="pattern-cell">🎪</div>
+              <div class="pattern-cell">🎈</div>
+            </div>
+            <div class="pattern-group">
+              <div class="pattern-cell">🎪</div>
+              <div class="pattern-cell">🎈</div>
+            </div>
+            <div class="pattern-group">
+              <div class="pattern-cell">🎪</div>
+              <div class="pattern-cell missing">？</div>
+            </div>
+          </div>
+        `
+      },
+      {
+        id: 4,
+        dim: "APP",
+        dimName: "圖形與生活",
+        skill_id: "APP-2",
+        level: "L1",
+        reportLabel: "整點鐘面(6點鐘)",
+        promptText: "馬戲團表演時間到！望下紅色短針指住邊個數字，而家係幾點鐘呀？",
+        speech: "第四題！馬戲團表演時間到喇！望下藍色長針指住十二，紅色短針指住邊個數字？而家係幾點鐘呀？",
+        hintText: "💡 睇實紅色短針指住嘅數字呀！",
+        hintSpeech: "睇清楚短啲嗰支紅色時針指住邊個數字呀，佢指住幾多就係幾點鐘！",
+        allowSilentTip: false,
+        answer: "6點",
+        options: [
+          { value: "3點", label: "3 點" },
+          { value: "6點", label: "6 點" },
+          { value: "9點", label: "9 點" }
+        ],
+        renderVisual: () => buildClockSVG(6)
+      },
+      {
+        id: 5,
+        dim: "SPA",
+        dimName: "空間與方位",
+        skill_id: "SPA-1",
+        level: "L1",
+        reportLabel: "上下前後左右方位(左邊)",
+        promptText: "小丑企喺中間表演！邊隻動物企喺小丑嘅「左邊」呀？",
+        speech: "第五題！小丑企喺中間表演！搵一搵，邊隻動物企喺小丑嘅左邊呀？",
+        hintText: "💡 伸出你隻左手望下，左邊企住邊隻動物呀？",
+        hintSpeech: "試下舉起你隻左手望一望，小丑嘅左邊企住邊隻動物呀？",
+        allowSilentTip: false,
+        answer: "🦁",
+        options: [
+          { value: "🦁", label: "🦁 獅子" },
+          { value: "🤡", label: "🤡 小丑" },
+          { value: "🐘", label: "🐘 大象" }
+        ],
+        renderVisual: () => `
+          <div class="spatial-stage">
+            <div class="spatial-box">
+              <div class="spatial-emoji">🦁</div>
+              <div class="spatial-label">獅子</div>
+            </div>
+            <div class="spatial-box center-ref">
+              <div class="spatial-emoji">🤡</div>
+              <div class="spatial-label">小丑（中間）</div>
+            </div>
+            <div class="spatial-box">
+              <div class="spatial-emoji">🐘</div>
+              <div class="spatial-label">大象</div>
+            </div>
+          </div>
+        `
+      },
+      {
+        id: 6,
+        dim: "ADD",
+        dimName: "加法運算",
+        skill_id: "ADD-1",
+        level: "L1",
+        reportLabel: "5至10分合(8的組成)",
+        promptText: "帳篷上面要掛 8 粒星星！已經有 5 粒，仲差幾粒先夠 8 粒呀？",
+        speech: "第六題！馬戲團帳篷一共要掛八粒星星！已經掛咗五粒，仲差幾粒先夠八粒呀？用手點住後面嘅空位數下啦！",
+        hintText: "💡 輕輕點住後面藍色空位，數一數仲爭幾粒星星！",
+        hintSpeech: "用手點住後面藍色虛線嘅空位，一齊慢慢數下仲爭幾粒星星呀！",
+        allowSilentTip: true,
+        answer: "3",
+        options: [
+          { value: "2", label: "2" },
+          { value: "3", label: "3" },
+          { value: "4", label: "4" }
+        ],
+        renderVisual: () => `
+          <div class="bond-frame">
+            <div class="bond-eq">5 ＋ ？ ＝ 8</div>
+            <div class="items-flex">
+              <button class="tap-item" onclick="toggleCountItem(this)">⭐</button>
+              <button class="tap-item" onclick="toggleCountItem(this)">⭐</button>
+              <button class="tap-item" onclick="toggleCountItem(this)">⭐</button>
+              <button class="tap-item" onclick="toggleCountItem(this)">⭐</button>
+              <button class="tap-item" onclick="toggleCountItem(this)">⭐</button>
+              <button class="tap-item empty-slot" onclick="toggleCountItem(this)">？</button>
+              <button class="tap-item empty-slot" onclick="toggleCountItem(this)">？</button>
+              <button class="tap-item empty-slot" onclick="toggleCountItem(this)">？</button>
+            </div>
+          </div>
+        `
+      },
+      {
+        id: 7,
+        dim: "SUB",
+        dimName: "減法運算",
+        skill_id: "SUB-1",
+        level: "L1",
+        reportLabel: "10以內基礎減法(8-3)",
+        promptText: "原本有 8 個氣球，飛走咗 3 個，仲剩返幾多個氣球呀？",
+        speech: "第七題！原本有八個氣球，飛走咗三個變灰咗，仲剩返幾多個彩色氣球呀？你可以用手點住彩色氣球數呀！",
+        hintText: "💡 點住仲喺度嘅彩色氣球，慢慢數下剩返幾多個！",
+        hintSpeech: "唔使急，用手點住仲喺度嘅彩色氣球，由頭數一次剩返幾多個呀！",
+        allowSilentTip: true,
+        answer: "5",
+        options: [
+          { value: "4", label: "4" },
+          { value: "5", label: "5" },
+          { value: "6", label: "6" }
+        ],
+        renderVisual: () => `
+          <div class="bond-frame">
+            <div class="bond-eq">8 － 3 ＝ ？</div>
+            <div class="items-flex">
+              <button class="tap-item" onclick="toggleCountItem(this)">🎈</button>
+              <button class="tap-item" onclick="toggleCountItem(this)">🎈</button>
+              <button class="tap-item" onclick="toggleCountItem(this)">🎈</button>
+              <button class="tap-item" onclick="toggleCountItem(this)">🎈</button>
+              <button class="tap-item" onclick="toggleCountItem(this)">🎈</button>
+              <div class="tap-item taken-away">🎈</div>
+              <div class="tap-item taken-away">🎈</div>
+              <div class="tap-item taken-away">🎈</div>
+            </div>
+          </div>
+        `
+      },
+      {
+        id: 8,
+        dim: "LOG",
+        dimName: "規律與邏輯",
+        skill_id: "LOG-3",
+        level: "L2",
+        reportLabel: "進階序列(ABC規律)",
+        promptText: "動物巡遊排隊！獅子、大象、馬騮，下一隻輪到邊隻動物出場呀？",
+        speech: "第八題！動物巡遊三個一組排隊！獅子、大象、馬騮；獅子、大象、馬騮；獅子、大象，最後一隻輪到邊隻動物呀？",
+        hintText: "💡 睇返前面兩個藍色框，大象後面排住邊隻動物呀？",
+        hintSpeech: "望返前面兩個藍色框入面，獅子、大象後面係邊隻動物呀？",
+        allowSilentTip: false,
+        answer: "🐒",
+        options: [
+          { value: "🦁", label: "🦁" },
+          { value: "🐘", label: "🐘" },
+          { value: "🐒", label: "🐒" }
+        ],
+        renderVisual: () => `
+          <div class="pattern-row">
+            <div class="pattern-group">
+              <div class="pattern-cell">🦁</div>
+              <div class="pattern-cell">🐘</div>
+              <div class="pattern-cell">🐒</div>
+            </div>
+            <div class="pattern-group">
+              <div class="pattern-cell">🦁</div>
+              <div class="pattern-cell">🐘</div>
+              <div class="pattern-cell">🐒</div>
+            </div>
+            <div class="pattern-group">
+              <div class="pattern-cell">🦁</div>
+              <div class="pattern-cell">🐘</div>
+              <div class="pattern-cell missing">？</div>
+            </div>
+          </div>
+        `
+      },
+      {
+        id: 9,
+        dim: "APP",
+        dimName: "圖形與生活",
+        skill_id: "APP-1",
+        level: "L1",
+        reportLabel: "平面圖形辨識(圓形)",
+        promptText: "小丑要搵圓碌碌嘅魔術呼拉圈！邊一個係「圓形」呀？",
+        speech: "第九題！小丑要搵圓碌碌嘅魔術道具！睇下下面三個圖形，邊一個係圓形呀？",
+        hintText: "💡 圓形係滑嘟嘟、無尖角嘅圖形呀！",
+        hintSpeech: "再望真啲呀，圓形係圓碌碌、一隻尖角都無嘅！",
+        allowSilentTip: false,
+        answer: "圓形",
+        options: [
+          { value: "三角形", html: buildShapeSVG("triangle") + `<span style="font-size:18px;">三角形</span>` },
+          { value: "圓形", html: buildShapeSVG("circle") + `<span style="font-size:18px;">圓形</span>` },
+          { value: "正方形", html: buildShapeSVG("square") + `<span style="font-size:18px;">正方形</span>` }
+        ],
+        renderVisual: () => `
+          <div style="font-size: clamp(54px, 9vh, 78px); line-height: 1;">🤡⭕</div>
+          <div style="font-size: clamp(18px, 2.6vw, 24px); font-weight: 900; color: #7f8c8d;">幫小丑揀出「圓形」道具！</div>
+        `
+      },
+      {
+        id: 10,
+        dim: "SUB",
+        dimName: "減法運算",
+        skill_id: "SUB-3",
+        level: "L2",
+        reportLabel: "比較相差(多幾個)",
+        promptText: "最後一題！上排爆谷比下排雪糕「多幾個」呀？",
+        speech: "第十題，最後一題喇！睇下上面排爆谷同下面排雪糕，爆谷比雪糕多幾個呀？可以點住多出嚟嘅爆谷數下！",
+        hintText: "💡 對齊一組組睇，睇下右邊有幾多個爆谷無雪糕配對！",
+        hintSpeech: "試下上對下排好隊望，右邊多出嚟、下面無雪糕嘅爆谷有幾個呀？",
+        allowSilentTip: true,
+        answer: "2",
+        options: [
+          { value: "1", label: "1 個" },
+          { value: "2", label: "2 個" },
+          { value: "3", label: "3 個" }
+        ],
+        renderVisual: () => `
+          <div class="compare-grid">
+            <div class="compare-row">
+              <button class="tap-item" onclick="toggleCountItem(this)">🍿</button>
+              <button class="tap-item" onclick="toggleCountItem(this)">🍿</button>
+              <button class="tap-item" onclick="toggleCountItem(this)">🍿</button>
+              <button class="tap-item" onclick="toggleCountItem(this)">🍿</button>
+              <button class="tap-item" onclick="toggleCountItem(this)">🍿</button>
+              <button class="tap-item" onclick="toggleCountItem(this)">🍿</button>
+            </div>
+            <div class="compare-row">
+              <button class="tap-item" onclick="toggleCountItem(this)">🍦</button>
+              <button class="tap-item" onclick="toggleCountItem(this)">🍦</button>
+              <button class="tap-item" onclick="toggleCountItem(this)">🍦</button>
+              <button class="tap-item" onclick="toggleCountItem(this)">🍦</button>
+              <div class="compare-placeholder"></div>
+              <div class="compare-placeholder"></div>
+            </div>
+          </div>
+        `
+      }
+    ];
+
+    // ====== 4. 狀態管理、隨按跳題與計時器 ======
+    let currentIdx = 0;
+    let questionStartMs = 0;
+    let locked = false;
+    let reportSent = false;
+    let finalReportText = "";
+
+    const results = quizData.map(() => ({
+      answered: false,
+      firstTryCorrect: true,
+      hadWrong: false,
+      sec: 0
+    }));
+
+    function buildStepDots() {
+      const nav = document.getElementById("stepDots");
+      nav.innerHTML = quizData.map((q, idx) => `
+        <button class="step-dot" id="dot-${idx}" onclick="jumpToQuestion(${idx})" title="跳去第 ${q.id} 題">${q.id}</button>
+      `).join("");
+    }
+
+    function updateStepDots() {
+      quizData.forEach((_, idx) => {
+        const dot = document.getElementById("dot-" + idx);
+        if (!dot) return;
+        dot.classList.remove("active", "done-ok", "done-hint");
+        if (idx === currentIdx) {
+          dot.classList.add("active");
+        } else if (results[idx].answered) {
+          dot.classList.add(results[idx].firstTryCorrect ? "done-ok" : "done-hint");
+        }
+      });
+    }
+
+    function startQuiz() {
+      document.getElementById("startOverlay").classList.add("hidden");
+      loadHKVoice();
+      buildStepDots();
+      jumpToQuestion(0);
+    }
+
+    function jumpToQuestion(idx) {
+      stopAllAudioAndTimers();
+      currentIdx = idx;
+      locked = false;
+      questionStartMs = Date.now();
+      updateStepDots();
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      const q = quizData[currentIdx];
+      document.getElementById("progressPill").textContent = `第 ${q.id} / ${quizData.length} 題`;
+      document.getElementById("teacherMsg").textContent = q.promptText;
+      const replayBtn = document.getElementById("replayBtn");
+      replayBtn.classList.remove("hidden");
+
+      currentQuestionSpeech = q.speech;
+
+      const stage = document.getElementById("stageCard");
+      stage.innerHTML = `
+        <div class="stage-top-meta">
+          <div class="dim-badge">🎪 ${q.dimName}</div>
+          <div class="silent-tip">${q.allowSilentTip ? "👆 可以點住圖案自己數數" : "👀 睇清楚圖案揀答案"}</div>
+        </div>
+        <div class="visual-stage">${q.renderVisual()}</div>
+        <div class="gentle-hint-box" id="hintBox"></div>
+        <div class="options-row">
+          ${q.options.map((opt, oIdx) => `
+            <button class="opt-btn" id="opt-${oIdx}" onclick="selectOption(${oIdx})">
+              ${opt.html ? opt.html : opt.label}
+            </button>
+          `).join("")}
+        </div>
+      `;
+
+      speakCantonese(q.speech, 0.72);
+    }
+
+    function selectOption(oIdx) {
+      if (locked) return;
+      const q = quizData[currentIdx];
+      const chosen = q.options[oIdx];
+      const btn = document.getElementById("opt-" + oIdx);
+      const hintBox = document.getElementById("hintBox");
+
+      if (chosen.value === q.answer) {
+        // 同步更新狀態防死鎖
+        locked = true;
+        btn.classList.add("correct");
+        const elapsed = Math.max(1, Math.round((Date.now() - questionStartMs) / 1000));
+        results[currentIdx].answered = true;
+        results[currentIdx].firstTryCorrect = !results[currentIdx].hadWrong;
+        results[currentIdx].sec = elapsed;
+        updateStepDots();
+
+        hintBox.className = "gentle-hint-box ok";
+        hintBox.textContent = "🎉 好叻呀！答啱喇！";
+        speakCantonese("好叻呀！答啱喇！", 0.78);
+
+        scheduleTimer(() => {
+          const nextUnanswered = results.findIndex((r, i) => i > currentIdx && !r.answered);
+          if (currentIdx < quizData.length - 1) {
+            jumpToQuestion(currentIdx + 1);
+          } else if (nextUnanswered !== -1) {
+            jumpToQuestion(nextUnanswered);
+          } else {
+            const anyLeft = results.findIndex(r => !r.answered);
+            if (anyLeft !== -1) {
+              jumpToQuestion(anyLeft);
+            } else {
+              renderSummary();
+            }
+          }
+        }, 1250);
+      } else {
+        results[currentIdx].hadWrong = true;
+        btn.classList.add("wrong-shake");
+        hintBox.className = "gentle-hint-box";
+        hintBox.textContent = q.hintText;
+        speakCantonese(q.hintSpeech, 0.74);
+        scheduleTimer(() => btn.classList.remove("wrong-shake"), 420);
+      }
+    }
+
+    // ====== 5. 結算、微技能統計與雙保險自動上報 ======
+    function buildSkillStats() {
+      const grouped = {};
+      quizData.forEach((q, idx) => {
+        const res = results[idx];
+        const sec = res.sec || 1;
+        const ok = res.answered && res.firstTryCorrect ? 1 : 0;
+        if (!grouped[q.skill_id]) {
+          grouped[q.skill_id] = {
+            dim: q.dim,
+            skill_id: q.skill_id,
+            level: q.level,
+            total: 0,
+            correct: 0,
+            secSum: 0
+          };
+        }
+        grouped[q.skill_id].total += 1;
+        grouped[q.skill_id].correct += ok;
+        grouped[q.skill_id].secSum += sec;
+      });
+
+      return Object.values(grouped).map(item => ({
+        dim: item.dim,
+        skill_id: item.skill_id,
+        level: item.level,
+        total: item.total,
+        correct: item.correct,
+        avg_sec: Number((item.secSum / Math.max(1, item.total)).toFixed(1))
+      }));
+    }
+
+    function renderSummary() {
+      stopAllAudioAndTimers();
+      currentIdx = -1;
+      updateStepDots();
+
+      const parts = quizData.map((q, idx) => {
+        const r = results[idx];
+        const statusTxt = r.firstTryCorrect ? "1次答對" : "需提示";
+        return `Q${q.id} ${q.reportLabel}: ${r.sec || 1}s(${statusTxt})`;
+      });
+      finalReportText = `【數學測驗回報】Day 15（奇幻馬戲團） | ${parts.join(" | ")}`;
+
+      const skillStats = buildSkillStats();
+      const correctCount = results.filter(r => r.firstTryCorrect).length;
+      const totalSec = results.reduce((acc, r) => acc + (r.sec || 1), 0);
+      const avgSec = (totalSec / quizData.length).toFixed(1);
+
+      if (!reportSent && window.LinglingReport && typeof window.LinglingReport.save === "function") {
+        reportSent = true;
+        window.LinglingReport.save("數學探索島", "Maths Day 15（奇幻馬戲團）", finalReportText, {
+          term: "K2-T1",
+          skill_stats: skillStats
+        });
+      }
+
+      document.getElementById("progressPill").textContent = "🏆 全部完成";
+      document.getElementById("teacherMsg").textContent = `🎉 恭喜玲玲完成奇幻馬戲團 10 關挑戰！一次答對 ${correctCount}/10 題！`;
+      document.getElementById("replayBtn").classList.add("hidden");
+
+      const stage = document.getElementById("stageCard");
+      stage.innerHTML = `
+        <div class="summary-wrap">
+          <div class="summary-head">
+            <div style="font-size: 40px; line-height: 1;">🏆🎪✨</div>
+            <div style="font-weight: 900; font-size: clamp(15px, 2.2vw, 19px); color: #b9770e;">
+              一次答對：${correctCount} / 10 題 ｜ 平均用時：${avgSec} 秒
+            </div>
+            <div class="sync-badge">☁️ 戰報已自動同步至家長戰報箱與成長儀表板</div>
+          </div>
+
+          <div class="summary-table-box">
+            <table class="report-table">
+              <thead>
+                <tr>
+                  <th>題號</th>
+                  <th>能力與題型</th>
+                  <th>表現</th>
+                  <th>耗時</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${quizData.map((q, idx) => {
+                  const r = results[idx];
+                  return `
+                    <tr>
+                      <td>Q${q.id}</td>
+                      <td>${q.reportLabel}</td>
+                      <td>${r.firstTryCorrect ? "✅ 1次答對" : "💡 需提示"}</td>
+                      <td>${r.sec || 1}s</td>
+                    </tr>
+                  `;
+                }).join("")}
+              </tbody>
+            </table>
+          </div>
+
+          <div class="summary-actions">
+            <button class="btn-secondary" id="copyBtn" onclick="copyReport()">📋 一鍵複製進度暗號俾 Anna 老師</button>
+            <a href="index.html" class="btn-primary" onclick="stopAllAudioAndTimers()">🏠 返回學習樂園</a>
+          </div>
+        </div>
+      `;
+
+      speakCantonese(`嘩！恭喜玲玲完成奇幻馬戲團十關數學大挑戰！你好叻呀，俾個大大嘅掌聲自己！`, 0.76);
+    }
+
+    function copyReport() {
+      const btn = document.getElementById("copyBtn");
+      const showCopied = () => {
+        if (btn) {
+          btn.textContent = "✅ 已複製暗號！";
+          scheduleTimer(() => { btn.textContent = "📋 一鍵複製進度暗號俾 Anna 老師"; }, 2200);
+        }
+      };
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(finalReportText).then(showCopied).catch(fallback);
+      } else {
+        fallback();
+      }
+
+      function fallback() {
+        const ta = document.createElement("textarea");
+        ta.value = finalReportText;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand("copy"); } catch (e) {}
+        document.body.removeChild(ta);
+        showCopied();
+      }
+    }
+  </script>
+</body>
+</html>
