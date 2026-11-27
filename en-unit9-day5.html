@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>英文 AI 課堂｜Unit 9 Day 5 美食小餐廳與全單元總複習</title>
+  <link rel="stylesheet" href="theme.css?v=1">
+  <script src="voice-engine.js?v=1"></script>
+  <script src="report-hub.js?v=3"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    body {
+      display: block !important;
+      margin: 0;
+      font-family: "PingFang HK", "Nunito", "Noto Sans TC", sans-serif;
+      background: linear-gradient(160deg, #e0f2fe 0%, #f0f9ff 50%, #fef9c3 100%);
+      color: #0f172a;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* iPad Safari 首次點擊解鎖啟動頁 */
+    .unlock-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      background: linear-gradient(160deg, #0284c7 0%, #38bdf8 55%, #7dd3fc 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      text-align: center;
+    }
+    .unlock-card {
+      background: rgba(255,255,255,0.97);
+      color: #0c4a6e;
+      border-radius: 30px;
+      padding: 30px 24px;
+      max-width: 440px;
+      width: 100%;
+      border: 4px solid #bae6fd;
+      border-bottom: 10px solid #0369a1;
+      box-shadow: 0 18px 40px rgba(3, 105, 161, 0.35);
+    }
+    .unlock-emoji { font-size: 70px; margin-bottom: 8px; }
+    .unlock-title { font-size: 26px; font-weight: 900; margin: 0 0 8px; }
+    .unlock-sub { font-size: 17px; font-weight: 700; color: #334155; margin: 0 0 22px; line-height: 1.5; }
+    .btn-start {
+      width: 100%;
+      padding: 16px 24px;
+      border-radius: 22px;
+      background: linear-gradient(180deg, #4ade80, #16a34a);
+      color: #fff;
+      border: 3px solid #15803d;
+      border-bottom: 7px solid #166534;
+      font-size: 24px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+    .btn-start:active { transform: translateY(3px); border-bottom-width: 3px; }
+
+    /* 深藍頂部導航列 */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 10px 14px;
+      background: linear-gradient(90deg, #0c4a6e, #0369a1);
+      color: #fff;
+      border-bottom: 4px solid #38bdf8;
+      position: sticky;
+      top: 0;
+      z-index: 30;
+    }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 8px 12px;
+      background: #e0f2fe;
+      color: #0c4a6e;
+      border: 2px solid #7dd3fc;
+      border-bottom: 4px solid #0284c7;
+      border-radius: 14px;
+      font-weight: 900;
+      font-size: 15px;
+      text-decoration: none;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .back-btn:active { transform: translateY(2px); }
+    .top-title {
+      font-size: 17px;
+      font-weight: 900;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-width: 0;
+    }
+    .step-dots {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .step-dot {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 2px solid #7dd3fc;
+      border-bottom: 4px solid #0284c7;
+      background: rgba(255,255,255,0.2);
+      color: #fff;
+      font-weight: 900;
+      font-size: 14px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+    }
+    .step-dot.active {
+      background: #facc15;
+      color: #713f12;
+      border-color: #fde047;
+      border-bottom-color: #ca8a04;
+      transform: scale(1.08);
+    }
+    .step-dot.done {
+      background: #22c55e;
+      color: #fff;
+      border-color: #4ade80;
+      border-bottom-color: #15803d;
+    }
+
+    /* 主容器 */
+    .stage-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 12px 16px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* Anna 老師黃色橫幅 */
+    .anna-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: #fef9c3;
+      border: 3px solid #fde047;
+      border-bottom: 6px solid #eab308;
+      border-radius: 22px;
+      padding: 12px 16px;
+      cursor: pointer;
+    }
+    .anna-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+    .anna-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      flex-shrink: 0;
+      border: 3px solid #facc15;
+    }
+    .anna-text {
+      font-size: 18px;
+      font-weight: 900;
+      color: #713f12;
+      line-height: 1.4;
+    }
+    .btn-replay {
+      padding: 10px 14px;
+      border-radius: 16px;
+      background: #fff;
+      color: #0369a1;
+      border: 2px solid #38bdf8;
+      border-bottom: 4px solid #0284c7;
+      font-size: 15px;
+      font-weight: 900;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    /* 主卡片舞台 */
+    .panel {
+      background: #fff;
+      border: 3px solid #bae6fd;
+      border-bottom: 7px solid #38bdf8;
+      border-radius: 26px;
+      padding: 18px;
+      box-shadow: 0 10px 24px rgba(2, 132, 199, 0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    /* 第一幕：美食菜單字形口訣卡 */
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+    .menu-card {
+      background: linear-gradient(180deg, #f0f9ff 0%, #e0f2fe 100%);
+      border: 3px solid #7dd3fc;
+      border-bottom: 7px solid #0284c7;
+      border-radius: 20px;
+      padding: 14px 8px;
+      text-align: center;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      transition: transform 0.12s;
+    }
+    .menu-card:active { transform: translateY(3px); border-bottom-width: 3px; }
+    .menu-card.heard {
+      background: linear-gradient(180deg, #ecfdf5 0%, #d1fae5 100%);
+      border-color: #34d399;
+      border-bottom-color: #059669;
+    }
+    .menu-emoji { font-size: 46px; line-height: 1.05; }
+    .menu-word { font-size: 24px; font-weight: 900; color: #0c4a6e; }
+    .menu-hl { color: #dc2626; }
+    .tip-banner {
+      background: #fffbeb;
+      border: 3px dashed #f59e0b;
+      border-radius: 18px;
+      padding: 12px 16px;
+      font-size: 18px;
+      font-weight: 900;
+      color: #92400e;
+      text-align: center;
+      min-height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* 第二幕：Phonics /p/ 餐盤挑戰 */
+    .pho-hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .big-ear-btn {
+      padding: 14px 28px;
+      border-radius: 22px;
+      background: linear-gradient(180deg, #60a5fa, #2563eb);
+      color: #fff;
+      border: 3px solid #1d4ed8;
+      border-bottom: 7px solid #1e3a8a;
+      font-size: 21px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+    .big-ear-btn:active { transform: translateY(3px); border-bottom-width: 3px; }
+    .reveal-text {
+      min-height: 34px;
+      font-size: 24px;
+      font-weight: 900;
+      color: #15803d;
+      text-align: center;
+    }
+    .opt-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      max-width: 600px;
+      width: 100%;
+      margin: 0 auto;
+    }
+    .opt-card {
+      padding: 20px 12px;
+      border-radius: 22px;
+      background: #f8fafc;
+      border: 3px solid #cbd5e1;
+      border-bottom: 7px solid #94a3b8;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .opt-card:active { transform: translateY(3px); border-bottom-width: 3px; }
+    .opt-card.correct {
+      background: #dcfce7;
+      border-color: #22c55e;
+      border-bottom-color: #15803d;
+      color: #166534;
+    }
+    .opt-card.wrong {
+      background: #fef3c7;
+      border-color: #f59e0b;
+      animation: shake 0.35s;
+    }
+    .opt-emoji { font-size: 56px; line-height: 1.1; }
+    .opt-word { font-size: 36px; font-weight: 900; color: #0c4a6e; }
+
+    /* 第三幕：小老闆開口點餐（兩粒純事實掣） */
+    .spk-stage {
+      text-align: center;
+      background: linear-gradient(180deg, #f0fdf4 0%, #dcfce7 100%);
+      border: 3px solid #86efac;
+      border-radius: 24px;
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+    .spk-progress { font-size: 16px; font-weight: 900; color: #166534; }
+    .spk-emoji { font-size: 70px; }
+    .spk-sentence { font-size: 30px; font-weight: 900; color: #0c4a6e; }
+    .btn-listen-demo {
+      padding: 12px 24px;
+      border-radius: 18px;
+      background: #38bdf8;
+      color: #fff;
+      border: 2px solid #0284c7;
+      border-bottom: 5px solid #0369a1;
+      font-size: 19px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+    .fact-btn-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      width: 100%;
+      max-width: 580px;
+      margin: 0 auto;
+    }
+    .btn-fact-self {
+      padding: 18px 12px;
+      border-radius: 22px;
+      background: linear-gradient(180deg, #fde047, #f59e0b);
+      color: #78350f;
+      border: 3px solid #d97706;
+      border-bottom: 7px solid #b45309;
+      font-size: 22px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+    .btn-fact-mom {
+      padding: 18px 12px;
+      border-radius: 22px;
+      background: linear-gradient(180deg, #86efac, #22c55e);
+      color: #14532d;
+      border: 3px solid #16a34a;
+      border-bottom: 7px solid #15803d;
+      font-size: 22px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+    .btn-fact-self:active, .btn-fact-mom:active { transform: translateY(3px); border-bottom-width: 3px; }
+
+    /* 通用大按鈕 */
+    .btn-next {
+      padding: 14px 30px;
+      border-radius: 20px;
+      background: linear-gradient(180deg, #4ade80, #16a34a);
+      color: #fff;
+      border: 3px solid #15803d;
+      border-bottom: 6px solid #166534;
+      font-size: 20px;
+      font-weight: 900;
+      cursor: pointer;
+      align-self: center;
+      text-decoration: none;
+    }
+    .btn-next:active { transform: translateY(3px); border-bottom-width: 3px; }
+
+    /* 煙花慶祝浮層 */
+    .fx-toast {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.8);
+      background: rgba(255, 255, 255, 0.96);
+      border: 4px solid #facc15;
+      border-radius: 26px;
+      padding: 18px 28px;
+      font-size: 28px;
+      font-weight: 900;
+      color: #b45309;
+      box-shadow: 0 14px 34px rgba(0,0,0,0.18);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.2s;
+      z-index: 200;
+    }
+    .fx-toast.show {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    /* 結算區 */
+    .summary-box {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+    .sync-badge {
+      background: #dcfce7;
+      color: #166534;
+      border: 2px solid #86efac;
+      border-radius: 14px;
+      padding: 8px 16px;
+      font-size: 16px;
+      font-weight: 800;
+    }
+    .report-preview {
+      width: 100%;
+      background: #f8fafc;
+      border: 2px solid #cbd5e1;
+      border-radius: 16px;
+      padding: 12px;
+      font-size: 14px;
+      text-align: left;
+      color: #334155;
+      line-height: 1.5;
+      word-break: break-all;
+    }
+    .action-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .btn-copy {
+      padding: 12px 22px;
+      border-radius: 16px;
+      background: #fef08a;
+      color: #713f12;
+      border: 2px solid #eab308;
+      border-bottom: 5px solid #a16207;
+      font-size: 17px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-8px); }
+      75% { transform: translateX(8px); }
+    }
+
+    @media (max-width: 640px) {
+      .menu-grid { grid-template-columns: repeat(2, 1fr); }
+      .fact-btn-row { grid-template-columns: 1fr; }
+      .spk-sentence { font-size: 24px; }
+      .opt-word { font-size: 28px; }
+      .anna-text { font-size: 15px; }
+      .top-title { font-size: 15px; }
+      .step-dot { width: 30px; height: 30px; font-size: 13px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- iPad Safari 首次點擊啟動解鎖頁 -->
+  <div class="unlock-overlay" id="unlockOverlay">
+    <div class="unlock-card">
+      <div class="unlock-emoji">🍽️👨‍🍳</div>
+      <h1 class="unlock-title">Unit 9 · Day 5</h1>
+      <p class="unlock-sub">Tickles 美食小餐廳總複習！<br>今日做小小餐廳老闆，重溫所有美食單字、Phonics p 同演說句型！</p>
+      <button type="button" class="btn-start" onclick="startLesson()">🔊 開始營業！</button>
+    </div>
+  </div>
+
+  <div class="fx-toast" id="fxToast">🎆🌟 Yummy!</div>
+
+  <header class="top-bar">
+    <a href="en-unit9.html?v=1" class="back-btn" onclick="stopAll()">🏠 返回</a>
+    <div class="top-title">🍽️ Unit 9 Day 5 · 美食餐廳總複習</div>
+    <div class="step-dots" id="stepDots">
+      <button type="button" class="step-dot active" onclick="jumpStage(0)" aria-label="第1幕">1</button>
+      <button type="button" class="step-dot" onclick="jumpStage(1)" aria-label="第2幕">2</button>
+      <button type="button" class="step-dot" onclick="jumpStage(2)" aria-label="第3幕">3</button>
+      <button type="button" class="step-dot" onclick="jumpStage(3)" aria-label="第4幕">4</button>
+    </div>
+  </header>
+
+  <main class="stage-wrap">
+    <section class="anna-bar" onclick="replayGuide()">
+      <div class="anna-left">
+        <div class="anna-avatar">👩‍🏫</div>
+        <div class="anna-text" id="annaText">歡迎嚟到 Tickles 美食小餐廳！</div>
+      </div>
+      <button type="button" class="btn-replay" id="replayBtn" onclick="event.stopPropagation(); replayGuide();">🔊 重聽</button>
+    </section>
+
+    <section class="panel" id="mainPanel"></section>
+  </main>
+
+  <script>
+    // ========= 1. 全單元食物總庫（100% 重用現有 ElevenLabs MP3） =========
+    const FOODS = [
+      { id: 'bread',   word: 'bread',   html: '<span class="menu-hl">b</span>rea<span class="menu-hl">d</span>', emoji: '🍞', mp3: 'en-bread.mp3',   isP: false, tip: '🍞 bread：前面大肚腩 b、後面大肚腩 d，好似兩塊厚多士夾住餡料！' },
+      { id: 'eggs',    word: 'eggs',    html: 'e<span class="menu-hl">gg</span>s',                              emoji: '🥚', mp3: 'en-eggs.mp3',    isP: false, tip: '🥚 eggs：後面有兩個圓碌碌嘅 g，好似兩隻圓圓嘅雞蛋！' },
+      { id: 'rice',    word: 'rice',    html: '<span class="menu-hl">r</span>ice',                              emoji: '🍚', mp3: 'en-rice.mp3',    isP: false, tip: '🍚 rice：香噴噴白飯，簡簡單單四個字母 r-i-c-e！' },
+      { id: 'fish',    word: 'fish',    html: '<span class="menu-hl">f</span>ish',                              emoji: '🐟', mp3: 'en-fish.mp3',    isP: false, tip: '🐟 fish：前面個 f 彎彎哋，好似一支釣魚竿釣起條魚！' },
+      { id: 'meat',    word: 'meat',    html: '<span class="menu-hl">m</span>eat',                              emoji: '🥩', mp3: 'en-meat.mp3',    isP: false, tip: '🥩 meat：開頭係摸肚仔閉嘴音 m，一見到 m 就諗起食肉肉！' },
+      { id: 'pear',    word: 'pear',    html: '<span class="menu-hl">p</span>ear',                              emoji: '🍐', mp3: 'en-pear.mp3',    isP: true,  tip: '🍐 pear：p-p-pear！爆破音 p 開頭嘅香甜啤梨！' },
+      { id: 'pumpkin', word: 'pumpkin', html: '<span class="menu-hl">p</span>um<span class="menu-hl">p</span>kin', emoji: '🎃', mp3: 'en-pumpkin.mp3', isP: true,  tip: '🎃 pumpkin：p-p-pumpkin！仲藏住兩個 p 嘅圓碌碌大南瓜！' },
+      { id: 'potato',  word: 'potato',  html: '<span class="menu-hl">p</span>otato',                            emoji: '🥔', mp3: 'en-potato.mp3',  isP: true,  tip: '🥔 potato：p-p-potato！兩個圓圓 o 嘅可愛薯仔！' }
+    ];
+
+    const SPK_SENTENCES = [
+      { id: 's1', emoji: '🍞❓', text: 'Do you like bread? Yes, I do.', mp3: 'en-do-you-like-bread.mp3' },
+      { id: 's2', emoji: '🍚😊', text: 'I like rice.',                  mp3: 'en-i-like-rice.mp3' },
+      { id: 's3', emoji: '🍐🟢', text: 'I have a pear.',                mp3: 'en-i-have-a-pear.mp3' },
+      { id: 's4', emoji: '😋✨', text: 'Yummy!',                        mp3: 'en-yummy.mp3' }
+    ];
+
+    const PHO_ROUNDS = [
+      { target: 'pear',    distractors: ['bread', 'fish', 'meat'] },
+      { target: 'pumpkin', distractors: ['eggs', 'rice', 'fish'] },
+      { target: 'potato',  distractors: ['bread', 'meat', 'eggs'] }
+    ];
+
+    // 第四幕：前 3 題純圖盲聽 (EN-LIS-1)，後 3 題純英文字形認讀 (EN-VOC-2)
+    const ORDER_ROUNDS = [
+      { mode: 'pic',  target: 'bread',   pool: ['bread', 'eggs', 'rice', 'meat'] },
+      { mode: 'pic',  target: 'fish',    pool: ['fish', 'pear', 'pumpkin', 'bread'] },
+      { mode: 'pic',  target: 'potato',  pool: ['potato', 'eggs', 'meat', 'rice'] },
+      { mode: 'word', target: 'eggs',    pool: ['eggs', 'bread', 'fish', 'meat'] },
+      { mode: 'word', target: 'meat',    pool: ['meat', 'rice', 'pear', 'fish'] },
+      { mode: 'word', target: 'pear',    pool: ['pear', 'bread', 'rice', 'potato'] }
+    ];
+
+    const state = {
+      lessonStart: Date.now(),
+      stage: 0,
+      doneStages: new Set(),
+      activeTimer: null,
+      currentGuideAction: null,
+      // Stage 1
+      heardMenu: new Set(),
+      // Stage 2 (Phonics p)
+      phoIdx: 0,
+      phoStart: Date.now(),
+      phoWrong: false,
+      phoResults: [],
+      // Stage 3 (Speaking)
+      spkIdx: 0,
+      spkStart: Date.now(),
+      spkResults: [],
+      // Stage 4 (Restaurant Orders: 3 pic + 3 word)
+      ordIdx: 0,
+      ordStart: Date.now(),
+      ordWrong: false,
+      ordResults: [],
+      reported: false
+    };
+
+    const errorWords = new Set();
+
+    function stopAll() {
+      if (state.activeTimer) { clearTimeout(state.activeTimer); state.activeTimer = null; }
+      if (window.LinglingVoice) window.LinglingVoice.stop();
+    }
+
+    function showFireworks(msg = '🎆🌟 Good job!') {
+      const t = document.getElementById('fxToast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 950);
+    }
+
+    function shuffle(arr) {
+      const a = arr.slice();
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function getFood(id) {
+      return FOODS.find(f => f.id === id);
+    }
+
+    function updateDots() {
+      document.querySelectorAll('.step-dot').forEach((btn, i) => {
+        btn.classList.remove('active', 'done');
+        if (i === state.stage) btn.classList.add('active');
+        else if (state.doneStages.has(i)) btn.classList.add('done');
+      });
+    }
+
+    function replayGuide() {
+      if (typeof state.currentGuideAction === 'function') state.currentGuideAction();
+    }
+
+    function startLesson() {
+      if (window.LinglingVoice) window.LinglingVoice.unlock();
+      document.getElementById('unlockOverlay').style.display = 'none';
+      state.lessonStart = Date.now();
+      jumpStage(0);
+    }
+
+    function jumpStage(idx) {
+      stopAll();
+      state.stage = idx;
+      if (idx === 1) { state.phoIdx = 0; state.phoResults = []; }
+      if (idx === 2) { state.spkIdx = 0; state.spkResults = []; }
+      if (idx === 3) { state.ordIdx = 0; state.ordResults = []; }
+      renderStage();
+    }
+
+    function renderStage() {
+      updateDots();
+      document.getElementById('replayBtn').style.visibility = state.stage === 4 ? 'hidden' : 'visible';
+      if (state.stage === 0) renderMenuStage();
+      else if (state.stage === 1) renderPhonicsStage();
+      else if (state.stage === 2) renderSpeakingStage();
+      else if (state.stage === 3) renderOrderStage();
+      else renderSummary();
+    }
+
+    // ========= 第一幕：美食菜單字形口訣總溫習 =========
+    function renderMenuStage() {
+      document.getElementById('annaText').textContent = '第一幕：小餐廳菜單總溫習！點開下面每張美食卡，聽英文發音同重溫字形魔法口訣！';
+      state.currentGuideAction = () => {
+        window.LinglingVoice.playZh('第一幕，歡迎嚟到美食小餐廳！點一點下面嘅食物菜單，聽英文發音同重溫字形小口訣啦！');
+      };
+      state.currentGuideAction();
+
+      const panel = document.getElementById('mainPanel');
+      panel.innerHTML = `
+        <div class="tip-banner" id="menuTip">👆 點擊任何一張美食卡，顯示字形口訣並播放英文原聲！</div>
+        <div class="menu-grid">
+          ${FOODS.map(f => `
+            <button type="button" class="menu-card ${state.heardMenu.has(f.id) ? 'heard' : ''}" id="mc-${f.id}" onclick="tapMenuFood('${f.id}')">
+              <div class="menu-emoji">${f.emoji}</div>
+              <div class="menu-word">${f.html}</div>
+            </button>
+          `).join('')}
+        </div>
+        <button type="button" class="btn-next" onclick="finishMenu()">溫習完畢！去 Phonics p 餐盤挑戰 ➡️</button>
+      `;
+    }
+
+    function tapMenuFood(id) {
+      stopAll();
+      const f = getFood(id);
+      state.heardMenu.add(id);
+      const card = document.getElementById('mc-' + id);
+      if (card) card.classList.add('heard');
+      const tip = document.getElementById('menuTip');
+      if (tip) tip.textContent = f.tip;
+      window.LinglingVoice.playMp3(f.mp3);
+    }
+
+    function finishMenu() {
+      state.doneStages.add(0);
+      jumpStage(1);
+    }
+
+    // ========= 第二幕：Phonics /p/ 餐盤尋寶（零劇透） =========
+    function renderPhonicsStage() {
+      const round = PHO_ROUNDS[state.phoIdx];
+      const target = getFood(round.target);
+      state.phoStart = Date.now();
+      state.phoWrong = false;
+
+      document.getElementById('annaText').textContent = `第二幕：Phonics p 餐盤挑戰（第 ${state.phoIdx + 1} / ${PHO_ROUNDS.length} 題）！留心聽首音同單字，揀出以 p 開頭嘅美食！`;
+      state.currentGuideAction = () => {
+        window.LinglingVoice.playQueue([
+          { type: 'mp3', file: 'en-p-sound.mp3' },
+          { type: 'mp3', file: target.mp3 }
+        ]);
+      };
+      if (state.phoIdx === 0) {
+        window.LinglingVoice.playQueue([
+          { type: 'zh', text: '第二幕，Phonics p 餐盤挑戰！留心聽英文首音同單字，揀出啱嘅美食啦！' },
+          { type: 'mp3', file: 'en-p-sound.mp3' },
+          { type: 'mp3', file: target.mp3 }
+        ]);
+      } else {
+        state.currentGuideAction();
+      }
+
+      const opts = shuffle([round.target, ...round.distractors]).map(getFood);
+      const panel = document.getElementById('mainPanel');
+      panel.innerHTML = `
+        <div class="pho-hero">
+          <div style="font-size:15px;font-weight:900;color:#64748b;">第 ${state.phoIdx + 1} 題 ／ 共 ${PHO_ROUNDS.length} 題</div>
+          <button type="button" class="big-ear-btn" onclick="replayGuide()">👂 再聽 /p/ 提示</button>
+          <div class="reveal-text" id="phoReveal"></div>
+        </div>
+        <div class="opt-grid">
+          ${opts.map(f => `
+            <button type="button" class="opt-card" onclick="checkPhonics(this, '${f.id}')">
+              <div class="opt-emoji">${f.emoji}</div>
+            </button>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function checkPhonics(btn, chosenId) {
+      if (btn.disabled) return;
+      const round = PHO_ROUNDS[state.phoIdx];
+      const target = getFood(round.target);
+
+      if (chosenId === round.target) {
+        const sec = Math.max(1, Math.round((Date.now() - state.phoStart) / 1000));
+        state.phoResults.push({ id: target.id, correct: !state.phoWrong, sec });
+        document.querySelectorAll('.opt-card').forEach(b => b.disabled = true);
+        btn.classList.add('correct');
+        document.getElementById('phoReveal').textContent = `🌟 p-p-${target.word}!`;
+        showFireworks(`🎆 p-p-${target.word}!`);
+        window.LinglingVoice.playMp3(target.mp3);
+
+        state.activeTimer = setTimeout(() => {
+          if (state.phoIdx + 1 < PHO_ROUNDS.length) {
+            state.phoIdx++;
+            renderPhonicsStage();
+          } else {
+            state.doneStages.add(1);
+            jumpStage(2);
+          }
+        }, 1500);
+      } else {
+        state.phoWrong = true;
+        errorWords.add('Phonics p:' + target.word);
+        btn.classList.add('wrong');
+        setTimeout(() => btn.classList.remove('wrong'), 400);
+        window.LinglingVoice.playZh('試吓隔離嗰張圖卡啦！');
+      }
+    }
+
+    // ========= 第三幕：小老闆開口點餐打卡（兩粒純事實掣） =========
+    function renderSpeakingStage() {
+      const s = SPK_SENTENCES[state.spkIdx];
+      state.spkStart = Date.now();
+
+      document.getElementById('annaText').textContent = `第三幕：小小餐廳老闆開口講（第 ${state.spkIdx + 1} / ${SPK_SENTENCES.length} 句）！企直身，聽完示範大聲讀出嚟！`;
+      state.currentGuideAction = () => {
+        if (state.spkIdx === 0) {
+          window.LinglingVoice.playHybrid('第三幕，輪到小老闆大聲講英文！聽住示範讀呢一句：', s.mp3);
+        } else {
+          window.LinglingVoice.playMp3(s.mp3);
+        }
+      };
+      state.currentGuideAction();
+
+      const panel = document.getElementById('mainPanel');
+      panel.innerHTML = `
+        <div class="spk-stage">
+          <div class="spk-progress">第 ${state.spkIdx + 1} 句 ／ 共 ${SPK_SENTENCES.length} 句</div>
+          <div class="spk-emoji">${s.emoji}</div>
+          <div class="spk-sentence">${s.text}</div>
+          <button type="button" class="btn-listen-demo" onclick="window.LinglingVoice.playMp3('${s.mp3}')">🔊 再聽示範</button>
+        </div>
+        <div class="fact-btn-row">
+          <button type="button" class="btn-fact-self" onclick="recordSpeaking(true)">🌟 自己讀到</button>
+          <button type="button" class="btn-fact-mom" onclick="recordSpeaking(false)">🌱 跟住媽媽讀</button>
+        </div>
+      `;
+    }
+
+    function recordSpeaking(isSelf) {
+      stopAll();
+      const s = SPK_SENTENCES[state.spkIdx];
+      const sec = Math.max(1, Math.round((Date.now() - state.spkStart) / 1000));
+      state.spkResults.push({ id: s.id, self: isSelf, sec });
+
+      showFireworks(isSelf ? '🎆🌟 自己讀到好犀利！' : '🎆🌱 讀得好大聲好棒！');
+      window.LinglingVoice.playZh(isSelf ? '嘩！自己讀到好犀利呀！' : '跟住媽媽讀得好大聲好棒呀！');
+
+      state.activeTimer = setTimeout(() => {
+        if (state.spkIdx + 1 < SPK_SENTENCES.length) {
+          state.spkIdx++;
+          renderSpeakingStage();
+        } else {
+          state.doneStages.add(2);
+          jumpStage(3);
+        }
+      }, 1300);
+    }
+
+    // ========= 第四幕：零劇透餐廳點餐大挑戰（3 題盲聽選圖 ＋ 3 題純英文字形認讀） =========
+    function renderOrderStage() {
+      const round = ORDER_ROUNDS[state.ordIdx];
+      const target = getFood(round.target);
+      state.ordStart = Date.now();
+      state.ordWrong = false;
+
+      const isWordMode = round.mode === 'word';
+      // 嚴格零劇透：絕不出現目標單字中文意思或暗示
+      document.getElementById('annaText').textContent = isWordMode
+        ? `第四幕：純英文字形點餐（第 ${state.ordIdx + 1} / ${ORDER_ROUNDS.length} 題）！留心聽英文，憑字形揀出啱嘅英文單字卡！`
+        : `第四幕：餐廳盲聽點餐（第 ${state.ordIdx + 1} / ${ORDER_ROUNDS.length} 題）！留心聽下客人點邊款食物，揀出啱嘅圖卡！`;
+
+      state.currentGuideAction = () => {
+        window.LinglingVoice.playMp3(target.mp3);
+      };
+      if (state.ordIdx === 0) {
+        window.LinglingVoice.playHybrid('最後一關，餐廳點餐大挑戰！留心聽下英文聲音，揀出啱嘅圖卡啦！', target.mp3);
+      } else if (state.ordIdx === 3) {
+        window.LinglingVoice.playHybrid('升級挑戰！今次睇英文字形，留心聽英文搵出啱嘅單字卡啦！', target.mp3);
+      } else {
+        state.currentGuideAction();
+      }
+
+      const opts = shuffle(round.pool).map(getFood);
+      const panel = document.getElementById('mainPanel');
+      panel.innerHTML = `
+        <div class="pho-hero">
+          <div style="font-size:15px;font-weight:900;color:#64748b;">第 ${state.ordIdx + 1} 題 ／ 共 ${ORDER_ROUNDS.length} 題（${isWordMode ? '🔤 純英文字形認讀' : '👂 盲聽選圖'}）</div>
+          <button type="button" class="big-ear-btn" onclick="replayGuide()">👂 再聽客人點餐</button>
+          <div class="reveal-text" id="ordReveal"></div>
+        </div>
+        <div class="opt-grid">
+          ${opts.map(f => `
+            <button type="button" class="opt-card" onclick="checkOrder(this, '${f.id}')">
+              ${isWordMode
+                ? `<div class="opt-word">${f.word}</div>`
+                : `<div class="opt-emoji">${f.emoji}</div>`
+              }
+            </button>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function checkOrder(btn, chosenId) {
+      if (btn.disabled) return;
+      const round = ORDER_ROUNDS[state.ordIdx];
+      const target = getFood(round.target);
+
+      if (chosenId === round.target) {
+        const sec = Math.max(1, Math.round((Date.now() - state.ordStart) / 1000));
+        state.ordResults.push({ mode: round.mode, id: target.id, correct: !state.ordWrong, sec });
+        document.querySelectorAll('.opt-card').forEach(b => b.disabled = true);
+        btn.classList.add('correct');
+        document.getElementById('ordReveal').textContent = `🌟 ${target.emoji} ${target.word}!`;
+        showFireworks(`🎆 ${target.emoji} ${target.word}!`);
+        window.LinglingVoice.playMp3(target.mp3);
+
+        state.activeTimer = setTimeout(() => {
+          if (state.ordIdx + 1 < ORDER_ROUNDS.length) {
+            state.ordIdx++;
+            renderOrderStage();
+          } else {
+            state.doneStages.add(3);
+            state.stage = 4;
+            renderSummary();
+          }
+        }, 1500);
+      } else {
+        state.ordWrong = true;
+        errorWords.add(target.word);
+        btn.classList.add('wrong');
+        setTimeout(() => btn.classList.remove('wrong'), 400);
+        window.LinglingVoice.playZh('試吓隔離嗰張卡啦！');
+      }
+    }
+
+    // ========= 結算與香港 K2 客觀儀表板同步 =========
+    function renderSummary() {
+      stopAll();
+      updateDots();
+      const totalSec = Math.max(1, Math.round((Date.now() - state.lessonStart) / 1000));
+      const avg = arr => arr.length ? Math.round((arr.reduce((s, x) => s + x.sec, 0) / arr.length) * 10) / 10 : 0;
+
+      const phoOk = state.phoResults.filter(x => x.correct).length;
+      const phoTot = state.phoResults.length || PHO_ROUNDS.length;
+      const selfCount = state.spkResults.filter(x => x.self).length;
+      const spkTot = state.spkResults.length || SPK_SENTENCES.length;
+
+      const picArr = state.ordResults.filter(x => x.mode === 'pic');
+      const wordArr = state.ordResults.filter(x => x.mode === 'word');
+      const ordOk = state.ordResults.filter(x => x.correct).length;
+      const ordTot = state.ordResults.length || ORDER_ROUNDS.length;
+
+      const skillStats = [];
+      if (state.phoResults.length) {
+        skillStats.push({ dim: 'PHO', skill_id: 'EN-PHO-2', level: 'L1', total: phoTot, correct: phoOk, avg_sec: avg(state.phoResults) });
+      }
+      if (state.spkResults.length) {
+        skillStats.push({ dim: 'SPK', skill_id: 'EN-SPK-2', level: 'L2', total: spkTot, correct: selfCount, avg_sec: avg(state.spkResults) });
+      }
+      if (picArr.length) {
+        skillStats.push({ dim: 'LIS', skill_id: 'EN-LIS-1', level: 'L1', total: picArr.length, correct: picArr.filter(x => x.correct).length, avg_sec: avg(picArr) });
+      }
+      if (wordArr.length) {
+        skillStats.push({ dim: 'VOC', skill_id: 'EN-VOC-2', level: 'L2', total: wordArr.length, correct: wordArr.filter(x => x.correct).length, avg_sec: avg(wordArr) });
+      }
+
+      const errArr = Array.from(errorWords);
+      const reportText = `【英文AI課堂｜Unit 9 Day 5 完成戰報】美食小餐廳全單元總複習（bread, eggs, rice, fish, meat ＋ Phonics p: pear, pumpkin, potato）全部畢業！Phonics p 餐盤 ${phoOk}/${phoTot}｜開口打卡：自己讀到 ${selfCount}/${spkTot}｜餐廳點餐盲聽與認字 ${ordOk}/${ordTot} 一次答對！｜總用時：${totalSec}秒。`;
+
+      if (!state.reported && window.LinglingReport) {
+        state.reported = true;
+        window.LinglingReport.save('英文AI課堂', 'Unit 9 Day 5', reportText, {
+          term: 'K2-T1',
+          skill_stats: skillStats,
+          error_words: errArr
+        });
+      }
+
+      document.getElementById('annaText').textContent = '恭喜玲玲！Unit 9《Time to eat》五日微課堂全部圓滿畢業！';
+      window.LinglingVoice.playZh('恭喜玲玲！Unit Nine 美食小餐廳總複習全部過關，你真係超級叻呀！');
+
+      const panel = document.getElementById('mainPanel');
+      panel.innerHTML = `
+        <div class="summary-box">
+          <div style="font-size:66px;">🏆🍽️</div>
+          <div style="font-size:26px;font-weight:900;color:#0c4a6e;">Unit 9 Day 5 圓滿畢業！</div>
+          <div class="sync-badge">☁️ 戰報已自動同步至家長戰報箱與成長儀表板</div>
+          <div class="report-preview" id="reportBox">${reportText}</div>
+          <div class="action-row">
+            <button type="button" class="btn-copy" onclick="copyReport()">📋 一鍵複製進度暗號</button>
+            <a href="en-unit9.html?v=1" class="btn-next">返回 Unit 9 主頁 🏠</a>
+          </div>
+        </div>
+      `;
+    }
+
+    function copyReport() {
+      const text = document.getElementById('reportBox').textContent;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => alert('已複製進度暗號！'));
+      } else {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        ta.remove();
+        alert('已複製進度暗號！');
+      }
+    }
+  </script>
+</body>
+</html>
