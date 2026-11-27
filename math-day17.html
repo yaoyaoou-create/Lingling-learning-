@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>數學探索島｜Maths Day 17 彩虹積木樂園</title>
+  <link rel="stylesheet" href="theme.css?v=1">
+  <script src="report-hub.js?v=3"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    body {
+      margin: 0;
+      font-family: "PingFang HK", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      background: linear-gradient(160deg, #fff1f2 0%, #fef9c3 48%, #e0f2fe 100%);
+      color: #1e293b;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* 頂部防切字雙行導航列 */
+    .top-header {
+      background: rgba(255, 255, 255, 0.95);
+      border-bottom: 4px solid #fb7185;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      padding: 10px 14px 8px;
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 8px 12px;
+      background: #ffe4e6;
+      color: #9f1239;
+      border: 2px solid #fda4af;
+      border-bottom: 4px solid #e11d48;
+      border-radius: 14px;
+      font-weight: 900;
+      font-size: 15px;
+      text-decoration: none;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .back-btn:active { transform: translateY(2px); border-bottom-width: 2px; }
+    .day-title {
+      font-size: 18px;
+      font-weight: 900;
+      color: #881337;
+      text-align: right;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .step-dots {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .step-dot {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid #cbd5e1;
+      border-bottom: 4px solid #94a3b8;
+      background: #f8fafc;
+      color: #64748b;
+      font-weight: 900;
+      font-size: 13px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+    }
+    .step-dot:active { transform: translateY(2px); }
+    .step-dot.active {
+      background: #f43f5e;
+      color: #fff;
+      border-color: #e11d48;
+      border-bottom-color: #9f1239;
+      transform: scale(1.08);
+    }
+    .step-dot.done {
+      background: #22c55e;
+      color: #fff;
+      border-color: #16a34a;
+      border-bottom-color: #15803d;
+    }
+
+    /* 主互動舞台 */
+    .stage-wrap {
+      flex: 1;
+      width: 100%;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 12px 16px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* Anna 老師語音欄 */
+    .anna-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: #fff;
+      border: 3px solid #fde68a;
+      border-bottom: 6px solid #f59e0b;
+      border-radius: 22px;
+      padding: 12px 16px;
+      box-shadow: 0 6px 14px rgba(245, 158, 11, 0.12);
+    }
+    .anna-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+    .anna-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #fde047, #fb7185);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      flex-shrink: 0;
+      border: 3px solid #fff;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+    }
+    .anna-text {
+      font-size: 19px;
+      font-weight: 800;
+      color: #78350f;
+      line-height: 1.4;
+    }
+    .btn-replay {
+      padding: 10px 16px;
+      border-radius: 16px;
+      border: 2px solid #38bdf8;
+      border-bottom: 5px solid #0284c7;
+      background: #e0f2fe;
+      color: #0369a1;
+      font-size: 16px;
+      font-weight: 900;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .btn-replay:active { transform: translateY(2px); border-bottom-width: 2px; }
+
+    /* 題目主卡片 */
+    .quiz-card {
+      background: #fff;
+      border: 3px solid #e2e8f0;
+      border-bottom: 7px solid #cbd5e1;
+      border-radius: 26px;
+      padding: 18px;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.06);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 14px;
+    }
+    .q-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 15px;
+      font-weight: 900;
+      color: #64748b;
+    }
+    .dim-pill {
+      background: #fce7f3;
+      color: #9d174d;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 14px;
+    }
+
+    /* 視覺展示區 */
+    .visual-box {
+      background: #fffbeb;
+      border: 3px solid #fde68a;
+      border-radius: 22px;
+      padding: 16px 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      min-height: 188px;
+    }
+    .count-hint {
+      font-size: 14px;
+      font-weight: 800;
+      color: #b45309;
+    }
+
+    /* 靜音可點實物（嚴禁顯示數字角標與報數） */
+    .item-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .tap-item {
+      position: relative;
+      font-size: 44px;
+      width: 62px;
+      height: 62px;
+      border-radius: 18px;
+      background: #fff;
+      border: 3px solid #fde68a;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.15s, background 0.2s;
+    }
+    .tap-item.lit {
+      background: #fef08a;
+      border-color: #f59e0b;
+      transform: scale(1.1);
+      box-shadow: 0 0 14px rgba(245, 158, 11, 0.45);
+    }
+    .tap-item.lit::after {
+      content: "✨";
+      position: absolute;
+      top: -8px;
+      right: -6px;
+      font-size: 18px;
+    }
+    .tap-item.crossed {
+      opacity: 0.35;
+      background: #f1f5f9;
+      border-color: #cbd5e1;
+    }
+    .tap-item.crossed::before {
+      content: "";
+      position: absolute;
+      width: 75%;
+      height: 5px;
+      background: #ef4444;
+      transform: rotate(-35deg);
+      border-radius: 4px;
+    }
+
+    /* 數序卡片 */
+    .seq-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .seq-box {
+      width: 76px;
+      height: 76px;
+      border-radius: 20px;
+      background: #eff6ff;
+      border: 3px solid #60a5fa;
+      border-bottom: 6px solid #2563eb;
+      font-size: 36px;
+      font-weight: 900;
+      color: #1e3a8a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .seq-box.blank {
+      background: #fef08a;
+      border-color: #f59e0b;
+      border-bottom-color: #b45309;
+      color: #b45309;
+    }
+
+    /* 左右方位強化對比框 */
+    .dir-cue {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 480px;
+      gap: 10px;
+    }
+    .cue-left {
+      background: #dbeafe;
+      color: #1d4ed8;
+      border: 2px solid #60a5fa;
+      border-radius: 12px;
+      padding: 4px 14px;
+      font-size: 16px;
+      font-weight: 900;
+    }
+    .cue-right {
+      background: #fce7f3;
+      color: #be185d;
+      border: 2px solid #f472b6;
+      border-radius: 12px;
+      padding: 4px 14px;
+      font-size: 16px;
+      font-weight: 900;
+    }
+    .pos-stage {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      width: 100%;
+      max-width: 500px;
+    }
+    .pos-card {
+      flex: 1;
+      background: #fff;
+      border: 3px solid #cbd5e1;
+      border-radius: 20px;
+      padding: 12px 8px;
+      text-align: center;
+    }
+    .pos-card.side-left { border-color: #93c5fd; background: #eff6ff; }
+    .pos-card.side-right { border-color: #f9a8d4; background: #fdf2f8; }
+    .pos-card.center {
+      background: #fef9c3;
+      border-color: #f59e0b;
+      transform: scale(1.06);
+    }
+    .pos-emoji { font-size: 54px; line-height: 1.1; }
+    .pos-tag { font-size: 15px; font-weight: 900; color: #334155; margin-top: 4px; }
+
+    /* 分合與比較相差 */
+    .split-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .split-group {
+      background: #fff;
+      border: 3px dashed #f59e0b;
+      border-radius: 18px;
+      padding: 10px 14px;
+      text-align: center;
+    }
+    .split-title { font-size: 15px; font-weight: 900; color: #92400e; margin-bottom: 6px; }
+    .plus-sign { font-size: 34px; font-weight: 900; color: #ea580c; }
+
+    .compare-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .compare-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* 溫柔提示框（嚴禁 ❌） */
+    .gentle-hint-box {
+      display: none;
+      background: #fef3c7;
+      border: 2px solid #f59e0b;
+      color: #92400e;
+      border-radius: 16px;
+      padding: 10px 14px;
+      font-size: 17px;
+      font-weight: 800;
+      text-align: center;
+    }
+    .gentle-hint-box.show { display: block; }
+
+    /* 選項按鈕 */
+    .opt-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      width: 100%;
+    }
+    .opt-grid.four {
+      grid-template-columns: repeat(4, 1fr);
+    }
+    .opt-btn {
+      padding: 18px 10px;
+      border-radius: 20px;
+      background: #f8fafc;
+      color: #1e293b;
+      border: 3px solid #cbd5e1;
+      border-bottom: 7px solid #94a3b8;
+      font-size: 34px;
+      font-weight: 900;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+    .opt-btn:active { transform: translateY(3px); border-bottom-width: 3px; }
+    .opt-btn.correct {
+      background: #dcfce7;
+      border-color: #22c55e;
+      border-bottom-color: #15803d;
+      color: #166534;
+    }
+    .opt-btn.wrong-shake {
+      background: #fef3c7;
+      border-color: #f59e0b;
+      animation: shake 0.35s;
+    }
+    .opt-sub { font-size: 17px; font-weight: 900; }
+
+    /* 結算表格 */
+    .summary-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      text-align: center;
+    }
+    .sync-badge {
+      background: #dcfce7;
+      color: #166534;
+      border: 2px solid #86efac;
+      border-radius: 14px;
+      padding: 8px 16px;
+      font-size: 16px;
+      font-weight: 800;
+    }
+    .diag-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      background: #fff;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 2px solid #e2e8f0;
+    }
+    .diag-table th, .diag-table td {
+      padding: 8px 10px;
+      border-bottom: 1px solid #e2e8f0;
+      text-align: left;
+    }
+    .diag-table th { background: #ffe4e6; color: #881337; }
+    .action-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .btn-copy {
+      padding: 12px 22px;
+      border-radius: 16px;
+      background: #fef08a;
+      color: #713f12;
+      border: 2px solid #eab308;
+      border-bottom: 5px solid #a16207;
+      font-size: 17px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+    .btn-home {
+      padding: 12px 22px;
+      border-radius: 16px;
+      background: #22c55e;
+      color: #fff;
+      border: 2px solid #16a34a;
+      border-bottom: 5px solid #15803d;
+      font-size: 17px;
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-8px); }
+      75% { transform: translateX(8px); }
+    }
+
+    @media (max-width: 600px) {
+      .anna-text { font-size: 16px; }
+      .tap-item { font-size: 34px; width: 48px; height: 48px; }
+      .seq-box { width: 60px; height: 60px; font-size: 28px; }
+      .opt-btn { font-size: 26px; padding: 14px 6px; }
+      .opt-grid.four { grid-template-columns: repeat(2, 1fr); }
+      .pos-emoji { font-size: 42px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="top-header">
+    <div class="top-row">
+      <a href="index.html" class="back-btn" onclick="stopAllAudio()">⬅️ 返回樂園</a>
+      <div class="day-title">🚂 Maths Day 17 · 彩虹積木樂園</div>
+    </div>
+    <div class="step-dots" id="stepDots"></div>
+  </header>
+
+  <main class="stage-wrap">
+    <section class="anna-bar">
+      <div class="anna-left">
+        <div class="anna-avatar">👩‍🏫</div>
+        <div class="anna-text" id="annaText">歡迎嚟到第三期首發！一齊坐彩虹小火車去積木樂園玩啦！</div>
+      </div>
+      <button type="button" class="btn-replay" id="replayBtn" onclick="replayQuestion()">🔊 聽題目</button>
+    </section>
+
+    <section class="quiz-card" id="quizCard"></section>
+  </main>
+
+  <script>
+    // ========= 1. iPad Safari 安全廣東話語音引擎 (Anti-GC) =========
+    window.utterancePool = [];
+    let cantoneseVoice = null;
+    let activeTimer = null;
+    let currentSpeech = '';
+
+    function loadCantoneseVoice() {
+      const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+      cantoneseVoice =
+        voices.find(v => /zh-HK/i.test(v.lang) && /Sinji|Tracy|Mei-Jia|Cantonese/i.test(v.name)) ||
+        voices.find(v => /zh-HK/i.test(v.lang)) ||
+        voices.find(v => /yue/i.test(v.lang)) ||
+        null;
+    }
+    if (window.speechSynthesis) {
+      loadCantoneseVoice();
+      window.speechSynthesis.onvoiceschanged = loadCantoneseVoice;
+    }
+
+    function stopAllAudio() {
+      if (activeTimer) { clearTimeout(activeTimer); activeTimer = null; }
+      if (window.speechSynthesis) window.speechSynthesis.cancel();
+    }
+
+    function speakHK(text, saveAsCurrent = false) {
+      if (saveAsCurrent) currentSpeech = text;
+      if (!window.speechSynthesis) return;
+      window.speechSynthesis.cancel();
+      setTimeout(() => {
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = 'zh-HK';
+        if (cantoneseVoice) u.voice = cantoneseVoice;
+        u.rate = 0.76;
+        u.pitch = 1.04;
+        window.utterancePool.push(u);
+        if (window.utterancePool.length > 20) window.utterancePool.shift();
+        window.speechSynthesis.speak(u);
+      }, 40);
+    }
+
+    function replayQuestion() {
+      if (currentSpeech) speakHK(currentSpeech, false);
+    }
+
+    // 靜音點數：只觸發發光與小星星，嚴禁報數
+    function toggleTapItem(el) {
+      el.classList.toggle('lit');
+    }
+
+    // ========= 2. 整點鐘面 SVG =========
+    function renderClockSVG(hour) {
+      const angle = (hour % 12) * 30;
+      return `
+        <svg width="164" height="164" viewBox="0 0 160 160" aria-label="鐘面">
+          <circle cx="80" cy="80" r="72" fill="#ffffff" stroke="#fb7185" stroke-width="6"/>
+          ${[12,1,2,3,4,5,6,7,8,9,10,11].map((n, idx) => {
+            const rad = (idx * 30 - 90) * Math.PI / 180;
+            const x = 80 + 54 * Math.cos(rad);
+            const y = 80 + 54 * Math.sin(rad) + 6;
+            const isTarget = n === hour;
+            return `<text x="${x}" y="${y}" text-anchor="middle" font-size="${isTarget ? 19 : 16}" font-weight="900" fill="${isTarget ? '#dc2626' : '#334155'}">${n}</text>`;
+          }).join('')}
+          <!-- 分針指 12 -->
+          <line x1="80" y1="80" x2="80" y2="30" stroke="#2563eb" stroke-width="5" stroke-linecap="round"/>
+          <!-- 時針 -->
+          <line x1="80" y1="80" x2="80" y2="44" stroke="#dc2626" stroke-width="7" stroke-linecap="round" transform="rotate(${angle} 80 80)"/>
+          <circle cx="80" cy="80" r="6" fill="#1e293b"/>
+        </svg>
+      `;
+    }
+
+    // ========= 3. 方案 B：10 題六維全覆蓋題庫 =========
+    const quizData = [
+      {
+        dim: 'SPA', skill_id: 'SPA-1', level: 'L1',
+        dimLabel: 'SPA 空間與方位（重點補漏）',
+        reportLabel: '上下前後左右方位(右邊)',
+        prompt: '第一題！彩虹火車停喺正中間。請問邊樣玩具放喺火車嘅「右邊」粉紅色框入面呀？',
+        hint: '望下右上角粉紅色箭嘴，右邊就係粉紅色框嗰邊呀，再揀一次！',
+        answer: '🧸',
+        options: [
+          { val: '🤖', label: '🤖', sub: '機械人' },
+          { val: '🚂', label: '🚂', sub: '小火車' },
+          { val: '🧸', label: '🧸', sub: '熊仔' }
+        ],
+        renderVisual: () => `
+          <div class="dir-cue"><span class="cue-left">⬅️ 左邊</span><span class="cue-right">右邊 ➡️</span></div>
+          <div class="pos-stage">
+            <div class="pos-card side-left"><div class="pos-emoji">🤖</div><div class="pos-tag">機械人</div></div>
+            <div class="pos-card center"><div class="pos-emoji">🚂</div><div class="pos-tag">中間</div></div>
+            <div class="pos-card side-right"><div class="pos-emoji">🧸</div><div class="pos-tag">熊仔</div></div>
+          </div>
+        `
+      },
+      {
+        dim: 'ADD', skill_id: 'ADD-1', level: 'L1',
+        dimLabel: 'ADD 加法運算（重點補漏）',
+        reportLabel: '5至10分合(7的組成)',
+        prompt: '第二題！積木塔總共要砌夠七粒積木。左邊已經有四粒，右邊仲要加幾多粒先湊夠七粒呀？',
+        hint: '由四開始用手指接著數到七：五、六、七，數咗幾多隻手指呀？',
+        answer: '3',
+        options: [{ val: '2', label: '2' }, { val: '3', label: '3' }, { val: '4', label: '4' }],
+        renderVisual: () => `
+          <div class="count-hint">總共要湊夠 7 粒 🧱（點一下積木會發光，自己數下）</div>
+          <div class="split-wrap">
+            <div class="split-group">
+              <div class="split-title">左邊已有 4 粒</div>
+              <div class="item-row">${Array(4).fill('<button type="button" class="tap-item" onclick="toggleTapItem(this)">🧱</button>').join('')}</div>
+            </div>
+            <div class="plus-sign">＋</div>
+            <div class="split-group">
+              <div class="split-title">右邊要加幾多？</div>
+              <div class="seq-box blank" style="margin:0 auto;">?</div>
+            </div>
+          </div>
+        `
+      },
+      {
+        dim: 'NUM', skill_id: 'NUM-3', level: 'L2',
+        dimLabel: 'NUM 數感與數序（L2 延續）',
+        reportLabel: '50以內數序(21-24相鄰數)',
+        prompt: '第三題！睇下彩虹車廂號碼：二十一、二十二、空格、二十四。中間唔見咗邊個數字呀？',
+        hint: '由二十一開始順序數落去：二十一、二十二、跟住係咩呢？',
+        answer: '23',
+        options: [{ val: '20', label: '20' }, { val: '23', label: '23' }, { val: '25', label: '25' }],
+        renderVisual: () => `
+          <div class="seq-row">
+            <div class="seq-box">21</div>
+            <div class="seq-box">22</div>
+            <div class="seq-box blank">?</div>
+            <div class="seq-box">24</div>
+          </div>
+        `
+      },
+      {
+        dim: 'SPA', skill_id: 'SPA-1', level: 'L1',
+        dimLabel: 'SPA 空間與方位（左右對比）',
+        reportLabel: '上下前後左右方位(左邊)',
+        prompt: '第四題！今次彩虹企喺正中間。請問邊樣嘢喺彩虹嘅「左邊」藍色框入面呀？',
+        hint: '望下左上角藍色箭嘴，左邊就係藍色框嗰邊呀，再試下！',
+        answer: '☀️',
+        options: [
+          { val: '☀️', label: '☀️', sub: '太陽' },
+          { val: '🌈', label: '🌈', sub: '彩虹' },
+          { val: '☁️', label: '☁️', sub: '白雲' }
+        ],
+        renderVisual: () => `
+          <div class="dir-cue"><span class="cue-left">⬅️ 左邊</span><span class="cue-right">右邊 ➡️</span></div>
+          <div class="pos-stage">
+            <div class="pos-card side-left"><div class="pos-emoji">☀️</div><div class="pos-tag">太陽</div></div>
+            <div class="pos-card center"><div class="pos-emoji">🌈</div><div class="pos-tag">中間</div></div>
+            <div class="pos-card side-right"><div class="pos-emoji">☁️</div><div class="pos-tag">白雲</div></div>
+          </div>
+        `
+      },
+      {
+        dim: 'ADD', skill_id: 'ADD-1', level: 'L1',
+        dimLabel: 'ADD 加法運算（重點補漏）',
+        reportLabel: '5至10分合(8的組成)',
+        prompt: '第五題！氣球盒總共要放八個氣球。左邊已經有五個，右邊仲要加幾多個先湊夠八個呀？',
+        hint: '由五開始用手指接著數到八：六、七、八，數咗幾多隻手指呀？',
+        answer: '3',
+        options: [{ val: '2', label: '2' }, { val: '3', label: '3' }, { val: '4', label: '4' }],
+        renderVisual: () => `
+          <div class="count-hint">總共要湊夠 8 個 🎈（點一下氣球會發光）</div>
+          <div class="split-wrap">
+            <div class="split-group">
+              <div class="split-title">左邊已有 5 個</div>
+              <div class="item-row">${Array(5).fill('<button type="button" class="tap-item" onclick="toggleTapItem(this)">🎈</button>').join('')}</div>
+            </div>
+            <div class="plus-sign">＋</div>
+            <div class="split-group">
+              <div class="split-title">右邊要加幾多？</div>
+              <div class="seq-box blank" style="margin:0 auto;">?</div>
+            </div>
+          </div>
+        `
+      },
+      {
+        dim: 'ADD', skill_id: 'ADD-2', level: 'L1',
+        dimLabel: 'ADD 加法運算（提速鞏固）',
+        reportLabel: '10以內基礎加法(4+4)',
+        prompt: '第六題！左邊有四粒黃色星星，右邊又有四粒黃色星星，一共有幾多粒星星呀？可以點下星星自己數下！',
+        hint: '用手指逐粒點下星星自己大聲數，四加四一共係幾多呢？',
+        answer: '8',
+        options: [{ val: '7', label: '7' }, { val: '8', label: '8' }, { val: '9', label: '9' }],
+        renderVisual: () => `
+          <div class="count-hint">👆 點一下星星會發光，自己大聲數下！</div>
+          <div class="split-wrap">
+            <div class="item-row">${Array(4).fill('<button type="button" class="tap-item" onclick="toggleTapItem(this)">⭐</button>').join('')}</div>
+            <div class="plus-sign">＋</div>
+            <div class="item-row">${Array(4).fill('<button type="button" class="tap-item" onclick="toggleTapItem(this)">⭐</button>').join('')}</div>
+          </div>
+        `
+      },
+      {
+        dim: 'APP', skill_id: 'APP-2', level: 'L1',
+        dimLabel: 'APP 圖形與生活（提速鞏固）',
+        reportLabel: '整點鐘面(8點鐘)',
+        prompt: '第七題！樂園大時鐘響喇！藍色長針指住十二，紅色短針指住邊個數字？而家係幾點鐘呀？',
+        hint: '望實紅色短短嗰支時針指住邊個紅色數字呀，就係幾點鐘喇！',
+        answer: '8點',
+        options: [{ val: '7點', label: '7點' }, { val: '8點', label: '8點' }, { val: '9點', label: '9點' }],
+        renderVisual: () => renderClockSVG(8)
+      },
+      {
+        dim: 'SUB', skill_id: 'SUB-1', level: 'L1',
+        dimLabel: 'SUB 減法運算（提速鞏固）',
+        reportLabel: '10以內基礎減法(8-2)',
+        prompt: '第八題！原本有八個彩虹冬甩，小狗食咗畫咗紅線嗰兩個，仲剩返幾多個冬甩呀？',
+        hint: '只係數返冇畫紅線、仲留低嗰啲冬甩呀，再數多一次！',
+        answer: '6',
+        options: [{ val: '5', label: '5' }, { val: '6', label: '6' }, { val: '7', label: '7' }],
+        renderVisual: () => `
+          <div class="count-hint">👆 數下仲剩返幾多個冇畫線嘅冬甩（點一下會發光）</div>
+          <div class="item-row">
+            ${Array(6).fill('<button type="button" class="tap-item" onclick="toggleTapItem(this)">🍩</button>').join('')}
+            ${Array(2).fill('<div class="tap-item crossed">🍩</div>').join('')}
+          </div>
+        `
+      },
+      {
+        dim: 'LOG', skill_id: 'LOG-2', level: 'L1',
+        dimLabel: 'LOG 規律與邏輯',
+        reportLabel: '分類與配對(唔同類)',
+        prompt: '第九題！下面有四張圖卡，有三樣係同一類，有一樣係「唔同類」嘅。請玲玲搵出邊樣唔同類！',
+        hint: '睇清楚呀，有三個都係喺馬路或者天空行嘅交通工具，邊一個係可以食嘅水果呢？',
+        answer: '🍓',
+        fourOpts: true,
+        options: [
+          { val: '🚗', label: '🚗', sub: '私家車' },
+          { val: '🚌', label: '🚌', sub: '巴士' },
+          { val: '🍓', label: '🍓', sub: '士多啤梨' },
+          { val: '✈️', label: '✈️', sub: '飛機' }
+        ],
+        renderVisual: () => `<div style="font-size:52px;">🔍🚦</div><div class="count-hint">喺下面四個入面，搵出邊一個係「唔同類」嘅！</div>`
+      },
+      {
+        dim: 'SUB', skill_id: 'SUB-3', level: 'L2',
+        dimLabel: 'SUB 減法運算（L2 維持）',
+        reportLabel: '比較相差(多幾個)',
+        prompt: '最後一題！上面有七個紅色正方形積木，下面有四個藍色圓形波波，一對一排齊咗。請問紅色積木比藍色波波「多幾個」呀？',
+        hint: '望下後面多出嚟、下面冇波波配對嗰幾個紅色積木，點一下自己數下有幾個！',
+        answer: '3',
+        options: [{ val: '2', label: '2' }, { val: '3', label: '3' }, { val: '4', label: '4' }],
+        renderVisual: () => `
+          <div class="count-hint">👆 上下排齊對比，數下上面比下面多出幾個！</div>
+          <div class="compare-grid">
+            <div class="compare-row">${Array(7).fill('<button type="button" class="tap-item" onclick="toggleTapItem(this)">🟥</button>').join('')}</div>
+            <div class="compare-row">${Array(4).fill('<button type="button" class="tap-item" onclick="toggleTapItem(this)">🔵</button>').join('')}</div>
+          </div>
+        `
+      }
+    ];
+
+    // ========= 4. 狀態管理與「隨按即跳」導航 =========
+    const state = {
+      idx: 0,
+      qStart: Date.now(),
+      records: Array(quizData.length).fill(null),
+      curWrong: false,
+      reported: false
+    };
+
+    function renderDots() {
+      const box = document.getElementById('stepDots');
+      box.innerHTML = quizData.map((_, i) => {
+        const cls = i === state.idx ? 'active' : (state.records[i] ? 'done' : '');
+        return `<button type="button" class="step-dot ${cls}" onclick="jumpQuestion(${i})" aria-label="第${i+1}題">${i + 1}</button>`;
+      }).join('');
+    }
+
+    function jumpQuestion(i) {
+      stopAllAudio();
+      state.idx = i;
+      state.curWrong = false;
+      state.qStart = Date.now();
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      renderDots();
+      document.getElementById('replayBtn').style.visibility = 'visible';
+      const q = quizData[state.idx];
+
+      document.getElementById('annaText').textContent = `第 ${state.idx + 1} 題：${q.prompt}`;
+      speakHK(q.prompt, true);
+
+      const card = document.getElementById('quizCard');
+      card.innerHTML = `
+        <div class="q-meta">
+          <span>第 ${state.idx + 1} 題 ／ 共 ${quizData.length} 題</span>
+          <span class="dim-pill">${q.dimLabel}</span>
+        </div>
+        <div class="visual-box">${q.renderVisual()}</div>
+        <div class="gentle-hint-box" id="hintBox">💡 ${q.hint}</div>
+        <div class="opt-grid ${q.fourOpts ? 'four' : ''}">
+          ${q.options.map(opt => `
+            <button type="button" class="opt-btn" onclick="handleAnswer(this, '${opt.val}')">
+              <span>${opt.label}</span>
+              ${opt.sub ? `<span class="opt-sub">${opt.sub}</span>` : ''}
+            </button>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function handleAnswer(btn, val) {
+      if (btn.disabled) return;
+      const q = quizData[state.idx];
+
+      if (val === q.answer) {
+        const sec = Math.max(1, Math.round((Date.now() - state.qStart) / 1000));
+        state.records[state.idx] = {
+          firstTry: !state.curWrong,
+          sec
+        };
+        document.querySelectorAll('.opt-btn').forEach(b => b.disabled = true);
+        btn.classList.add('correct');
+        document.getElementById('hintBox').classList.remove('show');
+        renderDots();
+        speakHK('好叻呀玲玲！答啱晒！', false);
+
+        activeTimer = setTimeout(() => {
+          if (state.idx + 1 < quizData.length) {
+            jumpQuestion(state.idx + 1);
+          } else if (state.records.every(Boolean)) {
+            renderSummary();
+          } else {
+            const firstMissing = state.records.findIndex(r => !r);
+            jumpQuestion(firstMissing);
+          }
+        }, 1250);
+      } else {
+        state.curWrong = true;
+        btn.classList.add('wrong-shake');
+        setTimeout(() => btn.classList.remove('wrong-shake'), 400);
+        const hintBox = document.getElementById('hintBox');
+        if (hintBox) hintBox.classList.add('show');
+        speakHK(q.hint, false);
+      }
+    }
+
+    // ========= 5. 結算、標準戰報與儀表板雙保險同步 =========
+    function renderSummary() {
+      stopAllAudio();
+      document.getElementById('replayBtn').style.visibility = 'hidden';
+      document.querySelectorAll('.step-dot').forEach(d => { d.classList.remove('active'); d.classList.add('done'); });
+
+      const parts = quizData.map((q, i) => {
+        const rec = state.records[i] || { firstTry: true, sec: 1 };
+        const status = rec.firstTry ? '1次答對' : '需提示';
+        return `Q${i + 1} ${q.reportLabel}: ${rec.sec}s(${status})`;
+      });
+      const reportText = `【數學測驗回報】Day 17（彩虹積木樂園） | ${parts.join(' | ')}`;
+
+      const map = {};
+      quizData.forEach((q, i) => {
+        const rec = state.records[i] || { firstTry: true, sec: 1 };
+        if (!map[q.skill_id]) {
+          map[q.skill_id] = { dim: q.dim, skill_id: q.skill_id, level: q.level, total: 0, correct: 0, sumSec: 0 };
+        }
+        map[q.skill_id].total += 1;
+        if (rec.firstTry) map[q.skill_id].correct += 1;
+        map[q.skill_id].sumSec += rec.sec;
+      });
+      const skillStats = Object.values(map).map(item => ({
+        dim: item.dim,
+        skill_id: item.skill_id,
+        level: item.level,
+        total: item.total,
+        correct: item.correct,
+        avg_sec: Math.round((item.sumSec / item.total) * 10) / 10
+      }));
+
+      if (!state.reported && window.LinglingReport) {
+        state.reported = true;
+        window.LinglingReport.save('數學探索島', 'Maths Day 17（彩虹積木樂園）', reportText, {
+          term: 'K2-T1',
+          skill_stats: skillStats
+        });
+      }
+
+      document.getElementById('annaText').textContent = '恭喜玲玲完成第三期首發！彩虹積木樂園大滿貫！';
+      speakHK('恭喜玲玲！第三期彩虹積木樂園十題全部過關，真係好犀利呀！', false);
+
+      const card = document.getElementById('quizCard');
+      card.innerHTML = `
+        <div class="summary-wrap">
+          <div style="font-size:64px;">🚂🏆</div>
+          <div style="font-size:26px;font-weight:900;color:#881337;">Maths Day 17 圓滿完成！</div>
+          <div class="sync-badge">☁️ 戰報已自動同步至家長戰報箱與成長儀表板</div>
+          <table class="diag-table">
+            <thead><tr><th>題號</th><th>考核項目</th><th>耗時</th><th>表現</th></tr></thead>
+            <tbody>
+              ${quizData.map((q, i) => {
+                const rec = state.records[i] || { firstTry: true, sec: 1 };
+                return `<tr>
+                  <td>Q${i + 1}</td>
+                  <td>${q.reportLabel}</td>
+                  <td>${rec.sec}s</td>
+                  <td>${rec.firstTry ? '✅ 1次答對' : '💡 需提示'}</td>
+                </tr>`;
+              }).join('')}
+            </tbody>
+          </table>
+          <div id="hiddenReport" style="display:none;">${reportText}</div>
+          <div class="action-row">
+            <button type="button" class="btn-copy" onclick="copyReport()">📋 一鍵複製進度暗號俾 Anna 老師</button>
+            <a href="index.html" class="btn-home">返回樂園主頁 🏠</a>
+          </div>
+        </div>
+      `;
+    }
+
+    function copyReport() {
+      const text = document.getElementById('hiddenReport').textContent;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => alert('已複製進度暗號！'));
+      } else {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        ta.remove();
+        alert('已複製進度暗號！');
+      }
+    }
+
+    renderQuestion();
+  </script>
+</body>
+</html>
