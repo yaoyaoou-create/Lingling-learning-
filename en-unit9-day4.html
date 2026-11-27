@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>英文 AI 課堂｜Unit 9 Day 4 Show-and-Tell with Tickles!</title>
+  <link rel="stylesheet" href="theme.css?v=1">
+  <script src="voice-engine.js?v=1"></script>
+  <script src="report-hub.js?v=3"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    body {
+      display: block !important;
+      margin: 0;
+      font-family: "PingFang HK", "Nunito", "Noto Sans TC", sans-serif;
+      background: linear-gradient(160deg, #e0f2fe 0%, #f0f9ff 52%, #ecfdf5 100%);
+      color: #0f172a;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* iPad 首次點擊語音解鎖啟動遮罩 */
+    .unlock-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      background: linear-gradient(160deg, #0284c7 0%, #38bdf8 55%, #7dd3fc 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      padding: 24px;
+      text-align: center;
+      color: #fff;
+    }
+    .unlock-card {
+      background: rgba(255,255,255,0.96);
+      color: #0c4a6e;
+      border-radius: 30px;
+      padding: 30px 26px;
+      max-width: 440px;
+      width: 100%;
+      border: 4px solid #bae6fd;
+      border-bottom: 10px solid #0369a1;
+      box-shadow: 0 18px 40px rgba(3, 105, 161, 0.35);
+    }
+    .unlock-emoji { font-size: 72px; margin-bottom: 8px; }
+    .unlock-title { font-size: 26px; font-weight: 900; margin: 0 0 8px; }
+    .unlock-sub { font-size: 17px; font-weight: 700; color: #334155; margin: 0 0 22px; line-height: 1.5; }
+    .btn-start {
+      width: 100%;
+      padding: 16px 24px;
+      border-radius: 22px;
+      background: linear-gradient(180deg, #4ade80, #16a34a);
+      color: #fff;
+      border: 3px solid #15803d;
+      border-bottom: 7px solid #166534;
+      font-size: 24px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+    .btn-start:active { transform: translateY(3px); border-bottom-width: 3px; }
+
+    /* 深藍頂部導航列 */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 10px 14px;
+      background: linear-gradient(90deg, #0c4a6e, #0369a1);
+      color: #fff;
+      border-bottom: 4px solid #38bdf8;
+      position: sticky;
+      top: 0;
+      z-index: 30;
+    }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 8px 12px;
+      background: #e0f2fe;
+      color: #0c4a6e;
+      border: 2px solid #7dd3fc;
+      border-bottom: 4px solid #0284c7;
+      border-radius: 14px;
+      font-weight: 900;
+      font-size: 15px;
+      text-decoration: none;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .back-btn:active { transform: translateY(2px); }
+    .top-title {
+      font-size: 17px;
+      font-weight: 900;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-width: 0;
+    }
+    .step-dots {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .step-dot {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 2px solid #7dd3fc;
+      border-bottom: 4px solid #0284c7;
+      background: rgba(255,255,255,0.2);
+      color: #fff;
+      font-weight: 900;
+      font-size: 14px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+    }
+    .step-dot.active {
+      background: #facc15;
+      color: #713f12;
+      border-color: #fde047;
+      border-bottom-color: #ca8a04;
+      transform: scale(1.08);
+    }
+    .step-dot.done {
+      background: #22c55e;
+      color: #fff;
+      border-color: #4ade80;
+      border-bottom-color: #15803d;
+    }
+
+    /* 主內容區 */
+    .stage-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 12px 16px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* Anna 老師黃色橫幅 */
+    .anna-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: #fef9c3;
+      border: 3px solid #fde047;
+      border-bottom: 6px solid #eab308;
+      border-radius: 22px;
+      padding: 12px 16px;
+      cursor: pointer;
+    }
+    .anna-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+    .anna-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      flex-shrink: 0;
+      border: 3px solid #facc15;
+    }
+    .anna-text {
+      font-size: 18px;
+      font-weight: 900;
+      color: #713f12;
+      line-height: 1.4;
+    }
+    .btn-replay {
+      padding: 10px 14px;
+      border-radius: 16px;
+      background: #fff;
+      color: #0369a1;
+      border: 2px solid #38bdf8;
+      border-bottom: 4px solid #0284c7;
+      font-size: 15px;
+      font-weight: 900;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    /* 主卡片舞台 */
+    .panel {
+      background: #fff;
+      border: 3px solid #bae6fd;
+      border-bottom: 7px solid #38bdf8;
+      border-radius: 26px;
+      padding: 18px;
+      box-shadow: 0 10px 24px rgba(2, 132, 199, 0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    /* 第一幕：儀態與 pear 熱身 */
+    .warmup-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+    .big-3d-card {
+      background: linear-gradient(180deg, #f0f9ff 0%, #e0f2fe 100%);
+      border: 3px solid #7dd3fc;
+      border-bottom: 8px solid #0284c7;
+      border-radius: 24px;
+      padding: 20px 14px;
+      text-align: center;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      transition: transform 0.15s;
+    }
+    .big-3d-card:active { transform: translateY(3px); border-bottom-width: 4px; }
+    .big-3d-card.lit {
+      background: linear-gradient(180deg, #ecfdf5 0%, #d1fae5 100%);
+      border-color: #34d399;
+      border-bottom-color: #059669;
+    }
+    .card-emoji { font-size: 74px; line-height: 1.05; }
+    .card-en { font-size: 32px; font-weight: 900; color: #0c4a6e; }
+    .card-tip { font-size: 16px; font-weight: 800; color: #334155; }
+
+    /* 第二幕：Tickles 5 句示範 */
+    .play-all-btn {
+      padding: 12px 20px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, #38bdf8, #0284c7);
+      color: #fff;
+      border: 3px solid #0369a1;
+      border-bottom: 6px solid #0c4a6e;
+      font-size: 19px;
+      font-weight: 900;
+      cursor: pointer;
+      align-self: center;
+    }
+    .play-all-btn:active { transform: translateY(2px); }
+    .line-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .speech-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: #f8fafc;
+      border: 3px solid #cbd5e1;
+      border-bottom: 6px solid #94a3b8;
+      border-radius: 18px;
+      padding: 12px 16px;
+      cursor: pointer;
+      transition: transform 0.12s, background 0.2s;
+    }
+    .speech-row:active { transform: translateY(2px); }
+    .speech-row.active-line {
+      background: #fef9c3;
+      border-color: #facc15;
+      border-bottom-color: #ca8a04;
+      transform: scale(1.01);
+    }
+    .speech-row.heard {
+      background: #ecfdf5;
+      border-color: #34d399;
+      border-bottom-color: #059669;
+    }
+    .speech-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .speech-icon { font-size: 34px; }
+    .speech-en { font-size: 24px; font-weight: 900; color: #0f172a; }
+    .speech-badge { font-size: 22px; }
+
+    /* 第三幕：開口打卡兩粒純事實掣 */
+    .spk-stage {
+      text-align: center;
+      background: linear-gradient(180deg, #f0fdf4 0%, #dcfce7 100%);
+      border: 3px solid #86efac;
+      border-radius: 24px;
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+    .spk-progress { font-size: 16px; font-weight: 900; color: #166534; }
+    .spk-emoji { font-size: 76px; }
+    .spk-sentence { font-size: 34px; font-weight: 900; color: #0c4a6e; }
+    .btn-listen-demo {
+      padding: 12px 24px;
+      border-radius: 18px;
+      background: #38bdf8;
+      color: #fff;
+      border: 2px solid #0284c7;
+      border-bottom: 5px solid #0369a1;
+      font-size: 19px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+    .fact-btn-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      width: 100%;
+      max-width: 580px;
+      margin: 0 auto;
+    }
+    .btn-fact-self {
+      padding: 18px 12px;
+      border-radius: 22px;
+      background: linear-gradient(180deg, #fde047, #f59e0b);
+      color: #78350f;
+      border: 3px solid #d97706;
+      border-bottom: 7px solid #b45309;
+      font-size: 22px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+    .btn-fact-mom {
+      padding: 18px 12px;
+      border-radius: 22px;
+      background: linear-gradient(180deg, #86efac, #22c55e);
+      color: #14532d;
+      border: 3px solid #16a34a;
+      border-bottom: 7px solid #15803d;
+      font-size: 22px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+    .btn-fact-self:active, .btn-fact-mom:active { transform: translateY(3px); border-bottom-width: 3px; }
+
+    /* 第四幕：零劇透聽句尋寶 */
+    .quiz-top {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    .big-ear-btn {
+      padding: 14px 28px;
+      border-radius: 22px;
+      background: linear-gradient(180deg, #60a5fa, #2563eb);
+      color: #fff;
+      border: 3px solid #1d4ed8;
+      border-bottom: 7px solid #1e3a8a;
+      font-size: 22px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+    .big-ear-btn:active { transform: translateY(3px); border-bottom-width: 3px; }
+    .reveal-text {
+      min-height: 34px;
+      font-size: 24px;
+      font-weight: 900;
+      color: #15803d;
+      text-align: center;
+    }
+    .opt-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      max-width: 620px;
+      width: 100%;
+      margin: 0 auto;
+    }
+    .opt-card {
+      padding: 20px 12px;
+      border-radius: 22px;
+      background: #f8fafc;
+      border: 3px solid #cbd5e1;
+      border-bottom: 7px solid #94a3b8;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .opt-card:active { transform: translateY(3px); }
+    .opt-card.correct {
+      background: #dcfce7;
+      border-color: #22c55e;
+      border-bottom-color: #15803d;
+    }
+    .opt-card.wrong {
+      background: #fef3c7;
+      border-color: #f59e0b;
+      animation: shake 0.35s;
+    }
+    .opt-emoji { font-size: 58px; line-height: 1.1; }
+
+    /* 通用下一步按鈕 */
+    .btn-next {
+      padding: 14px 30px;
+      border-radius: 20px;
+      background: linear-gradient(180deg, #4ade80, #16a34a);
+      color: #fff;
+      border: 3px solid #15803d;
+      border-bottom: 6px solid #166534;
+      font-size: 20px;
+      font-weight: 900;
+      cursor: pointer;
+      align-self: center;
+      text-decoration: none;
+    }
+    .btn-next:active { transform: translateY(3px); border-bottom-width: 3px; }
+
+    /* 煙花慶祝浮層 */
+    .fx-toast {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.8);
+      background: rgba(255, 255, 255, 0.96);
+      border: 4px solid #facc15;
+      border-radius: 26px;
+      padding: 18px 28px;
+      font-size: 28px;
+      font-weight: 900;
+      color: #b45309;
+      box-shadow: 0 14px 34px rgba(0,0,0,0.18);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.2s;
+      z-index: 200;
+    }
+    .fx-toast.show {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    /* 結算區 */
+    .summary-box {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+    .sync-badge {
+      background: #dcfce7;
+      color: #166534;
+      border: 2px solid #86efac;
+      border-radius: 14px;
+      padding: 8px 16px;
+      font-size: 16px;
+      font-weight: 800;
+    }
+    .report-preview {
+      width: 100%;
+      background: #f8fafc;
+      border: 2px solid #cbd5e1;
+      border-radius: 16px;
+      padding: 12px;
+      font-size: 14px;
+      text-align: left;
+      color: #334155;
+      line-height: 1.5;
+      word-break: break-all;
+    }
+    .action-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .btn-copy {
+      padding: 12px 22px;
+      border-radius: 16px;
+      background: #fef08a;
+      color: #713f12;
+      border: 2px solid #eab308;
+      border-bottom: 5px solid #a16207;
+      font-size: 17px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-8px); }
+      75% { transform: translateX(8px); }
+    }
+
+    @media (max-width: 620px) {
+      .warmup-grid { grid-template-columns: 1fr; }
+      .fact-btn-row { grid-template-columns: 1fr; }
+      .speech-en { font-size: 19px; }
+      .spk-sentence { font-size: 26px; }
+      .anna-text { font-size: 15px; }
+      .top-title { font-size: 15px; }
+      .step-dot { width: 30px; height: 30px; font-size: 13px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- iPad 首次點擊啟動解鎖頁 -->
+  <div class="unlock-overlay" id="unlockOverlay">
+    <div class="unlock-card">
+      <div class="unlock-emoji">🎤🍐</div>
+      <h1 class="unlock-title">Unit 9 · Day 4</h1>
+      <p class="unlock-sub">Show-and-Tell with Tickles!<br>今日同 Tickles 一齊企直身、做小小演說家！</p>
+      <button type="button" class="btn-start" onclick="startLesson()">🔊 開始上堂！</button>
+    </div>
+  </div>
+
+  <div class="fx-toast" id="fxToast">🎆🌟 好叻呀！</div>
+
+  <header class="top-bar">
+    <a href="en-unit9.html?v=1" class="back-btn" onclick="stopAll()">🏠 返回</a>
+    <div class="top-title">🎤 Unit 9 Day 4 · Show-and-Tell</div>
+    <div class="step-dots" id="stepDots">
+      <button type="button" class="step-dot active" onclick="jumpStage(0)" aria-label="第1幕">1</button>
+      <button type="button" class="step-dot" onclick="jumpStage(1)" aria-label="第2幕">2</button>
+      <button type="button" class="step-dot" onclick="jumpStage(2)" aria-label="第3幕">3</button>
+      <button type="button" class="step-dot" onclick="jumpStage(3)" aria-label="第4幕">4</button>
+    </div>
+  </header>
+
+  <main class="stage-wrap">
+    <section class="anna-bar" onclick="replayGuide()">
+      <div class="anna-left">
+        <div class="anna-avatar">👩‍🏫</div>
+        <div class="anna-text" id="annaText">準備好同 Tickles 一齊上台演說未呀？</div>
+      </div>
+      <button type="button" class="btn-replay" id="replayBtn" onclick="event.stopPropagation(); replayGuide();">🔊 重聽</button>
+    </section>
+
+    <section class="panel" id="mainPanel"></section>
+  </main>
+
+  <script>
+    const SHOW_LINES = [
+      { id: 'tickles', text: 'Hello, I am Tickles.', mp3: 'en-hello-tickles.mp3', emoji: '🐱👋' },
+      { id: 'pear',    text: 'I have a pear.',       mp3: 'en-i-have-a-pear.mp3', emoji: '🍐' },
+      { id: 'green',   text: 'It is green.',         mp3: 'en-it-is-green.mp3',   emoji: '🟢🍃' },
+      { id: 'sweet',   text: 'It is sweet.',         mp3: 'en-it-is-sweet.mp3',   emoji: '🍯😊' },
+      { id: 'yummy',   text: 'Yummy!',               mp3: 'en-yummy.mp3',         emoji: '😋✨' }
+    ];
+
+    const state = {
+      started: false,
+      lessonStart: Date.now(),
+      stage: 0,
+      doneStages: new Set(),
+      activeTimer: null,
+      currentGuideAction: null,
+      // Stage 1
+      warmupDone: new Set(),
+      // Stage 2
+      heardLines: new Set(),
+      // Stage 3 (Speaking)
+      spkIdx: 0,
+      spkStart: Date.now(),
+      spkResults: [], // { id, self: true/false, sec }
+      // Stage 4 (Listening Quiz)
+      quizOrder: [],
+      quizIdx: 0,
+      quizStart: Date.now(),
+      quizWrongFlag: false,
+      quizResults: [], // { id, text, correct, sec }
+      reported: false
+    };
+
+    const errorWords = new Set();
+
+    function stopAll() {
+      if (state.activeTimer) { clearTimeout(state.activeTimer); state.activeTimer = null; }
+      if (window.LinglingVoice) window.LinglingVoice.stop();
+    }
+
+    function showFireworks(msg = '🎆🌟 Good job!') {
+      const t = document.getElementById('fxToast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 950);
+    }
+
+    function shuffle(arr) {
+      const a = arr.slice();
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function updateDots() {
+      document.querySelectorAll('.step-dot').forEach((btn, i) => {
+        btn.classList.remove('active', 'done');
+        if (i === state.stage) btn.classList.add('active');
+        else if (state.doneStages.has(i)) btn.classList.add('done');
+      });
+    }
+
+    function replayGuide() {
+      if (typeof state.currentGuideAction === 'function') {
+        state.currentGuideAction();
+      }
+    }
+
+    // 同步解鎖 iPad Safari 播放器
+    function startLesson() {
+      if (window.LinglingVoice) window.LinglingVoice.unlock();
+      document.getElementById('unlockOverlay').style.display = 'none';
+      state.started = true;
+      state.lessonStart = Date.now();
+      jumpStage(0);
+    }
+
+    function jumpStage(idx) {
+      stopAll();
+      state.stage = idx;
+      if (idx === 2) { state.spkIdx = 0; state.spkResults = []; }
+      if (idx === 3) {
+        state.quizOrder = shuffle(SHOW_LINES);
+        state.quizIdx = 0;
+        state.quizResults = [];
+      }
+      renderStage();
+    }
+
+    function renderStage() {
+      updateDots();
+      document.getElementById('replayBtn').style.visibility = state.stage === 4 ? 'hidden' : 'visible';
+      if (state.stage === 0) renderWarmup();
+      else if (state.stage === 1) renderDemo();
+      else if (state.stage === 2) renderSpeaking();
+      else if (state.stage === 3) renderQuiz();
+      else renderSummary();
+    }
+
+    // ========= 第一幕：儀態熱身 Stand straight + pear =========
+    function renderWarmup() {
+      document.getElementById('annaText').textContent = '第一幕：上台小秘訣！先學 Tickles 企直身（Stand straight），再點一點啤梨重溫發音！';
+      state.currentGuideAction = () => {
+        window.LinglingVoice.playZh('第一幕，上台演說小秘訣！講嘢前要先企直身，Stand straight！再點一點右邊嘅啤梨重溫發音啦！');
+      };
+      state.currentGuideAction();
+
+      const panel = document.getElementById('mainPanel');
+      panel.innerHTML = `
+        <div class="warmup-grid">
+          <button type="button" class="big-3d-card ${state.warmupDone.has('stand') ? 'lit' : ''}" onclick="tapWarmup('stand')">
+            <div class="card-emoji">🧍‍♀️✨</div>
+            <div class="card-en">Stand straight!</div>
+            <div class="card-tip">企直身、望住大家微笑！</div>
+          </button>
+          <button type="button" class="big-3d-card ${state.warmupDone.has('pear') ? 'lit' : ''}" onclick="tapWarmup('pear')">
+            <div class="card-emoji">🍐</div>
+            <div class="card-en"><span style="color:#dc2626;">p</span>ear</div>
+            <div class="card-tip">字母 p 企直似啤梨嘅長腳！點我聽發音</div>
+          </button>
+        </div>
+        <button type="button" class="btn-next" onclick="finishWarmup()">準備好喇！聽 Tickles 示範 ➡️</button>
+      `;
+    }
+
+    function tapWarmup(key) {
+      state.warmupDone.add(key);
+      if (key === 'stand') {
+        showFireworks('🧍‍♀️✨ 企得好直呀！');
+        window.LinglingVoice.playZh('好叻呀！企到好似小士兵咁直，好有自信！');
+      } else {
+        window.LinglingVoice.playMp3('en-pear.mp3');
+      }
+      renderWarmupUIOnly();
+    }
+
+    function renderWarmupUIOnly() {
+      const cards = document.querySelectorAll('.big-3d-card');
+      if (cards[0] && state.warmupDone.has('stand')) cards[0].classList.add('lit');
+      if (cards[1] && state.warmupDone.has('pear')) cards[1].classList.add('lit');
+    }
+
+    function finishWarmup() {
+      state.doneStages.add(0);
+      jumpStage(1);
+    }
+
+    // ========= 第二幕：Tickles 5 句演說示範 =========
+    function renderDemo() {
+      document.getElementById('annaText').textContent = '第二幕：聽下 Tickles 點樣介紹佢嘅啤梨！可以逐句點開聽，或者一鍵連播全部五句！';
+      state.currentGuideAction = () => {
+        window.LinglingVoice.playZh('第二幕，聽下 Tickles 嘅五句精彩演說！你可以逐句點開聽，或者撳藍色大掣一次過聽晒！');
+      };
+      state.currentGuideAction();
+
+      drawDemoUI(-1);
+    }
+
+    function drawDemoUI(activeIdx) {
+      const panel = document.getElementById('mainPanel');
+      panel.innerHTML = `
+        <button type="button" class="play-all-btn" onclick="playAllShowLines()">🎬 一鍵聽 Tickles 完整演說</button>
+        <div class="line-list">
+          ${SHOW_LINES.map((line, i) => `
+            <button type="button" class="speech-row ${activeIdx === i ? 'active-line' : (state.heardLines.has(i) ? 'heard' : '')}" onclick="playSingleLine(${i})">
+              <div class="speech-left">
+                <span class="speech-icon">${line.emoji}</span>
+                <span class="speech-en">${line.text}</span>
+              </div>
+              <span class="speech-badge">${state.heardLines.has(i) ? '✅' : '🔊'}</span>
+            </button>
+          `).join('')}
+        </div>
+        <button type="button" class="btn-next" onclick="finishDemo()">聽熟喇！輪到玲玲上台講 ➡️</button>
+      `;
+    }
+
+    function playSingleLine(i) {
+      stopAll();
+      state.heardLines.add(i);
+      drawDemoUI(i);
+      window.LinglingVoice.playMp3(SHOW_LINES[i].mp3, () => {
+        drawDemoUI(-1);
+      });
+    }
+
+    function playAllShowLines() {
+      stopAll();
+      let idx = 0;
+      function nextLine() {
+        if (idx >= SHOW_LINES.length || state.stage !== 1) {
+          drawDemoUI(-1);
+          return;
+        }
+        state.heardLines.add(idx);
+        drawDemoUI(idx);
+        const cur = idx;
+        idx++;
+        window.LinglingVoice.playMp3(SHOW_LINES[cur].mp3, () => {
+          state.activeTimer = setTimeout(nextLine, 260);
+        });
+      }
+      nextLine();
+    }
+
+    function finishDemo() {
+      state.doneStages.add(1);
+      jumpStage(2);
+    }
+
+    // ========= 第三幕：玲玲上台開口打卡（兩粒純事實掣） =========
+    function renderSpeaking() {
+      const line = SHOW_LINES[state.spkIdx];
+      state.spkStart = Date.now();
+
+      document.getElementById('annaText').textContent = `第三幕：玲玲上台演說（第 ${state.spkIdx + 1} / ${SHOW_LINES.length} 句）！企直身，聽完示範就大聲讀出嚟！`;
+      state.currentGuideAction = () => {
+        if (state.spkIdx === 0) {
+          window.LinglingVoice.playHybrid('第三幕，輪到玲玲企直身大聲讀！聽住示範讀呢一句：', line.mp3);
+        } else {
+          window.LinglingVoice.playMp3(line.mp3);
+        }
+      };
+      state.currentGuideAction();
+
+      const panel = document.getElementById('mainPanel');
+      panel.innerHTML = `
+        <div class="spk-stage">
+          <div class="spk-progress">第 ${state.spkIdx + 1} 句 ／ 共 ${SHOW_LINES.length} 句</div>
+          <div class="spk-emoji">${line.emoji}</div>
+          <div class="spk-sentence">${line.text}</div>
+          <button type="button" class="btn-listen-demo" onclick="window.LinglingVoice.playMp3('${line.mp3}')">🔊 再聽示範</button>
+        </div>
+        <div class="fact-btn-row">
+          <button type="button" class="btn-fact-self" onclick="recordSpeaking(true)">🌟 自己讀到</button>
+          <button type="button" class="btn-fact-mom" onclick="recordSpeaking(false)">🌱 跟住媽媽讀</button>
+        </div>
+      `;
+    }
+
+    function recordSpeaking(isSelf) {
+      stopAll();
+      const line = SHOW_LINES[state.spkIdx];
+      const sec = Math.max(1, Math.round((Date.now() - state.spkStart) / 1000));
+      state.spkResults.push({ id: line.id, self: isSelf, sec });
+
+      // 兩粒按鈕均即時觸發煙花與正向讚美
+      showFireworks(isSelf ? '🎆🌟 自己讀到好犀利！' : '🎆🌱 讀得好大聲好棒！');
+      window.LinglingVoice.playZh(isSelf ? '嘩！自己讀到好犀利呀！' : '跟住媽媽讀得好大聲好棒呀！');
+
+      state.activeTimer = setTimeout(() => {
+        if (state.spkIdx + 1 < SHOW_LINES.length) {
+          state.spkIdx++;
+          renderSpeaking();
+        } else {
+          state.doneStages.add(2);
+          jumpStage(3);
+        }
+      }, 1300);
+    }
+
+    // ========= 第四幕：零劇透聽句尋寶 =========
+    function renderQuiz() {
+      const q = state.quizOrder[state.quizIdx];
+      state.quizStart = Date.now();
+      state.quizWrongFlag = false;
+
+      // 嚴格零劇透：畫面與語音均不出現目標中文意思
+      document.getElementById('annaText').textContent = `第四幕：聽音尋寶（第 ${state.quizIdx + 1} / ${state.quizOrder.length} 題）！留心聽下英文句子，揀出啱嘅圖卡啦！`;
+      state.currentGuideAction = () => {
+        if (state.quizIdx === 0) {
+          window.LinglingVoice.playHybrid('最後一關，聽音尋寶！留心聽下英文聲音，揀出啱嘅圖卡啦！', q.mp3);
+        } else {
+          window.LinglingVoice.playMp3(q.mp3);
+        }
+      };
+      state.currentGuideAction();
+
+      // 4 張純視覺圖卡選項（零文字劇透）
+      const distractors = shuffle(SHOW_LINES.filter(x => x.id !== q.id)).slice(0, 3);
+      const options = shuffle([q, ...distractors]);
+
+      const panel = document.getElementById('mainPanel');
+      panel.innerHTML = `
+        <div class="quiz-top">
+          <div style="font-size:15px;font-weight:900;color:#64748b;">第 ${state.quizIdx + 1} 題 ／ 共 ${state.quizOrder.length} 題</div>
+          <button type="button" class="big-ear-btn" onclick="window.LinglingVoice.playMp3('${q.mp3}')">👂 再聽一次英文</button>
+          <div class="reveal-text" id="quizReveal"></div>
+        </div>
+        <div class="opt-grid">
+          ${options.map(opt => `
+            <button type="button" class="opt-card" onclick="checkQuiz(this, '${opt.id}')">
+              <div class="opt-emoji">${opt.emoji}</div>
+            </button>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function checkQuiz(btn, chosenId) {
+      if (btn.disabled) return;
+      const q = state.quizOrder[state.quizIdx];
+
+      if (chosenId === q.id) {
+        const sec = Math.max(1, Math.round((Date.now() - state.quizStart) / 1000));
+        state.quizResults.push({ id: q.id, text: q.text, correct: !state.quizWrongFlag, sec });
+        document.querySelectorAll('.opt-card').forEach(b => b.disabled = true);
+        btn.classList.add('correct');
+        document.getElementById('quizReveal').textContent = `🌟 ${q.text}`;
+        showFireworks('🎆🌟 答啱喇！');
+        window.LinglingVoice.playMp3(q.mp3);
+
+        state.activeTimer = setTimeout(() => {
+          if (state.quizIdx + 1 < state.quizOrder.length) {
+            state.quizIdx++;
+            renderQuiz();
+          } else {
+            state.doneStages.add(3);
+            state.stage = 4;
+            renderSummary();
+          }
+        }, 1600);
+      } else {
+        state.quizWrongFlag = true;
+        errorWords.add(q.text);
+        btn.classList.add('wrong');
+        setTimeout(() => btn.classList.remove('wrong'), 400);
+        // 溫和提示且絕不覆蓋題目原音
+        window.LinglingVoice.playZh('試吓隔離嗰張圖卡啦！');
+      }
+    }
+
+    // ========= 結算與香港 K2 客觀儀表板同步 =========
+    function renderSummary() {
+      stopAll();
+      updateDots();
+      const totalSec = Math.max(1, Math.round((Date.now() - state.lessonStart) / 1000));
+      const selfCount = state.spkResults.filter(x => x.self).length;
+      const spkTotal = state.spkResults.length || SHOW_LINES.length;
+      const quizCorrect = state.quizResults.filter(x => x.correct).length;
+      const quizTotal = state.quizResults.length || SHOW_LINES.length;
+
+      const avg = arr => arr.length ? Math.round((arr.reduce((s, x) => s + x.sec, 0) / arr.length) * 10) / 10 : 0;
+
+      const skillStats = [
+        {
+          dim: 'SPK', skill_id: 'EN-SPK-2', level: 'L2',
+          total: spkTotal, correct: selfCount, avg_sec: avg(state.spkResults)
+        },
+        {
+          dim: 'QNA', skill_id: 'EN-QNA-2', level: 'L2',
+          total: quizTotal, correct: quizCorrect, avg_sec: avg(state.quizResults)
+        }
+      ];
+
+      const errArr = Array.from(errorWords);
+      const reportText = `【英文AI課堂｜Unit 9 Day 4 完成戰報】P.43 Show-and-Tell with Tickles!（Stand straight ＋ Hello, I am Tickles. / I have a pear. / It is green. / It is sweet. / Yummy!）全部完成！開口打卡：自己讀到 ${selfCount}/${spkTotal}｜聽句尋寶 ${quizCorrect}/${quizTotal} 一次答對！｜總用時：${totalSec}秒。`;
+
+      if (!state.reported && window.LinglingReport) {
+        state.reported = true;
+        window.LinglingReport.save('英文AI課堂', 'Unit 9 Day 4', reportText, {
+          term: 'K2-T1',
+          skill_stats: skillStats,
+          error_words: errArr
+        });
+      }
+
+      document.getElementById('annaText').textContent = '太叻喇玲玲！你已經係最棒嘅小小英文演說家喇！';
+      window.LinglingVoice.playZh('恭喜玲玲！今日 Show and Tell 演說大成功，你真係最叻嘅小小演說家！');
+
+      const panel = document.getElementById('mainPanel');
+      panel.innerHTML = `
+        <div class="summary-box">
+          <div style="font-size:66px;">🏆🎤</div>
+          <div style="font-size:26px;font-weight:900;color:#0c4a6e;">Unit 9 Day 4 演說大成功！</div>
+          <div class="sync-badge">☁️ 戰報已自動同步至家長戰報箱與成長儀表板</div>
+          <div class="report-preview" id="reportBox">${reportText}</div>
+          <div class="action-row">
+            <button type="button" class="btn-copy" onclick="copyReport()">📋 一鍵複製進度暗號</button>
+            <a href="en-unit9.html?v=1" class="btn-next">返回 Unit 9 主頁 🏠</a>
+          </div>
+        </div>
+      `;
+    }
+
+    function copyReport() {
+      const text = document.getElementById('reportBox').textContent;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => alert('已複製進度暗號！'));
+      } else {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        ta.remove();
+        alert('已複製進度暗號！');
+      }
+    }
+  </script>
+</body>
+</html>
